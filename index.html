@@ -4,40 +4,56 @@
   <meta charset="utf-8">
   <meta http-equiv="content-type" content="text/html">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="Description" content="An interactive map showing the carbon footprint of each neighbourhood in England">
+  <meta name="Description" content="An interactive map to aid cycle planning in Scotland">
   
   <!--  Social Media Tags -->
-  <meta property="og:title" content="Place-based carbon calculator">
-  <meta property="og:description" content="An interactive map showing the carbon footprint of each neighbourhood in England">
+  <meta property="og:title" content="NPT Scotland">
+  <meta property="og:description" content="An interactive map to aid cycle planning in Scotland">
   <meta property="og:image" content="/images/thumbnail.jpg">
-  <meta property="twitter:image" content="http://www.carbon.place/images/thumbnail.jpg">
-  <meta property="og:url" content="https://www.carbon.place">
+  <meta property="twitter:image" content="/images/thumbnail.jpg">
+  <meta property="og:url" content="https://www.npt.scot">
   <meta name="twitter:card" content="summary_large_image">
-  <meta property="og:site_name" content="Place-based carbon calculator">
-  <meta name="twitter:image:alt" content="PBCC thumbnail">
+  <meta property="og:site_name" content="NPT Scotland">
+  <meta name="twitter:image:alt" content="NPT Scotland thumbnail">
   
-  <title>Place-based carbon calculator</title>
+  <title>NPT Scotland</title>
   <!-- PWA support -->
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="apple-touch-icon" href="/images/creds192.png">
-  <meta name="apple-mobile-web-app-status-bar" content="#AC1A40">
-  <meta name="theme-color" content="#AC1A40">
+  <link rel="apple-touch-icon" href="/images/icons/192.png">
+  <meta name="apple-mobile-web-app-status-bar" content="#0b38e6">
+  <meta name="theme-color" content="#0b38e6">
   <script src="/app.js" defer></script>
   
-  <!-- Set Up CSS -->
-  <link rel="stylesheet" href="css/main_carbon.css">
+  <!-- Set Up map -->
+  <script src="/js/lib/pmtiles/index-2.11.0.js"></script> <!-- v2.7.1 -->
+  <script src="/js/lib/geocoder/maplibre-gl-geocoder.min.js"></script>
+  <link rel="stylesheet" href="js/lib/geocoder/maplibre-gl-geocoder-small.css" type="text/css"/>
+  <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+  <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
   
-  <!-- Third Party Scrips -->
-  <script src="https://kit.fontawesome.com/1f7357bc14.js" crossorigin="anonymous" async></script>
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q11V10CDRV"></script>
+  <!-- Set Up CSS -->
+  <link rel="stylesheet" href="css/main.css">
+  
+  <link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet">
+  <link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet">
+  
+  <!-- Markdown conversion -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
+  
+  <!-- Tooltips -->
+  <script src="https://unpkg.com/@popperjs/core@2"></script>
+  <script src="https://unpkg.com/tippy.js@6"></script>
+  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QZMHV92YXJ"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
   
-    gtag('config', 'G-Q11V10CDRV');
+    gtag('config', 'G-QZMHV92YXJ');
   </script>
+
   
   <!-- Set Up Icon -->
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
@@ -45,25 +61,24 @@
   
 </head>
 <body style="overflow:hidden">
-
+  
 <!-- Menu -->
 <div class="nav-wrapper">
 	<div class="topnav" id="myTopnav">
 		<div class="main-title">
-		  	<a href="/">Place-based carbon calculator</a>
+		  	<a href="/">Carbon & Place</a>
 		</div>
-		   <a href="/about" title="About">About</a>
-		   <a href="/data" title="Data">Data</a>
-		   <a href="/la" title="Local authorities">Local Authorities</a>
+		   <a href="/about">About</a>
+		   <a href="/data">Data</a>
+		   <a href="/manual">Manual</a>
 		   <a class="smaller" href="/privacy">Privacy &amp; accessibility</a>
-		   <a href="javascript:void(0);" class="icon" onclick="expandtopnav()" aria-label="Expand Menu">
-    <i class="fa fa-bars"></i>
-  </a>
+		   <a href="#" id="expandtopnav" class="icon" aria-label="Expand Menu"><i class="fa fa-bars"></i></a>
 	</div>
 		<div class="logo">
-			<a href="https://www.creds.ac.uk/" target="_blank" rel="noopener noreferrer"><img src="images/CREDS-logo-reversed.svg" alt="CREDS logo" width="110" height="35.85"></a>
+			<img src="/images/npt_logo.png" alt="NPT Logo" height="40">
 		</div>	
 </div>
+
 
 <!-- Cookies Warning  -->
 <div id='cookiewarning' class='cookiewarning'>
@@ -73,12 +88,28 @@
     <button onclick="cookiebutton(false)" class="button button2"><b>No</b></button>
   </p>
 </div>
-<script type="text/javascript" src="js/ga_optout.js"></script>
+<script src="js/ga_optout.js"></script>
 
 <!-- Main Content -->
 <div class="content" style="overflow:hidden">
-  <p>Content</p>
+
+<p><b><a href="/pbcc">Place-Based Carbon Calculator</a></b></p>
+<p>Lorem Ipsum</p>
+
+<p><b><a href="/transport">Transport and Accessibility Explorer</a></b></p>
+<p>Lorem Ipsum</p>
+
+<p><b><a href="/retrofit">Retrofit Explorer</a></b></p>
+<p>Lorem Ipsum</p>
+
+<p><b><a href="/landuse">Land Use Explorer</a></b></p>
+<p>Lorem Ipsum</p>
+
 </div>
+
+<script src="js/gui.js"></script>
+<script src="js/ga_optout.js" defer></script>
 
 </body>
 </html>
+ 
