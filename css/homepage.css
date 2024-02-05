@@ -1,0 +1,75 @@
+html,body {
+    font-family: Arial, sans-serif;
+    margin: 0px;
+    padding: 0px;
+    height: 100%;
+    width: 100%;
+}
+h1 {
+    font-size: 50px;
+    padding-top: 0px;
+    padding-left: 0px;
+    margin: 0px;
+}
+
+h2 {
+    padding-left: 0px;
+}
+
+#menu {
+  height: 50px;
+  width: 100%;
+  padding: 10px;
+  background-color: #f5d7d7;
+}
+
+#banner {
+  height: 80%;
+  width: 100%;
+  position: relative;
+  margin: 0;
+  
+  font-size: 20px;
+  background-size:     cover;                      
+  background-repeat:   no-repeat;
+  background-position: center center; 
+  transition: background 1s ease-in-out;
+}
+
+#bannertext {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 20px;
+  background: rgba(255,255,255,0.7);
+}
+
+#tools {
+  height: 80%;
+  width: 100%;
+  padding: 10px;
+  background-color: #f0f0f0;
+}
+
+#footer {
+  height: 40%;
+  width: 100%;
+  padding: 10px;
+  background-color: #f5d7d7;
+}
+
+.card {
+  border-radius: 15px;
+  margin: 10px;
+  border: 2px solid #73AD21;
+  padding: 20px;
+  float: left;
+  width: 300px;
+  height: 120px;
+}
+
+.logo {
+  height: 50px;
+  float: left;
+  margin: 10px;
+}
