@@ -1,6 +1,6 @@
 var phrases = ["Matters", "is Different", "Emits Carbon", "is at Risk"];
-        var colors = ["#0d6b18", "#060959", "#664810", "#700606"];
-        var images = ["/images/ui/banners/headline1.jpg", "/images/ui/banners/headline2.jpg", "/images/ui/banners/headline3.jpg", "/images/ui/banners/headline4.jpg"];
+        //var colors = ["#ffffff", "#ffffff", "#ffffff", "#fffff"];
+        //var images = ["/images/ui/banners/headline1.jpg", "/images/ui/banners/headline2.jpg", "/images/ui/banners/headline3.jpg", "/images/ui/banners/headline4.jpg"];
         var i = 0;
 
         function animateText() {
@@ -12,8 +12,8 @@ var phrases = ["Matters", "is Different", "Emits Carbon", "is at Risk"];
                 easing: "easeOutExpo",
                 complete: function(anim) {
                     document.getElementById("animated-text").textContent = phrases[i];
-                    document.getElementById("animated-text").style.color = colors[i];
-                    document.getElementById("banner").style.background = "url('" + images[i] + "') no-repeat center center fixed";
+                    //document.getElementById("animated-text").style.color = colors[i];
+                    //document.getElementById("banner").style.background = "url('" + images[i] + "') no-repeat center top fixed";
                 }
             })
             .add({

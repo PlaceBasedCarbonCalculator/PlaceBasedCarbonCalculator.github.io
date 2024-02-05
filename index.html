@@ -26,47 +26,83 @@
   
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <link rel="stylesheet" href="/css/homepage.css">
+    <link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet">
+    <link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet">
 </head>
 <body>
-<div id="menu">
-  <p>Carbon & Place</p>
+<!-- Menu Bar -->
+<div class="nav-wrapper">
+	<div class="topnav" id="myTopnav">
+		<div class="main-title">
+		  	<a href="/">Carbon & Place</a>
+		</div>
+		   <a href="/about">About</a>
+		   <a href="/data">Data</a>
+		   <a href="/manual">Manual</a>
+		   <a href="#" id="expandtopnav" class="icon" aria-label="Expand Menu"><i class="fa fa-bars"></i></a>
+	</div>
+		<div class="logo">
+			<img src="/images/ui/logo.png" alt="PBCC Logo" height="40">
+		</div>	
 </div>
+
+<!-- Banner Image  -->
 <div id="banner">
   <div id="bannertext">
-    <h1>Every Place <span id="animated-text">Matters</span></h1>
-    <h2>Carbon & Place provides free tools to allow communities, planners, and policy makers to understand their local carbon footprint.</h2>
+    <p><h1>Every Place</h1></p>
+    <p><h1><span id="animated-text">Matters</span></h1></p>
+    
   </div>
 </div>
+
+<div class="glassstrip">
+<h2>Carbon & Place provides free tools to allow communities, planners, and policy makers to understand their local carbon footprint.</h2>
+<p>Based on the latest research and the best available data, we explore how carbon footprints change between neighbouhoods and how the path to net-zero will vary between places.</p>
+</div>
+
+<!-- Tools -->
 <div id="tools">
-  <h2>Tools</h2>
-  <div class="card">
-    <h3><a href="/pbcc">Place-Based Carbon Calculator</a></h3>
+  <a href="/pbcc"><div class="card" style="background-color:rgba(255,0,0,0.1)">
+    <h3>Place-Based Carbon Calculator</h3>
     <p>Understand your neighbouhoods carbon footprint an how it compares to other places.</p>
-  </div>
-  <div class="card">
-    <h3><a href="/transport">Transport and Accessability Explorer</a></h3>
+  </div></a>
+  <a href="/transport"><div class="card" style="background-color:rgba(0,255,0,0.1)">
+    <h3>Transport and Accessability Explorer</h3>
     <p>Transport is the largest source of emissions in the UK</p>
-  </div>
-  <div class="card">
-    <h3><a href="/retrofit">Retrofit Explorer</a></h3>
+  </div></a>
+  <a href="/retrofit"><div class="card" style="background-color:rgba(0,0,255,0.1)">
+    <h3>Retrofit Explorer</h3>
     <p>Britain has some of the coldest and leakiest buildings in Europe, what can we do to fix them?</p>
-  </div>
-  <div class="card">
-    <h3><a href="/landuse">Land Use and Planning Explorer</a></h3>
+  </div></a>
+  <a href="/landuse"><div class="card" style="background-color:rgba(255,225,0,0.1)">
+    <h3>Land Use and Planning Explorer</h3>
     <p>How we use land and what we put in different places matters, explore how land is used across Great Britain.</p>
-  </div>
+  </div></a>
 </div>
-<div id="footer">
+
+<!-- Footer -->
+<div class="glassstrip">
   <p><h3>Carbon and Place is funded developed with the help of:</h3></p>
   <div>
-  <img class="logo" src="/images/ui/edrc-logo.webp"></img>
-  <img class="logo" src="/images/ui/creds-logo.webp"></img>
-  <img class="logo" src="/images/ui/EPSRC.png"></img>
-  <img class="logo" src="/images/ui/leeds-logo.webp"></img>
-  <img class="logo" src="/images/ui/manchester-logo.webp"></img>
-  <img class="logo" src="/images/ui/tfse-logo.webp"></img>
-  <img class="logo" src="/images/ui/steer-logo.webp"></img>
+  <img class="logos" src="/images/ui/edrc-logo.webp"></img>
+  <img class="logos" src="/images/ui/creds-logo.webp"></img>
+  <img class="logos" src="/images/ui/EPSRC.png"></img>
+  <img class="logos" src="/images/ui/leeds-logo.webp"></img>
+  <img class="logos" src="/images/ui/manchester-logo.webp"></img>
+  <img class="logos" src="/images/ui/tfse-logo.webp"></img>
+  <img class="logos" src="/images/ui/steer-logo.webp"></img>
   </div>
+  <div>
+  </div>
+  
+</div>
+
+<div id="footer">
+  <div>
+    <p>Image Credit: <a href="https://commons.wikimedia.org/wiki/File:Leedscityaerialview.jpg">Tigerbww</a></p>
+  </div>
+   
+  
 </div>
 
 
@@ -81,5 +117,6 @@
 <script src="/js/ga_optout.js"></script>
 
 <script src="/js/homepage.js" defer></script>
+<script src="/js/gui.js" defer></script>
 </body>
 </html>
