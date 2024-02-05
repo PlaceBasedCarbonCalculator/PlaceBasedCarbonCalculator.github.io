@@ -24,7 +24,7 @@ h2 {
 }
 
 #banner {
-  height: 80%;
+  height: 60%;
   width: 100%;
   position: relative;
   margin: 0;
@@ -45,15 +45,15 @@ h2 {
 }
 
 #tools {
-  height: 80%;
   width: 100%;
+  min-height: 300px;
   padding: 10px;
   background-color: #f0f0f0;
 }
 
 #footer {
-  height: 40%;
   width: 100%;
+  min-height: 200px;
   padding: 10px;
   background-color: #f5d7d7;
 }
