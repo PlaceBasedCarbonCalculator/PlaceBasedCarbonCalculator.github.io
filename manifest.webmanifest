@@ -1,6 +1,6 @@
 {
-  "name": "Place-Based Carbon Calculator",
-  "short_name": "PBCC",
+  "name": "Carbon & Place",
+  "short_name": "Carbon & Place",
   "start_url": "./",
   "scope": "./",
   "icons": [
