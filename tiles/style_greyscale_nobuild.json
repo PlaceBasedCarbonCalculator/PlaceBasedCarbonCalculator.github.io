@@ -10,7 +10,8 @@
     "composite": {
       "url": "pmtiles://https://pbcc.blob.core.windows.net/pbcc-pmtiles/oszoom_dasymetric.pmtiles",
       "type": "vector"
-    }/*,
+    }
+    /*,
     "terrainSource": {
       "type": "raster-dem",
       "tiles": ["https://pbcc.blob.core.windows.net/rastertiles/dem/{z}/{x}/{y}.webp"],
