@@ -8,7 +8,7 @@ topnav ();
 // Load the Markdown file as text and place it into the content div
 function loadManual ()
 {
-  fetch ('index.md')
+  fetch ('/manual/index.md')
     .then (response => response.text ())
     .then (function (text) {
       document.querySelector ('#content').innerHTML = mdToHtml (text);
