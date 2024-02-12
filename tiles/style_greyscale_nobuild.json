@@ -29,12 +29,6 @@
       "paint": {"fill-color": "rgba(221, 221, 221, 1)"}
     },
     {
-      "id": "hillshading",
-      "type": "hillshade",
-      "source": "hillshadeSource",
-      "source-layer": "hillshadeSource"
-    },
-    {
       "id": "national-parks",
       "type": "fill",
       "source": "composite",
