@@ -284,10 +284,12 @@ const nptUi = (function () {
 			map.addControl(new maplibregl.NavigationControl(), 'top-left');
 			
 			// Add terrain control
+			/*
 			map.addControl(new maplibregl.TerrainControl({
 				source: 'terrainSource',
 				exaggeration: 1.25
 			}), 'top-left');
+			*/
 			
 			// Add buildings; note that the style/colouring may be subsequently altered by data layers
 			nptUi.addBuildings(map);
