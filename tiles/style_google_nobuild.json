@@ -15,7 +15,7 @@
     "composite": {
       "url": "pmtiles://https://pbcc.blob.core.windows.net/pbcc-pmtiles/oszoom_dasymetric.pmtiles",
       "type": "vector"
-    },
+    }/*,
     "terrainSource": {
       "type": "raster-dem",
       "tiles": ["https://pbcc.blob.core.windows.net/rastertiles/dem/{z}/{x}/{y}.webp"],
@@ -32,10 +32,10 @@
     	"maxzoom": 9,
     	"bounds": [-8.650007,49.864674,1.763680,60.860766]
     }
-    
+    */
   },
-  "sprite": "https://pbcc.blob.core.windows.net/mapextras/sprites/greyscale",
-  "glyphs": "https://pbcc.blob.core.windows.net/mapextras/fonts/{fontstack}/{range}.pbf",
+  "sprite": "https://pbcc.blob.core.windows.net/pbcc-mapextras/sprites/greyscale",
+  "glyphs": "https://pbcc.blob.core.windows.net/pbcc-mapextras/fonts/{fontstack}/{range}.pbf",
   "layers": [
     {
       "id": "background",
