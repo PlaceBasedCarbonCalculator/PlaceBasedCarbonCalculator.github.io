@@ -47,18 +47,17 @@ const settings = {
 	placenamesTilesUrl: 'pmtiles://%tileserverUrl/oszoom_names.pmtiles',
 	
 	// Manual
-	manualEditingUrl: 'https://github.com/nptscot/nptscot.github.io/edit/dev/%id/index.md',
+	manualEditingUrl: 'https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/edit/dev/%id/index.md',
 	
 	// OSM data date
 	osmDate: '6 December 2023',
 	
 	// Analytics
-	gaProperty: 'G-QZMHV92YXJ',
+	gaProperty: 'G-Q11V10CDRV',
 	
 	// UI callback
 
 };
   
-
 
 		

@@ -58,7 +58,7 @@
   cursor: pointer;
 }
 
-#welcome .modal-close, #help_modal .modal-close {
+#welcome-modal .modal-close, #help_modal .modal-close {
   color: black;
 }
 
