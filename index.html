@@ -1,126 +1,128 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="content-type" content="text/html">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="Description" content="An interactive map showing the carbon footprint of each neighbourhood in Great Britain">
-    
-    <!--  Social Media Tags -->
-    <meta property="og:title" content="Carbon & Place">
-    <meta property="og:description" content="An interactive map showing the carbon footprint of each neighbourhood in Great Britain">
-    <meta property="og:image" content="/images/thumbnail.jpg">
-    <meta property="twitter:image" content="/images/thumbnail.jpg">
-    <meta property="og:url" content="https://www.carbon.place">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta property="og:site_name" content="Carbon & Place">
-    <meta name="twitter:image:alt" content="Carbon & Place thumbnail">
-    
-    <title>Carbon & Place</title>
-    <!-- PWA support -->
-    <link rel="manifest" href="/manifest.webmanifest">
-    <link rel="apple-touch-icon" href="/images/icons/192.png">
-    <meta name="apple-mobile-web-app-status-bar" content="#0b38e6">
-    <meta name="theme-color" content="#0b38e6">
-    <script src="/app.js" defer></script>
+  <meta charset="utf-8">
+  <meta http-equiv="content-type" content="text/html">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="Description" content="An interactive map showing the carbon footprint of each neighbourhood in Great Britain">
   
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-    <link rel="stylesheet" href="/css/homepage.css">
-    <link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet">
-    <link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet">
+  <!--  Social Media Tags -->
+  <meta property="og:title" content="Carbon & Place">
+  <meta property="og:description" content="An interactive map showing the carbon footprint of each neighbourhood in Great Britain">
+  <meta property="og:image" content="/images/thumbnail.jpg">
+  <meta property="twitter:image" content="/images/thumbnail.jpg">
+  <meta property="og:url" content="https://www.carbon.place">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:site_name" content="Carbon & Place">
+  <meta name="twitter:image:alt" content="Carbon & Place thumbnail">
+  
+  <title>Carbon & Place</title>
+  <!-- PWA support -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/images/icons/192.png">
+  <meta name="apple-mobile-web-app-status-bar" content="#0b38e6">
+  <meta name="theme-color" content="#0b38e6">
+  <script src="/app.js" defer></script>
+
+  <link rel="stylesheet" href="/css/homepage.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet">
+  <link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet">
+ 
+  <!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q11V10CDRV"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag () {dataLayer.push (arguments);}
+		gtag('js', new Date ());
+		gtag('config', 'G-Q11V10CDRV');
+	</script>
+
+ 
 </head>
 <body>
-<!-- Menu Bar -->
-<div class="nav-wrapper">
-	<div class="topnav" id="myTopnav">
-	  <div class="main-title">
-		  	<a href="/">Carbon & Place</a>
-		</div>
-		   <a href="/about">About</a>
-		   <a href="/data">Data</a>
-		   <a href="/manual">Manual</a>
-		   <a href="#" id="expandtopnav" class="icon" aria-label="Expand Menu"><i class="fa fa-bars"></i></a>
-	</div>
-		<div class="logo">
-			<img src="/images/ui/logo.png" alt="Carbon & Place Logo" height="40">
-		</div>	
-</div>
-
-<!-- Banner Image  -->
-<div id="banner">
-  <div id="bannertext">
-    <p><h1>Every Place</h1></p>
-    <p><h1><span id="animated-text">Matters</span></h1></p>
-    
-  </div>
-</div>
-
-<div class="glassstrip">
-<h2>Carbon & Place provides free tools to allow communities, planners, and policy makers to understand their local carbon footprint.</h2>
-<p>Based on the latest research and the best available data, we explore how carbon footprints change between neighbouhoods and how the path to net-zero will vary between places.</p>
-</div>
-
-<!-- Tools -->
-<div id="tools">
-  <a href="/pbcc"><div class="card" style="background-color:rgba(255,0,0,0.1)">
-    <h3>Place-Based Carbon Calculator</h3>
-    <p>Understand your neighbouhoods carbon footprint an how it compares to other places.</p>
-  </div></a>
-  <a href="/transport"><div class="card" style="background-color:rgba(0,255,0,0.1)">
-    <h3>Transport and Accessability Explorer</h3>
-    <p>Transport is the largest source of emissions in the UK</p>
-  </div></a>
-  <a href="/retrofit"><div class="card" style="background-color:rgba(0,0,255,0.1)">
-    <h3>Retrofit Explorer</h3>
-    <p>Britain has some of the coldest and leakiest buildings in Europe, what can we do to fix them?</p>
-  </div></a>
-  <a href="/landuse"><div class="card" style="background-color:rgba(255,225,0,0.1)">
-    <h3>Land Use and Planning Explorer</h3>
-    <p>How we use land and what we put in different places matters, explore how land is used across Great Britain.</p>
-  </div></a>
-  <a href="/landownership"><div class="card" style="background-color:rgba(255,0,255,0.1)">
-    <h3>Land Ownership Explorer</h3>
-    <p>Explore Land Registry data about UK and foreign companies that own land in England and Wales.</p>
-  </div></a>
-</div>
-
-<!-- Footer -->
-<div class="glassstrip">
-  <p><h3>Carbon and Place is funded and developed with the help of:</h3></p>
-  <div>
-  <img class="logos" src="/images/ui/edrc-logo.webp"></img>
-  <img class="logos" src="/images/ui/CREDS-logo.svg"></img>
-  <img class="logos" src="/images/ui/EPSRC.webp"></img>
-  <img class="logos" src="/images/ui/leeds.webp"></img>
-  <img class="logos" src="/images/ui/manchester.webp"></img>
-  <img class="logos" src="/images/ui/tfse.webp"></img>
-  <img class="logos" src="/images/ui/steer.webp"></img>
-  </div>
-  <div>
-  </div>
-  
-</div>
-
-<div id="footer">
-  <div>
-    <p>Image Credit: <a href="https://commons.wikimedia.org/wiki/File:Leedscityaerialview.jpg">Tigerbww</a></p>
-  </div>
-   
-  
-</div>
-
+<!-- Menu -->
+<nav>
+	<a href="/"><img src="/images/ui/logo.png" alt="Carbon & Place Logo" class="logo" /></a>
+	<a href="/about/">About</a>
+	<a href="/data/">Data</a>
+	<a href="/manual/">Manual</a>
+	<a href="#" id="expandtopnav" class="icon" aria-label="Expand menu"><i class="fa fa-bars"></i></a>
+</nav> 
 
 <!-- Cookies Warning  -->
-<div id='cookiewarning' class='cookiewarning'>
-  <p>We use cookies to measure how you use our website so we can understand how you interact with it, which helps us to make improvements. <a href="/privacy">Find out more.</a></p>
-  <p>
-    <button onclick="cookiebutton(true)" class="button button1"><b>OK</b></button>
-    <button onclick="cookiebutton(false)" class="button button2"><b>No</b></button>
-  </p>
+<div id="cookiewarning" class="cookiewarning">
+	<p>We use cookies to measure how you use our website so we can understand how you interact with it, which helps us to make improvements. <a href="/privacy">Find out more.</a></p>
+	<p>
+		<button class="button buttonOK" value="1"><strong>OK</strong></button>
+		<button class="button buttonNO" value=""><strong>No</strong></button>
+	</p>
 </div>
-<script src="/js/ga_optout.js"></script>
 
-<script src="/js/homepage.js" defer></script>
-<script src="/js/gui.js" defer></script>
-</body>
-</html>
+<!-- Art -->
+<div id="page">
+	<div class="parapic" id="parallaxoff">
+	</div>
+	<div class="parapic" id="parallax">
+		<div class="parapic_layer parallax" id="parapic-0" data-speed="2"></div>
+		<div class="parapic_layer parallax" id="parapic-1" data-speed="5"></div>
+		<div class="parapic_layer parallax" id="parapic-2" data-speed="11"></div>
+		<div class="parapic_layer parallax" id="parapic-3" data-speed="30"></div>
+		<div class="parapic_layer parallax" id="parapic-4" data-speed="45"></div>
+		<div class="parapic_layer parallax" id="parapic-5" data-speed="60"></div>
+		<div class="parapic_layer parallax" id="parapic-6" data-speed="80"></div>
+		<div class="parapic_layer parallax" id="parapic-7" data-speed="90"></div>
+		<div class="parapic_layer" id="parapic-8" data-speed="100"></div>
+	</div>
+
+	<div id="main">
+	    <!-- Description -->
+      <div class="glassstrip">
+      <h2>Carbon & Place provides free tools to allow communities, planners, and policy makers to understand their local carbon footprint.</h2>
+      <p>Based on the latest research and the best available data, we explore how carbon footprints change between neighbouhoods and how the path to net-zero will vary between places.</p>
+      </div>
+      <!-- Tools -->
+      <div id="tools">
+        <a href="/pbcc"><div class="card" style="background-color:rgba(255,0,0,0.8)">
+          <h3>Place-Based Carbon Calculator</h3>
+          <p>Understand your neighbouhoods carbon footprint an how it compares to other places.</p>
+        </div></a>
+        <a href="/transport"><div class="card" style="background-color:rgba(0,255,0,0.8)">
+          <h3>Transport and Accessability Explorer</h3>
+          <p>Transport is the largest source of emissions in the UK</p>
+        </div></a>
+        <a href="/retrofit"><div class="card" style="background-color:rgba(0,0,255,0.8)">
+          <h3>Retrofit Explorer</h3>
+          <p>Britain has some of the coldest and leakiest buildings in Europe, what can we do to fix them?</p>
+        </div></a>
+        <a href="/landuse"><div class="card" style="background-color:rgba(255,225,0,0.8)">
+          <h3>Land Use and Planning Explorer</h3>
+          <p>How we use land and what we put in different places matters, explore how land is used across Great Britain.</p>
+        </div></a>
+        <a href="/landownership"><div class="card" style="background-color:rgba(255,0,255,0.8)">
+          <h3>Land Ownership Explorer</h3>
+          <p>Explore Land Registry data about UK and foreign companies that own land in England and Wales.</p>
+        </div></a>
+      </div>
+      <!-- Footer -->
+      <div class="glassstrip">
+        <p><h3>Carbon and Place is funded and developed with the help of:</h3></p>
+        <div>
+          <img class="logos" src="/images/ui/edrc-logo.webp"></img>
+          <img class="logos" src="/images/ui/CREDS-logo.svg"></img>
+          <img class="logos" src="/images/ui/EPSRC.webp"></img>
+          <img class="logos" src="/images/ui/leeds.webp"></img>
+          <img class="logos" src="/images/ui/manchester.webp"></img>
+          <img class="logos" src="/images/ui/tfse.webp"></img>
+          <img class="logos" src="/images/ui/steer.webp"></img>
+        </div>
+      </div>
+	  </div>
+
+</div>
+
+<script type="text/javascript" src="/js/parallax.js"></script>
+    
+	
+
+</body></html>

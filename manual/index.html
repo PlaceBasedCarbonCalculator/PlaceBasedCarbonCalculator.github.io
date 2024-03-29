@@ -6,16 +6,6 @@
 <meta name="Description" content="Carbon & Place Manual">
 <title>Manual | Carbon & Place</title>
 
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-QZMHV92YXJ"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-QZMHV92YXJ');
-</script>
-
 <link rel="stylesheet" href="/css/main.css">
 <link rel="stylesheet" href="/css/manual.css">
 <!-- Set Up Icon -->
@@ -25,7 +15,8 @@
 <!-- Third Party Scrips -->
 <link href="/assets/fontawesome/css/fontawesome.min.css" rel="stylesheet">
 <link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet">
-<link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet'>
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/manual.css">
 
 <!-- Markdown conversion -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
@@ -35,31 +26,35 @@
 <body>
 
 <!-- Menu -->
-<div class="nav-wrapper">
-	<div class="topnav" id="myTopnav">
-		<div class="main-title">
-		  	<a href="/">Carbon & Place</a>
-		</div>
-		   <a href="/about">About</a>
-		   <a href="/data">Data</a>
-		   <a href="/manual">Manual</a>
-		   <a class="smaller" href="/privacy">Privacy &amp; accessibility</a>
-		   <a href="#" id="expandtopnav" class="icon" aria-label="Expand Menu"><i class="fa fa-bars"></i></a>
-	</div>
-		<div class="logo">
-			<img src="/images/npt_logo.png" alt="NPT Logo" height="40">
-		</div>	
+<nav>
+	<a href="/"><img src="/images/ui/logo.png" alt="Carbon & Place Logo" class="logo" /></a>
+	<a href="/about/">About</a>
+	<a href="/data/">Data</a>
+	<a href="/manual/">Manual</a>
+	<a href="#" id="expandtopnav" class="icon" aria-label="Expand menu"><i class="fa fa-bars"></i></a>
+</nav> 
+
+<!-- Cookies Warning  -->
+<div id="cookiewarning" class="cookiewarning">
+	<p>We use cookies to measure how you use our website so we can understand how you interact with it, which helps us to make improvements. <a href="/privacy">Find out more.</a></p>
+	<p>
+		<button class="button buttonOK" value="1"><strong>OK</strong></button>
+		<button class="button buttonNO" value=""><strong>No</strong></button>
+	</p>
 </div>
 
+<div class="editlinkdiv">
+  <p><a id="editlink" href="#" title="Contribute to improving our documentation">Edit this page</a></p>
+</div>
 
-
-<p><a id="editlink" href="#" title="Contribute to improving our documentation">Edit this page</a></p>
 
 <div id="content" class="content">
   <!-- Content from .md will be loaded here -->
 </div>
 
-<script src="/src_npt/nptui.js"></script>
+
+<script src="/js/ui-common.js"></script>
+<script src="/js/settings-common.js"></script>
 <script src="/js/manual.js" async defer></script>
 
 

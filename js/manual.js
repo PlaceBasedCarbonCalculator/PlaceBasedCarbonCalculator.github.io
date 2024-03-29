@@ -16,6 +16,7 @@ function loadManual ()
       createEditLink ();
     })
     .catch (function (error) {
+      console.log(error);
       alert('Failed to load manual text.');
     });
 }

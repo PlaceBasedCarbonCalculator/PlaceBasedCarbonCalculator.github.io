@@ -56,9 +56,16 @@ body {
 }
 
 #editlink {
+  
   float: right;
   margin-right: 15px;
   padding: 5px 10px;
   border: 1px solid #ddd;
   border-radius: 5px;
+}
+
+.editlinkdiv {
+  top: 60px;
+  right: 10px;
+  position: absolute;
 }

@@ -1221,3 +1221,6 @@ const nptUi = (function () {
 	};
 	
 } ());
+
+
+const datasets = { ...datasets_common, ...datasets_extra };

@@ -1,9 +1,10 @@
-// NPT UI implementation code
+// Carbon & Place Common  UI implementation code
+// Shared Map UI, each map also has its own ui.js
 
 /*jslint browser: true, white: true, single: true, for: true, unordered: true, long: true */
 /*global alert, console, window, maplibregl, pmtiles, MaplibreGeocoder, noUiSlider, tippy */
 
-const nptUi = (function () {
+const capUi = (function () {
 	
 	'use strict';
 	
@@ -12,6 +13,7 @@ const nptUi = (function () {
 	let _settings = {};		// Will be populated by constructor
 	let _datasets = {};		// Will be populated by constructor
 	let _map;
+	let _hashComponents = {layers: '/', map: ''};
 	
 	// Functions
 	return {
@@ -23,174 +25,67 @@ const nptUi = (function () {
 			_settings = settings;
 			_datasets = datasets;
 			
-			// Manage analytics cookie setting
-			nptUi.manageAnalyticsCookie ();
-			
-			// Set OSM date in welcome message
-			nptUi.setOsmDate ();
-			
-			// Create welcome screen
-			nptUi.newModal ('welcome');
-			nptUi.updateDate ();
-			
 			// Enable the accordion functionality for the layer controls box and popups
-			nptUi.accordion ();
+			capUi.accordion ();
 			
 			// Layer controls box UI
-			nptUi.layerControlsBoxUi ();
+			capUi.layerControlsBoxUi ();
 			
 			// General GUI topnav function
-			nptUi.topnav ();
+			capUi.topnav ();
 			
 			// Create the map UI
-			_map = nptUi.createMap ();
+			_map = capUi.createMap ();
 			
 			// Manage layers
-			nptUi.manageLayers ();
+			capUi.manageLayers ();
 			
 			// Create popups
-			nptUi.createPopups ();
+			capUi.createPopups ();
 			
 			// Create charts for the defined map layers
-			nptUi.charts ();
+			capUi.charts ();
 			
 			// Handler for help buttons which have a data-help attribute indicating there is a manual section
-			nptUi.handleHelpButtons ();
-			
-			// Create sliders
-			nptUi.createSliders ();
+			capUi.handleHelpButtons ();
 			
 			// Tooltip support
-			nptUi.tooltips ();
+			capUi.tooltips ();
 			
 			// UI specialised function callback, if defined
-			if (typeof settings.uiCallback === 'function') {
-				settings.uiCallback ();
+			if (typeof _settings.uiCallback === 'function') {
+				_settings.uiCallback ();
 			}
+			
+			// Manage analytics cookie setting
+	  	capUi.manageAnalyticsCookie ();
 		},
 		
-		
-		// function to manage analytics cookie setting
-		manageAnalyticsCookie: function ()
+		// Welcome screen
+		welcomeScreen: function ()
 		{
-			// Disable tracking if the opt-out cookie exists.
-			const disableStr = 'ga-disable-' + _settings.gaProperty;
-			if (document.cookie.indexOf(disableStr + '=true') > -1) {
-				window[disableStr] = true;
+			// Show only first time
+			const cookieName = 'welcomescreen';
+			if (capUi.getCookie (cookieName)) {return;}
+			
+			// Create modal
+			const welcomeModal = capUi.newModal ('welcome-modal');
+			welcomeModal.show ();
+			
+			// Set OSM and update dates in the text, if present
+			/*
+			if (document.getElementById ('osmupdatedate')) {
+				document.getElementById ('osmupdatedate').innerHTML = _settings.osmDate;
+			}
+			*/
+			if (document.getElementById ('updatedate')) {
+				document.getElementById ('updatedate').innerText = capUi.formatAsUKDate (document.lastModified);
 			}
 			
-			// Define the cookie name
-			const cookieName = 'NPTtrack';
-			
-			// Handle cookie warning buttons
-			document.querySelectorAll('#cookiewarning button').forEach(function (button) {
-				button.addEventListener('click', function (e) {
-					cookieButton(button.value);
-				});
-			});
-			
-			// Show the cookie warning
-			showCookieWarning();
-			
-			
-			// Opt-out function
-			function gaOptout ()
-			{
-				document.cookie = disableStr + '=true; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/; SameSite=None; Secure';
-				window[disableStr] = true;
-			}
-			
-			
-			// Warning Control
-			function cookieButton (accepted)
-			{
-				if (accepted) {
-					nptUi.setCookie(cookieName, 'true');
-				} else {
-					//alert("Tracking Op-Out Disabled");
-					gaOptout();
-					nptUi.setCookie(cookieName, 'false');
-				}
-				
-				const cookiewarning = document.getElementById ('cookiewarning');
-				cookiewarning.style.display = 'none';
-			}
-			
-			
-			// Cookie warning
-			function showCookieWarning ()
-			{
-				const cookiewarning = document.getElementById ('cookiewarning');
-				const NPTcookie = nptUi.getCookie (cookieName);
-				//console.log ("Cookie status: '" + NPTcookie + "'");
-				cookiewarning.style.display = (NPTcookie === '' ? 'block' : 'none');
-			}
+			// Set cookie
+			capUi.setCookie (cookieName, 'true');
 		},
-		
-		
-		// Function to set the OSM date in the welcome message
-		setOsmDate: function ()
-		{
-			document.getElementById ('osmupdatedate').innerHTML = _settings.osmDate;
-		},
-		
-		
-		// Function to manage modal dialogs
-		newModal: function (modalId)
-		{
-			// Identify the modal
-			const modal = document.getElementById(modalId);
-			
-			// When the user clicks on <span> (x), close the modal
-			const closeButton = document.querySelector('#' + modalId + ' .modal-close');
-			closeButton.addEventListener('click', function () {
-				hide();
-			});
-			
-			// Treat clicking outside of the modal as implied close
-			window.addEventListener('click', function (event) {
-				if (event.target == modal || event.target.id == 'overlay') {
-					hide();
-				}
-			});
-			
-			// Treat escape key as implied close
-			window.addEventListener('keyup', function (event) {
-				if (event.key == 'Escape') {
-					if (window.getComputedStyle(modal).display == 'block') { // I.e. is displayed
-						hide();
-					}
-				}
-			});
-			
-			// Show
-			const show = function ()
-			{
-				document.getElementById('overlay').style.display = 'block';
-				modal.style.display = 'block';
-			};
-			
-			// Hide
-			const hide = function ()
-			{
-				modal.style.display = 'none';
-				document.getElementById('overlay').style.display = 'none';
-			};
-			
-			// Accessor functions
-			return {
-				show: show,
-				hide: hide
-			};
-		},
-		
-		
-		// Function to set the update date in the welcome screen
-		updateDate: function ()
-		{
-			document.getElementById('updatedate').innerText = nptUi.formatAsUKDate(document.lastModified);
-		},
-		
+
 		
 		// Function to manage an accordion
 		accordion: function ()
@@ -214,9 +109,13 @@ const nptUi = (function () {
 		// Function to manage the layer controls box UI
 		layerControlsBoxUi: function ()
 		{
-			// Show the layer controls box, and open up the route network part of this
+			// Show the layer controls box
 			showlayercontrols(true);
-			document.getElementById('rnet_accordion').click();
+
+			// Auto-open a section if required
+			if (document.getElementById('autoopen')) {
+				document.getElementById('autoopen').click ();
+			}
 			
 			// Show layer control box when button clicked on
 			document.querySelector('#showrightbox button').addEventListener('click', function () {
@@ -245,45 +144,89 @@ const nptUi = (function () {
 		topnav: function ()
 		{
 			document.getElementById ('expandtopnav').addEventListener ('click', function (e) {
-				const x = document.getElementById('myTopnav');
-				if (x.className == 'topnav') {
-					x.classList.add ('responsive');
+				const nav = document.querySelector ('nav');
+				if (!nav.classList.contains ('responsive')) {
+					nav.classList.add ('responsive');
 				} else {
-					x.classList.remove ('responsive');
+					nav.classList.remove ('responsive');
 				}
 				e.preventDefault ();
 			});
 		},
 		
+		// Function to parse the URL hash state
+
+		parseUrl: function ()
+		{
+			// Get the hash, e.g. "/layer1,layer2/#8/55.953/-3.138" would be extracted from https://example.com/#/layer1,layer2/#8/55.953/-3.138
+			const hash = window.location.hash.replace (/^#/, '');
+			// Split path component from map compoment
+			const hashComponents = hash.split ('#');
+			// End if not the intended format of /layers/#map , thus retaining the default state of the _hashComponents property
+			if (hashComponents.length != 2) {return;}
+			// Register the change in the state
+			_hashComponents.layers = hashComponents[0];
+			_hashComponents.map = hashComponents[1];
+			//console.log (_hashComponents);
+		},
+
+		// Function to register a state change, adjusting the URL
+		registerUrlStateChange: function (component, value)
+		{
+			// Update the registry
+			_hashComponents[component] = value;
+			//console.log (_hashComponents);
+			// Construct the new hash state
+			const hashState = '#' + _hashComponents.layers + _hashComponents.map;
+
+			// Update the hash state in the browser history
+			const location = window.location.href.replace (/(#.+)?$/, hashState);	// Does correctly work from the first hash onwards (when multiple)
+			window.history.replaceState (window.history.state, null, location);
+
+		},
 		
 		// Function to set up the map UI and controls
 		createMap: function ()
 		{
 			// Create the layer switcher
-			nptUi.layerSwitcherHtml();
+			capUi.layerSwitcherHtml ();
+			
+			// Manage anti-aliasing
+			capUi.antiAliasing ();
+			
+			// Determine initial centre/zoom location, based on the hash if present, else the settings location
+			const initialPosition = (capUi.parseMapHash () || _settings.initialPosition);
 			
 			// Main map setup
 			const map = new maplibregl.Map({
 				container: 'map',
-				style: '/tiles/style_' + nptUi.getBasemapStyle() + '.json',
-				center: settings.initialPosition.center,
-				zoom: settings.initialPosition.zoom,
-				maxZoom: settings.maxZoom,
-				minZoom: settings.minZoom,
+				style: '/tiles/style_' + capUi.getBasemapStyle() + '.json',
+				center: initialPosition.center,
+				zoom: initialPosition.zoom,
+				maxZoom: _settings.maxZoom,
+				minZoom: _settings.minZoom,
 				maxPitch: 85,
-				hash: true,
+				hash: false,	// Emulating the hash manually for now; see layerStateUrl
 				antialias: document.getElementById('antialiascheckbox').checked
 			});
+			
+			// Manage hash manually, while we need full control of hashes to contain layer state
+			capUi.manageMapHash (map);
 			
 			// pmtiles
 			let protocol = new pmtiles.Protocol();
 			maplibregl.addProtocol('pmtiles', protocol.tile);
 			
-			// Add geocoder control; see: https://github.com/maplibre/maplibre-gl-geocoder
-			map.addControl(new MaplibreGeocoder(
-				nptUi.geocoderApi(), {
+			// Add geocoder control; see: https://github.com/maplibre/maplibre-gl-geocoder/blob/main/API.md
+			map.addControl (new MaplibreGeocoder(
+				capUi.geocoderApi (), {
 					maplibregl: maplibregl,
-					collapsed: true
+					collapsed: true,
+					marker: false,
+					flyTo: {
+						// #!# Ideally should be bounds: ... but this requires using .on and then result, which means bigger changes
+						zoom: 13
+					}
 				}
 			), 'top-left');
 			
@@ -291,20 +234,24 @@ const nptUi = (function () {
 			map.addControl(new maplibregl.NavigationControl(), 'top-left');
 			
 			// Add terrain control
+			/*
 			map.addControl(new maplibregl.TerrainControl({
 				source: 'terrainSource',
 				exaggeration: 1.25
 			}), 'top-left');
+			*/
 			
 			// Add buildings; note that the style/colouring may be subsequently altered by data layers
-			nptUi.addBuildings(map);
+			/*
+			capUi.addBuildings(map);
 			document.getElementById('basemapform').addEventListener('change', function (e) {
-				nptUi.addBuildings(map);
+				capUi.addBuildings(map);
 			});
+			*/
 			
 			// Add placenames support
 			map.once('idle', function () {
-				nptUi.placenames(map);
+				capUi.placenames(map);
 			});
 			
 			// Add geolocation control
@@ -323,7 +270,7 @@ const nptUi = (function () {
 				onAdd(map) {
 					const div = document.createElement('div');
 					div.className = 'maplibregl-ctrl maplibregl-ctrl-group';
-					div.innerHTML = '<button aria-label="Change basemap"><img src="/images/ui/basemaps/basemap.svg" title="Change basemap" /></button>';
+					div.innerHTML = '<button aria-label="Change basemap"><img src="/images/ui/basemaps/basemap.svg" class="basemap" title="Change basemap" /></button>';
 					div.addEventListener('contextmenu', (e) => e.preventDefault());
 					div.addEventListener('click', function () {
 						const box = document.getElementById('basemapcontrol');
@@ -334,22 +281,24 @@ const nptUi = (function () {
 			}
 			map.addControl(new BasemapButton(), 'top-left');
 			
-			// Add scale
-			map.addControl(new maplibregl.ScaleControl({
-				maxWidth: 80,
-				unit: 'metric'
-			}), 'bottom-left');
+			
 			
 			// Add attribution
 			map.addControl(new maplibregl.AttributionControl({
 				compact: true,
-				customAttribution: 'Contains OS data © Crown copyright 2021, Satelite map © ESRI 2023, © OpenStreetMap contributors'
-			}), 'bottom-right');
+				customAttribution: 'Contains OS data © Crown copyright 2024, Satelite map © ESRI 2024, © OpenStreetMap contributors'
+			}), 'bottom-left');
 			
 			// Antialias reload
 			document.getElementById('antialiascheckbox').addEventListener('click', function () {
 				location.reload();
 			});
+			
+			// Add scale
+			map.addControl(new maplibregl.ScaleControl({
+				maxWidth: 80,
+				unit: 'metric'
+			}), 'bottom-left');
 			
 			// Fire map ready when ready, which layer-enabling can be picked up
 			map.once('idle', function () {
@@ -360,13 +309,13 @@ const nptUi = (function () {
 			
 			// Change map and reload state on basemap change
 			document.getElementById('basemapform').addEventListener('change', function () {
-				const styleName = nptUi.getBasemapStyle();
+				const styleName = capUi.getBasemapStyle();
 				const styleCurrent = map.getStyle().name;
 				if (styleCurrent == styleName) {
 					return;
 				}
 				console.log('Restyling from ' + styleCurrent + ' to ' + styleName);
-				map.setStyle('tiles/style_' + styleName + '.json');
+				map.setStyle('/tiles/style_' + styleName + '.json');
 				
 				// Fire map ready event when ready
 				map.once('idle', function () {
@@ -380,6 +329,67 @@ const nptUi = (function () {
 			return map;
 		},
 		
+		// Function to manage the map hash manually; this is a minimal implementation covering only what we need
+		// Covers zoon,lat,lon; no support for bearing or pitch
+		// Based on the native implementation at: https://github.com/maplibre/maplibre-gl-js/blob/main/src/ui/hash.ts#L11
+
+		manageMapHash: function (map)
+		{
+			// Function to determine the map hash
+			function mapHash (map)
+			{
+				// Assemble the map hash from the map position
+				const center = map.getCenter ();
+				const zoom = Math.round (map.getZoom () * 100) / 100;
+				// derived from equation: 512px * 2^z / 360 / 10^d < 0.5px
+				const precision = Math.ceil ((zoom * Math.LN2 + Math.log (512 / 360 / 0.5)) / Math.LN10);
+				const m = Math.pow (10, precision);
+				const lng = Math.round (center.lng * m) / m;
+				const lat = Math.round (center.lat * m) / m;
+				const mapHash = `#${zoom}/${lat}/${lng}`;
+				// Update the hash state
+				capUi.registerUrlStateChange ('map', mapHash);
+			}
+
+			// In initial state and after moving the map, set the hash in the URL
+			mapHash (map);
+			map.on ('moveend', function () {
+				mapHash (map);
+			});
+
+			// Function to determine the map state
+			function setLocationFromHash (map) {
+				const location = capUi.parseMapHash ();
+				if (location) {
+					map.jumpTo (location);
+				}
+			}
+
+			// On hash change, set the map location; initial is set in map initialisation for efficiency
+			addEventListener ('hashchange', function () {
+				setLocationFromHash (map);
+			});
+
+		},
+
+		// Function to parse a map hash location to center and zoom components
+		parseMapHash: function ()
+		{
+			// Extract the hash and split by /
+			const mapHash = _hashComponents.map.replace (new RegExp ('^#'), '');	// Do not read window.location.hash directly, as that will contain layer state
+			const parts = mapHash.split ('/');
+
+			// If three parts, parse out
+			if (parts.length == 3) {
+				return {
+					center: [parts[2], parts[1]],
+					zoom: parts[0]
+				};
+			}
+
+			// Else return false
+			return false;
+		},
 		
 		// Generate layer switcher HTML
 		layerSwitcherHtml: function ()
@@ -387,13 +397,46 @@ const nptUi = (function () {
 			// Create each switcher button
 			const options = [];
 			Object.entries(settings.basemapStyles).forEach(([id, basemap]) => {
-				let option = `<input type="radio" name="basemap" id="${id}-basemap" value="${id}"` + (id == settings.basemapStyleDefault ? ' checked="checked"' : '') + ' />';
+				let option = `<input type="radio" name="basemap" id="${id}-basemap" value="${id}"` + (id == _settings.basemapStyleDefault ? ' checked="checked"' : '') + ' />';
 				option += `<label for="${id}-basemap"><img src="/images/ui/basemaps/${id}.png" title="${basemap.title}" /></label>`;
 				options.push(option);
 			});
 			
 			// Insert radiobuttons into form
 			document.getElementById('basemapform').innerHTML = options.join(' ');
+		},
+		
+		// Generate layer switcher HTML
+
+		antiAliasing: function ()
+
+		{
+			// Get the cookie value
+			const cookieName = 'antialias';
+			let cookieValue = capUi.getCookie (cookieName);
+			// Enable anti-aliasing by default on desktop devices, since they are likely to have sufficient power
+			if (cookieValue == '') {
+				if (!capUi.isMobileDevice ()) {
+					cookieValue = 'true';
+					capUi.setCookie (cookieName, cookieValue);
+				}
+			}
+			// Set form value if required
+			document.getElementById ('antialiascheckbox').checked = (cookieValue == 'true' ? 'checked' : '');
+
+			// Force system reload on change
+			document.getElementById ('antialiascheckbox').addEventListener ('click', function () {
+				capUi.setCookie (cookieName, (document.getElementById ('antialiascheckbox').checked ? 'true' : 'false'));
+				location.reload ();
+			});
+
+		},
+
+
+		// Determine whether the device is a mobile device
+		isMobileDevice: function ()
+		{
+			return (typeof window.orientation !== 'undefined');
 		},
 		
 		
@@ -405,6 +448,7 @@ const nptUi = (function () {
 		
 		
 		// Function to add the buildings layer
+		/*
 		addBuildings: function (map)
 		{
 			// When ready
@@ -414,7 +458,7 @@ const nptUi = (function () {
 				if (!map.getSource ('dasymetric')) {
 					map.addSource ('dasymetric', {
 						'type': 'vector',
-						'url': settings.buildingsTilesUrl.replace ('%tileserverUrl', settings.tileserverUrl),
+						'url': _settings.buildingsTilesUrl.replace ('%tileserverUrl', _settings.tileserverUrl),
 					});
 				}
 				
@@ -442,7 +486,7 @@ const nptUi = (function () {
 				}
 			});
 		},
-		
+		*/
 		
 		// Function to manage display of placenames
 		placenames: function (map)
@@ -450,7 +494,7 @@ const nptUi = (function () {
 			// Add the source
 			map.addSource ('placenames', {
 				'type': 'vector',
-				'url': settings.placenamesTilesUrl.replace ('%tileserverUrl', settings.tileserverUrl),
+				'url': _settings.placenamesTilesUrl.replace ('%tileserverUrl', _settings.tileserverUrl),
 			});
 			
 			// Load the style definition
@@ -509,7 +553,7 @@ const nptUi = (function () {
 							features.push(point);
 						}
 					} catch (e) {
-						console.error(`Failed to forwardGeocode with error: ${e}`);
+						console.error (`Failed to forwardGeocode with error: ${e}`);
 					}
 					
 					return {
@@ -526,31 +570,33 @@ const nptUi = (function () {
 		manageLayers: function ()
 		{
 			// Add layers when the map is ready (including after a basemap change)
-			document.addEventListener('@map/ready', function () {
+			document.addEventListener ('@map/ready', function () {
 				
 				// Initialise datasets (sources and layers)
-				nptUi.initialiseDatasets();
+				capUi.initialiseDatasets ();
 				
-				// Set initial state for all layers
+				// Set initial visibility based on URL state, by ensuring each such checkbox is ticked
+				const initialLayersString = _hashComponents.layers.replace (new RegExp ('^/'), '').replace (new RegExp ('/$'), '');		// Trim start/end slash(es)
+				if (initialLayersString.length) {
+					const initialLayers = initialLayersString.split (',');
+					Object.keys (_datasets.layers).forEach (layerId => {
+						const isEnabled = (initialLayers.includes (layerId));
+						document.querySelector ('input.showlayer[data-layer="' + layerId + '"]').checked = isEnabled;
+						document.querySelector ('input.showlayer[data-layer="' + layerId + '"]').dispatchEvent (new CustomEvent ('change'));
+					});
+				}
+				document.dispatchEvent (new Event ('@map/initiallayersset', {'bubbles': true}));
+
+				// Implement initial visibility state for all layers
 				Object.keys(_datasets.layers).forEach(layerId => {
-					nptUi.toggleLayer(layerId);
+					capUi.toggleLayer(layerId);
 				});
 				
-				// Handle layer change controls, each marked with the updatelayer class
-				document.querySelectorAll('.updatelayer').forEach((input) => {
-					input.addEventListener('change', function (e) {
-						let layerId = e.target.id;
-						// #!# The input IDs should be standardised, to replace this list of regexp matches
-						layerId = layerId.replace(/checkbox$/, ''); // Checkboxes, e.g. data_zonescheckbox => data_zones
-						layerId = layerId.replace(/_checkbox_.+$/, ''); // Checkboxes, e.g. data_zones_checkbox_dasymetric => data_zones
-						layerId = layerId.replace(/_slider-.+$/, ''); // Slider hidden inputs, e.g. rnet_slider-quietness => rnet
-						layerId = layerId.replace(/_selector$/, ''); // Dropdowns, e.g. data_zones_selector => data_zones   #!# Should be input, but currently data_zones_input would clash with rnet_*_input on next line
-						layerId = layerId.replace(/_[^_]+_input$/, ''); // Dropdowns, e.g. rnet_purpose_input => rnet
-						nptUi.toggleLayer(layerId);
-						// #!# Workaround, pending adapting layerId to be a list of affected layers
-						if (layerId == 'rnet') {
-							nptUi.toggleLayer('rnet-simplified');
-						}
+				// Handle layer change controls, each marked with .showlayer or .updatelayer
+				document.querySelectorAll ('.showlayer, .updatelayer').forEach ((input) => {
+					input.addEventListener ('change', function () {
+						const layerId = input.dataset.layer;
+						capUi.toggleLayer(layerId);
 					});
 				});
 			});
@@ -564,7 +610,7 @@ const nptUi = (function () {
 			
 			// Replace tileserver URL placeholder in layer definitions
 			Object.entries(_datasets.layers).forEach(([layerId, layer]) => {
-				let tileserverUrl = (settings.tileserverTempLocalOverrides[layerId] ? settings.tileserverTempLocalOverrides[layerId] : settings.tileserverUrl);
+				let tileserverUrl = (_settings.tileserverTempLocalOverrides[layerId] ? _settings.tileserverTempLocalOverrides[layerId] : _settings.tileserverUrl);
 				_datasets.layers[layerId].source.url = layer.source.url.replace ('%tileserverUrl', tileserverUrl)
 			});
 			
@@ -579,128 +625,25 @@ const nptUi = (function () {
 		},
 		
 		
-		toggleLayer: function (layerName)
+		toggleLayer: function (layerId)
 		{
-			//console.log ('Toggling layer ' + layerName);
+			console.log ('Toggling layer ' + layerId);
 			
-			// Check for a dynamic styling function, if any, as layerName + 'Styling', e.g. rnetStyling
-			const stylingFunction = layerName.replace('-', '_') + 'Styling'; // NB hyphens not legal in function names
-			if (typeof nptUi[stylingFunction] === 'function') {
-				nptUi[stylingFunction] (layerName, _map, _datasets, nptUi.createLegend);
+			// Check for a dynamic styling callback and run it if present
+			if (_datasets.layerStyling[layerId]) {
+				_datasets.layerStyling[layerId] (layerId, _map, _settings, _datasets, capUi.createLegend);
 			}
 			
 			// Set the visibility of the layer, based on the checkbox value
-			const isVisible = document.getElementById(layerName + 'checkbox').checked;
-			_map.setLayoutProperty(layerName, 'visibility', (isVisible ? 'visible' : 'none'));
+			const isVisible = document.getElementById(layerId + 'checkbox').checked;
+			_map.setLayoutProperty(layerId, 'visibility', (isVisible ? 'visible' : 'none'));
 		},
 		
-		
-		// Rnet styling
-		rnetStyling: function (layerName, map, datasets, createLegend /* callback */)
-		{
-			nptUi.handleRnet (layerName, map, datasets, createLegend);
-		},
-		
-		
-		// Rnet simplified styling
-		rnet_simplifiedStyling: function (layerName, map, datasets, createLegend /* callback */)
-		{
-			nptUi.handleRnet (layerName, map, datasets, createLegend);
-		},
-		
-		
-		handleRnet: function (layerId, map, datasets, createLegend /* callback */)
-		{
-			// Update the Legend - Do this even if map layer is off
-			const layerColour = document.getElementById('rnet_colour_input').value;
-			createLegend (datasets.legends.rnet, layerColour, 'linecolourlegend');
-			
-			// No special handling needed if not visible
-			if (!document.getElementById(layerId + 'checkbox').checked) {
-				return;
-			}
-			
-			// Determine the layer width field
-			const layerWidthField = nptUi.getLayerWidthField();
-			
-			// Parse route network sliders to be used as filters
-			const sliders = {};
-			document.querySelectorAll("input[id^='rnet_slider-']").forEach(slider => {
-				const sliderId = slider.id.replace('rnet_slider-', '');
-				const sliderValue = slider.value.split('-');
-				sliders[sliderId] = {
-					min: Number(sliderValue[0]),
-					max: Number(sliderValue[1])
-				};
-			});
-			
-			// Only filter cyclists if scenario set
-			const filter = ['all',
-				['>=', layerWidthField, sliders.cycle.min],
-				['<=', layerWidthField, sliders.cycle.max],
-				['>=', 'Quietness', sliders.quietness.min],
-				['<=', 'Quietness', sliders.quietness.max],
-				['>=', 'Gradient', sliders.gradient.min],
-				['<=', 'Gradient', sliders.gradient.max]
-			];
-			
-			// Define line colour
-			const line_colours = {
-				'none': datasets.lineColours.rnet.none,
-				'flow': [
-					'step', ['get', layerWidthField],
-					...datasets.lineColours.rnet.flow,
-					'#FF00C5'
-				],
-				'quietness': [
-					'step', ['get', 'Quietness'],
-					...datasets.lineColours.rnet.quietness,
-					'#000000'
-				],
-				'gradient': [
-					'step', ['get', 'Gradient'],
-					...datasets.lineColours.rnet.gradient,
-					'#000000'
-				]
-			};
-			
-			// Define line width
-			// Implements the formula y = (3 / (1 + exp(-3*(x/1000 - 1.6))) + 0.3)
-			// This code was hard to work out!
-			const line_width = [
-				'interpolate',
-				['linear'],
-				['zoom'],
-				12, ['*', 2.1, ['+', 0.3, ['/', 3, ['+', 1, ['^', 2.718, ['-', 2.94, ['*', ['get', layerWidthField], 0.0021]]]]]]],
-				14, ['*', 5.25, ['+', 0.3, ['/', 3, ['+', 1, ['^', 2.718, ['-', 2.94, ['*', ['get', layerWidthField], 0.0021]]]]]]],
-				15, ['*', 7.5, ['+', 0.3, ['/', 3, ['+', 1, ['^', 2.718, ['-', 2.94, ['*', ['get', layerWidthField], 0.0021]]]]]]],
-				16, ['*', 18, ['+', 0.3, ['/', 3, ['+', 1, ['^', 2.718, ['-', 2.94, ['*', ['get', layerWidthField], 0.0021]]]]]]],
-				18, ['*', 52.5, ['+', 0.3, ['/', 3, ['+', 1, ['^', 2.718, ['-', 2.94, ['*', ['get', layerWidthField], 0.0021]]]]]]],
-			];
-			
-			// Set the filter
-			map.setFilter (layerId, filter);
-			
-			// Set paint properties
-			map.setPaintProperty (layerId, 'line-color', line_colours[layerColour]);
-			map.setPaintProperty (layerId, 'line-width', line_width);
-		},
-		
-		
-		// Function to determine layer width field
-		// #!# Need to merge with popup.js: ncycleField ()
-		getLayerWidthField: function ()
-		{
-			const layerPurpose = document.getElementById('rnet_purpose_input').value;
-			const layerType = document.getElementById('rnet_type_input').value;
-			const layerScenario = document.getElementById('rnet_scenario_input').value;
-			const layerWidthField = layerPurpose + '_' + layerType + '_' + layerScenario;
-			return layerWidthField;
-		},
-		
+	
 		
 		// Data zones styling (including buildings styling)
-		data_zonesStyling: function (layerName, map, datasets, createLegend /* callback */)
+		//data_zonesStyling: function (layerName, map, datasets, createLegend /* callback */)
+		/*
 		{
 			// Update the legend (even if map layer is off)
 			const fieldId = document.getElementById('data_zones_selector').value;
@@ -710,22 +653,25 @@ const nptUi = (function () {
 			const daysymetricMode = document.getElementById('data_zones_checkbox_dasymetric').checked;
 			
 			// Set paint properties
-			map.setPaintProperty ('data_zones', 'fill-color', ['step', ['get', fieldId], ...nptUi.getStyleColumn(fieldId, datasets)]);
+			map.setPaintProperty ('data_zones', 'fill-color', ['step', ['get', fieldId], ...capUi.getStyleColumn(fieldId, datasets)]);
 			map.setPaintProperty ('data_zones', 'fill-opacity', (daysymetricMode ? 0.1 : 0.8)); // Very faded-out in daysymetric mode, as the buildings are coloured
 			
 			// Set buildings layer colour/visibility
-			const buildingColour = nptUi.getBuildingsColour();
+			const buildingColour = capUi.getBuildingsColour();
 			map.setPaintProperty ('dasymetric', 'fill-extrusion-color', (buildingColour || '#9c9898'));
 			map.setLayoutProperty ('dasymetric', 'visibility', (buildingColour ? 'visible' : 'none'));
 		},
+		*/
 		
 		
+		
+		/*
 		// Function to determine the buildings colour
 		getBuildingsColour: function ()
 		{
 			// If datazones is off, buildings shown, if vector style, as static colour appropriate to the basemap
 			if (!document.getElementById('data_zonescheckbox').checked) {
-				const styleName = nptUi.getBasemapStyle();
+				const styleName = capUi.getBasemapStyle();
 				return settings.basemapStyles[styleName].buildingColour;
 			}
 			
@@ -734,20 +680,20 @@ const nptUi = (function () {
 				const layerId = document.getElementById('data_zones_selector').value;
 				return ['step',
 					['get', layerId],
-					...nptUi.getStyleColumn(layerId, datasets)
+					...capUi.getStyleColumn(layerId, datasets)
 				];
 			}
 			
 			// Default to gray
 			return '#9c9898';
 		},
-		
+		*/
 		
 		// Function to determine the style column
 		getStyleColumn: function (layerId, datasets)
 		{
-			const style_col_selected = datasets.lineColours.data_zones.hasOwnProperty(layerId) ? layerId : '_';
-			return datasets.lineColours.data_zones[style_col_selected];
+			const style_col_selected = datasets.circleColours.landowners.hasOwnProperty(layerId) ? layerId : '_';
+			return datasets.circleColours.landowners[style_col_selected];
 		},
 		
 		
@@ -755,10 +701,10 @@ const nptUi = (function () {
 		{
 			// Create the legend HTML
 			// #!# Should be a list, not nested divs
-			let legendHtml = '<div class="l_r">';
+			let legendHtml = '<div class="l_rvertical">';
 			selected = (legendColours.hasOwnProperty(selected) ? selected : '_');
 			legendColours[selected].forEach(legendColour => {
-				legendHtml += `<div class="lb"><span style="background-color: ${legendColour[1]}"></span>${legendColour[0]}</div>`;
+				legendHtml += `<div class="lbvertial"><span style="background-color: ${legendColour[1]}"></span>${legendColour[0]}</div>`;
 			})
 			legendHtml += '</div>';
 			
@@ -766,13 +712,32 @@ const nptUi = (function () {
 			document.getElementById(selector).innerHTML = legendHtml;
 		},
 		
+		// Function to manage layer state URL
+		layerStateUrl: function ()
+		{
+			// Register the IDs of all checked layers, first resetting the list
+			const enabledLayers = [];
+			Object.entries (_datasets.layers).forEach (([layerId, layer]) => {
+				const isEnabled = document.querySelector ('input.showlayer[data-layer="' + layerId + '"]').checked;
+				if (isEnabled) {
+					enabledLayers.push (layerId);
+				}
+			});
+
+			// Compile the layer state URL
+			const enabledLayersHash = '/' + enabledLayers.join (',') + (enabledLayers.length ? '/' : '');
+
+			// Register a state change for the URL
+			capUi.registerUrlStateChange ('layers', enabledLayersHash);
+
+		},
 		
 		// Function to create popups
 		createPopups: function ()
 		{
 			// Add to each layer
 			Object.entries (_datasets.popups).forEach (([layerId, options]) => {
-				nptUi.mapPopups (layerId, options);
+				capUi.mapPopups (layerId, options);
 			});
 		},
 		
@@ -885,7 +850,7 @@ const nptUi = (function () {
 				initialiseChartsModalHtml (mapLayerId);
 				
 				// Create the modal
-				const location_modal = nptUi.newModal (mapLayerId + '-chartsmodal');
+				const location_modal = capUi.newModal (mapLayerId + '-chartsmodal');
 				
 				// Initialise the HTML structure for the set of chart boxes, writing in the titles and descriptions, and setting the canvas ID
 				initialiseChartBoxHtml(mapLayerId, chartDefinition.charts);
@@ -931,8 +896,9 @@ const nptUi = (function () {
 							// Create the charts
 							createCharts(chartDefinition, locationData);
 						})
-						.catch(function (error) {
-							alert('Failed to get data for this location. Please try refreshing the page.');
+						.catch(function (error) {	// Any error, including within called code, not just retrieval failure
+							alert ('Failed to get data for this location, or to process it correctly. Please try refreshing the page.');
+							console.log (error);
 						});
 				});
 			}
@@ -954,6 +920,7 @@ const nptUi = (function () {
 				const template = document.querySelector(`#${mapLayerId}-chartsmodal .chart-template`);
 				charts.forEach((chart) => {
 					const chartBox = template.content.cloneNode(true);
+					chartBox.querySelector('.chart-wrapper').id = chart[0] + '-chartrow';
 					chartBox.querySelector('.chart-title').innerText = chart[1];
 					chartBox.querySelector('.chart-description').innerText = chart[2];
 					chartBox.querySelector('.chart-container canvas').id = chart[0] + '-chart';
@@ -967,6 +934,11 @@ const nptUi = (function () {
 			{
 				// Create each chart
 				chartDefinition.charts.forEach((chart, i) => {
+				  
+				  // Clear existing if present
+					if (chartHandles[i]) {
+						chartHandles[i].destroy();
+					}
 					
 					// Assemble the datasets to be shown
 					const datasets = [];
@@ -1039,7 +1011,7 @@ const nptUi = (function () {
 			document.querySelectorAll ('.helpbutton').forEach (function (button) {
 				if (button.dataset.help) { // E.g. data-help="scenario" refers to the scenario section
 					button.addEventListener ('click', function () {
-						nptUi.showHelp (button.dataset.help);
+						capUi.showHelp (button.dataset.help);
 					});
 				}
 			});
@@ -1060,7 +1032,7 @@ const nptUi = (function () {
 					const extract = result[1];
 					
 					// Convert to HTML
-					const html = nptUi.mdToHtml (extract);
+					const html = capUi.mdToHtml (extract);
 					
 					// Parse to HTML
 					const parser = new DOMParser ();
@@ -1090,110 +1062,125 @@ const nptUi = (function () {
 			return html;
 		},
 		
-		
-		// Function to create the sliders
-		createSliders: function ()
-		{
-			// Find each div to be converted to a slider
-			document.querySelectorAll('div.slider-styled').forEach(div => {
-		
-				// Calculate the attributes based on an associated <datalist>
-				const attributes = nptUi.sliderAttributes(div.id);
-		
-				// Create the slider
-				noUiSlider.create(div, {
-					start: [attributes.min, attributes.max],
-					connect: true,
-					range: attributes.range,
-					pips: {
-						mode: 'range',
-						density: attributes.density,
-						format: attributes.format
-					}
-				});
-		
-				// Define handler to proxy the result to hidden input fields, with value "<numStart>-<numFinish>"
-				const slider = div.id.replace('slider-', '');
-				div.noUiSlider.on('update', function () {
-					document.getElementById('rnet_slider-' + slider).value = Number(div.noUiSlider.get()[0]) + '-' + Number(div.noUiSlider.get()[1]);
-					document.getElementById('rnet_slider-' + slider).dispatchEvent(new Event('change'));
-				});
-			});
-		},
-		
-		
-		// Function to determine the slider attributes based on a datalist accompanying the slider element
-		sliderAttributes: function (sliderId)
-		{
-			// Start an object to hold range, min, max, density, format
-			const sliderAttributes = {};
-		
-			// Identify the datalist
-			const datalistElement = document.getElementById(sliderId + '-values');
-			if (!datalistElement) {
-				console.log('ERROR in HTML: No <datalist> defined for slider ' + sliderId);
-				return {};
-			}
-		
-			// Loop through each datalist value, e.g. slider-cycle should be accompanied by <datalist id="slider-cycle-values">
-			sliderAttributes.range = {};
-			let increments;
-			const sliderOptions = Array.from(datalistElement.options);
-			sliderOptions.forEach((option, index) => {
-		
-				// Determine the increment to the next; last item has no increment; use defined or calculated for others
-				if (index == (sliderOptions.length - 1)) { // Last
-					increments = null;
-				} else if (option.dataset.hasOwnProperty('increments')) { // Increments defined
-					increments = parseInt(option.dataset.increments);
-				} else { // Increments is difference from current to next, e.g. 1 then 10 => 9
-					increments = parseInt(sliderOptions[index + 1].value - option.value);
-				}
-		
-				// Register result, e.g. {"12.5%": [1, 9], ...}
-				sliderAttributes.range[option.dataset.position] = [parseInt(option.value), increments]; // E.g. [1, 9]
-			});
-		
-			// Add min/max
-			sliderAttributes.min = parseInt(sliderOptions[0].value);
-			sliderAttributes.max = parseInt(sliderOptions[sliderOptions.length - 1].value);
-		
-			// Add density
-			sliderAttributes.density = parseInt(datalistElement.dataset.density);
-		
-			// Add format labels, if any
-			const labels = {};
-			sliderOptions.forEach((option, index) => {
-				if (option.dataset.hasOwnProperty('label')) {
-					labels[option.value] = option.dataset.label;
-				}
-			});
-			if (Object.keys(labels).length) {
-				sliderAttributes.format = {
-					to: function (value) {
-						return (labels.hasOwnProperty(value) ? labels[value] : value);
-					}
-				};
-			} else {
-				sliderAttributes.format = null;
-			}
-		
-			// Return the result
-			//console.log ('Slider values for id ' + sliderId + ':', sliderAttributes);
-			return sliderAttributes;
-		},
-		
-		
 		// Function to add tooltips
 		tooltips: function ()
 		{
 			tippy('[title]', {
-				content(reference) {
-				const title = reference.getAttribute('title');
-				reference.removeAttribute('title');
-				return title;
+				content (reference) {
+					const title = reference.getAttribute('title');
+					reference.removeAttribute('title');
+					return title;
 				},
 			});
+		},
+		
+		// function to manage analytics cookie setting
+
+		manageAnalyticsCookie: function ()
+		{
+
+			// Disable tracking if the opt-out cookie exists.
+			const disableStr = 'ga-disable-' + _settings.gaProperty;
+			if (document.cookie.indexOf(disableStr + '=true') > -1) {
+				window[disableStr] = true;
+			}
+
+			// Define the cookie name
+			const cookieName = 'analyticstrack';
+
+			// Handle cookie warning buttons
+
+			document.querySelectorAll('#cookiewarning button').forEach(function (button) {
+				button.addEventListener('click', function (e) {
+					cookieButton(button.value);
+				});
+			});
+
+			// Show the cookie warning
+			showCookieWarning();
+
+			// Opt-out function
+			function gaOptout ()
+			{
+				document.cookie = disableStr + '=true; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/; SameSite=None; Secure';
+				window[disableStr] = true;
+			}
+
+			// Warning Control
+			function cookieButton (accepted)
+			{
+				if (accepted) {
+					capUi.setCookie(cookieName, 'true');
+				} else {
+					//alert("Tracking Op-Out Disabled");
+					gaOptout();
+					capUi.setCookie(cookieName, 'false');
+				}
+				const cookiewarning = document.getElementById ('cookiewarning');
+				cookiewarning.style.display = 'none';
+			}
+
+			// Cookie warning
+			function showCookieWarning ()
+			{
+				const cookiewarning = document.getElementById ('cookiewarning');
+				const cookie = capUi.getCookie (cookieName);
+				//console.log ("Cookie status: '" + cookie + "'");
+				cookiewarning.style.display = (cookie === '' ? 'block' : 'none');
+
+			}
+
+		},
+
+		// Function to manage modal dialogs
+		newModal: function (modalId)
+		{
+			// Identify the modal
+			const modal = document.getElementById(modalId);
+      
+			// When the user clicks on <span> (x), close the modal
+			const closeButton = document.querySelector('#' + modalId + ' .modal-close');
+			closeButton.addEventListener('click', function () {
+			  console.log("Modal setup");
+				hide();
+			});
+			
+			// Treat clicking outside of the modal as implied close
+			window.addEventListener('click', function (event) {
+				if (event.target == modal || event.target.id == 'overlay') {
+					hide();
+				}
+			});
+
+			// Treat escape key as implied close
+			window.addEventListener('keyup', function (event) {
+				if (event.key == 'Escape') {
+					if (window.getComputedStyle(modal).display == 'block') { // I.e. is displayed
+						hide();
+					}
+				}
+			});
+
+			// Show
+			const show = function ()
+			{
+				document.getElementById('overlay').style.display = 'block';
+				modal.style.display = 'block';
+			};
+
+			// Hide
+			const hide = function ()
+			{
+				modal.style.display = 'none';
+				document.getElementById('overlay').style.display = 'none';
+			};
+
+			// Accessor functions
+			return {
+				show: show,
+				hide: hide
+			};
+
 		},
 
 
@@ -1210,10 +1197,10 @@ const nptUi = (function () {
 		
 		
 		// Generic cookie managment functions
-		setCookie: function (name, value)
+		setCookie: function (name, value, days = 100)
 		{
 			const d = new Date();
-			d.setTime(d.getTime() + (1000 * 24 * 60 * 60 * 1000));
+			d.setTime(d.getTime() + (24 * 60 * 60 * days * 1000));	// setTime is in ms
 			const expires = 'expires=' + d.toUTCString();
 			document.cookie = name + '=' + value + ';' + expires + ';path=/';
 		},

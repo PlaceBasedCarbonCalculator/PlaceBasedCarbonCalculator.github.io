@@ -1,5 +1,5 @@
 // Data definitions, i.e. layers, charts, etc.
-const datasets = {
+const datasets_extra = {
 	
 	// Data layers
 	layers: {
@@ -65,36 +65,6 @@ const datasets = {
 				},
 			}
 		}
-		/*
-		wards: {
-			'id': 'wards',
-			'type': 'line',
-			'source': {
-				'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/wards.pmtiles',
-			},
-			'source-layer': 'wards',
-			'paint': {
-				'line-color': 'rgba(32, 107, 7, 1)',
-				'line-width': 2
-			}
-		},
-		
-		la: {
-			'id': 'la',
-			'type': 'line',
-			'source': {
-				'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/la.pmtiles',
-			},
-			'source-layer': 'la',
-			'paint': {
-				'line-color': 'rgba(107, 7, 7, 1)',
-				'line-width': 2
-			} 
-		}
-		*/
-		
 	},
 	
 	// Layer styling callbacks functions, each defined below
@@ -221,165 +191,9 @@ const datasets = {
 		},
 	},
 	
-	
 	// Chart definitions, indexed by map layer ID
-	// #!# Need to define more clearly the assumed data structure, e.g. the 'charts' key shows a part field
 	charts: {
-    /*
-		// Data zones
-		data_zones: {
-			
-			// Data fields
-			// #!# Should use a main server URL setting
-			dataUrl: 'https://nptscot.blob.core.windows.net/json/DataZone/%id.json',
-			propertiesField: 'DataZone',
-			titleField: 'DataZone',
-			
-			// Title
-			titlePrefix: 'Zone Summary: ',
-
-			charts: [
-				[
-					// Commute Origin
-					'comm_orig',
-					'Commuters leaving',
-					'The bar chart shows estimated mode shares under different scenarios for commuters leaving this zone. (i.e they live here and commute to another zone).',
-					'Annual Average Daily Flow'
-				],
-				[
-					// Commute Destination
-					'comm_dest',
-					'Commuters arriving',
-					'The bar chart shows estimated mode shares under different scenarios for commuters arriving this zone. (i.e they work here and live in another zone).',
-					'Annual Average Daily Flow'
-				],
-				[
-					// School Primary Origin
-					'schl_primary_orig',
-					'Primary school children',
-					'The bar chart shows estimated mode shares under different scenarios for primary school childen that live in this zone.',
-					'Annual Average Daily Flow'
-				],
-				[
-					// School Secondary Origin
-					'schl_secondary_orig',
-					'Secondary school children',
-					'The bar chart shows estimated mode shares under different scenarios for secondary school childen that live in this zone.',
-					'Annual Average Daily Flow'
-				],
-				[
-					// shopping Origin
-					'shopping_orig',
-					'Shoppers leaving',
-					'The bar chart shows estimated mode shares of shopping trips under different scenarios for trips leaving this zone.',
-					'Annual Average Daily Flow'
-				],
-				[
-					// shopping Destination
-					'shopping_dest',
-					'Shoppers arriving',
-					'The bar chart shows estimated mode shares of shopping trips under different scenarios for trips arriving this zone.',
-					'Annual Average Daily Flow'
-				],
-				[
-					// leisure Origin
-					'leisure_orig',
-					'Leisure trips leaving',
-					'The bar chart shows estimated mode shares of leisure trips under different scenarios for trips leaving this zone.',
-					'Annual Average Daily Flow'
-				],
-				[
-					// leisure Destination
-					'leisure_dest',
-					'Leisure trips arriving',
-					'The bar chart shows estimated mode shares of leisure trips under different scenarios for trips arriving this zone.',
-					'Annual Average Daily Flow'
-				],
-				[
-					// visiting Origin
-					'visiting_orig',
-					'visiting friends and family trips leaving',
-					'The bar chart shows estimated mode shares of trips for visiting friends and family under different scenarios for trips leaving this zone.',
-					'Annual Average Daily Flow'
-				],
-				[
-					// visiting Destination
-					'visiting_dest',
-					'visiting friends and family trips arriving',
-					'The bar chart shows estimated mode shares of trips for visiting friends and family under different scenarios for trips arriving this zone.',
-					'Annual Average Daily Flow'
-				],
-			],
-
-			modes: [
-				// Label, field (e.g. bicycle => comm_orig_bicycle_ebike_fastest), background colour, border colour
-				['Bicycle', 'bicycle', 'rgba(51,160,44, 0.8)', 'rgba(51,160,44, 1)'],
-				['Foot', 'foot', 'rgba(178,223,138, 0.8)', 'rgba(178,223,138, 1)'],
-				['Public transport', 'public_transport', 'rgba(56,108,176, 0.8)', 'rgba(56,108,176, 1)'],
-				['Car', 'car', 'rgba(227,26,28, 0.8)', 'rgba(227,26,28, 1)'],
-				['Taxi', 'taxi', 'rgba(166,206,227, 0.8)', 'rgba(166,206,227, 1)'],
-			],
-
-			// Scenario suffixes and their labels
-			scenarios: [
-				['', 'Baseline'],
-				['_go_dutch_fastest', 'Go Dutch (Fastest)'],
-				['_ebike_fastest', 'Ebike (Fastest)'],
-				['_go_dutch_quietest', 'Go Dutch (Quietest)'],
-				['_ebike_quietest', 'Ebike (Quietest)']
-			]
-		},
-		
-		
-		// Travel to School Modeshare
-		schools: {
-
-			// Data fields
-			dataUrl: 'https://nptscot.blob.core.windows.net/json/School/%id.json',
-			propertiesField: 'SeedCode',
-			titleField: 'SchoolName',
-
-			// Title
-			titlePrefix: '',
-
-			charts: [
-				[
-					// School Primary Destination
-					'schl_primary_dest',
-					'Primary school modal split',
-					'The bar chart shows estimated mode shares for primary school children under different scenarios.',
-					'Annual Average Daily Flow'
-				],
-				[
-					// School Secondary Destination
-					'schl_secondary_dest',
-					'Secondary school modal split',
-					'The bar chart shows estimated mode shares for seconday school children under different scenarios.',
-					'Annual Average Daily Flow'
-				],
-			],
-
-			modes: [
-				// Label, field (e.g. bicycle => comm_orig_bicycle_ebike_fastest), background colour, border colour
-				['Bicycle', 'bicycle', 'rgba(51,160,44, 0.8)', 'rgba(51,160,44, 1)'],
-				['Foot', 'foot', 'rgba(178,223,138, 0.8)', 'rgba(178,223,138, 1)'],
-				['Public transport', 'public_transport', 'rgba(56,108,176, 0.8)', 'rgba(56,108,176, 1)'],
-				['Car', 'car', 'rgba(227,26,28, 0.8)', 'rgba(227,26,28, 1)'],
-				['Other', 'other', 'rgba(166,206,227, 0.8)', 'rgba(166,206,227, 1)'], // #!# NB the main modal has taxi rather than other
-			],
-
-			// Scenario suffixes and their labels
-			scenarios: [
-				['', 'Baseline'],
-				['_go_dutch_fastest', 'Go Dutch (Fastest)'],
-				['_ebike_fastest', 'Ebike (Fastest)'],
-				['_go_dutch_quietest', 'Go Dutch (Quietest)'],
-				['_ebike_quietest', 'Ebike (Quietest)']
-			]
-		}
-		*/
 	},
-	
 	
 	// Popups
 	popups: {
@@ -396,20 +210,9 @@ const datasets = {
 };
 
 
+const datasets = { ...datasets_common, ...datasets_extra };
+
 // Callbacks
-function popupCallback (feature)
-{
-	/*
-	const layerPurpose = document.getElementById('rnet_purpose_input').value;
-	const layerType = document.getElementById('rnet_type_input').value;
-	const layerScenario = document.getElementById('rnet_scenario_input').value;
-	const layerField = layerPurpose + '_' + layerType + '_' + layerScenario;
-	feature.properties._ncycle = feature.properties[layerField];
-	*/
-	return feature;
-}
-
-
 function landownersStyling (layerId, map, settings, datasets, createLegend /* callback */)
 {
 	// Update the legend (even if map layer is off)
@@ -417,7 +220,7 @@ function landownersStyling (layerId, map, settings, datasets, createLegend /* ca
 	createLegend (datasets.legends.landowners, field, 'landownerslegend');
 	
 	// Set paint properties
-	map.setPaintProperty ('landowners', 'circle-color', ['match', ['get', field], ...nptUi.getStyleColumn(field, datasets)]);
+	map.setPaintProperty ('landowners', 'circle-color', ['match', ['get', field], ...capUi.getStyleColumn(field, datasets)]);
 	
 }
 
