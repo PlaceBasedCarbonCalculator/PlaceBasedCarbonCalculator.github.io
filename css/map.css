@@ -269,7 +269,8 @@ input[type="radio"][id^="bm"] {
 
 
 /* Legend */
-.legend {
+/* Horizontal Mode */
+.legendHorizontal {
   width: 100%;
   text-align: center;
   display: table;
@@ -278,22 +279,23 @@ input[type="radio"][id^="bm"] {
 
 }
 
-.l_r{
+.l_rHorizontal{
   display: table-row;
 }
 
-.lb{
+.lbHorizontal{
   display: table-cell;
 }
 
-.legend div span {
+.legendHorizontal div span {
   display: inline-block;
   height: 15px;
   width: 100%;
   border: 1px solid black;
 }
 
-.legendvertical {
+/* Vertical Mode */
+.legendVertical {
   height: 100%; /* Set the height to 100% for vertical layout */
   text-align: left;
   display: table;
@@ -303,15 +305,15 @@ input[type="radio"][id^="bm"] {
   
 }
 
-.l_rvertical {
+.l_rVertical {
   display: table-cell; /* Change to table-cell for vertical layout */
 }
 
-.lbvertical {
+.lbVertical {
   display: table-row; /* Change to table-row for vertical layout */
 }
 
-.legendvertical div span {
+.legendVertical div span {
   display: inline-block;
   width: 20px; /* Swap height and width for vertical bars */
   height: 10px; /* Set the width to 100% for vertical bars */
@@ -506,4 +508,175 @@ input:checked + .slider:before {
 
 .externallink {
   white-space: nowrap;
+}
+
+/* Modals */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 1000; /* Sit on top */
+  left: 50px;
+  top: 50px;
+  bottom: 50px;
+  right: 50px;
+  padding: 20px;
+  overflow: auto; /* Enable scroll if needed */
+  background-color: #fefefe;
+  animation-name: fadeIn;
+  animation-duration: 0.4s;
+  max-width: 800px;
+}
+
+/* Prevent images from overflowing the box size */
+.modal img {
+  max-width: 100%;
+}
+
+/* The Close Button */
+.modal-close {
+  color: black;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.modal-close:hover, .modal-close:focus {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal-header .modal-close {
+  color: white;
+}
+
+.modal-header {
+  padding: 2px 16px;
+  background-color: #717e82;
+  color: white;
+}
+
+/*.modalrow {
+  display: flex;
+}
+
+.modalcolumn {
+  flex: 49%;
+} */
+
+.modalcolumn {
+  float: left;
+  width: 49%;
+}
+
+/* Clear floats after the columns */
+.modalrow:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Add Animation */
+@-webkit-keyframes slideIn {
+  from {bottom: -300px; opacity: 0} 
+  to {bottom: 0; opacity: 1}
+}
+
+@keyframes slideIn {
+  from {bottom: -300px; opacity: 0}
+  to {bottom: 0; opacity: 1}
+}
+
+@-webkit-keyframes fadeIn {
+  from {opacity: 0} 
+  to {opacity: 1}
+}
+
+@keyframes fadeIn {
+  from {opacity: 0} 
+  to {opacity: 1}
+}
+
+.chart-wrapper {
+  width: 100%;
+  clear: both;
+  margin: 30px 0;
+  padding: 30px 0;
+  border-top: 1px solid #eee;
+}
+.chart-wrapper h4 {
+  margin-top: 0;
+  padding-top: 0;
+}
+.chart-container {
+  height: 400px;
+  width: 100%;
+}
+.chart-text {
+  width: 100%;
+  padding-right: 0;
+}
+
+@media screen and (min-width: 56.25rem) {
+  .chart-container {
+  position: relative;
+  float: right;
+  height: 400px;
+  width: 50%;
+  }
+  .chart-text {
+  position: relative;
+  float: left;
+  width: 45%;
+  padding-right: 4%;
+  }
+}
+
+/**tab content wrapper
+.wrapper {
+	width: 100%;
+}
+.chart-container {
+	height: 400px;
+	width: 100%;
+}
+.chart-text {
+	width: 100%;
+	padding-right: 0;
+	}
+
+@media screen and (min-width: 56.25rem){
+	.chart-container {
+		position: relative;
+		float: right;
+		height: 400px;
+		width: 50%;
+	}
+	.chart-text {
+		position: relative;
+		float: left;
+		width: 50%;
+		padding-right: 4%;
+	}
+} **/
+
+
+/* Tabs in the modal */
+ /* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+	font-family: Raleway, sans-serif;
+	font-size: 1em;
 }

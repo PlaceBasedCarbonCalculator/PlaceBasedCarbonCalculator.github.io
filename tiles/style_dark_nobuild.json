@@ -15,24 +15,7 @@
     "composite": {
       "url": "pmtiles://https://pbcc.blob.core.windows.net/pbcc-pmtiles/oszoom_dasymetric.pmtiles",
       "type": "vector"
-    }/*,
-    "terrainSource": {
-      "type": "raster-dem",
-      "tiles": ["https://pbcc.blob.core.windows.net/rastertiles/dem/{z}/{x}/{y}.webp"],
-      "tileSize": 512,
-      "minzoom": 0,
-    	"maxzoom": 9,
-    	"bounds": [-8.650007,49.864674,1.763680,60.860766]
-    },
-    "hillshadeSource": {
-      "type": "raster-dem",
-      "tiles": ["https://pbcc.blob.core.windows.net/rastertiles/dem/{z}/{x}/{y}.webp"],
-      "tileSize": 512,
-      "minzoom": 0,
-    	"maxzoom": 9,
-    	"bounds": [-8.650007,49.864674,1.763680,60.860766]
-    }*/
-    
+    }
   },
   "sprite": "https://pbcc.blob.core.windows.net/pbcc-mapextras/sprites/dark",
   "glyphs": "https://pbcc.blob.core.windows.net/pbcc-mapextras/fonts/{fontstack}/{range}.pbf",
@@ -49,12 +32,6 @@
       "source-layer": "sea",
       "layout": {},
       "paint": {"fill-color": "rgba(44,44,44, 1)"}
-    },
-    {
-      "id": "hillshading",
-      "type": "hillshade",
-      "source": "hillshadeSource",
-      "source-layer": "hillshadeSource"
     },
     {
       "id": "national-parks",

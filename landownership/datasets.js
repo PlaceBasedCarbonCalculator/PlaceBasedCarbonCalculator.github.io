@@ -225,3 +225,12 @@ function landownersStyling (layerId, map, settings, datasets, createLegend /* ca
 }
 
 
+// Function to determine the style column
+// TODO: Move this out of main UI code as tool specific
+function getStyleColumn (layerId, datasets)
+{
+	const style_col_selected = datasets.circleColours.landowners.hasOwnProperty(layerId) ? layerId : '_';
+	return datasets.circleColours.landowners[style_col_selected];
+}
+
+

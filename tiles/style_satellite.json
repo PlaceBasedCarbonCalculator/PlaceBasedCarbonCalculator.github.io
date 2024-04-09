@@ -16,11 +16,8 @@
     },
     "terrainSource": {
       "type": "raster-dem",
-      "tiles": ["https://nptscot.blob.core.windows.net/rastertiles/dem/{z}/{x}/{y}.webp"],
-      "tileSize": 512,
-      "minzoom": 0,
-    	"maxzoom": 9,
-    	"bounds": [-8.650007,49.864674,1.763680,60.860766]
+      "url": "pmtiles:///tiles/DSM_England_2m.pmtiles",
+      "tileSize": 512
     }
   },
   "layers": [

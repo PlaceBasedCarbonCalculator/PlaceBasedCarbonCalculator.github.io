@@ -4,6 +4,36 @@
 /*jslint browser: true, white: true, single: true, for: true, unordered: true, long: true */
 /*global alert, console, window, maplibregl, pmtiles, MaplibreGeocoder, noUiSlider, tippy */
 
+/* Expectations in HTML:
+
+- Layer toggles, to enable/disable a layer by a checkbox:
+	Should be as follows, specifying the layerId in the data attribute, e.g.:
+	<input type="checkbox" class="showlayer" data-layer="foo">
+	
+- Layer attributes, to set values for a layer:
+	Should be as follows, specifying the layerId in the data attribute, and a name for the field, e.g.:
+	<select name="purpose" class="updatelayer" data-layer="rnet" aria-label="Route network trip purpose">
+	
+- Slider UI:
+	Sliders should have .slider-styled, with a name for the field, and an ID that matches a datalist name, e.g.:
+	<div id="slider-gradient-ui" class="slider-styled" data-name="gradient"></div>
+	<datalist name="slider-gradient-ui">...</datalist>
+	<input type="hidden" name="gradient" class="updatelayer slider" data-layer="foo" />
+	
+- Modal dialogs:
+	Modals should be defined as a <template> with an id ending -modal, include an X in a span.modal-close
+	
+- Popups:
+	Popups should be defined as a <template> with an id ending -popup
+	They should have placeholders like {some_field} which will be matched to the data properties
+	Predefined placeholders {_streetViewUrl} and {_osmUrl} can be used for links to these services
+	
+- Help buttons:
+	Help buttons should have .helpbutton and a data-help="..." value which matches a comment marker
+	The comment marker in the .md file should be added around the relevant lines to be displayed, e.g.:
+	<!-- #scenario -->...<!-- /#scenario -->
+*/
+
 const capUi = (function () {
 	
 	'use strict';
@@ -24,6 +54,9 @@ const capUi = (function () {
 			// Populate the settings and datasets class properties
 			_settings = settings;
 			_datasets = datasets;
+			
+			// Create welcome screen
+			capUi.welcomeScreen ();
 			
 			// Enable the accordion functionality for the layer controls box and popups
 			capUi.accordion ();
@@ -242,15 +275,17 @@ const capUi = (function () {
 			*/
 			
 			// Add buildings; note that the style/colouring may be subsequently altered by data layers
-			/*
+			
 			capUi.addBuildings(map);
 			document.getElementById('basemapform').addEventListener('change', function (e) {
+			  console.log("basemapform changed, add buildings");
 				capUi.addBuildings(map);
 			});
-			*/
+			
 			
 			// Add placenames support
 			map.once('idle', function () {
+			  console.log("Idle trigger place names");
 				capUi.placenames(map);
 			});
 			
@@ -448,27 +483,28 @@ const capUi = (function () {
 		
 		
 		// Function to add the buildings layer
-		/*
+		
 		addBuildings: function (map)
 		{
 			// When ready
 			map.once ('idle', function () {
 				
 				// Add the source
-				if (!map.getSource ('dasymetric')) {
-					map.addSource ('dasymetric', {
+				if (!map.getSource ('buildings')) {
+					map.addSource ('buildings', {
 						'type': 'vector',
-						'url': _settings.buildingsTilesUrl.replace ('%tileserverUrl', _settings.tileserverUrl),
+						'url': 'pmtiles://../tiles/buildings.pmtiles', // Temp Path
+						//'url': _settings.buildingsTilesUrl.replace ('%tileserverUrl', _settings.tileserverUrl),
 					});
 				}
 				
 				// Initialise the layer
-				if (!map.getLayer('dasymetric')) {
+				if (!map.getLayer('buildings')) {
 					map.addLayer({
-						'id': 'dasymetric',
+						'id': 'buildings',
 						'type': 'fill-extrusion',
-						'source': 'dasymetric',
-						'source-layer': 'dasymetric',
+						'source': 'buildings',
+						'source-layer': 'buildings',
 						'layout': {
 							'visibility': 'none'
 						},
@@ -486,11 +522,13 @@ const capUi = (function () {
 				}
 			});
 		},
-		*/
+		
 		
 		// Function to manage display of placenames
 		placenames: function (map)
 		{
+			
+			console.log("Placenames fucnction");
 			// Add the source
 			map.addSource ('placenames', {
 				'type': 'vector',
@@ -632,82 +670,44 @@ const capUi = (function () {
 			// Check for a dynamic styling callback and run it if present
 			if (_datasets.layerStyling[layerId]) {
 				_datasets.layerStyling[layerId] (layerId, _map, _settings, _datasets, capUi.createLegend);
+			} else {
+				capUi.createLegend (datasets.legends, layerId, layerId + 'legend');
 			}
 			
 			// Set the visibility of the layer, based on the checkbox value
-			const isVisible = document.getElementById(layerId + 'checkbox').checked;
+			const isVisible = document.querySelector ('input.showlayer[data-layer="' + layerId + '"]').checked;
 			_map.setLayoutProperty(layerId, 'visibility', (isVisible ? 'visible' : 'none'));
-		},
-		
-	
-		
-		// Data zones styling (including buildings styling)
-		//data_zonesStyling: function (layerName, map, datasets, createLegend /* callback */)
-		/*
-		{
-			// Update the legend (even if map layer is off)
-			const fieldId = document.getElementById('data_zones_selector').value;
-			createLegend (datasets.legends.data_zones, fieldId, 'dzlegend');
 			
-			// Get UI state
-			const daysymetricMode = document.getElementById('data_zones_checkbox_dasymetric').checked;
-			
-			// Set paint properties
-			map.setPaintProperty ('data_zones', 'fill-color', ['step', ['get', fieldId], ...capUi.getStyleColumn(fieldId, datasets)]);
-			map.setPaintProperty ('data_zones', 'fill-opacity', (daysymetricMode ? 0.1 : 0.8)); // Very faded-out in daysymetric mode, as the buildings are coloured
-			
-			// Set buildings layer colour/visibility
-			const buildingColour = capUi.getBuildingsColour();
-			map.setPaintProperty ('dasymetric', 'fill-extrusion-color', (buildingColour || '#9c9898'));
-			map.setLayoutProperty ('dasymetric', 'visibility', (buildingColour ? 'visible' : 'none'));
-		},
-		*/
-		
-		
-		
-		/*
-		// Function to determine the buildings colour
-		getBuildingsColour: function ()
-		{
-			// If datazones is off, buildings shown, if vector style, as static colour appropriate to the basemap
-			if (!document.getElementById('data_zonescheckbox').checked) {
-				const styleName = capUi.getBasemapStyle();
-				return settings.basemapStyles[styleName].buildingColour;
-			}
-			
-			// If dasymetric mode, use a colour set based on the layer
-			if (document.getElementById('data_zones_checkbox_dasymetric').checked) {
-				const layerId = document.getElementById('data_zones_selector').value;
-				return ['step',
-					['get', layerId],
-					...capUi.getStyleColumn(layerId, datasets)
-				];
-			}
-			
-			// Default to gray
-			return '#9c9898';
-		},
-		*/
-		
-		// Function to determine the style column
-		getStyleColumn: function (layerId, datasets)
-		{
-			const style_col_selected = datasets.circleColours.landowners.hasOwnProperty(layerId) ? layerId : '_';
-			return datasets.circleColours.landowners[style_col_selected];
+			// Update the layer state for the URL
+			capUi.layerStateUrl ();
 		},
 		
 		
 		createLegend: function (legendColours, selected, selector)
 		{
+      // Do nothing if no selector for where the legend will be added
+			if (!document.getElementById(selector)) {return;}
+			
+			// Detect Horizontal or Vertical modes
 			// Create the legend HTML
 			// #!# Should be a list, not nested divs
-			let legendHtml = '<div class="l_rvertical">';
-			selected = (legendColours.hasOwnProperty(selected) ? selected : '_');
-			legendColours[selected].forEach(legendColour => {
-				legendHtml += `<div class="lbvertial"><span style="background-color: ${legendColour[1]}"></span>${legendColour[0]}</div>`;
-			})
-			legendHtml += '</div>';
-			
+			let legendHtml;
+			if(document.getElementById(selector).className == "legendHorizontal") {
+			  legendHtml = '<div class="l_rHorizontal">';
+  			  selected = (legendColours.hasOwnProperty(selected) ? selected : '_');
+  			  legendColours[selected].forEach(legendColour => {
+  				legendHtml += `<div class="lbHorizontal"><span style="background-color: ${legendColour[1]}"></span>${legendColour[0]}</div>`;
+  			})
+  			legendHtml += '</div>';
+			} else {
+			  legendHtml = '<div class="l_rVertical">';
+  			  selected = (legendColours.hasOwnProperty(selected) ? selected : '_');
+  			  legendColours[selected].forEach(legendColour => {
+  				legendHtml += `<div class="lbVertial"><span style="background-color: ${legendColour[1]}"></span>${legendColour[0]}</div>`;
+  			})
+			  legendHtml += '</div>';
+			}
+      
 			// Set the legend
 			document.getElementById(selector).innerHTML = legendHtml;
 		},
@@ -718,6 +718,7 @@ const capUi = (function () {
 			// Register the IDs of all checked layers, first resetting the list
 			const enabledLayers = [];
 			Object.entries (_datasets.layers).forEach (([layerId, layer]) => {
+			  //console.log('input.showlayer[data-layer="' + layerId + '"]');
 				const isEnabled = document.querySelector ('input.showlayer[data-layer="' + layerId + '"]').checked;
 				if (isEnabled) {
 					enabledLayers.push (layerId);
@@ -861,7 +862,7 @@ const capUi = (function () {
 					// Ensure the source matches
 					let clickedFeatures = _map.queryRenderedFeatures(e.point);
 					clickedFeatures = clickedFeatures.filter(function (el) {
-						const layersToExclude = ['composite', 'dasymetric', 'placenames']; // #!# Hard-coded list - need to clarify purpose
+						const layersToExclude = ['composite', 'buildings', 'placenames']; // #!# Hard-coded list - need to clarify purpose
 						return !layersToExclude.includes(el.source);
 						//return el.source != 'composite';
 					});
@@ -907,6 +908,7 @@ const capUi = (function () {
 			// Function to initialise the modal HTML from the template
 			function initialiseChartsModalHtml (mapLayerId)
 			{
+				console.log("Modal " + mapLayerId);
 				const template = document.querySelector(`#chart-modal`);
 				const chartModal = template.content.cloneNode(true);
 				chartModal.querySelector('.modal').id = mapLayerId + '-chartsmodal';
@@ -942,18 +944,22 @@ const capUi = (function () {
 					
 					// Assemble the datasets to be shown
 					const datasets = [];
-					chartDefinition.modes.forEach(mode => {
+					chartDefinition.component.forEach(component => {
 						datasets.push({
-							label: mode[0],
-							data: chartDefinition.scenarios.map(scenario => locationData[chart[0] + '_' + mode[1] + scenario[0]]),
-							backgroundColor: mode[2],
-							borderColor: mode[3],
+							label: component[0],
+							data: chartDefinition.years.map(years => locationData[component[1] + years[0]]),
+							backgroundColor: component[2],
+							borderColor: component[3],
 							borderWidth: 1
 						});
 					});
 					
+					console.log(locationData);
+					console.log(chartDefinition);
+					console.log(datasets);
+					
 					// Bar labels
-					const labels = chartDefinition.scenarios.map(scenario => scenario[1]);
+					const labels = chartDefinition.years.map(years => years[1]);
 					
 					// Clear existing if present
 					if (chartHandles[i]) {
@@ -1137,11 +1143,10 @@ const capUi = (function () {
 		{
 			// Identify the modal
 			const modal = document.getElementById(modalId);
-      
+      console.log("Modal setup" + modalId);
 			// When the user clicks on <span> (x), close the modal
 			const closeButton = document.querySelector('#' + modalId + ' .modal-close');
 			closeButton.addEventListener('click', function () {
-			  console.log("Modal setup");
 				hide();
 			});
 			
