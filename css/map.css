@@ -611,6 +611,10 @@ input:checked + .slider:before {
   height: 400px;
   width: 100%;
 }
+.chart-container-wide {
+  height: 600px;
+  width: 100%;
+}
 .chart-text {
   width: 100%;
   padding-right: 0;
@@ -622,6 +626,12 @@ input:checked + .slider:before {
   float: right;
   height: 400px;
   width: 50%;
+  }
+  .chart-container-wide {
+  position: relative;
+  float: right;
+  height: 600px;
+  width: 100%;
   }
   .chart-text {
   position: relative;

@@ -1,3 +1,7 @@
+// Chart Globals
+var accessChart;
+
+
 // Data definitions, i.e. layers, charts, etc.
 const datasets_extra = {
 	
@@ -95,27 +99,7 @@ const datasets_extra = {
 		},
 	},
 	
-	circleColours: {
-		
-				// #!# These are presumably restatements of dzLegendColours
-		landowners: {
-			'Country': [
-				'UK', 	        '#b15928',
-				'JERSEY', 	    '#a6cee3',
-				'GUERNSEY', 	  '#1f78b4',
-				'BRITISH VIRGIN ISLANDS', 	'#fb9a99',
-				'ISLE OF MAN',	'#b2df8a',
-				'LUXEMBOURG',	'#fdbf6f',
-				'GIBRALTAR',	  '#33a02c',
-				'NETHERLANDS',	'#ff7f00',
-				'IRELAND',	    '#cab2d6',
-				'CAYMAN ISLANDS',	'#e31a1c',
-				'PANAMA',		  '#ffff99',
-				'CYPRUS',		  '#6a3d9a',
-				'#000000',
-			]
-		},
-	},
+	
 	
 	// Chart definitions, indexed by map layer ID
 	charts: {
@@ -123,51 +107,23 @@ const datasets_extra = {
 	    
 	    // Data fields
 			// #!# Should use a main server URL setting
-			dataUrl: '/data/json/LSOA/%id.json',
+			dataUrl: '/data/json/Access/%id.json',
 			propertiesField: 'LSOA21CD',
-			titleField: 'LSOA21CD',
+			titleField: 'LSOA11CD',
 			
 			// Title
 			titlePrefix: 'Neighbourhood Summary: ',
 			
 			charts: [
 				[
-					// Commute Origin
-					'comm_orig',
-					'Total Footprint',
+					// Access Proximity
+					'access_proximity',
+					'Access Proximity',
 					'Description goes here',
-					'kgCO2e per year'
+					'Access by public transport'
 				]
-		  ],
+		  ]
 		  
-		  component: [
-		    // Label, field (e.g. Gas => dgkp2020), background colour, border colour
-				['Gas', 'dgkp', 'rgba(166,206,227, 0.8)', 'rgba(166,206,227, 1)'],
-				['Electricity', 'dekp', 'rgba(31,120,180, 0.8)', 'rgba(31,120,180, 1)'],
-				['Other Housing', 'osep', 'rgba(51,160,44, 0.8)', 'rgba(51,160,44, 1)'],
-				['Cars', 'cep', 'rgba(251,154,153, 0.8)', 'rgba(251,154,153, 1)'],
-				['Vans', 'vep', 'rgba(227,26,28, 0.8)', 'rgba(227,26,28, 1)'],
-				['Flights', 'efp', 'rgba(255,127,0, 0.8)', 'rgba(255,127,0, 1)'],
-				['Food & Drink', 'nep', 'rgba(202,178,214, 0.8)', 'rgba(202,178,214, 1)'],
-				['Consumable Goods', 'cep', 'rgba(106,61,154, 0.8)', 'rgba(106,61,154, 1)'],
-				['Recreation', 'rep', 'rgba(255,255,153, 0.8)', 'rgba(255,255,153, 1)'],
-				['Services', 'sep', 'rgba(177,89,40, 0.8)', 'rgba(177,89,40, 1)'],
-				
-		  ],
-		  
-	   years: [
-				['2010', '2010'],
-				['2011', '2011'],
-				['2012', '2012'],
-				['2013', '2013'],
-				['2014', '2014'],
-				['2015', '2015'],
-				['2016', '2016'],
-				['2017', '2017'],
-				['2018', '2018'],
-				['2019', '2019'],
-				['2020', '2020'],
-			]
 	   
 	  }
 	  
@@ -180,82 +136,6 @@ const datasets_extra = {
 
 
 const datasets = { ...datasets_common, ...datasets_extra };
-
-
-// Function to create all charts
-function createCharts (chartDefinition, locationData)
-{
-	// Create each chart
-	chartDefinition.charts.forEach((chart, i) => {
-	  
-	  // Clear existing if present
-		if (chartHandles[i]) {
-			chartHandles[i].destroy();
-		}
-		
-		// Assemble the datasets to be shown
-		const datasets = [];
-		chartDefinition.component.forEach(component => {
-			datasets.push({
-				label: component[0],
-				data: chartDefinition.years.map(years => locationData[component[1] + years[0]]),
-				backgroundColor: component[2],
-				borderColor: component[3],
-				borderWidth: 1
-			});
-		});
-		
-		console.log(locationData);
-		console.log(chartDefinition);
-		console.log(datasets);
-		
-		// Bar labels
-		const labels = chartDefinition.years.map(years => years[1]);
-		
-		// Clear existing if present
-		if (chartHandles[i]) {
-			chartHandles[i].destroy();
-		}
-		
-		// Render the chart (and register it to a handle so it can be cleared in future)
-		chartHandles[i] = renderChart(chart[0] + '-chart', chart[3], datasets, labels);
-	});
-};
-			
-			
-// Function to render a chart
-function renderChart (divId, title, datasets, labels)
-{
-	// Create and return the chart
-	return new Chart(document.getElementById(divId).getContext('2d'), {
-		type: 'bar',
-		data: {
-			labels: labels,
-			datasets: datasets
-		},
-		options: {
-			scales: {
-				y: {
-					stacked: true,
-					title: {
-						display: true,
-						text: title
-					},
-					ticks: {
-						beginAtZero: true,
-					}
-				},
-				x: {
-					stacked: true
-				},
-			},
-			responsive: true,
-			maintainAspectRatio: false
-		}
-	});
-}
-
-
 
 
 // Function to determine the style column
@@ -308,6 +188,10 @@ function getBuildingsColour (settings)
 	// Default to gray
 	return '#9c9898';
 }
+
+
+
+
 
 
 

@@ -67,7 +67,7 @@
 		<script src="/js/datasets-common.js"></script>
 		<script src="datasets.js"></script>
 		<script src="/js/ui-common.js"></script>
-		<!-- <script src="ui.js"></script> -->
+		<script src="ui.js"></script>
 		<script>
 			document.addEventListener ('DOMContentLoaded', function () {
 			  capUi.initialise (settings, datasets);
@@ -187,28 +187,26 @@
 			</div>
 		</div>
 		
-		<!-- Template for chart modals, including a sub-template for the chart boxes, plus overlay -->
-		<template id="chart-modal">
-			<div class="modal">
-				<div class="modal-header">
-					<span class="modal-close">&times;</span>
-					<h2 class="modal-title">Summary</h2>
-				</div>
-				<div class="modal-body">
-					<template class="chart-template">
-						<div class="chart-wrapper">
-							<div class="chart-text">
-								<h4 class="chart-title"></h4>
-								<p class="chart-description"></p>
-							</div>
-							<div class="chart-container" >
-								<canvas></canvas>
-							</div>
-						</div>
-					</template>
-				</div>
+		<!-- Modal -->
+		<div class="modal" id="zones-chartsmodal" style="display: block;">
+			<div class="modal-header">
+				<span class="modal-close">×</span>
+				<h2 class="modal-title">Zone Summary: XXXXX</h2>
 			</div>
-		</template>
+			<div class="modal-body">
+			  <div class="chart-text">
+							<h4 class="chart-title">Historical Emissions</h4>
+							<p class="chart-description">Description goes here</p>
+						</div>
+					<div class="chart-wrapper" id="overview-chartrow" style="display: block;">
+						<div class="chart-container">
+							<canvas id="overview-chart"></canvas>
+						</div>
+					</div>
+
+				</div>
+		</div>
+		
 		<div id="overlay"></div>
 		
 		<!-- Template for map popup -->

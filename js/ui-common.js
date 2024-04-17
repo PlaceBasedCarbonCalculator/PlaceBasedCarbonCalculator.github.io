@@ -742,6 +742,80 @@ const capUi = (function () {
 			});
 		},
 		
+		// Function to handle chart creation
+		charts: function ()
+		{
+		  
+		  // Handles to charts
+			const chartHandles = {};
+		  
+		  // Function to create a chart modal
+			const chartsModal = function (mapLayerId, chartDefinition) {
+				
+				// Initialise the HTML structure for this modal
+				//initialiseChartsModalHtml (mapLayerId);
+				
+				// Create the modal
+				const location_modal = capUi.newModal (mapLayerId + '-chartsmodal');
+				
+				// Initialise the HTML structure for the set of chart boxes, writing in the titles and descriptions, and setting the canvas ID
+				//initialiseChartBoxHtml(mapLayerId, chartDefinition.charts);
+				
+				// Open modal on clicking the supported map layer
+				_map.on ('click', mapLayerId, function (e) {
+					
+					// Ensure the source matches
+					let clickedFeatures = _map.queryRenderedFeatures(e.point);
+					clickedFeatures = clickedFeatures.filter(function (el) {
+						const layersToExclude = ['composite', 'buildings', 'placenames']; // #!# Hard-coded list - need to clarify purpose
+						return !layersToExclude.includes(el.source);
+						//return el.source != 'composite';
+					});
+					if (clickedFeatures[0].sourceLayer != mapLayerId) {
+						return;
+					}
+					
+					// Display the modal
+					location_modal.show();
+					
+					// Assemble the JSON data file URL
+					const featureProperties = e.features[0].properties;
+					const locationId = featureProperties[chartDefinition.propertiesField];
+					const dataUrl = chartDefinition.dataUrl.replace('%id', locationId);
+					
+					// Get the data
+					fetch(dataUrl)
+						.then(function (response) {
+							return response.json();
+						})
+						.then(function (json) {
+							//const locationData = json[0]; //TODO this is what PBCC expects
+							const locationData = json;
+							console.log ('Retrieved data for layer '+  mapLayerId + ' location ' + locationId);
+							
+							//Hide Spinner
+							//document.getElementById('loader').style.display = 'none';
+							
+							// Set the title
+							const title = chartDefinition.titlePrefix + featureProperties[chartDefinition.titleField];
+							//document.querySelector(`#${mapLayerId}-chartsmodal .modal-title`).innerHTML = title;
+							
+							// Create the charts
+							manageCharts(chartDefinition, locationData);
+						})
+						.catch(function (error) {	// Any error, including within called code, not just retrieval failure
+							alert ('Failed to get data for this location, or to process it correctly. Please try refreshing the page.');
+							console.log (error);
+						});
+				});
+			}
+			
+			// Create each set of charts
+			Object.entries (_datasets.charts).forEach(([mapLayerId, chartDefinition]) => {
+				chartsModal (mapLayerId, chartDefinition);
+			});
+		},
+		
 		
 		// Popup handler
 		// Options are: {preprocessingCallback, smallValuesThreshold, literalFields}
@@ -835,179 +909,6 @@ const capUi = (function () {
 				properties._osmUrl = 'https://www.openstreetmap.org/#map=19/' + coordinates.lat + '/' + coordinates.lng;
 				return properties;
 			}
-		},
-		
-		
-		// Function to handle chart creation
-		charts: function ()
-		{
-			// Handles to charts
-			const chartHandles = {};
-			
-			// Function to create a chart modal
-			const chartsModal = function (mapLayerId, chartDefinition) {
-				
-				// Initialise the HTML structure for this modal
-				initialiseChartsModalHtml (mapLayerId);
-				
-				// Create the modal
-				const location_modal = capUi.newModal (mapLayerId + '-chartsmodal');
-				
-				// Initialise the HTML structure for the set of chart boxes, writing in the titles and descriptions, and setting the canvas ID
-				initialiseChartBoxHtml(mapLayerId, chartDefinition.charts);
-				
-				// Open modal on clicking the supported map layer
-				_map.on ('click', mapLayerId, function (e) {
-					
-					// Ensure the source matches
-					let clickedFeatures = _map.queryRenderedFeatures(e.point);
-					clickedFeatures = clickedFeatures.filter(function (el) {
-						const layersToExclude = ['composite', 'buildings', 'placenames']; // #!# Hard-coded list - need to clarify purpose
-						return !layersToExclude.includes(el.source);
-						//return el.source != 'composite';
-					});
-					if (clickedFeatures[0].sourceLayer != mapLayerId) {
-						return;
-					}
-					
-					// Display the modal
-					location_modal.show();
-					
-					// Assemble the JSON data file URL
-					const featureProperties = e.features[0].properties;
-					const locationId = featureProperties[chartDefinition.propertiesField];
-					const dataUrl = chartDefinition.dataUrl.replace('%id', locationId);
-					
-					// Get the data
-					fetch(dataUrl)
-						.then(function (response) {
-							return response.json();
-						})
-						.then(function (json) {
-							const locationData = json[0];
-							//console.log ('Retrieved data for location ' + locationId, locationData);
-							
-							//Hide Spinner
-							//document.getElementById('loader').style.display = 'none';
-							
-							// Set the title
-							const title = chartDefinition.titlePrefix + featureProperties[chartDefinition.titleField];
-							document.querySelector(`#${mapLayerId}-chartsmodal .modal-title`).innerHTML = title;
-							
-							// Create the charts
-							createCharts(chartDefinition, locationData);
-						})
-						.catch(function (error) {	// Any error, including within called code, not just retrieval failure
-							alert ('Failed to get data for this location, or to process it correctly. Please try refreshing the page.');
-							console.log (error);
-						});
-				});
-			}
-			
-			
-			// Function to initialise the modal HTML from the template
-			function initialiseChartsModalHtml (mapLayerId)
-			{
-				console.log("Modal " + mapLayerId);
-				const template = document.querySelector(`#chart-modal`);
-				const chartModal = template.content.cloneNode(true);
-				chartModal.querySelector('.modal').id = mapLayerId + '-chartsmodal';
-				document.body.appendChild(chartModal);
-			}
-			
-			
-			// Function to initialise the chart box HTML from the template
-			function initialiseChartBoxHtml (mapLayerId, charts)
-			{
-				const template = document.querySelector(`#${mapLayerId}-chartsmodal .chart-template`);
-				charts.forEach((chart) => {
-					const chartBox = template.content.cloneNode(true);
-					chartBox.querySelector('.chart-wrapper').id = chart[0] + '-chartrow';
-					chartBox.querySelector('.chart-title').innerText = chart[1];
-					chartBox.querySelector('.chart-description').innerText = chart[2];
-					chartBox.querySelector('.chart-container canvas').id = chart[0] + '-chart';
-					document.querySelector(`#${mapLayerId}-chartsmodal .modal-body`).appendChild(chartBox);
-				});
-			}
-			
-			
-			// Function to create all charts
-			function createCharts (chartDefinition, locationData)
-			{
-				// Create each chart
-				chartDefinition.charts.forEach((chart, i) => {
-				  
-				  // Clear existing if present
-					if (chartHandles[i]) {
-						chartHandles[i].destroy();
-					}
-					
-					// Assemble the datasets to be shown
-					const datasets = [];
-					chartDefinition.component.forEach(component => {
-						datasets.push({
-							label: component[0],
-							data: chartDefinition.years.map(years => locationData[component[1] + years[0]]),
-							backgroundColor: component[2],
-							borderColor: component[3],
-							borderWidth: 1
-						});
-					});
-					
-					console.log(locationData);
-					console.log(chartDefinition);
-					console.log(datasets);
-					
-					// Bar labels
-					const labels = chartDefinition.years.map(years => years[1]);
-					
-					// Clear existing if present
-					if (chartHandles[i]) {
-						chartHandles[i].destroy();
-					}
-					
-					// Render the chart (and register it to a handle so it can be cleared in future)
-					chartHandles[i] = renderChart(chart[0] + '-chart', chart[3], datasets, labels);
-				});
-			};
-			
-			
-			// Function to render a chart
-			function renderChart (divId, title, datasets, labels)
-			{
-				// Create and return the chart
-				return new Chart(document.getElementById(divId).getContext('2d'), {
-					type: 'bar',
-					data: {
-						labels: labels,
-						datasets: datasets
-					},
-					options: {
-						scales: {
-							y: {
-								stacked: true,
-								title: {
-									display: true,
-									text: title
-								},
-								ticks: {
-									beginAtZero: true,
-								}
-							},
-							x: {
-								stacked: true
-							},
-						},
-						responsive: true,
-						maintainAspectRatio: false
-					}
-				});
-			}
-			
-			// Create each set of charts
-			Object.entries (_datasets.charts).forEach(([mapLayerId, chartDefinition]) => {
-				chartsModal (mapLayerId, chartDefinition);
-			});
 		},
 		
 		
