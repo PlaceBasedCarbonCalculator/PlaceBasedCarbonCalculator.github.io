@@ -511,12 +511,15 @@ const capUi = (function () {
 						'paint': {
 							'fill-extrusion-color': '#9c9898', // Default gray
 							'fill-extrusion-height': [
-								'interpolate',
-								['linear'],
-								['zoom'],
-								12, 1,
-								15, 8
-							]
+                        'interpolate',
+                        ['linear'],
+                        ['zoom'],
+                        12,
+                        1,
+                        14.05,
+                        ['get', 'height']
+                    ],
+                'fill-extrusion-opacity': 0.9
 						}
 					}, 'roads 0 Guided Busway Casing');
 				}
