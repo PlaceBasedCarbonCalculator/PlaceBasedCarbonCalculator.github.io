@@ -80,7 +80,8 @@
 		
 		<!-- Menu -->
 		<nav>
-			<a href="/"><img src="/images/ui/logo.png" alt="Carbon & Place Logo" class="logo" />Place-Based Carbon Calculator</a>
+			<a href="/"><img src="/images/ui/logo.png" alt="Carbon & Place Logo" class="logo" /></a>
+			<a href="/pbcc/">Place-Based Carbon Calculator</a>
 			<a href="/about/">About</a>
 			<a href="/data/">Data</a>
 			<a href="/manual/">Manual</a>
@@ -154,9 +155,6 @@
 						<div class="lb"><span style="background-color: #ffffff"></span>&nbsp;</div>
 					</div>
 				</div>
-				<p><label class="switch"><input type="checkbox" name="daysymetricmode" class="updatelayer" data-layer="zones" checked><span class="slider round"></span></label> Dasymetric</p>
-			
-			<p><label><input type="checkbox" class="showlayer" data-layer="buildings" value="true">Show Buildings</label></p>
 			
 			</div>
 			
@@ -188,7 +186,7 @@
 		</div>
 		
 		<!-- Modal -->
-		<div class="modal" id="zones-chartsmodal" style="display: block;">
+		<div class="modal" id="zones-chartsmodal" >
 			<div class="modal-header">
 				<span class="modal-close">×</span>
 				<h2 class="modal-title">Zone Summary: XXXXX</h2>
@@ -198,7 +196,7 @@
 							<h4 class="chart-title">Historical Emissions</h4>
 							<p class="chart-description">Description goes here</p>
 						</div>
-					<div class="chart-wrapper" id="overview-chartrow" style="display: block;">
+					<div class="chart-wrapper" id="overview-chartrow">
 						<div class="chart-container">
 							<canvas id="overview-chart"></canvas>
 						</div>

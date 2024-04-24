@@ -98,8 +98,8 @@ const capUi = (function () {
 		welcomeScreen: function ()
 		{
 			// Show only first time
-			const cookieName = 'welcomescreen';
-			if (capUi.getCookie (cookieName)) {return;}
+			//const cookieName = 'welcomescreen';
+			//if (capUi.getCookie (cookieName)) {return;}
 			
 			// Create modal
 			const welcomeModal = capUi.newModal ('welcome-modal');
@@ -116,7 +116,7 @@ const capUi = (function () {
 			}
 			
 			// Set cookie
-			capUi.setCookie (cookieName, 'true');
+			//capUi.setCookie (cookieName, 'true');
 		},
 
 		
@@ -269,8 +269,15 @@ const capUi = (function () {
 			// Add terrain control
 			/*
 			map.addControl(new maplibregl.TerrainControl({
-				source: 'terrainSource',
-				exaggeration: 1.25
+				source: 'terrainSource'//,
+
+				exaggeration: 1,
+				redFactor: 0.1,
+				greenFactor: 0.1,
+				blueFactor: 0.1,
+				baseShift: -10000,
+				encoding : "custom"
+				
 			}), 'top-left');
 			*/
 			
@@ -489,6 +496,7 @@ const capUi = (function () {
 			// When ready
 			map.once ('idle', function () {
 				
+				console.log("Buildings fucnction");
 				// Add the source
 				if (!map.getSource ('buildings')) {
 					map.addSource ('buildings', {
@@ -647,7 +655,7 @@ const capUi = (function () {
 		// Function to initialise datasets (sources and layers)
 		initialiseDatasets: function ()
 		{
-			// console.log ('Initialising sources and layers');
+			console.log ('Initialising sources and layers');
 			
 			// Replace tileserver URL placeholder in layer definitions
 			Object.entries(_datasets.layers).forEach(([layerId, layer]) => {
@@ -1054,21 +1062,25 @@ const capUi = (function () {
 				hide();
 			});
 			
-			// Treat clicking outside of the modal as implied close
-			window.addEventListener('click', function (event) {
-				if (event.target == modal || event.target.id == 'overlay') {
-					hide();
-				}
-			});
-
-			// Treat escape key as implied close
-			window.addEventListener('keyup', function (event) {
-				if (event.key == 'Escape') {
-					if (window.getComputedStyle(modal).display == 'block') { // I.e. is displayed
-						hide();
-					}
-				}
-			});
+			if(closeButton.style.visibility != 'hidden'){
+			  // Treat clicking outside of the modal as implied close
+  			window.addEventListener('click', function (event) {
+  				if (event.target == modal || event.target.id == 'overlay') {
+  					hide();
+  				}
+  			});
+  
+  			// Treat escape key as implied close
+  			window.addEventListener('keyup', function (event) {
+  				if (event.key == 'Escape') {
+  					if (window.getComputedStyle(modal).display == 'block') { // I.e. is displayed
+  						hide();
+  					}
+  				}
+  			});
+      }
+			
+			
 
 			// Show
 			const show = function ()

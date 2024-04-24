@@ -58,14 +58,14 @@
 		<!-- Styles -->
 		<link rel="stylesheet" href="/css/main.css">
 		<link rel="stylesheet" href="/css/map.css">
-		<link rel="stylesheet" href="/css/modal.css" defer>
+		<!--  <link rel="stylesheet" href="/css/modal.css" defer> -->
 		
 		<!-- Carbon & Place application -->
 		<script src="/js/settings-common.js"></script>
 		<script src="/js/datasets-common.js"></script>
 		<script src="datasets.js"></script>
 		<script src="/js/ui-common.js"></script>
-		<!-- <script src="ui.js"></script> -->
+		<script src="ui.js"></script>
 		<script>
 			document.addEventListener ('DOMContentLoaded', function () {
 			  capUi.initialise (settings, datasets);
@@ -78,7 +78,8 @@
 		
 		<!-- Menu -->
 		<nav>
-			<a href="/"><img src="/images/ui/logo.png" alt="Carbon & Place Logo" class="logo" />Land Ownership Explorer</a>
+			<a href="/"><img src="/images/ui/logo.png" alt="Carbon & Place Logo" class="logo" /></a>
+			<a href="/about/">Land Ownership Explorer</a>
 			<a href="/about/">About</a>
 			<a href="/data/">Data</a>
 			<a href="/manual/">Manual</a>
@@ -87,16 +88,46 @@
 		
 		<!-- Welcome Splash -->
 		<div id="welcome-modal" class="modal">
-			<span class="modal-close">&times;</span>
+			<span class="modal-close" style="visibility:hidden;">&times;</span> 
 			<div>
-				<h3>Land Ownership in England and Wales</h3>
-				<p>ALPHA</p>
+				<h3>Land Ownership Explorer: ALPHA</h3>
 				<p>Last updated: <span id="updatedate"></span>. You may need to <a href="https://www.minitool.com/news/f5-vs-ctrl-f5.html">clear your browser cache</a> to see the latest updates.</p>
-				<p>Date of OSM Data on which network results are based: 
-				<div id="osmupdatedate"></div>
-				</p>
+				
+				<p>This map is intended to aid public understanding of land ownership in England and Wales. It maps data published by the <a href="https://www.gov.uk/government/organisations/land-registry">Land Registry</a>. For code and more information on data and methods see the <a href="https://github.com/mem48/LandOwnership/">GitHub repo</a>.</p>
+
+        <div style="background-color: #a5cffa; padding: 5px">
+          <p><b>To view the map, please provide the information below:</b></p>
+          <form method="POST" action="https://script.google.com/macros/s/AKfycbxNzqg-ewbcHJCqRNgzPPWhCyPXZAdlTNVpepVN6o59oKRTqKj3n-8WR7oG50_CQYOT/exec" target="dummyframe">
+          <label for="Name">Full name </label>
+          <input id="namebox" name="Name" type="text" placeholder="Full name" required=""><br>
+          <label for="Consent">I agree to the terms of use for this site (see below): </label>
+          <input id="Consentcheckbox" name="Consent" type="checkbox" required=""><br>
+          <label for="Cookies">I agree to the use of Google Analytics cookies: </label>
+          <input id="Cookiescheckbox" name="Cookies" type="checkbox" required=""><br>
+          <button type="submit" onclick="closewelcome()">Take me to the map</button>
+        </form></div>
+        
+        <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+        
+        <h2>Why do you ask for my name?</h2>
+        <p>The <a href="https://use-land-property-data.service.gov.uk/datasets/ccod/licence/view">licence</a> for the data published by the Land Registry requires that we <i>"maintain End-User Records ... for the purpose of auditing compliance with the terms of this Licence and/or for the prevention and/or detection of crime"</i>. Therefore we ask for your name and record the time you visited the site. We won't share this data with anybody unless the Land Registry requires us to as part of an audit. </p>
+        
+        <h2>Terms of use</h2>
+        <p>This website is for personal, non-commercial use. The information is illustrative and may contain errors or missing data. You must not attempt to scrape or bulk download the data. You cannot embed or reproduce the maps or data without written consent. Any use of this map must be consistent with the <a href="https://use-land-property-data.service.gov.uk/datasets/ccod/licence/view">Land Registry licence</a>. Data within the Land Ownership Explorer is not covered by the Open Data licence that applies to the rest of this site.</p>
+        
+        <h2>Copyright Notice</h2>
+        <p>This information is subject to Crown copyright and database rights 2022 and is reproduced with the <a href="https://use-land-property-data.service.gov.uk/datasets/inspire#conditions">permission of HM Land Registry</a>.</p>
+        <p>The polygons (including the associated geometry, namely x, y co-ordinates) are subject to Crown copyright and database rights 2022 Ordnance Survey 100026316.</p>
+        <p>Contains OS data © Crown copyright and database right 2022</p>
+        <p>Contains Royal Mail data © Royal Mail copyright and Database right 2022</p>
+        <p>Contains National Statistics data © Crown copyright and database right 2022</p>
+        
+        <h2>Cookies Notice</h2>
+        <p>We use Google Analytics as part of the requirement to log the usage of Land Registry data. These services may set third-party cookies.</p>
+				
 			</div>
 		</div>
+		
 		
 		<!-- Cookies Warning  -->
 		<div id="cookiewarning" class="cookiewarning">
@@ -145,13 +176,16 @@
 					</select>
 				<p></p>
 				
-				<div class="legendvertical" id="landownerslegend">
-					<div class="l_rvertical">
+				<div class="legendVertical" id="landownerslegend">
+					<div class="l_rVertical">
 						<div class="lbvertical"><span style="background-color: #313695"></span>Primary</div>
 						<div class="lbvertical"><span style="background-color: #a50026"></span>Seconday</div>
 						<div class="lbvertical"><span style="background-color: #43f22c"></span>Other</div>
 					</div>
 				</div>
+				
+				<p><label class="switch"><input type="checkbox" id="buildingsmode" onchange="showBuildings()" checked ><span class="slider round"></span></label> Show buildings</p>
+				
 			</div>
 			<button class="accordion">INSPIRE Polygons</button>
 			<div class="panel">
@@ -188,6 +222,8 @@
 				<p><em>Help content loading&hellip;</em></p>
 			</div>
 		</div>
+		
+		<div id="overlay"></div>
 		
 		<!-- Template for chart modals, including a sub-template for the chart boxes, plus overlay -->
 		<template id="chart-modal">

@@ -261,6 +261,8 @@ function renderChart (divId, title, datasets, labels)
 // Function to determine the style column
 function getStyleColumn (layerId, datasets)
 {
+  
+  console.log("Hi")
 	const style_col_selected = datasets.lineColours.zones.hasOwnProperty(layerId) ? layerId : '_';
 	//return datasets.lineColours.zones[style_col_selected];
 	return datasets.lineColours.zones['Grade'];

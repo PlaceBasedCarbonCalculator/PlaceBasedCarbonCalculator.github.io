@@ -129,10 +129,10 @@ a.smaller {
     position: static;
 		display: inline;
     vertical-align: middle;
-    margin-right: 20px;
+    margin-right: 5px;
 	}
 	nav a:first-child {
-		margin-right: 15px;
+		margin-right: 1px;
 	}
 	a.smaller {
 	font-size: 0.85em;

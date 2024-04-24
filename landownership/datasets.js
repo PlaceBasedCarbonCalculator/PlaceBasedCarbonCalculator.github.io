@@ -3,8 +3,8 @@ const datasets_extra = {
 	
 	// Data layers
 	layers: {
-		
-		inspire: {
+	  
+	  inspire: {
 			'id': 'inspire',
 			'type': 'fill',
 			'source': {
@@ -87,7 +87,7 @@ const datasets_extra = {
 				['Registered Society', 	'#ff7f00'],
 				['Unlimited Company', 	'#cab2d6'],
 				['Corporate Body', 	'#b15928'],
-				['Limited Company or Public Limited Company', 	'#e31a1c'],
+				['(Public) Limited Company', 	'#e31a1c'],
 				['Limited Liability Partnership', 	'#fb9a99'],
 				['Other',	'#000000'],
 			],
@@ -220,7 +220,9 @@ function landownersStyling (layerId, map, settings, datasets, createLegend /* ca
 	createLegend (datasets.legends.landowners, field, 'landownerslegend');
 	
 	// Set paint properties
-	map.setPaintProperty ('landowners', 'circle-color', ['match', ['get', field], ...capUi.getStyleColumn(field, datasets)]);
+	map.setPaintProperty ('landowners', 'circle-color', ['match', ['get', field], ...getStyleColumn(field, datasets)]);
+	map.setLayoutProperty ('buildings', 'visibility', 'visible');
+
 	
 }
 
@@ -232,5 +234,7 @@ function getStyleColumn (layerId, datasets)
 	const style_col_selected = datasets.circleColours.landowners.hasOwnProperty(layerId) ? layerId : '_';
 	return datasets.circleColours.landowners[style_col_selected];
 }
+
+
 
 
