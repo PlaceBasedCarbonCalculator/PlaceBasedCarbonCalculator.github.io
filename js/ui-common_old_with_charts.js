@@ -98,8 +98,8 @@ const capUi = (function () {
 		welcomeScreen: function ()
 		{
 			// Show only first time
-			//const cookieName = 'welcomescreen';
-			//if (capUi.getCookie (cookieName)) {return;}
+			const cookieName = 'welcomescreen';
+			if (capUi.getCookie (cookieName)) {return;}
 			
 			// Create modal
 			const welcomeModal = capUi.newModal ('welcome-modal');
@@ -116,7 +116,7 @@ const capUi = (function () {
 			}
 			
 			// Set cookie
-			//capUi.setCookie (cookieName, 'true');
+			capUi.setCookie (cookieName, 'true');
 		},
 
 		
@@ -269,15 +269,8 @@ const capUi = (function () {
 			// Add terrain control
 			/*
 			map.addControl(new maplibregl.TerrainControl({
-				source: 'terrainSource'//,
-
-				exaggeration: 1,
-				redFactor: 0.1,
-				greenFactor: 0.1,
-				blueFactor: 0.1,
-				baseShift: -10000,
-				encoding : "custom"
-				
+				source: 'terrainSource',
+				exaggeration: 1.25
 			}), 'top-left');
 			*/
 			
@@ -496,13 +489,12 @@ const capUi = (function () {
 			// When ready
 			map.once ('idle', function () {
 				
-				console.log("Buildings fucnction");
 				// Add the source
 				if (!map.getSource ('buildings')) {
 					map.addSource ('buildings', {
 						'type': 'vector',
-						//'url': 'pmtiles://../tiles/buildings.pmtiles', // Temp Path
-						'url': _settings.buildingsTilesUrl.replace ('%tileserverUrl', _settings.tileserverUrl),
+						'url': 'pmtiles://../tiles/buildings.pmtiles', // Temp Path
+						//'url': _settings.buildingsTilesUrl.replace ('%tileserverUrl', _settings.tileserverUrl),
 					});
 				}
 				
@@ -519,15 +511,12 @@ const capUi = (function () {
 						'paint': {
 							'fill-extrusion-color': '#9c9898', // Default gray
 							'fill-extrusion-height': [
-                        'interpolate',
-                        ['linear'],
-                        ['zoom'],
-                        12,
-                        1,
-                        14.05,
-                        ['get', 'height']
-                    ],
-                'fill-extrusion-opacity': 0.9
+								'interpolate',
+								['linear'],
+								['zoom'],
+								12, 1,
+								15, 8
+							]
 						}
 					}, 'roads 0 Guided Busway Casing');
 				}
@@ -655,7 +644,7 @@ const capUi = (function () {
 		// Function to initialise datasets (sources and layers)
 		initialiseDatasets: function ()
 		{
-			console.log ('Initialising sources and layers');
+			// console.log ('Initialising sources and layers');
 			
 			// Replace tileserver URL placeholder in layer definitions
 			Object.entries(_datasets.layers).forEach(([layerId, layer]) => {
@@ -729,7 +718,7 @@ const capUi = (function () {
 			// Register the IDs of all checked layers, first resetting the list
 			const enabledLayers = [];
 			Object.entries (_datasets.layers).forEach (([layerId, layer]) => {
-			  console.log('input.showlayer[data-layer="' + layerId + '"]');
+			  //console.log('input.showlayer[data-layer="' + layerId + '"]');
 				const isEnabled = document.querySelector ('input.showlayer[data-layer="' + layerId + '"]').checked;
 				if (isEnabled) {
 					enabledLayers.push (layerId);
@@ -750,80 +739,6 @@ const capUi = (function () {
 			// Add to each layer
 			Object.entries (_datasets.popups).forEach (([layerId, options]) => {
 				capUi.mapPopups (layerId, options);
-			});
-		},
-		
-		// Function to handle chart creation
-		charts: function ()
-		{
-		  
-		  // Handles to charts
-			const chartHandles = {};
-		  
-		  // Function to create a chart modal
-			const chartsModal = function (mapLayerId, chartDefinition) {
-				
-				// Initialise the HTML structure for this modal
-				//initialiseChartsModalHtml (mapLayerId);
-				
-				// Create the modal
-				const location_modal = capUi.newModal (mapLayerId + '-chartsmodal');
-				
-				// Initialise the HTML structure for the set of chart boxes, writing in the titles and descriptions, and setting the canvas ID
-				//initialiseChartBoxHtml(mapLayerId, chartDefinition.charts);
-				
-				// Open modal on clicking the supported map layer
-				_map.on ('click', mapLayerId, function (e) {
-					
-					// Ensure the source matches
-					let clickedFeatures = _map.queryRenderedFeatures(e.point);
-					clickedFeatures = clickedFeatures.filter(function (el) {
-						const layersToExclude = ['composite', 'buildings', 'placenames']; // #!# Hard-coded list - need to clarify purpose
-						return !layersToExclude.includes(el.source);
-						//return el.source != 'composite';
-					});
-					if (clickedFeatures[0].sourceLayer != mapLayerId) {
-						return;
-					}
-					
-					// Display the modal
-					location_modal.show();
-					
-					// Assemble the JSON data file URL
-					const featureProperties = e.features[0].properties;
-					const locationId = featureProperties[chartDefinition.propertiesField];
-					const dataUrl = chartDefinition.dataUrl.replace('%id', locationId);
-					
-					// Get the data
-					fetch(dataUrl)
-						.then(function (response) {
-							return response.json();
-						})
-						.then(function (json) {
-							//const locationData = json[0]; //TODO this is what PBCC expects
-							const locationData = json;
-							console.log ('Retrieved data for layer '+  mapLayerId + ' location ' + locationId);
-							
-							//Hide Spinner
-							//document.getElementById('loader').style.display = 'none';
-							
-							// Set the title
-							const title = chartDefinition.titlePrefix + featureProperties[chartDefinition.titleField];
-							//document.querySelector(`#${mapLayerId}-chartsmodal .modal-title`).innerHTML = title;
-							
-							// Create the charts
-							manageCharts(chartDefinition, locationData);
-						})
-						.catch(function (error) {	// Any error, including within called code, not just retrieval failure
-							alert ('Failed to get data for this location, or to process it correctly. Please try refreshing the page.');
-							console.log (error);
-						});
-				});
-			}
-			
-			// Create each set of charts
-			Object.entries (_datasets.charts).forEach(([mapLayerId, chartDefinition]) => {
-				chartsModal (mapLayerId, chartDefinition);
 			});
 		},
 		
@@ -923,6 +838,109 @@ const capUi = (function () {
 		},
 		
 		
+		// Function to handle chart creation
+		charts: function ()
+		{
+			// Handles to charts
+			const chartHandles = {};
+			
+			// Function to create a chart modal
+			const chartsModal = function (mapLayerId, chartDefinition) {
+				
+				// Initialise the HTML structure for this modal
+				initialiseChartsModalHtml (mapLayerId);
+				
+				// Create the modal
+				const location_modal = capUi.newModal (mapLayerId + '-chartsmodal');
+				
+				// Initialise the HTML structure for the set of chart boxes, writing in the titles and descriptions, and setting the canvas ID
+				initialiseChartBoxHtml(mapLayerId, chartDefinition.charts);
+				
+				// Open modal on clicking the supported map layer
+				_map.on ('click', mapLayerId, function (e) {
+					
+					// Ensure the source matches
+					let clickedFeatures = _map.queryRenderedFeatures(e.point);
+					clickedFeatures = clickedFeatures.filter(function (el) {
+						const layersToExclude = ['composite', 'buildings', 'placenames']; // #!# Hard-coded list - need to clarify purpose
+						return !layersToExclude.includes(el.source);
+						//return el.source != 'composite';
+					});
+					if (clickedFeatures[0].sourceLayer != mapLayerId) {
+						return;
+					}
+					
+					// Display the modal
+					location_modal.show();
+					
+					// Assemble the JSON data file URL
+					const featureProperties = e.features[0].properties;
+					const locationId = featureProperties[chartDefinition.propertiesField];
+					const dataUrl = chartDefinition.dataUrl.replace('%id', locationId);
+					
+					// Get the data
+					fetch(dataUrl)
+						.then(function (response) {
+							return response.json();
+						})
+						.then(function (json) {
+							//const locationData = json[0]; //TODO this is what PBCC expects
+							const locationData = json;
+							console.log ('Retrieved data for location ' + locationId);
+							
+							//Hide Spinner
+							//document.getElementById('loader').style.display = 'none';
+							
+							// Set the title
+							const title = chartDefinition.titlePrefix + featureProperties[chartDefinition.titleField];
+							document.querySelector(`#${mapLayerId}-chartsmodal .modal-title`).innerHTML = title;
+							
+							// Create the charts
+							createCharts(chartDefinition, locationData);
+						})
+						.catch(function (error) {	// Any error, including within called code, not just retrieval failure
+							alert ('Failed to get data for this location, or to process it correctly. Please try refreshing the page.');
+							console.log (error);
+						});
+				});
+			}
+			
+			
+			// Function to initialise the modal HTML from the template
+			function initialiseChartsModalHtml (mapLayerId)
+			{
+				console.log("Modal " + mapLayerId);
+				const template = document.querySelector(`#chart-modal`);
+				const chartModal = template.content.cloneNode(true);
+				chartModal.querySelector('.modal').id = mapLayerId + '-chartsmodal';
+				document.body.appendChild(chartModal);
+			}
+			
+			
+			// Function to initialise the chart box HTML from the template
+			function initialiseChartBoxHtml (mapLayerId, charts)
+			{
+				const template = document.querySelector(`#${mapLayerId}-chartsmodal .chart-template`);
+				charts.forEach((chart) => {
+					const chartBox = template.content.cloneNode(true);
+					chartBox.querySelector('.chart-wrapper').id = chart[0] + '-chartrow';
+					chartBox.querySelector('.chart-title').innerText = chart[1];
+					chartBox.querySelector('.chart-description').innerText = chart[2];
+					chartBox.querySelector('.chart-container canvas').id = chart[0] + '-chart';
+					document.querySelector(`#${mapLayerId}-chartsmodal .modal-body`).appendChild(chartBox);
+				});
+			}
+			
+			
+			
+			
+			// Create each set of charts
+			Object.entries (_datasets.charts).forEach(([mapLayerId, chartDefinition]) => {
+				chartsModal (mapLayerId, chartDefinition);
+			});
+		},
+		
+		
 		// Click handler for manual help buttons
 		handleHelpButtons: function ()
 		{
@@ -966,7 +984,7 @@ const capUi = (function () {
 				});
 			
 			// Show in modal
-			const help_modal = capUi.newModal ('help_modal');
+			const help_modal = newModal ('help_modal');
 			help_modal.show();
 		},
 		
@@ -1062,25 +1080,21 @@ const capUi = (function () {
 				hide();
 			});
 			
-			if(closeButton.style.visibility != 'hidden'){
-			  // Treat clicking outside of the modal as implied close
-  			window.addEventListener('click', function (event) {
-  				if (event.target == modal || event.target.id == 'overlay') {
-  					hide();
-  				}
-  			});
-  
-  			// Treat escape key as implied close
-  			window.addEventListener('keyup', function (event) {
-  				if (event.key == 'Escape') {
-  					if (window.getComputedStyle(modal).display == 'block') { // I.e. is displayed
-  						hide();
-  					}
-  				}
-  			});
-      }
-			
-			
+			// Treat clicking outside of the modal as implied close
+			window.addEventListener('click', function (event) {
+				if (event.target == modal || event.target.id == 'overlay') {
+					hide();
+				}
+			});
+
+			// Treat escape key as implied close
+			window.addEventListener('keyup', function (event) {
+				if (event.key == 'Escape') {
+					if (window.getComputedStyle(modal).display == 'block') { // I.e. is displayed
+						hide();
+					}
+				}
+			});
 
 			// Show
 			const show = function ()

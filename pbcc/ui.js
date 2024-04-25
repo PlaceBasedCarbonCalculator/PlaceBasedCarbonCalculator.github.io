@@ -14,8 +14,8 @@ makeChartOverview = function(chartDefinition, locationData){
 		overviewChart.destroy();
 	}
   
-  console.log(chartDefinition.component[0]);
-  console.log(chartDefinition.years[0]);
+  //console.log(chartDefinition.component[0]);
+  //console.log(chartDefinition.years[0]);
   
   // Assemble the datasets to be shown
 	const data = {datasets: []};

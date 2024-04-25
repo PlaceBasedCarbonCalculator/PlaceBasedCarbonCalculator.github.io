@@ -9,7 +9,7 @@ const datasets_extra = {
 			'type': 'fill',
 			'source': {
 			'type': 'vector',
-				'url': 'pmtiles://../tiles/zones.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/zones.pmtiles',
 				},
 			'source-layer': 'zones',
 			'paint': {
@@ -123,7 +123,7 @@ const datasets_extra = {
 	    
 	    // Data fields
 			// #!# Should use a main server URL setting
-			dataUrl: '/data/json/LSOA/%id.json',
+			dataUrl: 'https://pbcc.blob.core.windows.net/pbcc-data/LSOA/%id.json',
 			propertiesField: 'LSOA21CD',
 			titleField: 'LSOA21CD',
 			
