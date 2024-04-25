@@ -107,7 +107,7 @@ const datasets_extra = {
 	    
 	    // Data fields
 			// #!# Should use a main server URL setting
-			dataUrl: '/data/json/Access/%id.json',
+			dataUrl: 'https://pbcc.blob.core.windows.net/pbcc-data/Access/%id.json',
 			propertiesField: 'LSOA21CD',
 			titleField: 'LSOA11CD',
 			
