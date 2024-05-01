@@ -15,6 +15,20 @@
     "composite": {
       "url": "pmtiles://https://pbcc.blob.core.windows.net/pbcc-pmtiles/oszoom_dasymetric.pmtiles",
       "type": "vector"
+    },
+     "terrainSource": {
+      "type": "raster-dem",
+      "url": "pmtiles://https://pbcc.blob.core.windows.net/pbcc-pmtiles/DTM.pmtiles",
+      "tileSize": 512,
+      "minzoom": 0,
+    	"maxzoom": 13
+    },
+    "hillshadeSource": {
+      "type": "raster-dem",
+      "url": "pmtiles://https://pbcc.blob.core.windows.net/pbcc-pmtiles/DTM.pmtiles",
+      "tileSize": 512,
+      "minzoom": 0,
+    	"maxzoom": 13
     }
   },
   "sprite": "https://pbcc.blob.core.windows.net/pbcc-mapextras/sprites/dark",
@@ -32,6 +46,12 @@
       "source-layer": "sea",
       "layout": {},
       "paint": {"fill-color": "rgba(44,44,44, 1)"}
+    },
+    {
+      "id": "hillshading",
+      "type": "hillshade",
+      "source": "hillshadeSource",
+      "source-layer": "hillshadeSource"
     },
     {
       "id": "national-parks",

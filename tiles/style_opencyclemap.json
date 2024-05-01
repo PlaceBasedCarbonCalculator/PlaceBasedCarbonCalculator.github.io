@@ -14,13 +14,12 @@
       	"tiles": ["https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=bf09fff64f1443028994661047c077f5"],
       	"tileSize": 256
     },
-    "terrainSource": {
+     "terrainSource": {
       "type": "raster-dem",
-      "tiles": ["https://nptscot.blob.core.windows.net/rastertiles/dem/{z}/{x}/{y}.webp"],
+      "url": "pmtiles://https://pbcc.blob.core.windows.net/pbcc-pmtiles/DTM.pmtiles",
       "tileSize": 512,
       "minzoom": 0,
-    	"maxzoom": 9,
-    	"bounds": [-8.650007,49.864674,1.763680,60.860766]
+    	"maxzoom": 13
     }
   },
   "layers": [
