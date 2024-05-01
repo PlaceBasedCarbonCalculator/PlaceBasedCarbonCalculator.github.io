@@ -48,6 +48,12 @@
       "paint": {"fill-color": "#9cc0f9"}
     },
     {
+      "id": "hillshading",
+      "type": "hillshade",
+      "source": "hillshadeSource",
+      "source-layer": "hillshadeSource"
+    },
+    {
       "id": "surfacewater",
       "type": "fill",
       "source": "composite",
