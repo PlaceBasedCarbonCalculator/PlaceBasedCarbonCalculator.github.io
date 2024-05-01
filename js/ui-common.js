@@ -267,19 +267,19 @@ const capUi = (function () {
 			map.addControl(new maplibregl.NavigationControl(), 'top-left');
 			
 			// Add terrain control
-			/*
+			
 			map.addControl(new maplibregl.TerrainControl({
-				source: 'terrainSource'//,
+				source: 'terrainSource',
 
-				exaggeration: 1,
-				redFactor: 0.1,
-				greenFactor: 0.1,
-				blueFactor: 0.1,
-				baseShift: -10000,
-				encoding : "custom"
+				exaggeration: 1//,
+				//redFactor: 0.1,
+				//greenFactor: 0.1,
+				//blueFactor: 0.1,
+				//baseShift: -10000,
+				//encoding : "custom"
 				
 			}), 'top-left');
-			*/
+			
 			
 			// Add buildings; note that the style/colouring may be subsequently altered by data layers
 			

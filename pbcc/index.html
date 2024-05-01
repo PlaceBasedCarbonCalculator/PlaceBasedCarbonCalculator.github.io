@@ -195,15 +195,58 @@
 				<h2 class="modal-title">Zone Summary: XXXXX</h2>
 			</div>
 			<div class="modal-body">
-			  <div class="chart-text">
-							<h4 class="chart-title">Historical Emissions</h4>
-							<p class="chart-description">Description goes here</p>
-						</div>
+	
 					<div class="chart-wrapper" id="overview-chartrow">
+					  <div class="chart-text">
+							<h4 class="chart-title">Historical Emissions</h4>
+							<p class="chart-description">Estimated per person emissions 2010 to 2020</p>
+						</div>
 						<div class="chart-container">
 							<canvas id="overview-chart"></canvas>
 						</div>
 					</div>
+					
+					<div class="chart-wrapper" id="plefIgnore-chartrow">
+						<div class="chart-text">
+							<h4 class="chart-title">PLEF Ignore</h4>
+							<p class="chart-description">Forcast per person emissions under the PLEF Ignore scenario. Left column is a grandfathered downscaling, right column is an equity downscaling</p>
+						</div>
+						<div class="chart-container">
+							<canvas id="plefIgnore-chart"></canvas>
+						</div>
+					</div>
+					
+					<div class="chart-wrapper" id="plefSteer-chartrow">
+						<div class="chart-text">
+							<h4 class="chart-title">PLEF Steer</h4>
+							<p class="chart-description">Forcast per person emissions under the PLEF Steer scenario. Left column is a grandfathered downscaling, right column is an equity downscaling</p>
+						</div>
+						<div class="chart-container">
+							<canvas id="plefSteer-chart"></canvas>
+						</div>
+					</div>
+					
+					<div class="chart-wrapper" id="plefShift-chartrow">
+						<div class="chart-text">
+							<h4 class="chart-title">PLEF Shift</h4>
+							<p class="chart-description">Forcast per person emissions under the PLEF Shift scenario. Left column is a grandfathered downscaling, right column is an equity downscaling</p>
+						</div>
+						<div class="chart-container">
+							<canvas id="plefShift-chart"></canvas>
+						</div>
+					</div>
+					
+					<div class="chart-wrapper" id="plefTransform-chartrow">
+						<div class="chart-text">
+							<h4 class="chart-title">PLEF Transform</h4>
+							<p class="chart-description">Forcast per person emissions under the PLEF Transform scenario. Left column is a grandfathered downscaling, right column is an equity downscaling</p>
+						</div>
+						<div class="chart-container">
+							<canvas id="plefTransform-chart"></canvas>
+						</div>
+					</div>
+					
+					
 
 				</div>
 		</div>
