@@ -41,3 +41,4 @@ vignettes/*.pdf
 # Local Data
 *.pmtiles
 /data/json/
+/rastertiles
