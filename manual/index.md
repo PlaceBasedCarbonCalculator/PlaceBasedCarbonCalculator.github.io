@@ -1,9 +1,5 @@
 # Carbon & Place Manual
 
-
-## Introduction
-
-
 Welcome to Carbon & Place a family of tools to help you understand how and why carbon footprints change from place to place and how we can reduce them. Funded by the Energy Demand Research Centre and developed by the University of Leeds it. It builds on the Place-Based Carbon Calculator.
 
 ## Accessing Carbon & Place
@@ -66,6 +62,26 @@ The Anti-alias option enables advanced rendering options that make the map look 
 
 The layer controls on the right side of the map control what information is shown on the map.
 
+### General Concepts
+
+#### Neighbouhood Statitics
+
+The tools on site site often present their results in the form of neighbourhood statistics. We mostly use the Lower Super Output Areas (LSOA) created for the 2021 census, or their Scottish equivalents (Data Zones). 
+
+LSOAs are small statical areas designed to have roughly the same population (1,500 - 3,000 people). As such they vary in shape and size. In urban areas they may be as small as a single street, while in rural areas they can be very large. They were originally created for the 2001 Census by the Office for National Statistics (ONS) and have be updated for the 2011, and 2021 Cenuses.
+
+As well as being used by the ONS to publish Census statistics LSOAs are widely used in by Government and Academia to publish small area datasets. This means that information on a wide range of topics is available for LSOAs and they are a useful unit of comparison.
+
+While LSOAs are small they still contain thousands of people, so any data about them is still an average of many people and not individually specific. There will still be a lot of variation within an LSOA, think about how different you are to your neighbours. Small area statics can be useful as neighbours often have a lot in common. They may live in similar homes, have access to the same shops and services, and send their children to the same schools. Many of the choices we make are, at least in part, affected by where we live. Thus studying the differences between people and places can help us understand some of the biggest and most complex issues of our times.
+
+<!-- #dasymetric -->
+#### Dasymetric Mapping
+
+By default, the neighbourhood statistics are are shown as a dasymetric map. This means that the buildings within a zone are coloured to display information. If you turn off dasymetric mode, a simple choropleth map is shown where the whole neighbourhood is coloured. Note that the same underlying data is being visualised in both modes, and the differences between modes are merely aesthetic. However, dasymetric maps are intended to better represent the data by emphasising the true locations of people who are not uniformly distributed across the area. 
+
+For some data types we have split the neighbourhoods into residential and non-residential areas. The original LSOAs created by the Office for National Statistics (ONS) are contiguous. In other words every part of the country is within an LSOA with no gaps. However for some neighbourhood statistics they only make sense to refer to the part of the LSOA that contains homes. For example consider LSOA E01002444 which contains Heathrow Airport. This LSOA has a population of about 2,230 people. But none of these people live in the airport, they live in the homes near the airport. So we split the LSOA into two; one that contains all the homes and will report statistics that are relevant to the residential population, and one that contains no homes and will report non-domestic statistics. This means you may see maps that have gaps or grey buildings.
+<!-- #dasymetric -->
+
 ## Place-Based Carbon Calcualtor
 
 <!-- #purpose -->
@@ -77,7 +93,9 @@ Zones Help
 <!-- /#pbcc-zones -->
 
 
-## Transport and Accessability Explorer
+## Transport and Accessibility Explorer
+
+The Transport and Accessibility Explorer allows a deep dive on the issues related to transport and access to services. 
 
 ## Retrofit Explorer
 
@@ -310,8 +328,34 @@ It is hard to discuss issues around place without eventually coming to the topic
 
 The Land Ownership Explorer is intended to cast a little light onto the issue of land ownership by providing a more accessible form of official Land Registry datasets.
 
+### Map Layers
 
+<!-- #landownership-inspire -->
+#### INSPIRE Polygons
 
+The INSPIRE polygons area created by the Land Registry for England and Wales show all the freehold land in England and Wales. They are published as Open Data with a few conditions. Unofrtualty the Land Registry do not provide a easy service to view the INSPIRE data.
 
+So the first task was to build a modern vector tile set for INSPIRE polygons. I also decided to do some light cleaning of the data.
+Cleaning the polygons
+
+Land registry maps are often digitised versions of old paper maps. Therefore the titles are often split into grids where a property crosses the boundary of one paper map to another. I wrote code to detect straight edges that align with the 500m grids of the British National Grid and remove them.
+
+Polygon boarders aligned with the grid have been detected and highlighted in red.
+While this is not perfect, the INSPIRE Polygon data is very messy, it does help clean up the data and make it clearer where large titles are.
+
+Once the polygons have been cleaned, and duplicates have been removed, each Local Authority's data can be combined into a single 24 GB geojson. I also created smaller files containing just the polygons greater than 100 acres and 10 acres.
+
+I then built these into a tileset. As showing all the polygons in the country is not possible even for Vector Tiles, I chose to map the large polygons when zoomed out and then add smaller polygons the closer you zoom.
+
+When zoomed out only the largest polygons are shown
+
+Zoom in a little and you can see all the polygons
+
+You can also click on the polygons so see the INSPIRE ID which can be used to purchase the full title the Local Authority name and the area in square metres. Due to an oversight on my part the area is given to 13 decimal places, I'll fix this in a future version.
+
+Also as I have merged some polygons, some INSPIRE IDs are missing. For merged polygons they have been given one of the INSPIRE IDs from the unmerged polygons, but which one they get is essentially random.
+<!-- /#landownership-inspire -->
+
+#### Property ownend by UK and overseas companies
 
 
