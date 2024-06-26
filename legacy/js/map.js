@@ -235,7 +235,7 @@ map.addSource('epc', {
 	'minzoom': 6,
 	'maxzoom': 14
 });
-
+/*
 map.addSource('terrainSource', {
   'type': 'raster-dem',
   'tiles': ["https://www.carbon.place/rastertiles/demwebp/{z}/{x}/{y}.webp"],
@@ -260,7 +260,7 @@ map.addLayer(
 },
 'sea'
 );
-
+*/
 
 });
 

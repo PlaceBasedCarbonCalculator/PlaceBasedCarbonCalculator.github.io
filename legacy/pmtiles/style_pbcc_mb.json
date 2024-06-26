@@ -12,12 +12,30 @@
     "light": {"intensity": 0.25, "color": "hsl(0, 0%, 100%)"},
     "sources": {
         "composite": {
-            "tiles": ["https://www.carbon.place/tiles/oszoom/{z}/{x}/{y}.pbf"],
-            "type": "vector",
-            "maxzoom": 14
+          "url": "pmtiles://https://pbcc.blob.core.windows.net/pbcc-pmtiles/oszoom_dasymetric.pmtiles",
+          "type": "vector"
+        },
+        "terrainSource": {
+          "type": "raster-dem",
+          "url": "pmtiles://https://pbcc.blob.core.windows.net/pbcc-pmtiles/DTM.pmtiles",
+          "tileSize": 512,
+          "minzoom": 0,
+        	"maxzoom": 13
+        },
+        "hillshadeSource": {
+          "type": "raster-dem",
+          "url": "pmtiles://https://pbcc.blob.core.windows.net/pbcc-pmtiles/DTM.pmtiles",
+          "tileSize": 512,
+          "minzoom": 0,
+        	"maxzoom": 13
         }
-    },
-    "sprite": "https://www.carbon.place/sprites/sprites",
+      },
+    "sprite": [
+        {
+          "id": "default",
+          "url": "https://pbcc.blob.core.windows.net/pbcc-mapextras/sprites/greyscale"
+        }
+      ],
     "glyphs": "https://pbcc.blob.core.windows.net/pbcc-mapextras/fonts/{fontstack}/{range}.pbf",
     "layers": [
         {
@@ -32,6 +50,12 @@
             "source-layer": "sea",
             "layout": {},
             "paint": {"fill-color": "#c5cdd0"}
+        },
+        {
+          "id": "hillshading",
+          "type": "hillshade",
+          "source": "hillshadeSource",
+          "source-layer": "hillshadeSource"
         },
         {
             "id": "national-parks",

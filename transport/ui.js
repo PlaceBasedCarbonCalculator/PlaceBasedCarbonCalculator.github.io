@@ -4,6 +4,7 @@ var accessChart;
 manageCharts =  function (chartDefinition, locationData){
   console.log("Managing Charts");
   makeChartAccess(locationData);
+  makeTableAccess(locationData);
 }
 
 makeChartAccess = function(locationData){
@@ -123,3 +124,60 @@ makeChartAccess = function(locationData){
 }
 
 
+makeTableAccess = function(locationData){
+  
+  var tab = document.getElementById('access-table')
+  
+  const labels = locationData["Bc"];
+  
+  const access_15 = locationData["a15"];
+  const access_30 = locationData["a30"];
+  const access_45 = locationData["a45"];
+  const access_60 = locationData["a60"];
+  
+  const proximity_15 = locationData["p15"];
+  const proximity_30 = locationData["p30"];
+  const proximity_45 = locationData["p45"];
+  const proximity_60 = locationData["p60"];
+  
+  
+	// Create an object to store data for each category
+  const htmltext = {};
+  for (let i = 0; i < labels.length; i++) {
+    htmltext[i] = '<tr>' +
+                  '<td>' + labels[i] + '</td>' +
+                  '<td>' + access_15[i] + '</td><td>' + access_30[i] + '</td><td>' + access_45[i] + '</td><td>' + access_60[i] + '</td><td>' +
+                           proximity_15[i] + '</td><td>' + proximity_30[i] + '</td><td>' + proximity_45[i] + '</td><td>' + proximity_60[i] + '</td>' +
+                  '</tr>';
+                  
+  }
+  
+  
+  tab.innerHTML = '<table><tr><th>Type</th><th>15 min</th><th>30 min</th><th>45 min</th><th>60 min</th><th>5 mile</th><th>10 mile</th><th>15 mile</th><th>20 mile</th></tr>' +
+   Object.values(htmltext).join('') +
+  '</table>';
+  
+  const cells = tab.getElementsByTagName('td');
+
+  for (let cell of cells) {
+    const value = parseFloat(cell.textContent);
+    if (value < -2) {
+      cell.classList.add('very-poor');
+    } else if (value > 2) {
+      cell.classList.add('very-good');
+    } else if (value < -1 & value >= -2 ) {
+      cell.classList.add('poor');
+    } else if (value < -0.5 & value >= -1 ) {
+      cell.classList.add('below-average');
+    } else if (value < 0.5 & value >= -0.5 ) {
+      cell.classList.add('average');
+    } else if (value < 1 & value >= 0.5 ) {
+      cell.classList.add('above-average');
+    } else if (value < 2 & value >= 1 ) {
+      cell.classList.add('good');
+    }
+  }
+  
+  
+  
+}

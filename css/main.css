@@ -57,9 +57,9 @@ nav {
   backdrop-filter: blur(10px);
   background-color: rgba(0,0,0,0.6);
   z-index: 1100;
-  position: absolute;
   width: 100%;
 }
+
 nav a {
   float: left;
   display: table-cell;
