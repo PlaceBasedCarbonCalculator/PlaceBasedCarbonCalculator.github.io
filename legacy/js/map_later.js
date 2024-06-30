@@ -173,7 +173,7 @@ map.getCanvas().style.cursor = '';
 // Show Isochrones
 map.on('click', 'centroids', function (e) {
   var lsoacode = e.features[0].properties.code;
-  var lsoaurl = 'pmtiles://https://pbcc.blob.core.windows.net/pbcc-data/isochrones_legacy/' + lsoacode + '.geojson';
+  var lsoaurl = 'https://pbcc.blob.core.windows.net/pbcc-data/isochrones_legacy/' + lsoacode + '.geojson';
   
   if (map.getLayer('isochrones')){
     console.log("removed layer");
@@ -190,16 +190,19 @@ map.on('click', 'centroids', function (e) {
     type: 'geojson',
     data: lsoaurl
   });
-  console.log("add source");
+  //console.log("added source");
   
+  // TODO; THis loop forever so probably not best practice
   map.on('sourcedata', function(e) {
+    //console.log("source loaded");
   if (e.isSourceLoaded) {
   // Do something when the source has finished loading
   if (map.getLayer('isochrones')){
     //console.log("removed layer");
     map.removeLayer('isochrones');
    
-  } 
+  }
+  //console.log("add layer");
   map.addLayer(
           {
           'id': 'isochrones',
