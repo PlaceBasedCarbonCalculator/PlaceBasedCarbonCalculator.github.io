@@ -471,7 +471,7 @@ input:checked + .slider:before {
 /* Custom MapLibre Buttons */
 .maplibregl-ctrl-top-left {
   left: 0;
-  top: 60px;
+  /*top: 60px;*/
 }
 
 .maplibregl-ctrl-group button {
@@ -530,6 +530,10 @@ input:checked + .slider:before {
 /* Prevent images from overflowing the box size */
 .modal img {
   max-width: 100%;
+}
+
+.modal-body {
+  padding: 15px;
 }
 
 /* The Close Button */

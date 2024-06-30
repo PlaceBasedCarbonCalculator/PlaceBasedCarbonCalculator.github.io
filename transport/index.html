@@ -21,7 +21,7 @@
 		<meta name="twitter:card" content="summary_large_image">
 		<meta property="og:site_name" content="Carbon & Place">
 		<meta name="twitter:image:alt" content="Carbon & Place thumbnail">
-		<title>Place-Based Carbon Calculator</title>
+		<title>Transport and Accessability Explorer</title>
 		
 		<!-- PWA support -->
 		<link rel="manifest" href="manifest.webmanifest">
@@ -92,13 +92,11 @@
 		<!-- Welcome Splash -->
 		<div id="welcome-modal" class="modal">
 			<span class="modal-close">&times;</span>
-			<div>
-				<h3>Place-Based Carbon Calculator v2</h3>
+			<div class="modal-body">
+				<h3>Transport and Accessability Explorer</h3>
 				<p>ALPHA</p>
 				<p>Last updated: <span id="updatedate"></span>. You may need to <a href="https://www.minitool.com/news/f5-vs-ctrl-f5.html">clear your browser cache</a> to see the latest updates.</p>
-				<p>Date of OSM Data on which network results are based: 
-				<div id="osmupdatedate"></div>
-				</p>
+				<!-- <div id="osmupdatedate"></div> -->
 			</div>
 		</div>
 		
@@ -141,25 +139,26 @@
 				<p><label><input type="checkbox" class="showlayer" data-layer="zones" value="false">Show layer</label></p>
 				<p>
 					<select name="field" class="updatelayer" data-layer="zones" aria-label="Neighbouhood  layer">
-						<option value="total_grade_2020" selected>Total Emissions</option>
-						<option value="dom_gas_grade_2020" >Gas</option>
-						<option value="dom_elec_grade_2020">Electricity</option>
-						<option value="car_grade_2020" >Car</option>
-						<option value="van_grade_2020">Van</option>
-						<option value="goods_services_combined_grade_2020">Goods & Services</option>
-						<option value="flights_grade_2020">Flights</option>
+						<option value="change_bus_2008_2023" selected>Change in Bus Service (2008-2023)</option>
+						<option value="tph_daytime_avg_2023_0" >Tram</option>
+						<option value="tph_daytime_avg_2023_1">Subway</option>
+						<option value="tph_daytime_avg_2023_2" >Rail</option>
+						<option value="tph_daytime_avg_2023_3">Bus</option>
+						<option value="tph_daytime_avg_2023_4">Ferry</option>
 					</select>
-					<button aria-label="Help purpose" class="helpbutton" data-help="zones"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+					<button aria-label="Help purpose" class="helpbutton" data-help="trasport-zones"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
 				</p>
 				<div id="zoneslegend" class="legendHorizontal">
 					<div class="l_rHorizontal">
 						<div class="lb"><span style="background-color: #ffffff"></span>&nbsp;</div>
 					</div>
 				</div>
+				
+				<!--
 				<p><label class="switch"><input type="checkbox" name="daysymetricmode" class="updatelayer" data-layer="zones" checked><span class="slider round"></span></label> Dasymetric</p>
 			
 			<p><label><input type="checkbox" class="showlayer" data-layer="buildings" value="true">Show Buildings</label></p>
-			
+			-->
 			</div>
 			
 			<button class="accordion">Boundaries</button>

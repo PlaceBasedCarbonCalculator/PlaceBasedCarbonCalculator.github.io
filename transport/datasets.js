@@ -13,7 +13,7 @@ const datasets_extra = {
 			'type': 'fill',
 			'source': {
 			'type': 'vector',
-				'url': 'pmtiles://../tiles/zones.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/zones_transport.pmtiles',
 				},
 			'source-layer': 'zones',
 			'paint': {
@@ -50,51 +50,220 @@ const datasets_extra = {
 	legends: {
 
 		zones: {
-			'Grade': [
-				['A+','#313695'],
-  			['A' ,'#4575b4'],
-  			['A-','#4575b4'],
-  			['B+','#74add1'],
-  			['B' ,'#abd9e9'],
-  			['B-','#abd9e9'],
-  			['C+','#e0f3f8'],
-  			['C' ,'#e0f3f8'],
-  			['C-','#ffffbf'],
-  			['D+','#ffffbf'],
-  			['D' ,'#fee090'],
-  			['D-','#fee090'],
-  			['E+','#fdae61'],
-  			['E' ,'#fdae61'],
-  			['E-','#f46d43'],
-  			['F+','#d73027'],
-  			['F' ,'#d73027'],
-  			['F-','#a50026']
-			]
+			'change_bus_2008_2023': [
+				[0,'#313695'],
+  			[1 ,'#4575b4'],
+  			[4,'#4575b4'],
+  			[10,'#74add1'],
+  			[20 ,'#abd9e9'],
+  			[30,'#abd9e9'],
+  			[40,'#e0f3f8'],
+  			[50 ,'#e0f3f8'],
+  			[60,'#ffffbf'],
+  			[70,'#ffffbf'],
+  			[80 ,'#fee090'],
+  			[90,'#fee090'],
+  			[100,'#fdae61'],
+  			[150 ,'#fdae61'],
+  			[200,'#f46d43'],
+  			[300,'#d73027'],
+  			[400 ,'#d73027'],
+  			[500,'#a50026']
+			],
+			'tph_daytime_avg_2023_0': [
+				[0  ,'#313695'],
+  			[1  ,'#4575b4'],
+  			[2  ,'#4575b4'],
+  			[5 ,'#74add1'],
+  			[10 ,'#abd9e9'],
+  			[15 ,'#abd9e9'],
+  			[20 ,'#e0f3f8'],
+  			[40 ,'#e0f3f8'],
+  			[60 ,'#ffffbf'],
+  			[80 ,'#ffffbf'],
+  			[100 ,'#fee090'],
+  			[200 ,'#fee090'],
+  			[300,'#fdae61'],
+  			[400,'#fdae61'],
+  			[500,'#a50026']
+  		],
+  		'tph_daytime_avg_2023_1': [
+				[0  ,'#313695'],
+  			[1  ,'#4575b4'],
+  			[2  ,'#4575b4'],
+  			[5 ,'#74add1'],
+  			[10 ,'#abd9e9'],
+  			[15 ,'#abd9e9'],
+  			[20 ,'#e0f3f8'],
+  			[40 ,'#e0f3f8'],
+  			[60 ,'#ffffbf'],
+  			[80 ,'#ffffbf'],
+  			[100 ,'#fee090'],
+  			[200 ,'#fee090'],
+  			[300,'#fdae61'],
+  			[400,'#fdae61'],
+  			[500,'#a50026']
+  		],
+  		'tph_daytime_avg_2023_2': [
+				[0  ,'#313695'],
+  			[1  ,'#4575b4'],
+  			[2  ,'#4575b4'],
+  			[5 ,'#74add1'],
+  			[10 ,'#abd9e9'],
+  			[15 ,'#abd9e9'],
+  			[20 ,'#e0f3f8'],
+  			[40 ,'#e0f3f8'],
+  			[60 ,'#ffffbf'],
+  			[80 ,'#ffffbf'],
+  			[100 ,'#fee090'],
+  			[200 ,'#fee090'],
+  			[300,'#fdae61'],
+  			[400,'#fdae61'],
+  			[500,'#a50026']
+  		],
+  		'tph_daytime_avg_2023_3': [
+				[0  ,'#313695'],
+  			[1  ,'#4575b4'],
+  			[2  ,'#4575b4'],
+  			[5 ,'#74add1'],
+  			[10 ,'#abd9e9'],
+  			[15 ,'#abd9e9'],
+  			[20 ,'#e0f3f8'],
+  			[40 ,'#e0f3f8'],
+  			[60 ,'#ffffbf'],
+  			[80 ,'#ffffbf'],
+  			[100 ,'#fee090'],
+  			[200 ,'#fee090'],
+  			[300,'#fdae61'],
+  			[400,'#fdae61'],
+  			[500,'#a50026']
+  		],
+  		'tph_daytime_avg_2023_4': [
+				[0  ,'#313695'],
+  			[1  ,'#4575b4'],
+  			[2  ,'#4575b4'],
+  			[5 ,'#74add1'],
+  			[10 ,'#abd9e9'],
+  			[15 ,'#abd9e9'],
+  			[20 ,'#e0f3f8'],
+  			[40 ,'#e0f3f8'],
+  			[60 ,'#ffffbf'],
+  			[80 ,'#ffffbf'],
+  			[100 ,'#fee090'],
+  			[200 ,'#fee090'],
+  			[300,'#fdae61'],
+  			[400,'#fdae61'],
+  			[500,'#a50026']
+  		]
 		},
 	},
 	
 	lineColours: {
 	  zones: {
-			'Grade': [
-				'A+','#313695',
-  			'A' ,'#4575b4',
-  			'A-','#4575b4',
-  			'B+','#74add1',
-  			'B' ,'#abd9e9',
-  			'B-','#abd9e9',
-  			'C+','#e0f3f8',
-  			'C' ,'#e0f3f8',
-  			'C-','#ffffbf',
-  			'D+','#ffffbf',
-  			'D' ,'#fee090',
-  			'D-','#fee090',
-  			'E+','#fdae61',
-  			'E' ,'#fdae61',
-  			'E-','#f46d43',
-  			'F+','#d73027',
-  			'F' ,'#d73027',
-  			'F-','#a50026',
-  			'#000000'
+			'change_bus_2008_2023': [
+				-100,'#313695',
+  			1 ,'#4575b4',
+  			4,'#4575b4',
+  			10,'#74add1',
+  			20 ,'#abd9e9',
+  			30,'#abd9e9',
+  			40,'#e0f3f8',
+  			50 ,'#e0f3f8',
+  			60,'#ffffbf',
+  			70,'#ffffbf',
+  			80 ,'#fee090',
+  			90,'#fee090',
+  			100,'#fdae61',
+  			150 ,'#fdae61',
+  			200,'#f46d43',
+  			300,'#d73027',
+  			400 ,'#d73027',
+  			500,'#a50026'
+			],
+			'tph_daytime_avg_2023_0': [
+				0  ,'#313695',
+  			1  ,'#4575b4',
+  			2  ,'#4575b4',
+  			5 ,'#74add1',
+  			10 ,'#abd9e9',
+  			15 ,'#abd9e9',
+  			20 ,'#e0f3f8',
+  			40 ,'#e0f3f8',
+  			60 ,'#ffffbf',
+  			80 ,'#ffffbf',
+  			100 ,'#fee090',
+  			200 ,'#fee090',
+  			300,'#fdae61',
+  			400,'#fdae61',
+  			500,'#a50026'
+			],
+			'tph_daytime_avg_2023_1': [
+				0  ,'#313695',
+  			1  ,'#4575b4',
+  			2  ,'#4575b4',
+  			5 ,'#74add1',
+  			10 ,'#abd9e9',
+  			15 ,'#abd9e9',
+  			20 ,'#e0f3f8',
+  			40 ,'#e0f3f8',
+  			60 ,'#ffffbf',
+  			80 ,'#ffffbf',
+  			100 ,'#fee090',
+  			200 ,'#fee090',
+  			300,'#fdae61',
+  			400,'#fdae61',
+  			500,'#a50026'
+			],
+			'tph_daytime_avg_2023_2': [
+				0  ,'#313695',
+  			1  ,'#4575b4',
+  			2  ,'#4575b4',
+  			5 ,'#74add1',
+  			10 ,'#abd9e9',
+  			15 ,'#abd9e9',
+  			20 ,'#e0f3f8',
+  			40 ,'#e0f3f8',
+  			60 ,'#ffffbf',
+  			80 ,'#ffffbf',
+  			100 ,'#fee090',
+  			200 ,'#fee090',
+  			300,'#fdae61',
+  			400,'#fdae61',
+  			500,'#a50026'
+			],
+			'tph_daytime_avg_2023_3': [
+				0  ,'#313695',
+  			1  ,'#4575b4',
+  			2  ,'#4575b4',
+  			5 ,'#74add1',
+  			10 ,'#abd9e9',
+  			15 ,'#abd9e9',
+  			20 ,'#e0f3f8',
+  			40 ,'#e0f3f8',
+  			60 ,'#ffffbf',
+  			80 ,'#ffffbf',
+  			100 ,'#fee090',
+  			200 ,'#fee090',
+  			300,'#fdae61',
+  			400,'#fdae61',
+  			500,'#a50026'
+			],
+			'tph_daytime_avg_2023_4': [
+				0  ,'#313695',
+  			1  ,'#4575b4',
+  			2  ,'#4575b4',
+  			5 ,'#74add1',
+  			10 ,'#abd9e9',
+  			15 ,'#abd9e9',
+  			20 ,'#e0f3f8',
+  			40 ,'#e0f3f8',
+  			60 ,'#ffffbf',
+  			80 ,'#ffffbf',
+  			100 ,'#fee090',
+  			200 ,'#fee090',
+  			300,'#fdae61',
+  			400,'#fdae61',
+  			500,'#a50026'
 			]
 		},
 	},
@@ -142,8 +311,8 @@ const datasets = { ...datasets_common, ...datasets_extra };
 function getStyleColumn (layerId, datasets)
 {
 	const style_col_selected = datasets.lineColours.zones.hasOwnProperty(layerId) ? layerId : '_';
-	//return datasets.lineColours.zones[style_col_selected];
-	return datasets.lineColours.zones['Grade'];
+	return datasets.lineColours.zones[style_col_selected];
+	//return datasets.lineColours.zones['Grade'];
 }
 
 // Styling callback for data zones (including buildings styling)
@@ -151,15 +320,17 @@ function zonesStyling (layerId, map, settings, datasets, createLegend /* callbac
 {
 	// Update the legend (even if map layer is off)
 	const field = document.querySelector ('select.updatelayer[data-layer="zones"][name="field"]').value
-	createLegend (datasets.legends.zones, "Grade", 'zoneslegend'); // Fixed Legeng for Grades
+	createLegend (datasets.legends.zones, field, 'zoneslegend'); // Fixed Legeng for Grades
 	
 	// Get UI state
-	const daysymetricMode = document.querySelector ('input.updatelayer[data-layer="zones"][name="daysymetricmode"]').checked;
+	// const daysymetricMode = document.querySelector ('input.updatelayer[data-layer="zones"][name="daysymetricmode"]').checked;
 	
 	// Set paint properties
 	//map.setPaintProperty (layerId, 'fill-color', ['step', ['get', field], getStyleColumn (field, datasets)]);
-	map.setPaintProperty (layerId, 'fill-color', ['match', ['get', field], ...getStyleColumn (field, datasets)]);
-	map.setPaintProperty (layerId, 'fill-opacity', (daysymetricMode ? 0.1 : 0.8)); // Very faded-out in daysymetric mode, as the buildings are coloured
+	// map.setPaintProperty (layerId, 'fill-color', ['interpolate', ['linear'], ['get', field], ...getStyleColumn (field, datasets)]);
+	//console.log({'fill-color' : ['interpolate', ['linear'], ['get', field], ...getStyleColumn (field, datasets)]});
+	map.setPaintProperty (layerId, 'fill-color', ['interpolate', ['linear'], ['get', field], ...getStyleColumn (field, datasets)]);
+	map.setPaintProperty (layerId, 'fill-opacity', 0.8); 
 	
 	// Set buildings layer colour/visibility
 	const buildingColour = getBuildingsColour(settings);
@@ -173,7 +344,7 @@ function zonesStyling (layerId, map, settings, datasets, createLegend /* callbac
 function getBuildingsColour (settings)
 {
 	// If datazones is off, buildings shown, if vector style, as static colour appropriate to the basemap
-	
+	/*
 	if (!document.querySelector ('input.showlayer[data-layer="zones"]').checked) {
 		const styleName = document.querySelector('#basemapform input:checked').value;	// Same as nptUi.getBasemapStyle()
 		return settings.basemapStyles[styleName].buildingColour;
@@ -184,7 +355,7 @@ function getBuildingsColour (settings)
 		const field = document.querySelector ('select.updatelayer[data-layer="zones"][name="field"]').value;
 		return ['match', ['get', field], ...getStyleColumn (field, datasets)];
 	}
-	
+	*/
 	// Default to gray
 	return '#9c9898';
 }
