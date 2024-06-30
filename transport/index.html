@@ -196,35 +196,75 @@
 				<h2 class="modal-title">Zone Summary: XXXXX</h2>
 			</div>
 			<div class="modal-body">
-			  <div class="chart-text">
-					<h4 class="chart-title">Access Proximity plot</h4>
-					<p class="chart-description">Description goes here</p>
-				</div>
-				<div class="chart-wrapper" id="access-chartrow" style="display: block;">
-					<div class="chart-container-wide">
-						<canvas id="access-chart"></canvas>
-					</div>
+			  
+			   <!-- Tab links -->
+        <div class="tab">
+          <button class="tablinks" onclick="modalTab(event, 'pna')" id="defaultOpen">Proximity & Accessability</button>
+          <button class="tablinks" onclick="modalTab(event, 'ptfreq')">Public Transport Frequency</button>
+        </div>
+			  
+			  <div id="pna" class="tabcontent">
+  			  <div class="chart-text">
+  					<h4 class="chart-title">Access Proximity plot</h4>
+  					<p class="chart-description">Description goes here</p>
+  				</div>
+  				<div class="chart-wrapper" id="access-chartrow" style="display: block;">
+  					<div class="chart-container-wide">
+  						<canvas id="access-chart"></canvas>
+  					</div>
+  				</div>
+  				
+  				<div >
+  				  <h4>Access Summary</h4>
+  				  <div id="access-table">
+  				  <table>
+              <tr>
+                <th>Type</th>
+                <th>Access</th>
+                <th>Proximity</th>
+              </tr>
+              <tr>
+                <td>No Data</td>
+                <td>No Data</td>
+                <td>No Data</td>
+              </tr>
+            </table> 
+  				  </div>
+  				  
+  				  
+  				</div>
 				</div>
 				
-				<div >
-				  <h4>Access Summary</h4>
-				  <div id="access-table">
-				  <table>
-            <tr>
-              <th>Type</th>
-              <th>Access</th>
-              <th>Proximity</th>
-            </tr>
-            <tr>
-              <td>No Data</td>
-              <td>No Data</td>
-              <td>No Data</td>
-            </tr>
-          </table> 
-				  </div>
-				  
-				  
+				<div id="ptfreq" class="tabcontent">
+  			  <div class="chart-text">
+  					<h4 class="chart-title">Public Transport Frequnecy</h4>
+  					<p class="chart-description">Description goes here</p>
+  					
+  					<select id="select_day" name="select_day" onchange="">
+                <option value="weekday" selected>Weekday</option>
+                <option value="Sat" >Saturday</option>
+                <option value="Sun" >Sunday</option>
+            </select>
+          
+            <select id="select_mode" name="select_mode" onchange="">
+                <option value="0">Tram/Light Rail</option>
+                <option value="1">Metro</option>
+                <option value="2">Rail</option>
+                <option value="3" selected>Bus</option>
+                <option value="4">Ferry</option>
+            </select>
+  					
+  					
+  				</div>
+  				<div class="chart-wrapper" id="frequency-chartrow" style="display: block;">
+  					<div class="chart-container-wide">
+  						<canvas id="frequency-chart"></canvas>
+  					</div>
+  				</div>
+  				
+  				
 				</div>
+				
 			</div>
 		</div>
 		

@@ -1,5 +1,6 @@
 // Local Chart Mangement
 var accessChart;
+var frequencyChart;
 
 manageCharts =  function (chartDefinition, locationData){
   console.log("Managing Charts");
@@ -181,3 +182,108 @@ makeTableAccess = function(locationData){
   
   
 }
+
+makeChartFrequnecy = function(locationData){
+  
+  // Access Chart
+  // Destroy old chart
+	if(frequencyChart){
+		frequencyChart.destroy();
+	}
+	
+	md = document.getElementById("select_mode").value;
+	day = document.getElementById("select_day").value;
+  
+  // Get data muliple datasets for each category
+  
+  
+  const MorningPeak = locationData['tph_' + day + '_MorningPeak_' + md];
+  const Midday = locationData['tph_' + day + '_Midday_' + md];
+	const AfternoonPeak = locationData['tph_' + day + '_AfternoonPeak_' + md];
+	const Evening = locationData['tph_' + day + '_Evening_' + md];
+	const Night = locationData['tph_' + day + '_Night_' + md];
+	const years = locationData['year']
+	
+	var freqencyctx = document.getElementById('freqency-chart').getContext('2d');
+	freqencyChart = new Chart(freqencyctx, {
+		type: 'line',
+		data: {
+			labels: years,
+			datasets: [{
+				label: 'Morning Peak',
+				data: MorningPeak,
+				backgroundColor: 'rgba(228,26,28, 0.8)',
+				borderColor: 'rgba(228,26,28, 1)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: 'Midday',
+				data: Midday,
+				backgroundColor: 'rgba(55,126,184, 0.8)',
+				borderColor: 'rgba(55,126,184, 1)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: 'Afternoon Peak',
+				data: AfternoonPeak,
+				backgroundColor: 'rgba(77,175,74, 0.8)',
+				borderColor: 'rgba(77,175,74, 1)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: 'Evening',
+				data: Evening,
+				backgroundColor: 'rgba(255,127,0, 0.8)',
+				borderColor: 'rgba(255,127,0, 1)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: 'Night',
+				data: Night,
+				backgroundColor: 'rgba(152,78,163, 0.8)',
+				borderColor: 'rgba(152,78,163, 1)',
+				borderWidth: 1,
+				order: 1
+			}
+
+			]
+		},
+		options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      }
+    }
+	});
+
+}
+
+// Function for modal tabs
+modalTab = function (evt, tabName) {
+  // Declare all variables
+  var i, tabcontent, tablinks;
+
+  // Get all elements with class="tabcontent" and hide them
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+
+  // Get all elements with class="tablinks" and remove the class "active"
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+  // Show the current tab, and add an "active" class to the button that opened the tab
+  document.getElementById(tabName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+
+document.getElementById("defaultOpen").click();
