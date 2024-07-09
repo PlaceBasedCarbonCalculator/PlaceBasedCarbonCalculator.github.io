@@ -5,7 +5,7 @@ const datasets_common = {
 	// Data layers
 	layers: {
 		
-		/*
+		
 		wards: {
 			'id': 'wards',
 			'type': 'line',
@@ -32,8 +32,36 @@ const datasets_common = {
 				'line-color': 'rgba(107, 7, 7, 1)',
 				'line-width': 2
 			} 
+		},
+		
+		parish: {
+			'id': 'parish',
+			'type': 'line',
+			'source': {
+				'type': 'vector',
+				'url': 'pmtiles://%tileserverUrl/parish.pmtiles',
+			},
+			'source-layer': 'parish',
+			'paint': {
+				'line-color': 'rgba(107, 7, 7, 1)',
+				'line-width': 2
+			} 
+		},
+		
+		westminster: {
+			'id': 'westminster',
+			'type': 'line',
+			'source': {
+				'type': 'vector',
+				'url': 'pmtiles://%tileserverUrl/westminster.pmtiles',
+			},
+			'source-layer': 'westminster',
+			'paint': {
+				'line-color': 'rgba(107, 7, 7, 1)',
+				'line-width': 2
+			} 
 		}
-		*/
+		
 		
 	},
 	// Layer styling callbacks functions, each defined below
@@ -67,4 +95,20 @@ function popupCallback (feature)
 	*/
 	return feature;
 }
+
+
+function mergeObjects(obj1, obj2) {
+  const merged = { ...obj1 };
+
+  for (const prop in obj2) {
+    if (obj2.hasOwnProperty(prop)) {
+      //console.log(prop);
+      //console.log(obj2[prop]);
+      merged[prop] = {...merged[prop], ...obj2[prop]};
+    }
+  }
+
+  return merged;
+}
+
 

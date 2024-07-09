@@ -324,7 +324,7 @@ World Heritage Sites are an important part of the world's cultural and natural h
 ## Land Ownership Explorer
 
 ### Introduction
-It is hard to discuss issues around place without eventually coming to the topic of land ownership. Land owners through a combination of action and inaction sculpted the country into what it is today, ultimately they decide where the homes and jobs are, what it farmland and where is left for nature. Despite their enormous power, landownership is no democratically allocated, a small elite own a large proportion of the land in the UK, and data about who owns what is often hard to come by.
+It is hard to discuss issues around place without eventually coming to the topic of land ownership. Land owners through a combination of action and inaction sculpted the country into what it is today, ultimately they decide where the homes and jobs are, what it farmland and where is left for nature. Despite their enormous power, land ownership is not democratically allocated, a small elite own a large proportion of the land in the UK, and data about who owns what is often hard to come by.
 
 The Land Ownership Explorer is intended to cast a little light onto the issue of land ownership by providing a more accessible form of official Land Registry datasets.
 
@@ -333,29 +333,81 @@ The Land Ownership Explorer is intended to cast a little light onto the issue of
 <!-- #landownership-inspire -->
 #### INSPIRE Polygons
 
-The INSPIRE polygons area created by the Land Registry for England and Wales show all the freehold land in England and Wales. They are published as Open Data with a few conditions. Unofrtualty the Land Registry do not provide a easy service to view the INSPIRE data.
+The INSPIRE polygons area created by the Land Registry for England and Wales show all the freehold land in England and Wales. They are published as Open Data with a few conditions. Unfortunately the Land Registry do not provide a easy service to view the INSPIRE data.
 
-So the first task was to build a modern vector tile set for INSPIRE polygons. I also decided to do some light cleaning of the data.
-Cleaning the polygons
+This layer shows a cleaned 2022 snapshot of the INSPRIRE Polygons. Land registry maps are often digitised versions of old paper maps. Therefore the titles are often split into grids where a property crosses the boundary of one paper map to another. An automated method was used to rejoin split polygons to give a clearer overview of large landowners. The process is not perfect and some square titles remain. Also some polygons have been merged, some INSPIRE IDs are missing. For merged polygons they have been given one of the INSPIRE IDs from the unmerged polygons, but which one they get is essentially random.
 
-Land registry maps are often digitised versions of old paper maps. Therefore the titles are often split into grids where a property crosses the boundary of one paper map to another. I wrote code to detect straight edges that align with the 500m grids of the British National Grid and remove them.
+![Grid Detection](/images/manual/grid_detection.JPG)
+*An example of the cleaning process: Polygon boarders aligned with the grid have been detected and highlighted in red.
+While this is not perfect, the INSPIRE Polygon data is very messy, it does help clean up the data and make it clearer where large titles are.*
 
-Polygon boarders aligned with the grid have been detected and highlighted in red.
-While this is not perfect, the INSPIRE Polygon data is very messy, it does help clean up the data and make it clearer where large titles are.
+Due to the large side of the dataset it is not possible to show every land title in the country simultaneously. Thus only the large polygons are shown when zoomed out.
 
-Once the polygons have been cleaned, and duplicates have been removed, each Local Authority's data can be combined into a single 24 GB geojson. I also created smaller files containing just the polygons greater than 100 acres and 10 acres.
+![INSPIRE zoomed out](/images/manual/inspire_out.JPG)
+*When zoomed out only the largest polygons are shown*
 
-I then built these into a tileset. As showing all the polygons in the country is not possible even for Vector Tiles, I chose to map the large polygons when zoomed out and then add smaller polygons the closer you zoom.
+![INSPIRE zoomed in](/images/manual/inspire_in.JPG)
+*Zoom in a little and you can see all the polygons*
 
-When zoomed out only the largest polygons are shown
+Note that not all land is registered so there are gaps in the map. Registration became compulsory in 1990 and is only required when land is sold, so around 14% of land in England and Wales is still unregistered.
 
-Zoom in a little and you can see all the polygons
-
-You can also click on the polygons so see the INSPIRE ID which can be used to purchase the full title the Local Authority name and the area in square metres. Due to an oversight on my part the area is given to 13 decimal places, I'll fix this in a future version.
-
-Also as I have merged some polygons, some INSPIRE IDs are missing. For merged polygons they have been given one of the INSPIRE IDs from the unmerged polygons, but which one they get is essentially random.
+You can also click on the polygons so see the INSPIRE ID which can be used to purchase the full title the Local Authority name and the area in square metres.
 <!-- /#landownership-inspire -->
 
+<!-- #landownership-points -->
 #### Property ownend by UK and overseas companies
 
+The Land Registry publishes two open datasets that explicitly name the owners of the land. The [UK companies that own property in England and Wales](https://use-land-property-data.service.gov.uk/datasets/ccod) and the [Overseas companies that own property in England and Wales](https://use-land-property-data.service.gov.uk/datasets/ocod). 
 
+*The data in this tool is based on a 2022 snapshot of the published data and may be out of date.*
+
+These datasets provide a lot of information about land ownership, but the format is difficult to understand. Mainly because it is not provided on a map. The main purpose of the Land Ownership Explorer is to map these two datasets by geocoding the addresses. Geocoding is the process of turning text addresses into latitude/longitude coordinates that can be plotted on a map. 
+
+Some of the land registry titles are very simple, e.g.
+
+*5 West Park, Bristol (BS8 2LX)*
+
+This can easily be geocoded and plotted on a map. While we can't find the exact boundaries of the property we can at least put a point in the map a the address.
+
+But consider another example:
+
+*1-4 Crown Row, Bracknell (RG12 0TH), 3, 14, 17, 18, 21, 26, 29, 31, 45, 49, 50, 55-70, 74, 75, 77-81, 84, 85, 91-95, 101, 103, 104, 106, 110, 111 Dalcross, Bracknell (RG12 0UJ), 71-73, 76, 82, 83, 86, 87 Dalcross, Bracknell (RG12 0UL), 1, 6, 9, 11 Fencote, Bracknell (RG12 0TD), 6, 8, 9, 12, 19, 22, 25, 47, 50 Garswood, Bracknell (RG12 0TY), 52, 60, 61, 65, 67, 80 Garswood, Bracknell (RG12 0TZ), 2, 10, 14, 16, 18, 36, 40, 42-44, 58-60, 72, 76, 79, 80 Helmsdale, Bracknell (RG12 0TA), 12, 13, 15, 45, 64-67, 82, 86, 87, 96, 97-99, 108, 112-115, 118, 126, 129, 138 Helmsdale, Bracknell (RG12 0TB), 1, 6, 11, 15, 23, 24, 28, 32, 33, 42-51, 67, 68, 72, 79, 80 Keepers Coombe, Bracknell (RG12 0TW, 10, 12-14, 21, 22, 25-27, 29-31, 34-36, 41 Keepers Coombe, Bracknell (RG12 0TN), 1-9, 21, 22, 26, 27, 31, 32 Kimmeridge, Bracknell (RG12 0UD), 86, 89-93(odd), 94, 100, 102, 107, 122, 125 Leaves Green, Bracknell, (RG12 0TE), 1-6, 8-10, 13-26, 33, 34, 48-50, 54, 58, 59, 63-80 Leaves Green, Bracknell (RG1*
+
+
+In this case a single dot on the map does not clearly convey the extent of this land ownership. But it is possible to parse this into 233 unique addresses that the text refers to. In this case, I expect that the title covers even more addresses as there are several titles that cut off mid-postcode at 999 characters, which suggests they have been truncated at some point. Nevertheless identifying the knowable 233 addresses helps improve our understanding of land ownership even if it is incomplete.
+
+While this kind of text parsing is never 100% successful, it is worth doing. For example, 9,034 freehold titles that contained multiple postcodes. But when they were broken up, they actually held 168,911 unique property addresses. 
+
+Some titles are easier to work with than others. There were 1.77 million simple addresses are easy to pass through a geocoder. More complex titles came in the form of `address and associated land` in these cases removing the "and associated land" yields a simple geocodable address.
+
+In the most complex cases, there are a lot of locations that are `land in front/behind address`. While we can't geocode the exact location easily, we can at least extract the address and geocode that. In the worst cases, we get something in the form of `land north of somewhere road` again, we can't geocode this exactly, but we should at least be able to find the relevant road. Around 1% of titles have been discarded a too complex to geocode. 
+
+This is an imperfect process and the data is unstructured and complex, so there will be errors and missing data. The points may not be in the correct locations. For example, "the field behind 4 to 6 Privet Drive" is not the same as "4 Privet Drive, 5 Privet Drive, and 6 Privet Drive" but we can't geocode "the field behind" so the code will detect three addresses and create three points one for each house. Therefore it to best to think of the points as in the vicinity of the correct address rather than an exact location.
+
+Other problems occur when the information the Land Registry provides is vague. For example "3 Church lane, London" there are many Church lanes in London, so it is hard to locate the correct address. The Land Registry also prove the Local Authority name so that can narrow it down a bit, but in some cases the same title will appear in multiple places on the map due to the ambiguous nature of the address.
+
+##### Layer Options
+
+The land ownership points can be coloured on four variables:
+
+1. Organisation Type: The type of organisation, not that the dataset does not contain privately owned property
+2. Geocoding Accuracy: The precision of the point on the map the most common option is Address (Green) which means the full address has been located but in some cases only the road, postcode, or region could be identified. These points will be futher from their correct location.
+3. Country of Registration: Which country is the property owner based in.
+4. Tenure: Is the property title for the freehold or leasehold?
+
+##### Popup
+
+![Land owners popup](/images/manual/landowners_popup.JPG)
+*Click on any point to see more information*
+
+* Title: The title number held by the Land Registry
+* Tenure: Freehold or	Leasehold
+* Property Address: As recorded by the Land Registry (may be multiple addresses)
+* Company No: Company Number resisted with Companies House
+* Country: Country of Registration
+* Category: Type of organisation
+* Geocoded address:	Address of the geocoded point, should match address with Land Registry but may differ if and error has occurred and the address has been misinterpreted. 
+* Geocode type: The type of location that has been geocoded, e.g. Address, Road, Postcode, Region
+* Proprietor: The owner as resisted with the Land Registry
+
+<!-- /#landownership-points -->

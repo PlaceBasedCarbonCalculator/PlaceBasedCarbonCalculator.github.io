@@ -23,7 +23,7 @@
       "url": "pmtiles://https://pbcc.blob.core.windows.net/pbcc-pmtiles/DTM.pmtiles",
       "tileSize": 512,
       "minzoom": 0,
-    	"maxzoom": 13
+    	"maxzoom": 11
     }
   },
   "sprite": [

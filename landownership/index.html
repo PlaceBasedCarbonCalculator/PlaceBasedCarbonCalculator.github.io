@@ -87,13 +87,13 @@
 		</nav>
 		
 		<!-- Welcome Splash -->
-		<div id="welcome-modal" class="modal">
+		<div id="welcome-modal" class="welcome-modal">
 			<span class="modal-close" style="visibility:hidden;">&times;</span> 
 			<div>
-				<h3>Land Ownership Explorer: ALPHA</h3>
+				<h3>Land Ownership Explorer: BETA</h3>
 				<p>Last updated: <span id="updatedate"></span>. You may need to <a href="https://www.minitool.com/news/f5-vs-ctrl-f5.html">clear your browser cache</a> to see the latest updates.</p>
 				
-				<p>This map is intended to aid public understanding of land ownership in England and Wales. It maps data published by the <a href="https://www.gov.uk/government/organisations/land-registry">Land Registry</a>. For code and more information on data and methods see the <a href="https://github.com/mem48/LandOwnership/">GitHub repo</a>.</p>
+				<p>This map is intended to aid public understanding of land ownership in England and Wales. It maps data published by the <a href="https://www.gov.uk/government/organisations/land-registry">Land Registry</a>. For more information on data and methods see the <a href="/manual/#landownershipexplorer">Manual</a>.</p>
 
         <div style="background-color: #a5cffa; padding: 5px">
           <p><b>To view the map, please provide the information below:</b></p>
@@ -165,9 +165,10 @@
 			<button class="close-button" aria-label="Hide layers"><i class="fas fa-times"></i></button>
 			<b> Layer Controls</b>
 			
-			<button class="accordion">Land Owners</button>
+			<button class="accordion" checked="true">Land Owners</button>
 			<div class="panel">
-				<p><label><input type="checkbox" id="landownerscheckbox" data-layer="landowners" class="showlayer" value="false">Show Layer</label></p>
+				<p><label><input type="checkbox" id="landownerscheckbox" data-layer="landowners" class="showlayer" value="false">Show Layer</label> 
+				<button aria-label="Help purpose" class="helpbutton" data-help="landownership-points"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p> 
 				<select name="landowner_field" data-layer="landowners" class="updatelayer" aria-label="Land owners type">
 						<option value="Category" selected>Organisation type</option>
             <option value="geocode_type">Geocoding accuracy</option>
@@ -184,12 +185,11 @@
 					</div>
 				</div>
 				
-				<p><label class="switch"><input type="checkbox" id="buildingsmode" onchange="showBuildings()" checked ><span class="slider round"></span></label> Show buildings</p>
-				
 			</div>
 			<button class="accordion">INSPIRE Polygons</button>
 			<div class="panel">
-				<p><label><input type="checkbox" id="inspirecheckbox" data-layer="inspire" class="showlayer" value="false">Show Layer</label></p>
+				<p><label><input type="checkbox" id="inspirecheckbox" data-layer="inspire" class="showlayer" value="false">Show Layer</label>
+				<button aria-label="Help purpose" class="helpbutton" data-help="landownership-inspire"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 				<div class="legend">
 					<div class="l_r">
 						<div class="lb"><span style="background-color: #bc80bd"></span></div>

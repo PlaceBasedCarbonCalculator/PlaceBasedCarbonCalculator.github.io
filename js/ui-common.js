@@ -292,8 +292,12 @@ const capUi = (function () {
 			
 			// Add placenames support
 			map.once('idle', function () {
-			  console.log("Idle trigger place names");
+			  //console.log("Idle trigger place names");
 				capUi.placenames(map);
+				document.addEventListener ('@map/ready', function () {
+					capUi.placenames (map);
+				});
+				
 			});
 			
 			// Add geolocation control
@@ -539,12 +543,13 @@ const capUi = (function () {
 		placenames: function (map)
 		{
 			
-			console.log("Placenames fucnction");
-			// Add the source
-			map.addSource ('placenames', {
-				'type': 'vector',
-				'url': _settings.placenamesTilesUrl.replace ('%tileserverUrl', _settings.tileserverUrl),
-			});
+			// Add the source, if not already present
+			if (!map.getSource ('placenames')) {
+				map.addSource ('placenames', {
+					'type': 'vector',
+					'url': _settings.placenamesTilesUrl.replace ('%tileserverUrl', _settings.tileserverUrl),
+				});
+			}
 			
 			// Load the style definition
 			// #!# The .json file is currently not a complete style definition, e.g. with version number etc.
@@ -554,11 +559,16 @@ const capUi = (function () {
 				})
 				.then (function (placenameLayers) {
 					
+					// Register the list
+					placenameLayers = placenameLayers;
+
 					// Add each layer, respecting the initial checkbox state
-					Object.entries(placenameLayers).forEach(([layerId, layer]) => {
-						const checkbox = document.getElementById('placenamescheckbox');
+					Object.entries (placenameLayers).forEach (([layerId, layer]) => {
+						const checkbox = document.getElementById ('placenamescheckbox');
 						layer.visibility = (checkbox.checked ? 'visible' : 'none');
-						map.addLayer(layer);
+						if (!map.getLayer (layerId)) {
+							map.addLayer (layer);
+						}
 					});
 					
 					// Listen for checkbox changes

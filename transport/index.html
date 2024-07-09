@@ -82,7 +82,8 @@
 		
 		<!-- Menu -->
 		<nav>
-			<a href="/"><img src="/images/ui/logo.png" alt="Carbon & Place Logo" class="logo" />Transport and Accessability Explorer</a>
+			<a href="/"><img src="/images/ui/logo.png" alt="Carbon & Place Logo" class="logo" /></a>
+			<a href="/transport/">Transport and Accessability Explorer</a>
 			<a href="/about/">About</a>
 			<a href="/data/">Data</a>
 			<a href="/manual/">Manual</a>
@@ -90,11 +91,12 @@
 		</nav>
 		
 		<!-- Welcome Splash -->
-		<div id="welcome-modal" class="modal">
+		<div id="welcome-modal" class="welcome-modal">
 			<span class="modal-close">&times;</span>
 			<div class="modal-body">
 				<h3>Transport and Accessability Explorer</h3>
-				<p>ALPHA</p>
+				<p><b>BETA Tool: This tool is in BETA and may contain bugs and incomplete features.</b></p>
+				
 				<p>Last updated: <span id="updatedate"></span>. You may need to <a href="https://www.minitool.com/news/f5-vs-ctrl-f5.html">clear your browser cache</a> to see the latest updates.</p>
 				<!-- <div id="osmupdatedate"></div> -->
 			</div>
@@ -190,7 +192,7 @@
 		
 		
 		<!-- Modal -->
-		<div class="modal" id="zones-chartsmodal" style="display: block;">
+		<div class="modal" id="zones-chartsmodal" style="display: none;">
 			<div class="modal-header">
 				<span class="modal-close">×</span>
 				<h2 class="modal-title">Zone Summary: XXXXX</h2>
