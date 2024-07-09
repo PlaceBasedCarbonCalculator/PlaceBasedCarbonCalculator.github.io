@@ -127,22 +127,23 @@ makeChartAccess = function(locationData){
 
 makeTableAccess = function(locationData){
   
-  var tab = document.getElementById('access-table')
+    const tab = document.getElementById('access-table');
+    tab.innerHTML = ''
+    
+    const labels = locationData["Bc"];
+    const category = locationData["c"];
+    const access_15 = locationData["a15"];
+    const access_30 = locationData["a30"];
+    const access_45 = locationData["a45"];
+    const access_60 = locationData["a60"];
+    const proximity_15 = locationData["p15"];
+    const proximity_30 = locationData["p30"];
+    const proximity_45 = locationData["p45"];
+    const proximity_60 = locationData["p60"];
   
-  const labels = locationData["Bc"];
-  
-  const access_15 = locationData["a15"];
-  const access_30 = locationData["a30"];
-  const access_45 = locationData["a45"];
-  const access_60 = locationData["a60"];
-  
-  const proximity_15 = locationData["p15"];
-  const proximity_30 = locationData["p30"];
-  const proximity_45 = locationData["p45"];
-  const proximity_60 = locationData["p60"];
-  
-  
-	// Create an object to store data for each category
+  /*
+ 
+ 	// Create an object to store data for each category
   const htmltext = {};
   for (let i = 0; i < labels.length; i++) {
     htmltext[i] = '<tr>' +
@@ -154,28 +155,80 @@ makeTableAccess = function(locationData){
   }
   
   
-  tab.innerHTML = '<table><tr><th>Type</th><th>15 min</th><th>30 min</th><th>45 min</th><th>60 min</th><th>5 mile</th><th>10 mile</th><th>15 mile</th><th>20 mile</th></tr>' +
+  tab.innerHTML = '<table><tr><td>&nbsp;</td><td colspan="4">Public Transport Time</td><td colspan="4">Straight Line Distance</td></tr>' +
+  '<tr><th>Type</th><th>15 min</th><th>30 min</th><th>45 min</th><th>60 min</th><th>0.75 mile</th><th>1.5 mile</th><th>2.25 mile</th><th>3 mile</th></tr>' +
    Object.values(htmltext).join('') +
   '</table>';
   
-  const cells = tab.getElementsByTagName('td');
+  
+  */
+  
+
+
+// Group data by category
+const groupedData = {};
+for (let i = 0; i < labels.length; i++) {
+    const group = category[i];
+    if (!groupedData[group]) {
+        groupedData[group] = [];
+    }
+    groupedData[group].push(i);
+}
+
+// Create tables for each group
+for (const group in groupedData) {
+    const groupIndices = groupedData[group];
+    const groupTable = document.createElement('table');
+    groupTable.innerHTML = `
+        <tr>
+            <th colspan="9">${group}</th>
+        </tr>
+        <tr>
+            <th>Type</th>
+            <th style="width:42px;">15<br>min</th>
+            <th style="width:42px;">30<br>min</th>
+            <th style="width:42px;">45<br>min</th>
+            <th style="width:42px;">60<br>min</th>
+            <th style="width:42px;">0.75<br>mile</th>
+            <th style="width:42px;">1.5<br>mile</th>
+            <th style="width:42px;">2.25<br>mile</th>
+            <th style="width:42px;">3<br>mile</th>
+        </tr>
+        ${groupIndices.map(i => `
+            <tr>
+                <td>${labels[i]}</td>
+                <td>${access_15[i]}</td>
+                <td>${access_30[i]}</td>
+                <td>${access_45[i]}</td>
+                <td>${access_60[i]}</td>
+                <td>${proximity_15[i]}</td>
+                <td>${proximity_30[i]}</td>
+                <td>${proximity_45[i]}</td>
+                <td>${proximity_60[i]}</td>
+            </tr>
+        `).join('')}
+    `;
+    tab.appendChild(groupTable);
+}
+
+const cells = tab.getElementsByTagName('td');
 
   for (let cell of cells) {
     const value = parseFloat(cell.textContent);
-    if (value < -2) {
+    if (value < -1.5) {
       cell.classList.add('very-poor');
-    } else if (value > 2) {
-      cell.classList.add('very-good');
-    } else if (value < -1 & value >= -2 ) {
+    } else if (value < -1 & value >= -1.5 ) {
       cell.classList.add('poor');
-    } else if (value < -0.5 & value >= -1 ) {
+    } else if (value < -0.3 & value >= -1 ) {
       cell.classList.add('below-average');
-    } else if (value < 0.5 & value >= -0.5 ) {
+    } else if (value < 0.3 & value >= -0.3 ) {
       cell.classList.add('average');
-    } else if (value < 1 & value >= 0.5 ) {
+    } else if (value < 1 & value >= 0.3 ) {
       cell.classList.add('above-average');
-    } else if (value < 2 & value >= 1 ) {
+    } else if (value < 1.5 & value >= 1 ) {
       cell.classList.add('good');
+    } else if (value > 1.5) {
+      cell.classList.add('very-good');
     }
   }
   

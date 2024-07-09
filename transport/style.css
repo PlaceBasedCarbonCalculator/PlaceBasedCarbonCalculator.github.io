@@ -25,3 +25,11 @@
 .very-good {
   background-color: #1a9850;
 }
+
+#access-table {
+  width: 100%;
+}
+
+#access-table table {
+  width: 100%;
+}
