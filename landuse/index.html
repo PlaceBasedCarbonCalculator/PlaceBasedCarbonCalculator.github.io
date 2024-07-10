@@ -37,10 +37,11 @@
 		<script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
 		<link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
 		
-		<!-- Sliders -->
+		<!-- Sliders
 		<link href="/js/lib/noUiSlider_15_7_0/nouislider.min.css" rel="stylesheet">
 		<script src="/js/lib/noUiSlider_15_7_0/nouislider.min.js"></script>
-		
+		 -->
+		 
 		<!-- Font Awesome -->
 		<link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet">
 		<link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet">
@@ -132,39 +133,9 @@
 			<button class="close-button" aria-label="Hide layers"><i class="fas fa-times"></i></button>
 			<b> Layer Controls</b>
 			
-			<button class="accordion">Boundaries</button>
-			
-			<div class="panel">
-				<p><label><input type="checkbox" data-layer="wards" class="showlayer" value="false">Wards</label></p>
-				<div class="legendHorizontal">
-					<div class="l_rHorizontal">
-						<div class="lbHorizontal"><span style="background-color: #206b07"></span></div>
-					</div>
-				</div>
-				<p><label><input type="checkbox" data-layer="la" class="showlayer" value="false">Local Authorities</label></p>
-				<div class="legendHorizontal">
-					<div class="l_rHorizontal">
-						<div class="lbHorizontal"><span style="background-color: #6b0707"></span></div>
-					</div>
-				</div>
-				<p><label><input type="checkbox" data-layer="parish" class="showlayer" value="false">Parish</label></p>
-				<div class="legendHorizontal">
-					<div class="l_rHorizontal">
-						<div class="lbHorizontal"><span style="background-color: #6b0707"></span></div>
-					</div>
-				</div>
-				<p><label><input type="checkbox" data-layer="westminster" class="showlayer" value="false">Westminster Constituency</label></p>
-				<div class="legendHorizontal">
-					<div class="l_rHorizontal">
-						<div class="lbHorizontal"><span style="background-color: #6b0707"></span></div>
-					</div>
-				</div>
-			</div>
-			
-			
 			<button class="accordion">Risks and Pollution</button>
 			<div class="panel">
-				<p><label><input type="checkbox" class="showlayer" data-layer="floodzones" value="false"> Flood Risk</label><button onclick="show_help('floodzones')" aria-label="Help flood" class="helpbutton"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<p><label><input type="checkbox" class="showlayer" data-layer="floodzones" value="false"> Flood Risk</label><button data-help="landuse-floodzones" aria-label="Help flood" class="helpbutton"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 			
 			<div class="legendHorizontal"><div class="l_rHorizontal">
 			  <div class="lbHorizontal"><span style="background-color: #ffffff"></span>Low Risk</div>
@@ -172,29 +143,39 @@
 			  <div class="lbHorizontal"><span style="background-color: #313695"></span>High Risk</div>
 			</div></div>
 			
-			<p><label><input type="checkbox" class="showlayer" data-layer="railnoise" value="false"> Rail Noise</label><button onclick="show_help('railnoise')" aria-label="Help railnoise" class="helpbutton"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
-			
-			<p><select id="railnoise_type_input" name="railnoise_type_input" onchange="toggleLayer('railnoise')" aria-label="Rail noise">
-      <option value="rail_all"selected>24h average</option>
-      <option value="rail_16">Daytime average</option>
-      <option value="rail_night">Nightime average</option>
-      </select></p>
+			<p><label><input type="checkbox" class="showlayerProxy" id="roadnoiseProxy" value="false" onchange="roadCheckboxProxying()"> Road Noise</label><button data-help="landuse-roadnoise" aria-label="Help roadnoise" class="helpbutton"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
       
-      <div class="legendHorizontal"><div class="l_rHorizontal">
-		  <div class="lbHorizontal"><span style="background-color: #fef0d9"></span>50db</div>
-		  <div class="lbHorizontal"><span style="background-color: #fdd49e"></span>55db</div>
-		  <div class="lbHorizontal"><span style="background-color: #fdbb84"></span>60db</div>
-		  <div class="lbHorizontal"><span style="background-color: #fc8d59"></span>65db</div>
-		  <div class="lbHorizontal"><span style="background-color: #e34a33"></span>70db</div>
-		  <div class="lbHorizontal"><span style="background-color: #b30000"></span>>75db</div>
-		  </div></div>
-      
-      <p><label><input type="checkbox" class="showlayer" data-layer="roadnoise" value="false"> Road Noise</label><button onclick="show_help('roadnoise')" aria-label="Help roadnoise" class="helpbutton"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+      <!-- These three checkboxes actually control the layers, but are set by the show/simplified checkboxes -->
+			<input type="checkbox" class="showlayer hidden" data-layer="road_all" />
+			<input type="checkbox" class="showlayer hidden" data-layer="road_16" />
+			<input type="checkbox" class="showlayer hidden" data-layer="road_night" />
 			
-			<p><select id="roadnoise_type_input" name="roadnoise_type_input" onchange="toggleLayer('roadnoise')" aria-label="Road noise">
+			<p><select id="roadnoise_type_input" name="roadnoise_type_input" onchange="roadCheckboxProxying()" aria-label="Road noise">
       <option value="road_all"selected>24h average</option>
-      <option value="road_16">Daytime average</option>
-      <option value="road_night">Nightime average</option>
+      <option value="road_16">Daytime (16h) average</option>
+      <option value="road_night">Nightime (8h) average</option>
+      </select></p>
+      
+      <div class="legendHorizontal"><div class="l_rHorizontal">
+		  <div class="lbHorizontal"><span style="background-color: #fef0d9"></span>50db</div>
+		  <div class="lbHorizontal"><span style="background-color: #fdd49e"></span>55db</div>
+		  <div class="lbHorizontal"><span style="background-color: #fdbb84"></span>60db</div>
+		  <div class="lbHorizontal"><span style="background-color: #fc8d59"></span>65db</div>
+		  <div class="lbHorizontal"><span style="background-color: #e34a33"></span>70db</div>
+		  <div class="lbHorizontal"><span style="background-color: #b30000"></span>>75db</div>
+		  </div></div>
+			
+			<p><label><input type="checkbox" class="showlayerProxy" id="railnoiseProxy" value="false" onchange="railCheckboxProxying()"> Rail Noise</label><button data-help="landuse-railnoise" aria-label="Help railnoise" class="helpbutton"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+			
+			<!-- These three checkboxes actually control the layers, but are set by the show/simplified checkboxes -->
+			<input type="checkbox" class="showlayer hidden" data-layer="rail_all" />
+			<input type="checkbox" class="showlayer hidden" data-layer="rail_16" />
+			<input type="checkbox" class="showlayer hidden" data-layer="rail_night" />
+			
+			<p><select id="railnoise_type_input" name="railnoise_type_input" onchange="railCheckboxProxying()" aria-label="Rail noise">
+      <option value="rail_all"selected>24h average</option>
+      <option value="rail_16">Daytime (16h) average</option>
+      <option value="rail_night">Nightime (8h) average</option>
       </select></p>
       
       <div class="legendHorizontal"><div class="l_rHorizontal">
@@ -206,7 +187,9 @@
 		  <div class="lbHorizontal"><span style="background-color: #b30000"></span>>75db</div>
 		  </div></div>
       
-      <p><label><input type="checkbox" class="showlayer" data-layer="landfill" value="false"> Historic Landfills</label><button onclick="show_help('landfill')" aria-label="Help landfill" class="helpbutton"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+      
+      
+      <p><label><input type="checkbox" class="showlayer" data-layer="landfill" value="false"> Historic Landfills</label><button data-help="landuse-landfill" aria-label="Help landfill" class="helpbutton"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
       
       <div class="legendHorizontal"><div class="l_rHorizontal">
 		  <div class="lbHorizontal"><span style="background-color: #873e07"></span> </div>
@@ -325,6 +308,39 @@
 				<p><label><input type="checkbox" class="showlayer" data-layer="food_hygiene" value="false"> Food Hygine</label>
 				<button aria-label="Help purpose" class="helpbutton" data-help="landuse-food_hygiene"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 				
+			</div>
+			
+			<button class="accordion">Boundaries</button>
+			
+			<div class="panel">
+				<p><label><input type="checkbox" data-layer="wards" class="showlayer" value="false">Wards</label>
+				<button aria-label="Help" class="helpbutton" data-help="boundaries-wards"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<div class="legendHorizontal">
+					<div class="l_rHorizontal">
+						<div class="lbHorizontal"><span style="background-color: #206b07"></span></div>
+					</div>
+				</div>
+				<p><label><input type="checkbox" data-layer="la" class="showlayer" value="false">Local Authorities</label>
+				<button aria-label="Help" class="helpbutton" data-help="boundaries-la"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<div class="legendHorizontal">
+					<div class="l_rHorizontal">
+						<div class="lbHorizontal"><span style="background-color: #6b0707"></span></div>
+					</div>
+				</div>
+				<p><label><input type="checkbox" data-layer="parish" class="showlayer" value="false">Parish</label>
+				<button aria-label="Help" class="helpbutton" data-help="boundaries-parish"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<div class="legendHorizontal">
+					<div class="l_rHorizontal">
+						<div class="lbHorizontal"><span style="background-color: #6b0763"></span></div>
+					</div>
+				</div>
+				<p><label><input type="checkbox" data-layer="westminster" class="showlayer" value="false">Westminster Constituency</label>
+				<button aria-label="Help" class="helpbutton" data-help="boundaries-westminster"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<div class="legendHorizontal">
+					<div class="l_rHorizontal">
+						<div class="lbHorizontal"><span style="background-color: #07366b"></span></div>
+					</div>
+				</div>
 			</div>
 			
 		</div>

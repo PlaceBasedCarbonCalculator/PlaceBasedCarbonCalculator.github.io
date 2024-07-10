@@ -160,6 +160,126 @@ const datasets_extra = {
 	  },
 	  
 	  
+	 rail_all : {
+      'id': 'rail_all',
+      'type': 'fill',
+      'source': {'type': 'vector','url': 'pmtiles://%tileserverUrl/rail_all.pmtiles'},
+      'source-layer': 'rail_all',
+      'paint': {
+        'fill-color': [
+    			'match',
+    			['get', 'rail_all'],
+    			50,'rgba(254,240,217,0.6)',
+    			55,'rgba(253,212,158,0.6)',
+    			60,'rgba(253,187,132,0.6)',
+    			65,'rgba(252,141,89,0.6)',
+    			70,'rgba(227,74,51,0.6)',
+    			75,'rgba(179,0,0,0.6)',
+    			/* other */ '#f55dc0'
+    			]
+      }
+    },
+	  
+	  rail_16 : {
+      'id': 'rail_16',
+      'type': 'fill',
+      'source': {'type': 'vector','url': 'pmtiles://%tileserverUrl/rail_16.pmtiles'},
+      'source-layer': 'rail_16',
+      'paint': {
+        'fill-color': [
+    			'match',
+    			['get', 'rail_16'],
+    			50,'rgba(254,240,217,0.6)',
+    			55,'rgba(253,212,158,0.6)',
+    			60,'rgba(253,187,132,0.6)',
+    			65,'rgba(252,141,89,0.6)',
+    			70,'rgba(227,74,51,0.6)',
+    			75,'rgba(179,0,0,0.6)',
+    			/* other */ '#f55dc0'
+    			]
+      }
+    },
+    
+    rail_night : {
+      'id': 'rail_night',
+      'type': 'fill',
+      'source': {'type': 'vector','url': 'pmtiles://%tileserverUrl/rail_night.pmtiles'},
+      'source-layer': 'rail_night',
+      'paint': {
+        'fill-color': [
+    			'match',
+    			['get', 'rail_night'],
+    			50,'rgba(254,240,217,0.6)',
+    			55,'rgba(253,212,158,0.6)',
+    			60,'rgba(253,187,132,0.6)',
+    			65,'rgba(252,141,89,0.6)',
+    			70,'rgba(227,74,51,0.6)',
+    			75,'rgba(179,0,0,0.6)',
+    			/* other */ '#f55dc0'
+    			]
+      }
+    },
+	  
+	  road_all : {
+      'id': 'road_all',
+      'type': 'fill',
+      'source': {'type': 'vector','url': 'pmtiles://%tileserverUrl/road_all.pmtiles'},
+      'source-layer': 'road_all',
+      'paint': {
+        'fill-color': [
+    			'match',
+    			['get', 'road_all'],
+    			50,'rgba(254,240,217,0.6)',
+    			55,'rgba(253,212,158,0.6)',
+    			60,'rgba(253,187,132,0.6)',
+    			65,'rgba(252,141,89,0.6)',
+    			70,'rgba(227,74,51,0.6)',
+    			75,'rgba(179,0,0,0.6)',
+    			/* other */ '#f55dc0'
+    			]
+      }
+    },
+	  
+	  road_16 : {
+      'id': 'road_16',
+      'type': 'fill',
+      'source': {'type': 'vector','url': 'pmtiles://%tileserverUrl/road_16.pmtiles'},
+      'source-layer': 'road_16',
+      'paint': {
+        'fill-color': [
+    			'match',
+    			['get', 'road_16'],
+    			50,'rgba(254,240,217,0.6)',
+    			55,'rgba(253,212,158,0.6)',
+    			60,'rgba(253,187,132,0.6)',
+    			65,'rgba(252,141,89,0.6)',
+    			70,'rgba(227,74,51,0.6)',
+    			75,'rgba(179,0,0,0.6)',
+    			/* other */ '#f55dc0'
+    			]
+      }
+    },
+    
+    road_night : {
+      'id': 'road_night',
+      'type': 'fill',
+      'source': {'type': 'vector','url': 'pmtiles://%tileserverUrl/road_night.pmtiles'},
+      'source-layer': 'road_night',
+      'paint': {
+        'fill-color': [
+    			'match',
+    			['get', 'road_night'],
+    			50,'rgba(254,240,217,0.6)',
+    			55,'rgba(253,212,158,0.6)',
+    			60,'rgba(253,187,132,0.6)',
+    			65,'rgba(252,141,89,0.6)',
+    			70,'rgba(227,74,51,0.6)',
+    			75,'rgba(179,0,0,0.6)',
+    			/* other */ '#f55dc0'
+    			]
+      }
+    },
+	  
 	  // Can't work out custom icons
 	  /*
 	  food_hygiene : {
