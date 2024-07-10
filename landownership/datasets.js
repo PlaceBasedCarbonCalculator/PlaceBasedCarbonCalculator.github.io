@@ -210,7 +210,7 @@ const datasets_extra = {
 };
 
 
-const datasets = { ...datasets_common, ...datasets_extra };
+const datasets = mergeObjects(datasets_common, datasets_extra);
 
 // Callbacks
 function landownersStyling (layerId, map, settings, datasets, createLegend /* callback */)
