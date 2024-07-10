@@ -1,14 +1,64 @@
 // Local Chart Mangement
 var accessChart;
 var frequencyChart;
+var accessLocationData = {};
+var frequencyLocationData = {};
 
+/*
 manageCharts =  function (chartDefinition, locationData){
   console.log("Managing Charts");
-  makeChartAccess(locationData);
-  makeTableAccess(locationData);
+  //console.log(chartDefinition);
+  if(chartDefinition.dataUrl == 'https://pbcc.blob.core.windows.net/pbcc-data/Access/%id.json') {
+    makeChartAccess(locationData);
+    makeTableAccess(locationData);
+  } else {
+    makeChartFrequency(locationData);
+  }
 }
+*/
+/*
+manageCharts =  function (locationId){
+  console.log("Getting JSON data");
+  accessLocationData = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/Access/'+ locationId + '.json');
+  frequencyLocationData = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/PTfrequency/'+ locationId + '.json');
+  
+  console.log(accessLocationData);
+  makeChartAccess();
+  makeTableAccess();
+  makeChartFrequency();
 
-makeChartAccess = function(locationData){
+}
+*/
+manageCharts = function (locationId) {
+    capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/Access/' + locationId + '.json')
+        .then(function (accessData) {
+            accessLocationData = accessData;
+            makeChartAccess();
+            makeTableAccess();
+        })
+        .catch(function (error) {
+            alert('Failed to get access data for this location, or to process it correctly. Please try refreshing the page.');
+            console.log(error);
+        });
+        
+    capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/PTfrequency/' + locationId + '.json')
+        .then(function (frequencyData) {
+            frequencyLocationData = frequencyData;
+            //console.log(frequencyLocationData);
+            makeChartFrequency();
+        })
+        .catch(function (error) {
+            alert('Failed to get frequnecy data for this location, or to process it correctly. Please try refreshing the page.');
+            console.log(error);
+        });
+};
+
+
+
+
+
+
+makeChartAccess = function(){
   
   // Access Chart
   // Destroy old chart
@@ -19,10 +69,10 @@ makeChartAccess = function(locationData){
   // Get data muliple datasets for each category
   
   
-  const category = locationData["c"];
-  const datax = locationData["p60"];
-	const datay = locationData["a60"];
-	const labels = locationData["Bc"];
+  const category = accessLocationData["c"];
+  const datax = accessLocationData["p60"];
+	const datay = accessLocationData["a60"];
+	const labels = accessLocationData["Bc"];
 	//const data  = datax.map((xVal, index) => ({ x: xVal, y: datay[index] }));
 	
 	
@@ -125,21 +175,21 @@ makeChartAccess = function(locationData){
 }
 
 
-makeTableAccess = function(locationData){
+makeTableAccess = function(){
   
     const tab = document.getElementById('access-table');
     tab.innerHTML = ''
     
-    const labels = locationData["Bc"];
-    const category = locationData["c"];
-    const access_15 = locationData["a15"];
-    const access_30 = locationData["a30"];
-    const access_45 = locationData["a45"];
-    const access_60 = locationData["a60"];
-    const proximity_15 = locationData["p15"];
-    const proximity_30 = locationData["p30"];
-    const proximity_45 = locationData["p45"];
-    const proximity_60 = locationData["p60"];
+    const labels = accessLocationData["Bc"];
+    const category = accessLocationData["c"];
+    const access_15 = accessLocationData["a15"];
+    const access_30 = accessLocationData["a30"];
+    const access_45 = accessLocationData["a45"];
+    const access_60 = accessLocationData["a60"];
+    const proximity_15 = accessLocationData["p15"];
+    const proximity_30 = accessLocationData["p30"];
+    const proximity_45 = accessLocationData["p45"];
+    const proximity_60 = accessLocationData["p60"];
   
   /*
  
@@ -236,7 +286,7 @@ const cells = tab.getElementsByTagName('td');
   
 }
 
-makeChartFrequnecy = function(locationData){
+makeChartFrequency = function(){
   
   // Access Chart
   // Destroy old chart
@@ -250,55 +300,57 @@ makeChartFrequnecy = function(locationData){
   // Get data muliple datasets for each category
   
   
-  const MorningPeak = locationData['tph_' + day + '_MorningPeak_' + md];
-  const Midday = locationData['tph_' + day + '_Midday_' + md];
-	const AfternoonPeak = locationData['tph_' + day + '_AfternoonPeak_' + md];
-	const Evening = locationData['tph_' + day + '_Evening_' + md];
-	const Night = locationData['tph_' + day + '_Night_' + md];
-	const years = locationData['year']
+  const MorningPeak = frequencyLocationData[day + '_MorningPeak_' + md];
+  const Midday = frequencyLocationData[day + '_Midday_' + md];
+	const AfternoonPeak = frequencyLocationData[day + '_AfternoonPeak_' + md];
+	const Evening = frequencyLocationData[day + '_Evening_' + md];
+	const Night = frequencyLocationData[day + '_Night_' + md];
+	const years = frequencyLocationData['year']
 	
-	var freqencyctx = document.getElementById('freqency-chart').getContext('2d');
-	freqencyChart = new Chart(freqencyctx, {
+	//console.log(MorningPeak);
+	
+	var freqencyctx = document.getElementById('frequency-chart').getContext('2d');
+	frequencyChart = new Chart(freqencyctx, {
 		type: 'line',
 		data: {
 			labels: years,
 			datasets: [{
 				label: 'Morning Peak',
 				data: MorningPeak,
-				backgroundColor: 'rgba(228,26,28, 0.8)',
-				borderColor: 'rgba(228,26,28, 1)',
+				backgroundColor: 'rgba(232,243,83, 0.8)',
+				borderColor: 'rgba(232,243,83, 1)',
 				borderWidth: 1,
 				order: 1
 			},
 			{
 				label: 'Midday',
 				data: Midday,
-				backgroundColor: 'rgba(55,126,184, 0.8)',
-				borderColor: 'rgba(55,126,184, 1)',
+				backgroundColor: 'rgba(228,125,27, 0.8)',
+				borderColor: 'rgba(228,125,27, 1)',
 				borderWidth: 1,
 				order: 1
 			},
 			{
 				label: 'Afternoon Peak',
 				data: AfternoonPeak,
-				backgroundColor: 'rgba(77,175,74, 0.8)',
-				borderColor: 'rgba(77,175,74, 1)',
+				backgroundColor: 'rgba(230,25,124, 0.8)',
+				borderColor: 'rgba(230,25,124, 1)',
 				borderWidth: 1,
 				order: 1
 			},
 			{
 				label: 'Evening',
 				data: Evening,
-				backgroundColor: 'rgba(255,127,0, 0.8)',
-				borderColor: 'rgba(255,127,0, 1)',
+				backgroundColor: 'rgba(174,44,211, 0.8)',
+				borderColor: 'rgba(174,44,211, 1)',
 				borderWidth: 1,
 				order: 1
 			},
 			{
 				label: 'Night',
 				data: Night,
-				backgroundColor: 'rgba(152,78,163, 0.8)',
-				borderColor: 'rgba(152,78,163, 1)',
+				backgroundColor: 'rgba(0,0,0, 0.8)',
+				borderColor: 'rgba(0,0,0, 1)',
 				borderWidth: 1,
 				order: 1
 			}

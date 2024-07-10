@@ -164,22 +164,32 @@
 			</div>
 			
 			<button class="accordion">Boundaries</button>
-			<!--
 			<div class="panel">
-				<p><label><input type="checkbox" id="wardscheckbox" class="updatelayer" value="false">Wards</label></p>
-				<div class="legend">
-					<div class="l_r">
-						<div class="lb"><span style="background-color: #206b07"></span></div>
+				<p><label><input type="checkbox" data-layer="wards" class="showlayer" value="false">Wards</label></p>
+				<div class="legendHorizontal">
+					<div class="l_rHorizontal">
+						<div class="lbHorizontal"><span style="background-color: #206b07"></span></div>
 					</div>
 				</div>
-				<p><label><input type="checkbox" id="lacheckbox" class="updatelayer" value="false">Local Authorities</label></p>
-				<div class="legend">
-					<div class="l_r">
-						<div class="lb"><span style="background-color: #6b0707"></span></div>
+				<p><label><input type="checkbox" data-layer="la" class="showlayer" value="false">Local Authorities</label></p>
+				<div class="legendHorizontal">
+					<div class="l_rHorizontal">
+						<div class="lbHorizontal"><span style="background-color: #6b0707"></span></div>
+					</div>
+				</div>
+				<p><label><input type="checkbox" data-layer="parish" class="showlayer" value="false">Parish</label></p>
+				<div class="legendHorizontal">
+					<div class="l_rHorizontal">
+						<div class="lbHorizontal"><span style="background-color: #6b0763"></span></div>
+					</div>
+				</div>
+				<p><label><input type="checkbox" data-layer="westminster" class="showlayer" value="false">Westminster Constituency</label></p>
+				<div class="legendHorizontal">
+					<div class="l_rHorizontal">
+						<div class="lbHorizontal"><span style="background-color: #07366b"></span></div>
 					</div>
 				</div>
 			</div>
-			-->
 		</div>
 		
 		<!-- Help box -->
@@ -234,13 +244,13 @@
   					<h4 class="chart-title">Public Transport Frequnecy</h4>
   					<p class="chart-description">Description goes here</p>
   					
-  					<select id="select_day" name="select_day" onchange="">
+  					<select id="select_day" name="select_day" onchange="makeChartFrequency()">
                 <option value="weekday" selected>Weekday</option>
                 <option value="Sat" >Saturday</option>
                 <option value="Sun" >Sunday</option>
             </select>
           
-            <select id="select_mode" name="select_mode" onchange="">
+            <select id="select_mode" name="select_mode" onchange="makeChartFrequency()">
                 <option value="0">Tram/Light Rail</option>
                 <option value="1">Metro</option>
                 <option value="2">Rail</option>

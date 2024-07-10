@@ -739,7 +739,7 @@ const capUi = (function () {
 			// Register the IDs of all checked layers, first resetting the list
 			const enabledLayers = [];
 			Object.entries (_datasets.layers).forEach (([layerId, layer]) => {
-			  console.log('input.showlayer[data-layer="' + layerId + '"]');
+			  //console.log('input.showlayer[data-layer="' + layerId + '"]');
 				const isEnabled = document.querySelector ('input.showlayer[data-layer="' + layerId + '"]').checked;
 				if (isEnabled) {
 					enabledLayers.push (layerId);
@@ -763,7 +763,55 @@ const capUi = (function () {
 			});
 		},
 		
+		/*
+		fetchJSON: function (dataUrl)
+		{
+		  // Get the data
+			fetch(dataUrl)
+				.then(function (response) {
+					return response.json();
+				})
+				.then(function (json) {
+					//const locationData = json[0]; //TODO this is what PBCC expects
+					const locationData = json;
+					console.log ('Retrieved data for layer '+  mapLayerId + ' location ' + locationId);
+					
+					//Hide Spinner
+					//document.getElementById('loader').style.display = 'none';
+					
+					// Set the title
+					//const title = chartDefinition.titlePrefix + featureProperties[chartDefinition.titleField];
+					//document.querySelector(`#${mapLayerId}-chartsmodal .modal-title`).innerHTML = title;
+					
+					// Create the charts
+					//manageCharts(chartDefinition, locationData);
+					return locationData;
+				})
+				.catch(function (error) {	// Any error, including within called code, not just retrieval failure
+					alert ('Failed to get data for this location, or to process it correctly. Please try refreshing the page.');
+					console.log (error);
+				});
+		},
+		*/
+		
+		fetchJSON: function (dataUrl) {
+    return fetch(dataUrl)
+        .then(function (response) {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .catch(function (error) {
+            alert('Failed to get data for this location, or to process it correctly. Please try refreshing the page.');
+            console.log(error);
+        });
+    },
+
+		
 		// Function to handle chart creation
+		// Pulling out of common file as too different between tools
+		
 		charts: function ()
 		{
 		  
@@ -802,40 +850,33 @@ const capUi = (function () {
 					// Assemble the JSON data file URL
 					const featureProperties = e.features[0].properties;
 					const locationId = featureProperties[chartDefinition.propertiesField];
-					const dataUrl = chartDefinition.dataUrl.replace('%id', locationId);
+					//const dataUrl = chartDefinition.dataUrl.replace('%id', locationId);
 					
-					// Get the data
-					fetch(dataUrl)
-						.then(function (response) {
-							return response.json();
-						})
-						.then(function (json) {
-							//const locationData = json[0]; //TODO this is what PBCC expects
-							const locationData = json;
-							console.log ('Retrieved data for layer '+  mapLayerId + ' location ' + locationId);
-							
-							//Hide Spinner
-							//document.getElementById('loader').style.display = 'none';
-							
-							// Set the title
-							const title = chartDefinition.titlePrefix + featureProperties[chartDefinition.titleField];
-							//document.querySelector(`#${mapLayerId}-chartsmodal .modal-title`).innerHTML = title;
-							
-							// Create the charts
-							manageCharts(chartDefinition, locationData);
-						})
-						.catch(function (error) {	// Any error, including within called code, not just retrieval failure
-							alert ('Failed to get data for this location, or to process it correctly. Please try refreshing the page.');
-							console.log (error);
-						});
+					// Tool Specific Function in each ui.js
+					manageCharts(locationId);
+					
+					
 				});
 			}
 			
 			// Create each set of charts
+			
 			Object.entries (_datasets.charts).forEach(([mapLayerId, chartDefinition]) => {
-				chartsModal (mapLayerId, chartDefinition);
+			   //console.log(mapLayerId);
+			   //console.log(chartDefinition);
+			   //chartsModal (mapLayerId, chartDefinition);
+			   Object.entries (chartDefinition).forEach(([dataLayerId, dataDefinition]) => {
+  			   //console.log(dataLayerId);
+  			   //console.log(dataDefinition);
+  			   chartsModal (mapLayerId, dataDefinition);
+  			 });
+			   
 			});
+			
 		},
+		
+		
+		
 		
 		
 		// Popup handler

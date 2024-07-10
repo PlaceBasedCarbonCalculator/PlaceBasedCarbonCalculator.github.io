@@ -49,9 +49,9 @@
   width: 10px;
 }
 
-
-
-
+.showlayer.hidden {
+  display: none;
+}
 
 .rightbox {
   backdrop-filter: blur(10px);

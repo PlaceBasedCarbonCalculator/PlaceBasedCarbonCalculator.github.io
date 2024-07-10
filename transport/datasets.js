@@ -270,56 +270,56 @@ const datasets_extra = {
 	
 	
 	
-	// Chart definitions, indexed by map layer ID
+	// Chart definitions, indexed by map layer ID, then datasource ID, different from NPT wich has one data soruce per modal per map layer
+	// I.e. charts > Layer clicked on to trigger modal > datasource to fill the modal
+	
 	charts: {
 	  zones: {
+	    zones: {
+	      // Data fields
+  			// #!# Should use a main server URL setting
+  			dataUrl: 'https://pbcc.blob.core.windows.net/pbcc-data/Access/%id.json',
+  			propertiesField: 'LSOA21CD',
+  			titleField: 'LSOA11CD',
+  			
+  			// Title
+  			titlePrefix: 'Neighbourhood Summary: ',
+  			
+  			charts: [
+  				[
+  					// Access Proximity
+  					'access_proximity',
+  					'Access Proximity',
+  					'Description goes here',
+  					'Access by public transport'
+  				]
+  		  ]
+	    },
 	    
-	    // Data fields
-			// #!# Should use a main server URL setting
-			dataUrl: 'https://pbcc.blob.core.windows.net/pbcc-data/Access/%id.json',
-			propertiesField: 'LSOA21CD',
-			titleField: 'LSOA11CD',
-			
-			// Title
-			titlePrefix: 'Neighbourhood Summary: ',
-			
-			charts: [
-				[
-					// Access Proximity
-					'access_proximity',
-					'Access Proximity',
-					'Description goes here',
-					'Access by public transport'
-				]
-		  ]
-		  
-	   
+	    PTfrequency: {
+  	    
+  	    // Data fields
+  			// #!# Should use a main server URL setting
+  			dataUrl: 'https://pbcc.blob.core.windows.net/pbcc-data/PTfrequency/%id.json',
+  			propertiesField: 'LSOA21CD',
+  			titleField: 'LSOA21CD',
+  			
+  			// Title
+  			titlePrefix: 'Neighbourhood Summary: ',
+  			
+  			charts: [
+  				[
+  					// Access Proximity
+  					'PTFrequnecy',
+  					'PT Frequnecy',
+  					'Description goes here',
+  					'Public Transport Frequency'
+  				]
+  		  ]
+  		  
+  	   
+  	  }
 	  },
-	  
-	  PTfrequency: {
-	    
-	    // Data fields
-			// #!# Should use a main server URL setting
-			dataUrl: 'https://pbcc.blob.core.windows.net/pbcc-data/PTFrequnecy/%id.json',
-			propertiesField: 'LSOA21CD',
-			titleField: 'LSOA21CD',
-			
-			// Title
-			titlePrefix: 'Neighbourhood Summary: ',
-			
-			charts: [
-				[
-					// Access Proximity
-					'access_proximity',
-					'Access Proximity',
-					'Description goes here',
-					'Access by public transport'
-				]
-		  ]
-		  
-	   
-	  }
-	  
 	},
 	
 	// Popups
@@ -328,7 +328,7 @@ const datasets_extra = {
 };
 
 
-const datasets = { ...datasets_common, ...datasets_extra };
+const datasets = mergeObjects(datasets_common, datasets_extra);
 
 
 // Function to determine the style column
