@@ -80,7 +80,31 @@ While LSOAs are small they still contain thousands of people, so any data about 
 By default, the neighbourhood statistics are are shown as a dasymetric map. This means that the buildings within a zone are coloured to display information. If you turn off dasymetric mode, a simple choropleth map is shown where the whole neighbourhood is coloured. Note that the same underlying data is being visualised in both modes, and the differences between modes are merely aesthetic. However, dasymetric maps are intended to better represent the data by emphasising the true locations of people who are not uniformly distributed across the area. 
 
 For some data types we have split the neighbourhoods into residential and non-residential areas. The original LSOAs created by the Office for National Statistics (ONS) are contiguous. In other words every part of the country is within an LSOA with no gaps. However for some neighbourhood statistics they only make sense to refer to the part of the LSOA that contains homes. For example consider LSOA E01002444 which contains Heathrow Airport. This LSOA has a population of about 2,230 people. But none of these people live in the airport, they live in the homes near the airport. So we split the LSOA into two; one that contains all the homes and will report statistics that are relevant to the residential population, and one that contains no homes and will report non-domestic statistics. This means you may see maps that have gaps or grey buildings.
-<!-- #dasymetric -->
+<!-- /#dasymetric -->
+
+#### Administrative Boundaries
+
+<!-- #boundaries-la -->
+##### Local Authority
+
+Lower Tier Local Authority 2023
+<!-- /#boundaries-la -->
+<!-- #boundaries-wards -->
+##### Wards
+
+Wards 2023
+<!-- /#boundaries-wards -->
+<!-- #boundaries-parish -->
+##### Parish
+
+Parish 2023
+<!-- /#boundaries-parish -->
+<!-- #boundaries-westminster -->
+##### Westminster Constituency
+
+Westminster Constituency 2024
+<!-- /#boundaries-westminster -->
+
 
 ## Place-Based Carbon Calcualtor
 

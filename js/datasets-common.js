@@ -43,7 +43,7 @@ const datasets_common = {
 			},
 			'source-layer': 'parish',
 			'paint': {
-				'line-color': 'rgba(107, 7, 7, 1)',
+				'line-color': 'rgba(107,7,99, 1)',
 				'line-width': 2
 			} 
 		},
@@ -57,7 +57,7 @@ const datasets_common = {
 			},
 			'source-layer': 'westminster',
 			'paint': {
-				'line-color': 'rgba(107, 7, 7, 1)',
+				'line-color': 'rgba(7,54,107, 1)',
 				'line-width': 2
 			} 
 		}

@@ -80,6 +80,17 @@ a.smaller {
 .opentool {
   padding: 10px;
   background-color: green;
+  line-height: 2.3;
+}
+
+a.opentool {
+  color: #ffffff
+}
+a.opentool:hover{
+  color: #ffffff
+}
+a.opentool:visited{
+  color: #ffffff
 }
 
 .tool_thumbnail {
@@ -97,7 +108,7 @@ a.smaller {
   background: rgb(42,42,42);
   background: linear-gradient(322deg, rgba(42,42,42,1) 0%, rgba(128,128,128,1) 35%, rgba(244,244,244,1) 100%); 
 }
-
+/*
 #tools a:link, a:visited, a:hover{
   text-decoration: none;
   color: white;
@@ -106,7 +117,7 @@ a.smaller {
 #tools a:hover {
   color: #000000;
 }
-
+*/
 .card {
   border-radius: 15px;
   margin: 10px;
