@@ -67,6 +67,9 @@ const capUi = (function () {
 			// General GUI topnav function
 			capUi.topnav ();
 			
+			// Parse URL hash state
+			capUi.parseUrl ();
+			
 			// Create the map UI
 			_map = capUi.createMap ();
 			
@@ -200,6 +203,7 @@ const capUi = (function () {
 			// Register the change in the state
 			_hashComponents.layers = hashComponents[0];
 			_hashComponents.map = hashComponents[1];
+			
 			//console.log (_hashComponents);
 		},
 
@@ -208,6 +212,7 @@ const capUi = (function () {
 		{
 			// Update the registry
 			_hashComponents[component] = value;
+			
 			//console.log (_hashComponents);
 			// Construct the new hash state
 			const hashState = '#' + _hashComponents.layers + _hashComponents.map;
@@ -844,13 +849,20 @@ const capUi = (function () {
 						return;
 					}
 					
-					// Display the modal
-					location_modal.show();
-					
 					// Assemble the JSON data file URL
 					const featureProperties = e.features[0].properties;
 					const locationId = featureProperties[chartDefinition.propertiesField];
 					//const dataUrl = chartDefinition.dataUrl.replace('%id', locationId);
+					
+					
+					// Set the title
+					// TODO this is run muliple times when muliple data sources, but still works
+					console.log(chartDefinition.titlePrefix);
+					const title = chartDefinition.titlePrefix + featureProperties[chartDefinition.titleField];
+					document.querySelector(`#${mapLayerId}-chartsmodal .modal-title`).innerHTML = title;
+					
+					// Display the modal
+					location_modal.show();
 					
 					// Tool Specific Function in each ui.js
 					manageCharts(locationId);

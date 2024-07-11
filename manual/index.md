@@ -119,7 +119,23 @@ Zones Help
 
 ## Transport and Accessibility Explorer
 
-The Transport and Accessibility Explorer allows a deep dive on the issues related to transport and access to services. 
+The Transport and Accessibility Explorer allows a deep dive on the issues related to transport and access to services.
+
+### Map Layers
+<!-- #transport-zones -->
+#### Neighbouhoods
+
+The Neighbourhoods layer uses the Lower Super Output Areas (LSOA) to report a range of transport statistics.
+
+*Change in Bus Service (2008 - 2023)*
+
+This layer shows the change in bus frequency (trips per hour) of bus services stopping in or near each neighbourhood.
+
+*Tram / Subway / Rail / Bus / Ferry*
+
+These layers show the frequency of service (trips per hour) for each type of transport stopping in or near each neighbourhood in 2023.
+
+<!-- /#transport-zones -->
 
 ## Retrofit Explorer
 
