@@ -337,7 +337,7 @@ const capUi = (function () {
 			// Add attribution
 			map.addControl(new maplibregl.AttributionControl({
 				compact: true,
-				customAttribution: 'Contains OS data © Crown copyright 2024, Satelite map © ESRI 2024, © OpenStreetMap contributors'
+				customAttribution: 'Contains OS data © Crown copyright 2024, Satellite map © ESRI 2024, © OpenStreetMap contributors'
 			}), 'bottom-left');
 			
 			// Antialias reload

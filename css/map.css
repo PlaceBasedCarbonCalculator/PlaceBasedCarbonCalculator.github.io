@@ -525,13 +525,32 @@ input:checked + .slider:before {
   max-width: 1200px;
 }
 
+@media screen and (max-width: 760px) {
+  .modal {
+    left: 0px;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+  }
+}
+
+@media screen and (min-width: 761px) {
+  .modal {
+    left: 20px;
+    top: 70px;
+    bottom: 10px;
+    right: 50px;
+    max-width: 1200px;
+  }
+  
+  .modal-body {
+    padding: 15px;
+  }
+}
+
 /* Prevent images from overflowing the box size */
 .modal img {
   max-width: 100%;
-}
-
-.modal-body {
-  padding: 15px;
 }
 
 /* The Close Button */
