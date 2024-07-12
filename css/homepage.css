@@ -154,7 +154,7 @@ a.opentool:visited{
 }
 
 #parallaxoff {
-	background-image: url('/images/ui/parallax/mobile.jpg');
+	background-image: url('/images/ui/parallax/mobile.webp');
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: auto 100%;
