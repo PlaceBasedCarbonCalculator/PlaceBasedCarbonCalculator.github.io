@@ -331,10 +331,12 @@ const datasets_extra = {
         'circle-stroke-width': 1,
         "circle-color": [
     			'match',
-    			['get', 'BusinessType'],
-    			        'Restaurant/Cafe/Canteen','#e31d3e',
-                  'Pub/bar/nightclub','#f6cc15',
-                  'Takeaway/sandwich shop','#0e7e58',
+    			['get', 'RatingValue'],
+    			        '1','#d7191c',
+                  '2','#fdae61',
+                  '3','#ffffbf',
+                  '4','#a6d96a',
+                  '5','#1a9641',
 
     			 '#e0e0e0'
     			]
@@ -397,6 +399,15 @@ const datasets_extra = {
 	
 	// Popups
 	popups: {
+	  
+	  'food_hygiene': {
+			layerId: 'food_hygiene',
+			templateId: 'food_hygiene-popup',
+			preprocessingCallback: popupCallback,	// Defined below
+			smallValuesThreshold: 10,
+			literalFields: ['Gradient', 'Quietness'] // #!# Gradient and Quietness are capitalised unlike other
+		}
+	  
 	}
 };
 

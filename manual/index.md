@@ -359,7 +359,11 @@ Once a site is designated as a World Heritage Site, it becomes part of a global 
 World Heritage Sites are an important part of the world's cultural and natural heritage, and are recognized as being of universal value to all humanity. They serve as a reminder of the achievements of past civilizations, the wonders of nature, and the need to protect and preserve our shared cultural and natural heritage for future generations.
 <!-- /#landuse-worldheritagesite -->
 
+<!-- #landuse-food_hygiene -->
+#### Food Hygiene Ratings
 
+A 2023 extract of the [Food Standards Agency hygiene ratings](https://ratings.food.gov.uk/). Click on a dot to see the business name and type.
+<!-- /#landuse-food_hygiene -->
 
 ## Land Ownership Explorer
 

@@ -305,8 +305,16 @@
 			<button class="accordion">Services and amenities</button>
 			<div class="panel">
 				
-				<p><label><input type="checkbox" class="showlayer" data-layer="food_hygiene" value="false"> Food Hygine</label>
+				<p><label><input type="checkbox" class="showlayer" data-layer="food_hygiene" value="false"> Food Hygiene</label>
 				<button aria-label="Help purpose" class="helpbutton" data-help="landuse-food_hygiene"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				
+			<div class="legendHorizontal"><div class="l_rHorizontal">
+  		  <div class="lbHorizontal"><span style="background-color: #d7191c"></span>1</div>
+  		  <div class="lbHorizontal"><span style="background-color: #fdae61"></span>2</div>
+  		  <div class="lbHorizontal"><span style="background-color: #ffffbf"></span>3</div>
+  		  <div class="lbHorizontal"><span style="background-color: #a6d96a"></span>4</div>
+  		  <div class="lbHorizontal"><span style="background-color: #1a9641"></span>5</div>
+		  </div></div>
 				
 			</div>
 			
@@ -377,6 +385,16 @@
 		
 		<div id="overlay"></div>
 		
+		<!-- Template for map popup -->
+		<template id="food_hygiene-popup">
+			<div class="mappopup">
+				<h4>Food Hygine Rating</h4>
+				<table>
+					<tr><th>Name</td><td>{BusinessName}</td></tr>
+					<tr><th>Type</td><td>{BusinessType}</td></tr>
+					<tr><th>Rating</td><td>{RatingValue}</td></tr>
+				</table>
+		</template>
 		
 		
 	</body>

@@ -714,6 +714,10 @@ const capUi = (function () {
       // Do nothing if no selector for where the legend will be added
 			if (!document.getElementById(selector)) {return;}
 			
+			//console.log(legendColours);
+			//console.log(selected);
+			//console.log(selector);
+			
 			// Detect Horizontal or Vertical modes
 			// Create the legend HTML
 			// #!# Should be a list, not nested divs
@@ -721,6 +725,7 @@ const capUi = (function () {
 			if(document.getElementById(selector).className == "legendHorizontal") {
 			  legendHtml = '<div class="l_rHorizontal">';
   			  selected = (legendColours.hasOwnProperty(selected) ? selected : '_');
+  			  //console.log(selected);
   			  legendColours[selected].forEach(legendColour => {
   				legendHtml += `<div class="lbHorizontal"><span style="background-color: ${legendColour[1]}"></span>${legendColour[0]}</div>`;
   			})
