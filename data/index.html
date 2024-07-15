@@ -18,8 +18,8 @@
 <!-- PWA support -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/images/icons/192.png">
-<meta name="apple-mobile-web-app-status-bar" content="#0b38e6">
-<meta name="theme-color" content="#0b38e6">
+<meta name="apple-mobile-web-app-status-bar" content="#ac1a40">
+<meta name="theme-color" content="#ac1a40">
 <script src="/app.js" defer></script>
 
 <!-- Google tag (gtag.js) -->
@@ -36,7 +36,7 @@
 
 <!-- Menu -->
 <nav>
-	<a href="/"><img src="/images/ui/logo.png" alt="Carbon & Place Logo" class="logo" /></a>
+	<a href="/"><img src="/images/ui/logo.webp" alt="Carbon & Place Logo" class="logo" /></a>
 	<a href="/about/">About</a>
 	<a href="/data/">Data</a>
 	<a href="/manual/">Manual</a>
@@ -52,7 +52,7 @@
 	</p>
 </div>
 
-<div class="content" style="padding:15px; max-width:95%">
+<div class="content">
 <h1>Data</h1>
 <p>This page provides links to download data from the PBCC as well as extra information on licensing and methods for data users.</p>
 <h2>Data Access and Licence</h2>
@@ -161,7 +161,7 @@ Nevertheless, the anonymised data aggregated to postcode districts give a region
 
 
 <h3>Public Transport Timetables</h3>
-<p>The bus and light rail timetables are published by Traveline while the heavy rail timetables are published by the Association of Train Operating Companies (ATOC). We used the <a href="https://itsleeds.github.io/UK2GTFS/"></a>UK2GTFS package to convert and clean the data into the GTFS format. </p> 
+<p>The bus and light rail timetables are published by Traveline while the heavy rail timetables are published by the Association of Train Operating Companies (ATOC). We used the <a aria-label="UK2GTFS Tool" href="https://itsleeds.github.io/UK2GTFS/"></a>UK2GTFS package to convert and clean the data into the GTFS format. </p> 
 <h3>Travel time Isochrones</h3>
 <p>The travel time isochrones were produced with OpenTripPlanner and the <a href="https://docs.ropensci.org/opentripplanner/">OpenTripPlanner for R package</a>. The travel times were calculated for each LSOA’s population weighted centroid. Some centroids were slightly moved to facilitate routing. For example, if the centroid is in the middle of a lake then routing would fail.
 To build the OpenTripPlanner graph the OpenStreetMap was used as the road network extracted by <a href="https://download.geofabrik.de/europe/great-britain.html">Geofabrik</a>  terrain data was extracted from <a href="https://www.ordnancesurvey.co.uk/business-government/products/terrain-50">OS Terrain 50</a>.</p>

@@ -321,7 +321,7 @@ const capUi = (function () {
 				onAdd(map) {
 					const div = document.createElement('div');
 					div.className = 'maplibregl-ctrl maplibregl-ctrl-group';
-					div.innerHTML = '<button aria-label="Change basemap"><img src="/images/ui/basemaps/basemap.svg" class="basemap" title="Change basemap" /></button>';
+					div.innerHTML = '<button aria-label="Change basemap"><img src="/images/ui/basemaps/basemap.svg" alt="Change basemap" width="25" height="25" class="basemap" title="Change basemap" style="padding:5px"/></button>';
 					div.addEventListener('contextmenu', (e) => e.preventDefault());
 					div.addEventListener('click', function () {
 						const box = document.getElementById('basemapcontrol');
@@ -449,7 +449,7 @@ const capUi = (function () {
 			const options = [];
 			Object.entries(settings.basemapStyles).forEach(([id, basemap]) => {
 				let option = `<input type="radio" name="basemap" id="${id}-basemap" value="${id}"` + (id == _settings.basemapStyleDefault ? ' checked="checked"' : '') + ' />';
-				option += `<label for="${id}-basemap"><img src="/images/ui/basemaps/${id}.png" title="${basemap.title}" /></label>`;
+				option += `<label for="${id}-basemap"><img src="/images/ui/basemaps/${id}.webp" title="${basemap.title}" loading="lazy"/></label>`;
 				options.push(option);
 			});
 			

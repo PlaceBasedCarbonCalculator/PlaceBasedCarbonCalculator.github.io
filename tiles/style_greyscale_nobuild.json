@@ -30,10 +30,6 @@
     {
       "id": "default",
       "url": "https://pbcc.blob.core.windows.net/pbcc-mapextras/sprites/greyscale"
-    },
-    {
-      "id": "foodrating",
-      "url": "https://pbcc.blob.core.windows.net/pbcc-mapextras/sprites/foodrating"
     }
     ],
   "glyphs": "https://pbcc.blob.core.windows.net/pbcc-mapextras/fonts/{fontstack}/{range}.pbf",

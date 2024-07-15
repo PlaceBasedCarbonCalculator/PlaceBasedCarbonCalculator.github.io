@@ -6,28 +6,28 @@
 		<meta charset="utf-8">
 		<meta http-equiv="content-type" content="text/html">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="Description" content="An interactive map to aid cycle planning in Scotland">
+		<meta name="Description" content="An interactive map of Land ownership in Enland and Wales">
 		
 		<!-- Favicon -->
 		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 		<link rel="icon" href="/favicon.ico" type="image/x-icon">
 		
 		<!-- Social media -->
-		<meta property="og:title" content="NPT Scotland">
-		<meta property="og:description" content="An interactive map to aid cycle planning in Scotland">
+		<meta property="og:title" content="Carbon & Place">
+		<meta property="og:description" content="An interactive map of Land ownership in Enland and Wales">
 		<meta property="og:image" content="/images/thumbnail.jpg">
 		<meta property="twitter:image" content="/images/thumbnail.jpg">
-		<meta property="og:url" content="https://www.npt.scot">
+		<meta property="og:url" content="https://www.carbon.place">
 		<meta name="twitter:card" content="summary_large_image">
-		<meta property="og:site_name" content="NPT Scotland">
-		<meta name="twitter:image:alt" content="NPT Scotland thumbnail">
+		<meta property="og:site_name" content="Carbon & Place">
+		<meta name="twitter:image:alt" content="Carbon & Place thumbnail">
 		<title>Land Ownership Explorer</title>
 		
 		<!-- PWA support -->
 		<link rel="manifest" href="/manifest.webmanifest">
 		<link rel="apple-touch-icon" href="/images/icons/192.png">
-		<meta name="apple-mobile-web-app-status-bar" content="#0b38e6">
-		<meta name="theme-color" content="#0b38e6">
+		<meta name="apple-mobile-web-app-status-bar" content="#ac1a40">
+		<meta name="theme-color" content="#ac1a40">
 		<script src="/app.js" defer></script>
 		
 		<!-- Map dependencies -->
@@ -37,28 +37,9 @@
 		<script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
 		<link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
 		
-		<!-- Sliders -->
-		<link href="/js/lib/noUiSlider_15_7_0/nouislider.min.css" rel="stylesheet">
-		<script src="/js/lib/noUiSlider_15_7_0/nouislider.min.js"></script>
-		
-		<!-- Font Awesome -->
-		<link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet">
-		<link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet">
-		
-		<!-- Markdown conversion -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
-		
-		<!-- Tooltips -->
-		<script src="https://unpkg.com/@popperjs/core@2"></script>
-		<script src="https://unpkg.com/tippy.js@6"></script>
-		
-		<!-- Charts -->
-		<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1" defer></script>
-		
 		<!-- Styles -->
 		<link rel="stylesheet" href="/css/main.css">
 		<link rel="stylesheet" href="/css/map.css">
-		<!--  <link rel="stylesheet" href="/css/modal.css" defer> -->
 		
 		<!-- Carbon & Place application -->
 		<script src="/js/settings-common.js"></script>
@@ -72,13 +53,28 @@
 			});
 		</script>
 		
+		<!-- Font Awesome -->
+		<link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet"defer>
+		<link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet"defer>
+		
+		<!-- Markdown conversion -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"defer></script>
+		
+		<!-- Tooltips -->
+		<script src="https://unpkg.com/@popperjs/core@2"defer></script>
+		<script src="https://unpkg.com/tippy.js@6"defer></script>
+		
+		<!-- Charts -->
+		<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1" defer></script>
+		
+		
 	</head>
 	
 	<body>
 		
 		<!-- Menu -->
 		<nav>
-			<a href="/"><img src="/images/ui/logo.png" alt="Carbon & Place Logo" class="logo" /></a>
+			<a href="/"><img src="/images/ui/logo.webp" alt="Carbon & Place Logo" class="logo" /></a>
 			<a href="/about/">Land Ownership Explorer</a>
 			<a href="/about/">About</a>
 			<a href="/data/">Data</a>
@@ -139,7 +135,7 @@
 		</div>
 		
 		<!-- Main Content -->
-		<div class="content">
+		<div class="mapcontent">
 			<div id="map"></div>
 		</div>
 		

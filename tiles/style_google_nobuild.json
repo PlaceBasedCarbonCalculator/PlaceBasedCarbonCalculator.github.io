@@ -54,14 +54,6 @@
       "source-layer": "hillshadeSource"
     },
     {
-      "id": "surfacewater",
-      "type": "fill",
-      "source": "composite",
-      "source-layer": "surfacewater",
-      "layout": {},
-      "paint": {"fill-color": "#9cc0f9"}
-    },
-    {
       "id": "greenspace",
       "type": "fill",
       "source": "composite",
@@ -69,6 +61,7 @@
       "layout": {},
       "paint": {
         "fill-color": "#a8dab5",
+        "fill-opacity": 0.5,
         "fill-antialias": false
       }
     },
@@ -79,8 +72,17 @@
       "source-layer": "woodland",
       "layout": {},
       "paint": {
-        "fill-color": "#a8dab5"
+        "fill-color": "#a8dab5",
+        "fill-opacity": 0.5
       }
+    },
+        {
+      "id": "surfacewater",
+      "type": "fill",
+      "source": "composite",
+      "source-layer": "surfacewater",
+      "layout": {},
+      "paint": {"fill-color": "#9cc0f9"}
     },
     {
       "id": "roads 0 Restricted Road",

@@ -4,31 +4,7 @@ var frequencyChart;
 var accessLocationData = {};
 var frequencyLocationData = {};
 
-/*
-manageCharts =  function (chartDefinition, locationData){
-  console.log("Managing Charts");
-  //console.log(chartDefinition);
-  if(chartDefinition.dataUrl == 'https://pbcc.blob.core.windows.net/pbcc-data/Access/%id.json') {
-    makeChartAccess(locationData);
-    makeTableAccess(locationData);
-  } else {
-    makeChartFrequency(locationData);
-  }
-}
-*/
-/*
-manageCharts =  function (locationId){
-  console.log("Getting JSON data");
-  accessLocationData = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/Access/'+ locationId + '.json');
-  frequencyLocationData = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/PTfrequency/'+ locationId + '.json');
-  
-  console.log(accessLocationData);
-  makeChartAccess();
-  makeTableAccess();
-  makeChartFrequency();
 
-}
-*/
 manageCharts = function (locationId) {
     capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/Access/' + locationId + '.json')
         .then(function (accessData) {
@@ -191,29 +167,6 @@ makeTableAccess = function(){
     const proximity_45 = accessLocationData["p45"];
     const proximity_60 = accessLocationData["p60"];
   
-  /*
- 
- 	// Create an object to store data for each category
-  const htmltext = {};
-  for (let i = 0; i < labels.length; i++) {
-    htmltext[i] = '<tr>' +
-                  '<td>' + labels[i] + '</td>' +
-                  '<td>' + access_15[i] + '</td><td>' + access_30[i] + '</td><td>' + access_45[i] + '</td><td>' + access_60[i] + '</td><td>' +
-                           proximity_15[i] + '</td><td>' + proximity_30[i] + '</td><td>' + proximity_45[i] + '</td><td>' + proximity_60[i] + '</td>' +
-                  '</tr>';
-                  
-  }
-  
-  
-  tab.innerHTML = '<table><tr><td>&nbsp;</td><td colspan="4">Public Transport Time</td><td colspan="4">Straight Line Distance</td></tr>' +
-  '<tr><th>Type</th><th>15 min</th><th>30 min</th><th>45 min</th><th>60 min</th><th>0.75 mile</th><th>1.5 mile</th><th>2.25 mile</th><th>3 mile</th></tr>' +
-   Object.values(htmltext).join('') +
-  '</table>';
-  
-  
-  */
-  
-
 
 // Group data by category
 const groupedData = {};

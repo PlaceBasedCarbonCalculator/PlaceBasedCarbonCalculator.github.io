@@ -108,16 +108,7 @@ a.opentool:visited{
   background: rgb(42,42,42);
   background: linear-gradient(322deg, rgba(42,42,42,1) 0%, rgba(128,128,128,1) 35%, rgba(244,244,244,1) 100%); 
 }
-/*
-#tools a:link, a:visited, a:hover{
-  text-decoration: none;
-  color: white;
-}
 
-#tools a:hover {
-  color: #000000;
-}
-*/
 .card {
   border-radius: 15px;
   margin: 10px;
@@ -239,8 +230,6 @@ a.opentool:visited{
 		background-image: url('/images/ui/parallax/parallax8@2x.webp');
 	}
 }
-
-
 /* Mobile Mode */
 @media screen and (max-width: 600px) {
 	#parallaxoff {
@@ -253,7 +242,6 @@ a.opentool:visited{
 		height: 550px;
 	}
 }
-
 /* Desktop Mode */
 @media screen and (min-width: 601px) {
   #parallaxoff {
