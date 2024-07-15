@@ -1,44 +1,25 @@
-# Carbon & Place Manual
+# Manual
 
-Welcome to Carbon & Place a family of tools to help you understand how and why carbon footprints change from place to place and how we can reduce them. Funded by the Energy Demand Research Centre and developed by the University of Leeds it. It builds on the Place-Based Carbon Calculator.
+Welcome to Carbon & Place a family of tools to help you understand how and why carbon footprints change from place to place and how we can reduce them. Funded by the [Energy Demand Research Centre](https://www.edrc.ac.uk/) and developed by the [University of Leeds](https://www.leeds.ac.uk/).
 
 ## Accessing Carbon & Place
 
-
 The easiest way to access Carbon & Place is via the website hosted at [www.carbon.place](http://www.carbon.place).
 
-### Progressive Web App
+The Carbon & Place is also a [Progressive Web App](https://en.wikipedia.org/wiki/Progressive_web_app), which can be installed on many devices, including your smartphone. The App provides the same features as the website. But it includes additional benefits such as pining the App to your device’s home screen and full-screen support.
 
-The Carbon & Place is a Progressive Web App (PWA), which can be installed on many devices, including your smartphone. The App provides the same features as the website. Still, it includes additional benefits such as pining the App to your device’s home screen and full-screen support.
+If your device supports installing the app you will see the Install button on the [homepage](http://www.carbon.place).
 
-How to install the Carbon & Place App
+![Install Button](/images/manual/install.webp)
 
-#### Android
+*The install button appears on the homepage when your device supports installing apps.*
 
-1.  Visit [www.carbon.place](http://www.carbon.place) using Google Chrome
-2.  Click the “Add Carbon & Place to Home screen” and follow the instructions
+Note that you may have to use your operating system's default browser to install the app.
 
-If the “Add Carbon & Place to Home screen” option does not appear, you can also select the “Install app” option from the main chrome menu (…)
-
-#### Windows 10 & 11
-
-1.  Visit [www.carbon.place](http://www.carbon.place) using Microsoft Edge
-2.  In the address bar, click the App install button
-3.  Click install
-
-#### iOS
-
-1.  Visit [www.carbon.place](http://www.carbon.place) using Safari
-2.  In the bottom menu bar, click the share button (middle button)
-3.  Click “Add to Home Screen”
-4.  Click “Add”
-
-#### macOS
-
-1.  Visit [www.carbon.place](http://www.carbon.place) using Safari
-2.  In the address bar, click the App install button
-3.  Click install
-
+* Android -  Chrome
+* iOS - Safari
+* Windows 10 & 11 - Microsoft Edge
+* macOS - Safari
 
 ## Carbon & Place User Interface Guide
 
@@ -46,19 +27,19 @@ The Carbon & Place's user interface is intuitive, featuring map controls for eas
 
 ### Map Controls
 
-![Map controls](/images/map_controls.png)
+![Map controls](/images/manual/map_controls.png)
 
-The map can be navigated using map controls on the top left of the screen.
+*The map can be navigated using map controls on the top left of the screen.*
 
 The Carbon & Place provides different basemaps. The example below shows the basemap selection options with the satellite basemap with 3D terrain enabled. You can hide the basemap selection option by clicking the change basemap button again.
 
-![Basemap controls](/images/basemaps.png)
+![Basemap controls](/images/manual/basemap_controls.png)
 
 The Anti-alias option enables advanced rendering options that make the map look smoother and clearer. However, performance on low-end devices may be impaired when using anti-aliasing.
 
 ### Layer Controls
 
-![Layer Controls](/images/layer_controls.png)
+![Layer Controls](/images/manual/layer_controls.png)
 
 The layer controls on the right side of the map control what information is shown on the map.
 
@@ -148,7 +129,7 @@ These layers show the frequency of service (trips per hour) for each type of tra
   Flood zones are areas of land in England that have been identified as being at risk of flooding from rivers, the sea, or other sources of water. The Environment Agency, which is responsible for managing flood risk in England, has divided these flood zones into three main categories:
 
 <ol>
-  <li>Flood Zone 1 (low risk): This zone includes areas that have a less than 0.1% chance of flooding in any given year (i.e., a "1 in 1,000" chance). These areas are not considered to be at significant risk of flooding and are generally not subject to flood risk management measures.</li>
+    <li>Flood Zone 1 (low risk): This zone includes areas that have a less than 0.1% chance of flooding in any given year (i.e., a "1 in 1,000" chance). These areas are not considered to be at significant risk of flooding and are generally not subject to flood risk management measures.</li>
 
     <li>Flood Zone 2 (medium risk): This zone includes areas that have between a 0.1% and 1% chance of flooding in any given year (i.e., a "1 in 100" to "1 in 1,000" chance). These areas are considered to be at moderate risk of flooding, and flood risk management measures may be required.</li>
 
@@ -411,7 +392,7 @@ Some of the land registry titles are very simple, e.g.
 
 *5 West Park, Bristol (BS8 2LX)*
 
-This can easily be geocoded and plotted on a map. While we can't find the exact boundaries of the property we can at least put a point in the map a the address.
+This can easily be geocoded and plotted on a map. While we can't find the exact boundaries of the property we can at least put a point in the map at the address.
 
 But consider another example:
 
@@ -420,7 +401,7 @@ But consider another example:
 
 In this case a single dot on the map does not clearly convey the extent of this land ownership. But it is possible to parse this into 233 unique addresses that the text refers to. In this case, I expect that the title covers even more addresses as there are several titles that cut off mid-postcode at 999 characters, which suggests they have been truncated at some point. Nevertheless identifying the knowable 233 addresses helps improve our understanding of land ownership even if it is incomplete.
 
-While this kind of text parsing is never 100% successful, it is worth doing. For example, 9,034 freehold titles that contained multiple postcodes. But when they were broken up, they actually held 168,911 unique property addresses. 
+While this kind of text parsing is never 100% successful, it is worth doing. For example, there are 9,034 freehold titles that contain multiple postcodes. But when they were broken up, they actually refer to 168,911 unique property addresses. 
 
 Some titles are easier to work with than others. There were 1.77 million simple addresses are easy to pass through a geocoder. More complex titles came in the form of `address and associated land` in these cases removing the "and associated land" yields a simple geocodable address.
 
@@ -435,7 +416,7 @@ Other problems occur when the information the Land Registry provides is vague. F
 The land ownership points can be coloured on four variables:
 
 1. Organisation Type: The type of organisation, not that the dataset does not contain privately owned property
-2. Geocoding Accuracy: The precision of the point on the map the most common option is Address (Green) which means the full address has been located but in some cases only the road, postcode, or region could be identified. These points will be futher from their correct location.
+2. Geocoding Accuracy: The precision of the point on the map the most common option is Address (Green) which means the full address has been located but in some cases only the road, postcode, or region could be identified. These points will be further from their correct location.
 3. Country of Registration: Which country is the property owner based in.
 4. Tenure: Is the property title for the freehold or leasehold?
 
