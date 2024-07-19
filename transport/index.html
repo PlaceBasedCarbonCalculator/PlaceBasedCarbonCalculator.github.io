@@ -89,9 +89,11 @@
 			<span class="modal-close">&times;</span>
 			<div class="modal-body">
 				<h3>Transport and Accessability Explorer</h3>
-				<p><b>BETA Tool: This tool is in BETA and may contain bugs and incomplete features.</b></p>
+				<p style="background-color: #f58291"><b>Beta Tool</b>: This tool is still in development and may contain preliminary analysis, bugs, or incomplete features. Beta tools are intened to provide an early look at upcoming features and so results should be treated with care. The tool may change at any time without warning. We are intrested in your feeback and you can report issues or bugs on <a href="https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/issues" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
 				
-				<p>Last updated: <span id="updatedate"></span>. You may need to <a href="https://www.minitool.com/news/f5-vs-ctrl-f5.html">clear your browser cache</a> to see the latest updates.</p>
+				<p>The Transport and Accessability Explorer provides more detail on transport realted topics. For a full explination of the tool please see the <a href="/manual/#transportandaccessibilityexplorer">manual</a>. You can also access sections of the manual via the help buttons (<i class="fa fa-question-circle" aria-hidden="true"></i>).</p>
+				
+				<p>Last updated: <span id="updatedate"></span>. You may need to <a href="https://www.minitool.com/news/f5-vs-ctrl-f5.html" target="_blank" rel="noopener noreferrer">clear your browser cache</a> to see the latest updates.</p>
 				<!-- <div id="osmupdatedate"></div> -->
 			</div>
 		</div>
@@ -159,25 +161,29 @@
 			
 			<button class="accordion">Boundaries</button>
 			<div class="panel">
-				<p><label><input type="checkbox" data-layer="wards" class="showlayer" value="false">Wards</label></p>
+				<p><label><input type="checkbox" data-layer="wards" class="showlayer" value="false">Wards</label>
+				<button aria-label="Help" class="helpbutton" data-help="boundaries-wards"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 				<div class="legendHorizontal">
 					<div class="l_rHorizontal">
 						<div class="lbHorizontal"><span style="background-color: #206b07"></span></div>
 					</div>
 				</div>
-				<p><label><input type="checkbox" data-layer="la" class="showlayer" value="false">Local Authorities</label></p>
+				<p><label><input type="checkbox" data-layer="la" class="showlayer" value="false">Local Authorities</label>
+				<button aria-label="Help" class="helpbutton" data-help="boundaries-la"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 				<div class="legendHorizontal">
 					<div class="l_rHorizontal">
 						<div class="lbHorizontal"><span style="background-color: #6b0707"></span></div>
 					</div>
 				</div>
-				<p><label><input type="checkbox" data-layer="parish" class="showlayer" value="false">Parish</label></p>
+				<p><label><input type="checkbox" data-layer="parish" class="showlayer" value="false">Parish</label>
+				<button aria-label="Help" class="helpbutton" data-help="boundaries-parish"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 				<div class="legendHorizontal">
 					<div class="l_rHorizontal">
 						<div class="lbHorizontal"><span style="background-color: #6b0763"></span></div>
 					</div>
 				</div>
-				<p><label><input type="checkbox" data-layer="westminster" class="showlayer" value="false">Westminster Constituency</label></p>
+				<p><label><input type="checkbox" data-layer="westminster" class="showlayer" value="false">Westminster Constituency</label>
+				<button aria-label="Help" class="helpbutton" data-help="boundaries-westminster"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 				<div class="legendHorizontal">
 					<div class="l_rHorizontal">
 						<div class="lbHorizontal"><span style="background-color: #07366b"></span></div>
@@ -214,7 +220,7 @@
 			    <p>An Access-Proximity analysis attempts to capture whether a neighbourhood is under or over-provided with services. One of the core principles of sustainable transport is that people's needs should be near where they live. Nearby services reduce travel distances and reduce energy consumption and emissions. They also make it more likely that people can use healthy and sustainable modes of travel like walking and cycling. Short travel distances also save people time and money.</p> 
 <p>Ideally, everything would be nearby, but that is not always practical. Especially as the number of services we need varies. For example, we have far more hairdressers than speech therapists because many people regularly go to the hairdressers, and very few people need a speech therapist. So, we look at the ratio between the number of people and the number of services. For example, if there are 1,500 people within a 15-minute walk of your home, that could support around two hairdressers. But if only one hairdresser was within that distance, we would consider your neighbourhood underserved.</p>
 <p>We can do this calculation for all kinds of services and produce a score between -3 and +3, where 0 means your neighbourhood has services in about the same proportion as the national average. A positive score means you have more of that kind of service than average, and a negative score means you have less than average.</p> 
-<p>We look at different time and distance bands because some services are common (like hairdressers) while others are rare (like speech therapists). We measure straight line distance (Proximity) for 0.75, 1.5, 2.25, and 3 miles and travel time by walking and/or public transport for 15, 30, 45, and 60 minutes. For example, you may have no plasters within 0.75 miles of your home but plenty of plasters within 1.5 miles of your home, and that is probably fine. But if your nearest letterbox was 1.5 miles away, you would probably consider that too far.</p> 
+<p>We look at different time and distance bands because some services are common (like hairdressers) while others are rare (like speech therapists). We measure straight line distance (Proximity) for 0.75, 1.5, 2.25, and 3 miles and travel time by walking and/or public transport for 15, 30, 45, and 60 minutes. For example, you may have no plasterers within 0.75 miles of your home but plenty of plasterers within 1.5 miles of your home, and that is probably fine. But if your nearest postbox was 1.5 miles away, you would probably consider that too far.</p> 
 <p>The chart and table below present the same information in two different formats. This is to help you explore how service provision varies from place to place.</p>
   			  <div class="chart-text">
   					<h4 class="chart-title">Access Proximity plot</h4>
@@ -226,7 +232,7 @@
   				</div>
   				
   				<div >
-  				  <h4>Access Summary</h4>
+  				  <h4>Access-Proximity Summary</h4>
   				  <div id="access-table"></div>
   				  
   				  
@@ -236,23 +242,28 @@
 				<div id="ptfreq" class="tabcontent">
   			  <div class="chart-text">
   					<h4 class="chart-title">Public Transport Frequnecy</h4>
-  					<p class="chart-description">Description goes here</p>
+  					<p>This comes from an analysis of historical public transport timetable data. The chart shows the frequncy of the service (trips per hour) passing through or near the selected neighbouhood. Five different time periods are shown Morning peak (6-10am),
+Midday (10am-3pm),Afternoon peak (3-6pm),Evening (6-10pm), Night (10pm-6am). The chart shows each year from 2004 - 2023, note that 2012 and 2013 are missing due to lack of data. You can select the type of public transport and day of the week from the drop down menu. 
+
+<p>Please note that this analysis is based on a collection of hsitorical timetables. Some data is missing and there are known limitations. For more information see the <a href="/manual">manual</a>.</p>
+
+  
   					
-  					<select id="select_day" name="select_day" onchange="makeChartFrequency()">
-                <option value="weekday" selected>Weekday</option>
-                <option value="Sat" >Saturday</option>
-                <option value="Sun" >Sunday</option>
-            </select>
-          
-            <select id="select_mode" name="select_mode" onchange="makeChartFrequency()">
-                <option value="0">Tram/Light Rail</option>
-                <option value="1">Metro</option>
-                <option value="2">Rail</option>
+  					<p>Chart Options</p>
+  					<select id="select_mode" name="select_mode" onchange="makeChartFrequency()">
                 <option value="3" selected>Bus</option>
+                <option value="2">Rail</option>
+                <option value="0">Tram/Light Rail</option>
+                <option value="1">Metro/Underground</option>
                 <option value="4">Ferry</option>
             </select>
   					
-  					
+  					<select id="select_day" name="select_day" onchange="makeChartFrequency()">
+                <option value="weekday" selected>Weekday Average</option>
+                <option value="Sat" >Saturday</option>
+                <option value="Sun" >Sunday</option>
+            </select>
+
   				</div>
   				<div class="chart-wrapper" id="frequency-chartrow" style="display: block;">
   					<div class="chart-container-wide">

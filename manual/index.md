@@ -1,6 +1,6 @@
 # Manual
 
-Welcome to Carbon & Place a family of tools to help you understand how and why carbon footprints change from place to place and how we can reduce them. Funded by the [Energy Demand Research Centre](https://www.edrc.ac.uk/) and developed by the [University of Leeds](https://www.leeds.ac.uk/).
+Welcome to Carbon & Place a family of tools to help you understand how and why carbon footprints change from place to place and how we can reduce them. Carbon & Place is funded by the [Energy Demand Research Centre](https://www.edrc.ac.uk/) and developed by the [University of Leeds](https://www.leeds.ac.uk/).
 
 ## Accessing Carbon & Place
 
@@ -8,7 +8,7 @@ The easiest way to access Carbon & Place is via the website hosted at [www.carbo
 
 The Carbon & Place is also a [Progressive Web App](https://en.wikipedia.org/wiki/Progressive_web_app), which can be installed on many devices, including your smartphone. The App provides the same features as the website. But it includes additional benefits such as pining the App to your device’s home screen and full-screen support.
 
-If your device supports installing the app you will see the Install button on the [homepage](http://www.carbon.place).
+If your device supports installing the app you will see the Install button on the [homepage](/).
 
 ![Install Button](/images/manual/install.webp)
 
@@ -66,29 +66,45 @@ For some data types we have split the neighbourhoods into residential and non-re
 #### Administrative Boundaries
 
 <!-- #boundaries-la -->
-##### Local Authority
+##### Lower Tier Local Authority 2023
 
-Lower Tier Local Authority 2023
+A local authority district (abbreviated as LAD) is a subnational division for local government purposes. These districts are responsible for providing local services such as rubbish collection, housing, and planning applications. There are two main types of local authority districts in England:
+
+District, Borough, or City Councils: These councils cover smaller areas than county councils and offer more localized services. They handle tasks like rubbish collection, recycling, and Council Tax collections.
+
+Unitary Authorities: In some areas, a single tier of local government provides all the services mentioned above. Additionally, there are parish, community, and town councils that operate at a level below district and borough councils, addressing local issues like allotments, public clocks, and community centres.
+
+[Original Data Source](https://geoportal.statistics.gov.uk/search?q=BDY_LAD%202023&sort=Title%7Ctitle%7Casc)
 <!-- /#boundaries-la -->
 <!-- #boundaries-wards -->
-##### Wards
+##### Wards 2023
 
-Wards 2023
+Wards in the United Kingdom are electoral districts at the sub-national level, represented by one or more councillors.
+
+[Original Data Source](https://geoportal.statistics.gov.uk/search?q=BDY_WD%202023&sort=Title%7Ctitle%7Casc)
 <!-- /#boundaries-wards -->
 <!-- #boundaries-parish -->
-##### Parish
+##### Parish 2023
 
-Parish 2023
+In the United Kingdom, parishes serve as important administrative and territorial units. These are the lowest tier of local government in England. They exist below districts and counties.  Some districts are entirely unparished, including areas within London boroughs (except Westminster) and the City of London. Other districts are entirely parished, handling various local responsibilities.
+
+[Original Data Source](https://geoportal.statistics.gov.uk/search?q=BDY_PAR%202023&sort=Title%7Ctitle%7Casc)
+
 <!-- /#boundaries-parish -->
 <!-- #boundaries-westminster -->
-##### Westminster Constituency
+##### Westminster Constituencies 2024
 
-Westminster Constituency 2024
+A constituency is the specific geographical area that is represented by each MP in the House of Commons.
+
+People who live in an MP's constituency are known as their constituents.
+
+[Original Data Source](https://geoportal.statistics.gov.uk/search?q=BDY_PCON&sort=Date%20Created%7Ccreated%7Cdesc)
 <!-- /#boundaries-westminster -->
 
 
 ## Place-Based Carbon Calcualtor
 
+Coming Soon
 <!-- #purpose -->
 Section
 <!-- /#purpose -->
@@ -116,9 +132,43 @@ This layer shows the change in bus frequency (trips per hour) of bus services st
 
 These layers show the frequency of service (trips per hour) for each type of transport stopping in or near each neighbourhood in 2023.
 
+### Report Card
+
+Clicking on any neighbourhood in the map opens the report card.
+
+#### Proximity & Accessibility
+
+
+
+#### Public Transport Frequency
+
+The public transport frequency analysis attempts to capture for the frequency (trips per hour) of public transport varies across the country and over time. Frequency is an important concept in public transport as high frequency services have several benefits:
+
+1. **Reduced waiting times**. If there is a bus every 5 minutes you don have to wait long if you miss one.
+2. **Reduced connection times**. If your journey involves multiple steps a frequency service means you won't be waiting long to make a connection. It also reduced the impact of missing a connection as the next option will be along soon.
+3. **Turn up and go service**. When public transport is frequent people don't need to plan their journeys or consult the timetable. They can arrive at a stop and be confident that the next service will be along soon.
+4. **Reduced impact of delays**. If the service is frequent it can mitigate the effect of disruptions. E.g. It is frustrating if there is one bus per hour and it is 10 minutes late. But if there was one bus every 10 minutes and they are all 10 minutes late would you even notice?
+
+Frequency often varies throughout the day. It is common for there to be more services during rush hour, and fewer at evening and weekends. While this makes sense if frequency in off-peak times drops too low the service can become inconvenient. In may places across the UK public transport only serves 9-5 commuters and is poor at evening and weekends. Which makes public transport unusable for shift workers, leisure trips, etc. This can create a vicious cycle where a low frequency service leads to low ridership and so the frequency is further reduced in an attempt to save money.
+
+##### Data Collection
+
+To analyse how public transport varies it was necessary to gather historical timetables. There is no single official repository of timetable data in the UK. So it was necessary to assemble a patchwork of different datasets. Three sources were identified.  Firstly, the [National Public Transport Data Repository](https://www.data.gov.uk/dataset/d1f9e79f-d9db-44d0-b7b1-41c216fe5df6/national-public-transport-data-repository-nptdr) (NPTDR) gathered an annual snapshot of timetables in October for each year between 2004 and 2011.  Secondly, the [Bus Archive](https://www.busarchive.org.uk/) provided October bus timetables outside London from 2014 to 2017.  Thirdly, [Dr Malcolm Morgan](https://environment.leeds.ac.uk/transport/staff/964/dr-malcolm-morgan) maintains and archive of the [Traveline National Dataset](https://www.data.gov.uk/dataset/0447f8d9-8f1b-4a68-bbc8-246981d02256/traveline-national-dataset) (TNDS) and the [Association of Train Operating Companies](https://data.atoc.org/) (ATOC) (now called the Rail Delivery Group) national rail timetable from 2018 to the present.  While this collection of timetables is patchy in some places and times, notably missing data for 2012/13 and missing data for many years in London.  To our knowledge, it represents the largest collection of digital and analysable timetables in the UK, covering most of the last twenty years.
+
+Each of these data sources provided the timetables in differnt formats. So they were converted into a standardised format using the [UK2GTFS]() package. 
+
+Due to the retrospective nature of the data collection, it is difficult to say with certainty what proportion of the timetables have been gathered in any given year or place.  For most of these datasets contribution was voluntary, and in specific places, it is clear that data is missing.  However, it seems unlikely that transport companies would volunteer a partial timetable, so we have proceeded on the basis that if a timetable is provided, it is complete.  In most cases, the timetables are provided on a one-file-per-route basis.  Thus, missing data is often detectable by rapid changes in services from year to year.  For example, a bus service that ran every half-hour in 2006, was missing in 2007/8, and returned in 2009 is more likely to reflect missing data rather than an abrupt change in service patterns.
+
+
+##### Acknowlegement
+
+We are grateful to Friends of the Earth UK, who funded part of this work. They have their own tools and analysis [here](https://policy.friendsoftheearth.uk/insight/how-britains-bus-services-have-drastically-declined).
+
 <!-- /#transport-zones -->
 
 ## Retrofit Explorer
+
+Coming Soon
 
 ## Land Use and Planning Explorer
 
@@ -173,7 +223,7 @@ The UK government has established a framework for the management of historic lan
 <!-- /#landuse-landfill -->
 
 <!-- #landuse-aonb -->
-####Areas of Outstanding Natural Beauty
+#### Areas of Outstanding Natural Beauty
   Areas of Outstanding Natural Beauty (AONBs) are designated landscapes in England, Wales, and Northern Ireland that are considered to have exceptional natural beauty and significance. They are similar to national parks, but have a focus on protecting and enhancing the natural and cultural landscape, rather than on recreation and tourism.
 
 AONBs are typically characterized by their unique and diverse landscapes, which can include rolling hills, coastline, forests, moorland, and other distinctive features. They are managed by local partnerships made up of local authorities, landowners, and other stakeholders, who work together to balance conservation and sustainable development in the area.
@@ -184,7 +234,7 @@ AONBs provide a range of benefits, including the conservation of biodiversity an
 <!-- /#landuse-aonb -->
 
 <!-- #landuse-ancientwoodland -->
-####Ancient woodlands
+#### Ancient woodlands
   Ancient woodlands in England are areas of woodland that have been continuously wooded since at least 1600 AD, and are therefore considered to be of significant ecological and historical value. They are often characterized by a complex and diverse ecosystem, with a variety of tree species, plant life, and wildlife.
 
 Ancient woodlands in England can be found in a range of different landscapes, including lowland and upland areas, and can include broadleaved woodland, coniferous woodland, and mixed woodland. They may also contain features such as ponds, streams, and meadows.
@@ -195,7 +245,7 @@ To help protect and restore ancient woodlands in England, various initiatives ha
 <!-- /#landuse-ancientwoodland -->
 
 <!-- #landuse-conservationareas -->
-####Conservation areas
+#### Conservation areas
   Conservation areas in England are designated areas with significant historical or architectural value, where special planning regulations and controls are put in place to protect the character and appearance of the area. They are typically made up of historic buildings, streets, and other features that contribute to the unique character and identity of the area.
 
 Conservation areas in England can be designated by local authorities, based on a range of factors such as the historical significance of the area, the architectural merit of the buildings, and the contribution of the area to the wider community. Once designated, the local authority has a duty to preserve and enhance the character and appearance of the area, and to ensure that any development or changes are consistent with the special planning regulations and controls.
@@ -206,7 +256,7 @@ Conservation areas can provide a range of benefits, including the preservation o
 <!-- /#landuse-conservationareas -->
 
 <!-- #landuse-greenbelt -->
-####Greenbelt
+#### Greenbelt
   The greenbelt is a planning policy in England that aims to prevent urban sprawl and protect the countryside and other open spaces around cities and towns. It is a zone of land surrounding urban areas where new development is restricted, with the aim of preserving the natural environment and promoting sustainable development.
 
 The greenbelt was first established in England in the 1950s, in response to concerns about the impact of rapid urbanisation and the loss of green spaces and agricultural land. Today, the greenbelt covers around 13% of the land area in England, and is designated by local authorities through the planning system.
@@ -219,7 +269,7 @@ However, there are also some criticisms of the greenbelt policy, including conce
 <!-- /#landuse-greenbelt -->
 
 <!-- #landuse-listedbuildings -->
-####Listed buildings
+#### Listed buildings
   Listed buildings in England are buildings or structures that are deemed to be of special architectural or historic interest, and are therefore included on a national register called the National Heritage List for England. This register is maintained by Historic England, which is the government's official heritage agency.
 
 Buildings and structures can be listed for a variety of reasons, such as their historical significance, their architectural merit, or their contribution to the local community or landscape. Once listed, a building or structure is legally protected, and any alterations or changes to the building must be approved by the local planning authority and comply with strict regulations.
