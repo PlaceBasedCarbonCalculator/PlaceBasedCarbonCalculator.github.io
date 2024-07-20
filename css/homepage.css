@@ -169,7 +169,7 @@ a.opentool:visited{
 
 #parapic-0 {
 	background-image: url('/images/ui/parallax/parallax0.webp');
-	background-color: #f2fbd1;
+	background-color: #fff0f0;
 }
 #parapic-1 {
 	background-image: url('/images/ui/parallax/parallax1.webp');
@@ -196,14 +196,14 @@ a.opentool:visited{
 	background-image: url('/images/ui/parallax/parallax8.webp');
 }
 #parapic-scrim {
-	background-color: #fcf6f1;
+	background-color: #fff0f0;
 	opacity: 0;
 }
 
 @media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi){ 
   #parapic-0 {
 		background-image: url('/images/ui/parallax/parallax0@2x.webp');
-		background-color: #fcf6f1;
+		background-color: #fff0f0;
 	}
 	#parapic-1 {
 		background-image: url('/images/ui/parallax/parallax1@2x.webp');
