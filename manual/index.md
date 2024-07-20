@@ -139,6 +139,10 @@ Clicking on any neighbourhood in the map opens the report card.
 #### Proximity & Accessibility
 
 
+##### Method
+
+The creation of these plots is straightforward.  First, the [Ordnance Survey Points of Interest](https://www.ordnancesurvey.co.uk/products/points-of-interest) (POI) have been selected as a list of destinations people may wish to access.  The POI data includes a broader set of destinations than is usually considered in accessibility metrics.  In total 2,477,906 locations are divided into 385 different categories.  Second, the 34,753 2011 Lower Super Output Area population-weighted centroids are used as origins for the purpose of measuring accessibility.  Third, public transport isochrones and circular buffer are produced around each centroid.  In this case, the 15, 30, 45, and 60-minute isochrones are paired with 0.75, 1.5, 2.25, and 3-mile buffers implying a 3-mph walking speed.  Fourth, the number of each type of POI is counted for each time and distance band.  This is divided by the resident population within the measured area to provide a per capita measure.  For example, in Great Britain there are 6.46 restaurants per 10,000 people.  Finally, the results are presented as a scatter plot with the Proximity (distance) count on the x-axis and accessibility (time) count on the y-axis.  For both axes, the scale is normalised to show the number of standard deviations from the national average, so the average location would appear in the centre of the graph.
+
 
 #### Public Transport Frequency
 
@@ -155,9 +159,31 @@ Frequency often varies throughout the day. It is common for there to be more ser
 
 To analyse how public transport varies it was necessary to gather historical timetables. There is no single official repository of timetable data in the UK. So it was necessary to assemble a patchwork of different datasets. Three sources were identified.  Firstly, the [National Public Transport Data Repository](https://www.data.gov.uk/dataset/d1f9e79f-d9db-44d0-b7b1-41c216fe5df6/national-public-transport-data-repository-nptdr) (NPTDR) gathered an annual snapshot of timetables in October for each year between 2004 and 2011.  Secondly, the [Bus Archive](https://www.busarchive.org.uk/) provided October bus timetables outside London from 2014 to 2017.  Thirdly, [Dr Malcolm Morgan](https://environment.leeds.ac.uk/transport/staff/964/dr-malcolm-morgan) maintains and archive of the [Traveline National Dataset](https://www.data.gov.uk/dataset/0447f8d9-8f1b-4a68-bbc8-246981d02256/traveline-national-dataset) (TNDS) and the [Association of Train Operating Companies](https://data.atoc.org/) (ATOC) (now called the Rail Delivery Group) national rail timetable from 2018 to the present.  While this collection of timetables is patchy in some places and times, notably missing data for 2012/13 and missing data for many years in London.  To our knowledge, it represents the largest collection of digital and analysable timetables in the UK, covering most of the last twenty years.
 
-Each of these data sources provided the timetables in differnt formats. So they were converted into a standardised format using the [UK2GTFS]() package. 
-
 Due to the retrospective nature of the data collection, it is difficult to say with certainty what proportion of the timetables have been gathered in any given year or place.  For most of these datasets contribution was voluntary, and in specific places, it is clear that data is missing.  However, it seems unlikely that transport companies would volunteer a partial timetable, so we have proceeded on the basis that if a timetable is provided, it is complete.  In most cases, the timetables are provided on a one-file-per-route basis.  Thus, missing data is often detectable by rapid changes in services from year to year.  For example, a bus service that ran every half-hour in 2006, was missing in 2007/8, and returned in 2009 is more likely to reflect missing data rather than an abrupt change in service patterns.
+
+Each of these data sources provided the timetables in different formats. So they were converted into a standardised format using the [UK2GTFS](https://itsleeds.github.io/UK2GTFS/) package. For each year a one month snapshot of the timetable was produced. This month is usually October but in some year other months had to be used due to a lack of data.
+
+To produce the statistics shown in the tool, we counted the number of trips accessible from each LSOA or its immediate vicinity. As some small LSOAs do not have any public transport within them, but may have stops just outside. We used a combination of the LSOA boundaries and 500m circle around the population weighted centroid of the LSOA. This was then further buffered out by another 100m. Thus we are measuring the frequency of public transport within a short walk of each LSOA. 
+
+![Frequency Analysis Areas](/images/manual/transport_lsoa_buffer.png)
+
+*Example of the area used to count public transport trips*
+
+##### Missing Data / Data Quality
+
+Are the national timetables have been assembled from a patchworks of different datasets there are some know gaps. Data from 2004 to 2007 is patchy in many places and there is no data at all for 2012 and 2013. Rail data is also missing from 2014 to 2017. The table below shows and overview of the bus data quality.
+
+![Timetable missing data](/images/manual/transport_bus_data.png)
+
+*Summary of bus timetable data availability.  Green - good data coverage, Amber - possibly data missing.  Red - data is definitely missing.  Grey - no data for the years 2012 and 2013.  Blue - timetables severely reduced by COVID-19 pandemic lockdowns may not be representative*
+
+The raw data (especially in the earlier years) contains errors such as missing stops and vehicles travelling impossibly fast. The UK2GTFS packages was used to automatically correct many of these errors but it is not possible to say with complete certainty that all errors have been removed.
+
+##### Interpretation
+
+At this very local scale timetable data is complex and messy so the results should be treated with care. A sudden drop in service could be due to missing data or reflect a short term effect, e.g. a bus is redirected during road works. So the results for any specific place and time should be treated with care. Where this data is useful is when the it shows consistent trends over time and across multiple areas. 
+
+On of the strongest patterned to emerge from the data is that in most of the country the weekday rush hour bus service is worse than the service in the London suburbs on a Sunday night. Since 2008 bus services have declined significantly across the UK except in London where they have remained roughly the same.
 
 
 ##### Acknowlegement
