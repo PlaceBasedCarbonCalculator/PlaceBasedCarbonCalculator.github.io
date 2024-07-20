@@ -15,7 +15,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta property="og:site_name" content="Carbon & Place">
   <meta name="twitter:image:alt" content="Carbon & Place thumbnail">
-
+  
   <title>Carbon & Place</title>
   <!-- PWA support -->
   <link rel="manifest" href="/manifest.webmanifest">
@@ -166,7 +166,11 @@
 </div>
 
 <script type="text/javascript" src="/js/parallax.js"></script>
-<script type="text/javascript" src="/js/common-nonmap.js"></script>    
-	
+<script type="text/javascript" src="/js/common-nonmap.js"></script>
+
+<!-- Map dependencies not needed on homepage but cached for other pages-->
+<link rel="prefetch" href="https://unpkg.com/pmtiles@3.0.6/dist/pmtiles.js" />
+<link rel="prefetch" href="/js/lib/geocoder/maplibre-gl-geocoder.min.js" />
+<link rel="prefetch" href="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.js"/>
 
 </body></html>
