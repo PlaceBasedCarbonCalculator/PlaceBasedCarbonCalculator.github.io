@@ -101,19 +101,6 @@ People who live in an MP's constituency are known as their constituents.
 [Original Data Source](https://geoportal.statistics.gov.uk/search?q=BDY_PCON&sort=Date%20Created%7Ccreated%7Cdesc)
 <!-- /#boundaries-westminster -->
 
-
-## Place-Based Carbon Calcualtor
-
-Coming Soon
-<!-- #purpose -->
-Section
-<!-- /#purpose -->
-
-<!-- #pbcc-zones -->
-Zones Help
-<!-- /#pbcc-zones -->
-
-
 ## Transport and Accessibility Explorer
 
 The Transport and Accessibility Explorer allows a deep dive on the issues related to transport and access to services.
@@ -124,24 +111,44 @@ The Transport and Accessibility Explorer allows a deep dive on the issues relate
 
 The Neighbourhoods layer uses the Lower Super Output Areas (LSOA) to report a range of transport statistics.
 
-*Change in Bus Service (2008 - 2023)*
+**Change in buses/hour (2008 - 2023)**
 
-This layer shows the change in bus frequency (trips per hour) of bus services stopping in or near each neighbourhood.
+This layer shows the change in bus frequency (trips per hour daytime average) of bus services stopping in or near each neighbourhood between 2008 and 2023. 
 
-*Tram / Subway / Rail / Bus / Ferry*
+**Bus/Tram/Subway/Rail/Ferry per hour (daytime average)**
 
-These layers show the frequency of service (trips per hour) for each type of transport stopping in or near each neighbourhood in 2023.
+These layers show the frequency of service (trips per hour) for each type of transport stopping in or near each neighbourhood in 2023. Note that not all types of transport are available in every neighbourhood. Please with no timetabled services are shown in black.
+
+Clicking on any neighbourhood brings up the report card that provides more information.
+
+<!-- /#transport-zones -->
 
 ### Report Card
 
 Clicking on any neighbourhood in the map opens the report card.
 
-#### Proximity & Accessibility
+#### Accessibility & Proximity 
+
+Accessibility and proximity are two core concepts of sustainable transport planning. Proximity is a simple measure of how far away from people are the things they need. While accessibility is a more complex concept accounting for real world travel times, costs, and other factors that affect people's ability to get where they need to be. 
+
+Accessibility can be improved by improving proximity (bringing people closer to the things they need) or mobility (enabling people to move further and faster),  but improving proximity is usually considered more sustainable and desirable. This is because when shops and services are nearby people can walk, cycle, or take public transport all of these options are cheaper and less resource intensive. But when services are far away people are more likely to use cars which are expensive to own and run, and [very costly for society as a whole](https://doi.org/10.1016/j.jtrangeo.2024.103817). Cars and their infrastructure also take up a lot of space, which further spreads out towns and cities reducing proximity and increasing car dependency.
+
+The Accessibility-Proximity analysis attempt to capture whether a neighbourhood has enough of the shops and services that people need within a reasonable distance.
 
 
 ##### Method
 
 The creation of these plots is straightforward.  First, the [Ordnance Survey Points of Interest](https://www.ordnancesurvey.co.uk/products/points-of-interest) (POI) have been selected as a list of destinations people may wish to access.  The POI data includes a broader set of destinations than is usually considered in accessibility metrics.  In total 2,477,906 locations are divided into 385 different categories.  Second, the 34,753 2011 Lower Super Output Area population-weighted centroids are used as origins for the purpose of measuring accessibility.  Third, public transport isochrones and circular buffer are produced around each centroid.  In this case, the 15, 30, 45, and 60-minute isochrones are paired with 0.75, 1.5, 2.25, and 3-mile buffers implying a 3-mph walking speed.  Fourth, the number of each type of POI is counted for each time and distance band.  This is divided by the resident population within the measured area to provide a per capita measure.  For example, in Great Britain there are 6.46 restaurants per 10,000 people.  Finally, the results are presented as a scatter plot with the Proximity (distance) count on the x-axis and accessibility (time) count on the y-axis.  For both axes, the scale is normalised to show the number of standard deviations from the national average, so the average location would appear in the centre of the graph.
+
+##### Accessibility & Proximity Summary Table
+
+The table lists 385 types of destinations listed in the [Ordnance Survey Points of Interest](https://www.ordnancesurvey.co.uk/products/points-of-interest). For each destination eight scores are shown. The four accessibility scores are based on the number of destinations that can be reached by public transport in 15, 30, 45, and 60 minutes. While the four proximity scores are based on the number of destinations that are within 0.75, 1.5, 2.25, and 3 miles. Each score is on a scale from -3 to +3 which describes how many [standard deviations](https://en.wikipedia.org/wiki/Standard_deviation) the neighbourhood is from the national average. 89% of neighbourhoods are within three standard deviations of the average, while values greater than +3 or less than -3 are truncated to that range. 
+
+Scores more than 0 (better than national average) are highlighted in green. Scores less than 0 (worse than national) average are shown in red.
+
+##### Accessibility & Proximity Summary Chart
+
+The interactive chart shows the same information at the table in a more visual form. The 30 minute / 1.5 mile data is plotted on the graph. With the 1.5 mile proximity score on the x-axis and the 30 minute accessibility score on the y-axis. Click on any dot to see the name of the destination. 
 
 
 #### Public Transport Frequency
@@ -190,11 +197,7 @@ On of the strongest patterned to emerge from the data is that in most of the cou
 
 We are grateful to Friends of the Earth UK, who funded part of this work. They have their own tools and analysis [here](https://policy.friendsoftheearth.uk/insight/how-britains-bus-services-have-drastically-declined).
 
-<!-- /#transport-zones -->
 
-## Retrofit Explorer
-
-Coming Soon
 
 ## Land Use and Planning Explorer
 
@@ -512,3 +515,21 @@ The land ownership points can be coloured on four variables:
 * Proprietor: The owner as resisted with the Land Registry
 
 <!-- /#landownership-points -->
+
+
+
+## Place-Based Carbon Calcualtor
+
+Coming Soon
+<!-- #purpose -->
+Section
+<!-- /#purpose -->
+
+<!-- #pbcc-zones -->
+Zones Help
+<!-- /#pbcc-zones -->
+
+
+## Retrofit Explorer
+
+Coming Soon

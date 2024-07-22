@@ -136,12 +136,12 @@
 				<p><label><input type="checkbox" class="showlayer" data-layer="zones" value="false">Show layer</label></p>
 				<p>
 					<select name="field" class="updatelayer" data-layer="zones" aria-label="Neighbouhood  layer">
-						<option value="change_bus_2008_2023" selected>Change in Buses per hour (2008-2023)</option>
-						<option value="tph_daytime_avg_2023_3">Buses per hour (daytime average)</option>
-						<option value="tph_daytime_avg_2023_2">Trains per hour (daytime average)</option>
-						<option value="tph_daytime_avg_2023_0">Trams per hour (daytime average)</option>
-						<option value="tph_daytime_avg_2023_1">Subway per hour (daytime average)</option>
-						<option value="tph_daytime_avg_2023_4">Ferries per hour (daytime average)</option>
+						<option value="change_bus_2008_2023" selected>Change in buses/hour (2008-2023)</option>
+						<option value="tph_daytime_avg_2023_3">Buses/hour (daytime average)</option>
+						<option value="tph_daytime_avg_2023_2">Trains/hour (daytime average)</option>
+						<option value="tph_daytime_avg_2023_0">Trams/hour (daytime average)</option>
+						<option value="tph_daytime_avg_2023_1">Subway/hour (daytime average)</option>
+						<option value="tph_daytime_avg_2023_4">Ferries/hour (daytime average)</option>
 					</select>
 					<button aria-label="Help purpose" class="helpbutton" data-help="transport-zones"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
 				</p>
@@ -210,19 +210,20 @@
 			  
 			   <!-- Tab links -->
         <div class="tab">
-          <button class="tablinks" onclick="modalTab(event, 'pna')" id="defaultOpen">Proximity & Accessibility</button>
+          <button class="tablinks" onclick="modalTab(event, 'pna')" id="defaultOpen">Accessibility & Proximity</button>
           <button class="tablinks" onclick="modalTab(event, 'ptfreq')">Public Transport Frequency</button>
         </div>
 			  
 			  <div id="pna" class="tabcontent">
 			    
-			    <p>An Access-Proximity analysis attempts to capture whether a neighbourhood is under or over-provided with services. One of the core principles of sustainable transport is that people's needs should be near where they live. Nearby services reduce travel distances and reduce energy consumption and emissions. They also make it more likely that people can use healthy and sustainable modes of travel like walking and cycling. Short travel distances also save people time and money.</p> 
+			    <p>An Accessibility-Proximity analysis attempts to capture whether a neighbourhood is under or over-provided with services. One of the core principles of sustainable transport is that people's needs should be near where they live. Nearby services reduce travel distances and reduce energy consumption and emissions. They also make it more likely that people can use healthy and sustainable modes of travel like walking and cycling. Short travel distances also save people time and money.</p> 
 <p>Ideally, everything would be nearby, but that is not always practical. Especially as the number of services we need varies. For example, we have far more hairdressers than speech therapists because many people regularly go to the hairdressers, and very few people need a speech therapist. So, we look at the ratio between the number of people and the number of services. For example, if there are 1,500 people within a 15-minute walk of your home, that could support around two hairdressers. But if only one hairdresser was within that distance, we would consider your neighbourhood underserved.</p>
 <p>We can do this calculation for all kinds of services and produce a score between -3 and +3, where 0 means your neighbourhood has services in about the same proportion as the national average. A positive score means you have more of that kind of service than average, and a negative score means you have less than average.</p> 
 <p>We look at different time and distance bands because some services are common (like hairdressers) while others are rare (like speech therapists). We measure straight line distance (Proximity) for 0.75, 1.5, 2.25, and 3 miles and travel time by walking and/or public transport for 15, 30, 45, and 60 minutes. For example, you may have no plasterers within 0.75 miles of your home but plenty of plasterers within 1.5 miles of your home, and that is probably fine. But if your nearest postbox was 1.5 miles away, you would probably consider that too far.</p> 
 <p>The chart and table below present the same information in two different formats. This is to help you explore how service provision varies from place to place.</p>
   			  <div class="chart-text">
-  					<h4 class="chart-title">Access Proximity plot</h4>
+  					<h4 class="chart-title">Accessibility & Proximity Summary Table</h4>
+  					<p>This chart shows the 30 minute / 1.5 mile data from the table below.</p>
   				</div>
   				<div class="chart-wrapper" id="access-chartrow" style="display: block;">
   					<div class="chart-container-wide">
@@ -231,7 +232,7 @@
   				</div>
   				
   				<div >
-  				  <h4>Access-Proximity Summary</h4>
+  				  <h4>Accessibility & Proximity Summary Table</h4>
   				  <div id="access-table"></div>
   				  
   				  
