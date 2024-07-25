@@ -8,6 +8,7 @@ function loadManual ()
     .then (response => response.text ())
     .then (function (text) {
       document.querySelector ('#content').innerHTML = mdToHtml (text);
+      followAnchorHash ();
       createToc ();
       createEditLink ();
     })
@@ -89,4 +90,15 @@ function createEditLink ()
   document.querySelector('#editlink').href = link;
 }
 
+// Function to follow the anchor hash for JS-loaded content (which loads after document ready)
+function followAnchorHash ()
+{
+  // Go to hash if present; see: https://stackoverflow.com/a/13736194/180733
+  if (window.location.hash) {
+    if (document.getElementById (window.location.hash.substring (1))) {
+      const top = document.getElementById (window.location.hash.substring (1)).offsetTop;
+      window.scrollTo (0, top);
+    }
+  }
+}
 
