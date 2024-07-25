@@ -3,7 +3,7 @@
     display: none;
   }
   .content {
-    width: calc(100% - 20px);
+    width: calc(100% - 30px);
   }
 }
 @media screen and (min-width: 761px) {
@@ -44,6 +44,7 @@ body {
   padding: 5px 0;
   color: #333;
   text-decoration: none;
+  font-weight: 400;
 }
 
 .table-of-contents li ul {
