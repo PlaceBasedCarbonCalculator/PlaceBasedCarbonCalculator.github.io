@@ -258,7 +258,7 @@ const datasets_extra = {
 };
 
 
-const datasets = mergeObjects(datasets_common, datasets_extra);
+const datasets = mergeObjects(datasets_extra, datasets_common);
 
 
 // Function to determine the style column
