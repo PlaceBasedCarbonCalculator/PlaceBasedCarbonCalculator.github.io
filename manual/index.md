@@ -1,8 +1,16 @@
 # Manual
 
-Welcome to Carbon & Place a family of tools to help you understand how and why carbon footprints change from place to place and how we can reduce them. Carbon & Place is funded by the [Energy Demand Research Centre](https://www.edrc.ac.uk/) and developed by the [University of Leeds](https://www.leeds.ac.uk/).
+Carbon & Place is a family of tools to help you understand how and why carbon footprints change from place to place and how we can reduce them. Carbon & Place is funded by the [Energy Demand Research Centre](https://www.edrc.ac.uk/) and developed by the [University of Leeds](https://www.leeds.ac.uk/).
 
-## Accessing Carbon & Place
+This manual is a living document that will be updated over time. You are welcome to contribute the documentation via [GitHub](https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/blob/dev/manual/index.md)
+
+Short extracts of this manual can be accessed throughout the tools via the <i class="fa fa-question-circle" aria-hidden="true" style="color: #0b38e6;"></i> buttons.
+
+## Common User Interface
+
+Most of the tools on Carbon & Place are map based and have map controls for easy navigation and layer controls to customize data visibility.This section describes features that appear in multiple tools. 
+
+### Accessing Carbon & Place
 
 The easiest way to access Carbon & Place is via the website hosted at [www.carbon.place](http://www.carbon.place).
 
@@ -20,10 +28,6 @@ Note that you may have to use your operating system's default browser to install
 * iOS - Safari
 * Windows 10 & 11 - Microsoft Edge
 * macOS - Safari
-
-## Carbon & Place User Interface Guide
-
-The Carbon & Place's user interface is intuitive, featuring map controls for easy navigation and layer controls to customize data visibility.
 
 ### Map Controls
 
@@ -43,7 +47,7 @@ The Anti-alias option enables advanced rendering options that make the map look 
 
 The layer controls on the right side of the map control what information is shown on the map.
 
-### General Concepts
+### Key Concepts
 
 #### Neighbouhood Statitics
 
@@ -58,15 +62,43 @@ While LSOAs are small they still contain thousands of people, so any data about 
 <!-- #dasymetric -->
 #### Dasymetric Mapping
 
-By default, the neighbourhood statistics are are shown as a dasymetric map. This means that the buildings within a zone are coloured to display information. If you turn off dasymetric mode, a simple choropleth map is shown where the whole neighbourhood is coloured. Note that the same underlying data is being visualised in both modes, and the differences between modes are merely aesthetic. However, dasymetric maps are intended to better represent the data by emphasising the true locations of people who are not uniformly distributed across the area. 
+![Dasymetric](/images/manual/dasymetric.png)
+
+*Dasymetric (left) and Choropleth (right) mapping techniques*
+
+By default, the neighbourhood statistics are are shown as a [dasymetric](https://en.wikipedia.org/wiki/Dasymetric_map) map. This means that the buildings within a zone are coloured to display information. If you turn off dasymetric mode, a simple [choropleth](https://en.wikipedia.org/wiki/Choropleth_map) map is shown where the whole neighbourhood is coloured. Note that the same underlying data is being visualised in both modes, and the differences between modes are merely aesthetic. However, dasymetric maps are intended to better represent the data by emphasising the true locations of people who are not uniformly distributed across the area. 
 
 For some data types we have split the neighbourhoods into residential and non-residential areas. The original LSOAs created by the Office for National Statistics (ONS) are contiguous. In other words every part of the country is within an LSOA with no gaps. However for some neighbourhood statistics they only make sense to refer to the part of the LSOA that contains homes. For example consider LSOA E01002444 which contains Heathrow Airport. This LSOA has a population of about 2,230 people. But none of these people live in the airport, they live in the homes near the airport. So we split the LSOA into two; one that contains all the homes and will report statistics that are relevant to the residential population, and one that contains no homes and will report non-domestic statistics. This means you may see maps that have gaps or grey buildings.
 <!-- /#dasymetric -->
+
+#### Digital Terrain Map and 3D buildings
+
+Maps are traditionally flat, but our lives are not 2D. Terrain affects the weather, what and where we build, travel choices, and our sense of place. Interactive maps need not be limited to two dimensions, so the Carbon & Place map support some 3D features. These include:
+
+* Hill shading: A pattern of light and dark areas is used on the map to indicate hills and valleys
+* 3D terrain: The map can be switched between a 2D (default) and 3D mode using the map controls. 
+* 3D buildings: when zoomed in building outlines have realistic heights.
+
+![Hill shading](/images/manual/hillshade.png)
+
+*An example of hill shading used to show terrain. In this area some of the terrain appears pixilated as missing data in the high resolution 2m data has been in-filled with lower quality 50m resolution data.*
+
+The underlying data that enables 3D features in Carbon & Place is a high-resolution [Digital Terrain Model](https://en.wikipedia.org/wiki/Digital_elevation_model) (DTM) and Digital Surface Model (DSM) of Great Britain. A DTM is basically a big picture where every pixel contains the elevation of the ground. The difference between a DTM and a DSM is that DTMs measure ground level while the DSM includes things on top of the ground, such as buildings and trees.
+ 
+The DTM and DSM are created from [LIDAR](https://en.wikipedia.org/wiki/Lidar) data published by the [Environment Agency](https://www.data.gov.uk/dataset/f0db0249-f17b-4036-9e65-309148c97ce4/national-lidar-programme), [Welsh](https://datamap.gov.wales/maps/lidar-viewer/), and [Scottish](https://remotesensingdata.gov.scot/data#/list) Governments. Individual datasets from between 2010 and the present have been stitched together into a single map with about a 2m x 2m pixel resolution.  Unfortunately, the coverage of new DTM is not universal. In England, coverage is over 95%, but in Wales, it is about 70%, and in Scotland, only about 40% (mostly in southern and central Scotland), so we had to infill with [50m data](https://www.ordnancesurvey.co.uk/products/os-terrain-50) in places. Fortunately, the coverage is concentrated in the most populated places, so a higher proportion of people are covered even if the beauty of the Scottish Highlands is slightly lost.
+
+Building heights are calculated be comparing the difference between the DTM and the DSM. Each building footprint is given a single height based on the maximum difference between the two datasets. This is a simple approach and does not account for buildings with sloping roofs or multiple levels. However the purpose of the 3D buildings in Carbon & Place is to visually distinguish different building types (e.g. houses and blocks of flats) that may not be clear on a 2D map, for this purpose the approximate height of the buildings is sufficient. 
+
+![3D buildings](/images/manual/3dbuildings.png)
+
+*An example of 3D buildings in Leeds*
 
 #### Administrative Boundaries
 
 <!-- #boundaries-la -->
 ##### Lower Tier Local Authority 2023
+
+![Lower Tier Local Authority](/images/manual/la.png)
 
 A local authority district (abbreviated as LAD) is a subnational division for local government purposes. These districts are responsible for providing local services such as rubbish collection, housing, and planning applications. There are two main types of local authority districts in England:
 
@@ -79,12 +111,16 @@ Unitary Authorities: In some areas, a single tier of local government provides a
 <!-- #boundaries-wards -->
 ##### Wards 2023
 
+![Ward](/images/manual/ward.png)
+
 Wards in the United Kingdom are electoral districts at the sub-national level, represented by one or more councillors.
 
 [Original Data Source](https://geoportal.statistics.gov.uk/search?q=BDY_WD%202023&sort=Title%7Ctitle%7Casc)
 <!-- /#boundaries-wards -->
 <!-- #boundaries-parish -->
 ##### Parish 2023
+
+![Parish](/images/manual/parish.png)
 
 In the United Kingdom, parishes serve as important administrative and territorial units. These are the lowest tier of local government in England. They exist below districts and counties.  Some districts are entirely unparished, including areas within London boroughs (except Westminster) and the City of London. Other districts are entirely parished, handling various local responsibilities.
 
@@ -93,6 +129,8 @@ In the United Kingdom, parishes serve as important administrative and territoria
 <!-- /#boundaries-parish -->
 <!-- #boundaries-westminster -->
 ##### Westminster Constituencies 2024
+
+![Constituencies](/images/manual/constituency.png)
 
 A constituency is the specific geographical area that is represented by each MP in the House of Commons.
 
@@ -165,6 +203,10 @@ Frequency often varies throughout the day. It is common for there to be more ser
 ##### Data Collection
 
 To analyse how public transport varies it was necessary to gather historical timetables. There is no single official repository of timetable data in the UK. So it was necessary to assemble a patchwork of different datasets. Three sources were identified.  Firstly, the [National Public Transport Data Repository](https://www.data.gov.uk/dataset/d1f9e79f-d9db-44d0-b7b1-41c216fe5df6/national-public-transport-data-repository-nptdr) (NPTDR) gathered an annual snapshot of timetables in October for each year between 2004 and 2011.  Secondly, the [Bus Archive](https://www.busarchive.org.uk/) provided October bus timetables outside London from 2014 to 2017.  Thirdly, [Dr Malcolm Morgan](https://environment.leeds.ac.uk/transport/staff/964/dr-malcolm-morgan) maintains and archive of the [Traveline National Dataset](https://www.data.gov.uk/dataset/0447f8d9-8f1b-4a68-bbc8-246981d02256/traveline-national-dataset) (TNDS) and the [Association of Train Operating Companies](https://data.atoc.org/) (ATOC) (now called the Rail Delivery Group) national rail timetable from 2018 to the present.  While this collection of timetables is patchy in some places and times, notably missing data for 2012/13 and missing data for many years in London.  To our knowledge, it represents the largest collection of digital and analysable timetables in the UK, covering most of the last twenty years.
+
+
+Each of these data sources provided the timetables in different formats. So they were converted into a standardised format using the [UK2GTFS](https://itsleeds.github.io/UK2GTFS/) package. 
+
 
 Due to the retrospective nature of the data collection, it is difficult to say with certainty what proportion of the timetables have been gathered in any given year or place.  For most of these datasets contribution was voluntary, and in specific places, it is clear that data is missing.  However, it seems unlikely that transport companies would volunteer a partial timetable, so we have proceeded on the basis that if a timetable is provided, it is complete.  In most cases, the timetables are provided on a one-file-per-route basis.  Thus, missing data is often detectable by rapid changes in services from year to year.  For example, a bus service that ran every half-hour in 2006, was missing in 2007/8, and returned in 2009 is more likely to reflect missing data rather than an abrupt change in service patterns.
 
@@ -311,7 +353,7 @@ Listing a building or structure can provide a range of benefits, including the p
 <!-- /#landuse-listedbuildings -->
 
 <!-- #landuse-nationalparks -->
-####National parks
+#### National parks
   National parks are large areas of land in England that are protected for their natural beauty, wildlife, and cultural heritage. They are designated by the government under the National Parks and Access to the Countryside Act 1949, with the aim of preserving the landscape and promoting public enjoyment of the countryside.
 
 There are currently 10 national parks in England, covering approximately 9% of the country's land area. Each park has its own unique character and landscape, ranging from the rugged peaks of the Lake District to the rolling hills of the South Downs.
@@ -324,7 +366,7 @@ National parks in England are important for their cultural and historical signif
 <!-- /#landuse-nationalparks -->
 
 <!-- #landuse-naturereserves -->
-####Nature reserves
+#### Nature reserves
   Nature reserves are areas of land and/or water that are managed for the purpose of conserving and protecting the natural environment, including plant and animal species, habitats, and ecosystems. They are established by governments, non-governmental organizations, or private individuals or groups, and are generally open to the public for education, research, and recreation.
 
 Nature reserves may be established to protect areas of special ecological, scientific, or cultural importance, or to restore and conserve habitats that have been damaged or degraded by human activities. They can be found in a variety of settings, including forests, wetlands, grasslands, and coastal areas.
@@ -335,7 +377,7 @@ Nature reserves play an important role in protecting biodiversity and ecosystem 
 <!-- /#landuse-naturereserves -->
 
 <!-- #landuse-parksandgardens -->
-####Registered Parks and Gardens
+#### Registered Parks and Gardens
   Registered Parks and Gardens are historic designed landscapes that are of national importance in England. They are designated by Historic England, which is responsible for identifying, protecting, and promoting England's historic environment.
 
 These landscapes can range from small urban gardens to large country estates, and are valued for their historic, cultural, and ecological significance. They often contain a variety of features, such as ornamental buildings, fountains, ponds, statues, and woodland areas, and can provide important habitats for wildlife.
@@ -348,7 +390,7 @@ Registered Parks and Gardens are an important part of England's heritage and pro
 <!-- /#landuse-parksandgardens -->
 
 <!-- #landuse-RAMSAR -->
-####RAMSAR
+#### RAMSAR
   RAMSAR sites are wetlands that are designated under the Ramsar Convention, an international treaty that was established in 1971 to protect wetlands of international importance. The Ramsar Convention is named after the city of Ramsar in Iran, where the treaty was signed.
 
 Wetlands are defined as areas of marsh, fen, peatland or water, whether natural or artificial, permanent or temporary, with water that is static or flowing, fresh, brackish or salt, including areas of marine water the depth of which at low tide does not exceed six meters.
@@ -361,8 +403,8 @@ Designation as a Ramsar site can provide various benefits, including internation
 <!-- /#landuse-RAMSAR -->
 
 <!-- #landuse-SAC -->
-####Special Areas of Conservation
-  Special Areas of Conservation (SACs) are protected areas designated under the European Union's Habitats Directive, with the aim of conserving important habitats and species of European importance. SACs are part of a wider network of protected areas known as Natura 2000, which includes both SACs and Special Protection Areas (SPAs) for birds.
+#### Special Areas of Conservation
+Special Areas of Conservation (SACs) are protected areas designated under the European Union's Habitats Directive, with the aim of conserving important habitats and species of European importance. SACs are part of a wider network of protected areas known as Natura 2000, which includes both SACs and Special Protection Areas (SPAs) for birds.
 
 SACs are designated based on scientific criteria, such as the presence of rare or threatened habitats or species, and their designation requires member states to take measures to conserve and manage these areas effectively. The Habitats Directive requires that SACs are managed in a way that maintains or restores their natural habitats and species, and that any plans or projects that may have an impact on these areas are subject to a rigorous assessment of their potential environmental impact.
 
@@ -372,7 +414,7 @@ The management of SACs in the UK is carried out by a range of organizations, inc
 <!-- /#landuse-SAC -->
 
 <!-- #landuse-scheduledmonuments -->
-####Scheduled monuments
+#### Scheduled monuments
   Scheduled monuments are archaeological or historic sites that are of national importance and are protected by law in the UK. They are designated under the Ancient Monuments and Archaeological Areas Act 1979 and are managed by Historic England, Cadw, Historic Environment Scotland, or the Northern Ireland Environment Agency.
 
 The designation of scheduled monuments is based on the archaeological or historical significance of the site, and their inclusion on the schedule affords them legal protection against damage, destruction or inappropriate development. The sites may include prehistoric standing stones, burial mounds, hillforts, Roman forts and villas, medieval castles, churches and monasteries, and industrial sites.
@@ -383,7 +425,7 @@ The management of scheduled monuments is the responsibility of the relevant heri
 <!-- /#landuse-scheduledmonuments -->
 
 <!-- #landuse-SPA -->
-####SPA
+#### SPA
   Special Protection Areas (SPAs) are areas designated under the European Union's Birds Directive, with the aim of protecting and conserving important habitats for birds. SPAs are part of a wider network of protected areas known as Natura 2000, which includes both SPAs and Special Areas of Conservation (SACs) for other habitats and species.
 
 SPAs are designated based on scientific criteria, such as the presence of rare or threatened bird species or important breeding or wintering habitats. The designation requires member states to take measures to protect these areas and ensure that any plans or projects that may have an impact on them are subject to a rigorous assessment of their potential environmental impact.
@@ -394,7 +436,7 @@ The management of SPAs in the UK is carried out by a range of organizations, inc
 <!-- /#landuse-SPA -->
 
 <!-- #landuse-SSSI -->
-####SSSI
+#### SSSI
   Sites of Special Scientific Interest (SSSIs) are areas designated under UK legislation as being of special interest due to their unique flora, fauna, or geological features. They are designated by the relevant nature conservation body in each country, such as Natural England, Scottish Natural Heritage, or the Countryside Council for Wales.
 
 SSSIs cover a range of habitats, including heathland, grassland, woodland, coastal habitats, and wetlands. They may be important for a particular species or group of species, or for their geology, landform or soils. Many sites are also designated for their ecological or geological processes, such as sand dune formation, peat accumulation, or the geological history of an area.
@@ -407,7 +449,7 @@ SSSIs are an important part of the UK's natural heritage, providing habitats for
 <!-- /#landuse-SSSI -->
 
 <!-- #landuse-worldheritagesite -->
-####World Heritage Sites
+#### World Heritage Sites
   World Heritage Sites are places of significant cultural, historical, or natural importance that are recognized by the United Nations Educational, Scientific and Cultural Organization (UNESCO) as being of universal value to humanity. They are considered to be among the most important and irreplaceable sites on the planet and are protected by international treaties.
 
 There are currently over 1,100 World Heritage Sites in more than 160 countries, which are chosen for their outstanding universal value, authenticity, and integrity. These sites include natural wonders, cultural landmarks, and historic monuments.
