@@ -354,7 +354,7 @@ Listing a building or structure can provide a range of benefits, including the p
 
 <!-- #landuse-nationalparks -->
 #### National parks
-  National parks are large areas of land in England that are protected for their natural beauty, wildlife, and cultural heritage. They are designated by the government under the National Parks and Access to the Countryside Act 1949, with the aim of preserving the landscape and promoting public enjoyment of the countryside.
+National parks are large areas of land in England that are protected for their natural beauty, wildlife, and cultural heritage. They are designated by the government under the National Parks and Access to the Countryside Act 1949, with the aim of preserving the landscape and promoting public enjoyment of the countryside.
 
 There are currently 10 national parks in England, covering approximately 9% of the country's land area. Each park has its own unique character and landscape, ranging from the rugged peaks of the Lake District to the rolling hills of the South Downs.
 
@@ -497,6 +497,8 @@ Due to the large side of the dataset it is not possible to show every land title
 
 Note that not all land is registered so there are gaps in the map. Registration became compulsory in 1990 and is only required when land is sold, so around 14% of land in England and Wales is still unregistered.
 
+There are some overlapping polygons, this can happen when more than one owner exists for example London Underground may own the tunnel, but another person owns the land on the surface. Solar power companies sometime purchase air rights above the ground to prevent building that might cast shadows on rooftop panels.
+
 You can also click on the polygons so see the INSPIRE ID which can be used to purchase the full title the Local Authority name and the area in square metres.
 <!-- /#landownership-inspire -->
 
@@ -507,7 +509,7 @@ The Land Registry publishes two open datasets that explicitly name the owners of
 
 *The data in this tool is based on a 2022 snapshot of the published data and may be out of date.*
 
-These datasets provide a lot of information about land ownership, but the format is difficult to understand. Mainly because it is not provided on a map. The main purpose of the Land Ownership Explorer is to map these two datasets by geocoding the addresses. Geocoding is the process of turning text addresses into latitude/longitude coordinates that can be plotted on a map. 
+These datasets provide a lot of information about land ownership, but the format is difficult to understand. Mainly because it is not provided on a map. The main purpose of the Land Ownership Explorer is to map these two datasets by geocoding the addresses. [Geocoding](https://en.wikipedia.org/wiki/Address_geocoding) is the process of turning text addresses into latitude/longitude coordinates that can be plotted on a map. 
 
 Some of the land registry titles are very simple, e.g.
 
@@ -520,7 +522,7 @@ But consider another example:
 *1-4 Crown Row, Bracknell (RG12 0TH), 3, 14, 17, 18, 21, 26, 29, 31, 45, 49, 50, 55-70, 74, 75, 77-81, 84, 85, 91-95, 101, 103, 104, 106, 110, 111 Dalcross, Bracknell (RG12 0UJ), 71-73, 76, 82, 83, 86, 87 Dalcross, Bracknell (RG12 0UL), 1, 6, 9, 11 Fencote, Bracknell (RG12 0TD), 6, 8, 9, 12, 19, 22, 25, 47, 50 Garswood, Bracknell (RG12 0TY), 52, 60, 61, 65, 67, 80 Garswood, Bracknell (RG12 0TZ), 2, 10, 14, 16, 18, 36, 40, 42-44, 58-60, 72, 76, 79, 80 Helmsdale, Bracknell (RG12 0TA), 12, 13, 15, 45, 64-67, 82, 86, 87, 96, 97-99, 108, 112-115, 118, 126, 129, 138 Helmsdale, Bracknell (RG12 0TB), 1, 6, 11, 15, 23, 24, 28, 32, 33, 42-51, 67, 68, 72, 79, 80 Keepers Coombe, Bracknell (RG12 0TW, 10, 12-14, 21, 22, 25-27, 29-31, 34-36, 41 Keepers Coombe, Bracknell (RG12 0TN), 1-9, 21, 22, 26, 27, 31, 32 Kimmeridge, Bracknell (RG12 0UD), 86, 89-93(odd), 94, 100, 102, 107, 122, 125 Leaves Green, Bracknell, (RG12 0TE), 1-6, 8-10, 13-26, 33, 34, 48-50, 54, 58, 59, 63-80 Leaves Green, Bracknell (RG1*
 
 
-In this case a single dot on the map does not clearly convey the extent of this land ownership. But it is possible to parse this into 233 unique addresses that the text refers to. In this case, I expect that the title covers even more addresses as there are several titles that cut off mid-postcode at 999 characters, which suggests they have been truncated at some point. Nevertheless identifying the knowable 233 addresses helps improve our understanding of land ownership even if it is incomplete.
+In this case a single dot on the map does not clearly convey the extent of this land ownership. But it is possible to parse this into 233 unique addresses that the text refers to. In this case, the title may have even more addresses as there are several titles that cut off mid-postcode at 999 characters, which suggests they have been truncated at some point. Nevertheless identifying the knowable 233 addresses helps improve our understanding of land ownership even if it is incomplete.
 
 While this kind of text parsing is never 100% successful, it is worth doing. For example, there are 9,034 freehold titles that contain multiple postcodes. But when they were broken up, they actually refer to 168,911 unique property addresses. 
 
