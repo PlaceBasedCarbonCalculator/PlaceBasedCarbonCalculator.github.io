@@ -14,7 +14,7 @@ Most of the tools on Carbon & Place are map based and have map controls for easy
 
 The easiest way to access Carbon & Place is via the website hosted at [www.carbon.place](http://www.carbon.place).
 
-The Carbon & Place is also a [Progressive Web App](https://en.wikipedia.org/wiki/Progressive_web_app), which can be installed on many devices, including your smartphone. The App provides the same features as the website. But it includes additional benefits such as pining the App to your device’s home screen and full-screen support.
+Carbon & Place is also a [Progressive Web App](https://en.wikipedia.org/wiki/Progressive_web_app), which can be installed on many devices, including your smartphone. The app provides the same features as the website. But it includes additional benefits such as pining the app to your device’s home screen and full-screen support.
 
 If your device supports installing the app you will see the Install button on the [homepage](/).
 
@@ -94,6 +94,8 @@ Building heights are calculated be comparing the difference between the DTM and 
 *An example of 3D buildings in Leeds*
 
 #### Administrative Boundaries
+
+Several types of administrative boundary can be added to the map. These aid with navigating the map and understanding when responsibilities transfer between organisations. 
 
 <!-- #boundaries-la -->
 ##### Lower Tier Local Authority 2023
