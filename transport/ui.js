@@ -218,7 +218,10 @@ const cells = tab.getElementsByTagName('td');
 
   for (let cell of cells) {
     const value = parseFloat(cell.textContent);
-    if (value < -1.5) {
+    if (value == -3) {
+      cell.classList.add('insufficient');
+      cell.textContent = 'Insf'
+    } else if (value < -1.5) {
       cell.classList.add('very-poor');
     } else if (value < -1 & value >= -1.5 ) {
       cell.classList.add('poor');

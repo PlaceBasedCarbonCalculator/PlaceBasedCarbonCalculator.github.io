@@ -26,11 +26,16 @@
   background-color: #1a9850;
 }
 
+.insufficient {
+  background-color: #F2F2F2;
+}
+
 #access-table {
   width: 100%;
 }
 
 #access-table table {
   width: 100%;
+  max-width: 760px;
   font-size: 12px;
 }
