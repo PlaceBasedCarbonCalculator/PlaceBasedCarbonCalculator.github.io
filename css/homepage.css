@@ -168,6 +168,16 @@ a.opentool:visited{
 	position: fixed;
 }
 
+/* Small Screen Mode */
+@media screen and (max-height: 800px) {
+  .parapic, .parapic_layer {
+  	height: 600px;
+  }
+  .parapic_layer {
+  	background-size: auto 600px;
+  }
+}
+
 #parapic-0 {
 	background-image: url('/images/ui/parallax/parallax0.webp');
 	background-color: #fff0f0;
