@@ -92,7 +92,7 @@ makeChartAccess = function(locationData){
           max: 3,
           title: {
             display: true,
-            text: 'Accessability by public transport'
+            text: 'Accessibility by public transport'
           }
         },
       },
