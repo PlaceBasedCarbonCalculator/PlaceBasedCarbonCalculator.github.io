@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+	
+	<head>
+		
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="Description" content="An interactive map of Transport and Accessibility">
+		
+		<!-- Favicon -->
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+		<link rel="icon" href="/favicon.ico" type="image/x-icon">
+		
+		<!-- Social media -->
+		<meta property="og:title" content="Carbon & Place">
+		<meta property="og:description" content="An interactive map of Transport and Accessibility">
+		<meta property="og:image" content="/images/thumbnail.jpg">
+		<meta property="twitter:image" content="/images/thumbnail.jpg">
+		<meta property="og:url" content="https://www.carbon.place">
+		<meta name="twitter:card" content="summary_large_image">
+		<meta property="og:site_name" content="Carbon & Place">
+		<meta name="twitter:image:alt" content="Carbon & Place thumbnail">
+		<title>Transport and Accessibility Explorer</title>
+		
+		<!-- PWA support -->
+		<link rel="manifest" href="/manifest.webmanifest">
+		<link rel="apple-touch-icon" href="/images/icons/192.png">
+		<meta name="apple-mobile-web-app-status-bar" content="#ac1a40">
+		<meta name="theme-color" content="#ac1a40">
+		<script src="/app.js" defer></script>
+		
+		<!-- Map dependencies -->
+		<script src="https://unpkg.com/pmtiles@3.0.6/dist/pmtiles.js"></script>
+		<script src="/js/lib/geocoder/maplibre-gl-geocoder.min.js"></script>
+		<link rel="stylesheet" href="/js/lib/geocoder/maplibre-gl-geocoder-small.css" type="text/css"/>
+		<script src="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.js"></script>
+		<link href="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.css" rel="stylesheet" />
+		
+		<!-- Styles -->
+		<link rel="stylesheet" href="/css/main.css">
+		<link rel="stylesheet" href="/css/map.css">
+		<link rel="stylesheet" href="style.css">
+
+		<!-- Carbon & Place application -->
+		<script src="/js/settings-common.js"></script>
+		<script src="/js/datasets-common.js"></script>
+		<script src="datasets.js"></script>
+		<script src="/js/ui-common.js"></script>
+		<script src="ui.js" defer></script>
+		<script>
+			document.addEventListener ('DOMContentLoaded', function () {
+			  capUi.initialise (settings, datasets);
+			});
+		</script>
+		
+		<!-- Font Awesome -->
+		<link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet" defer>
+		<link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet" defer>
+		
+		<!-- Markdown conversion -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js" defer></script>
+		
+		<!-- Tooltips -->
+		<script src="https://unpkg.com/@popperjs/core@2" defer></script>
+		<script src="https://unpkg.com/tippy.js@6" defer></script>
+		
+		<!-- Charts -->
+		<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1" defer></script>
+		
+		
+		
+	</head>
+	
+	<body>
+		
+		<!-- Menu -->
+		<nav>
+			<a href="/"><img src="/images/ui/logo.webp" alt="Carbon & Place Logo" class="logo" /></a>
+			<a href="/transport/">Transport and Accessability Explorer</a>
+			<a href="/about/">About</a>
+			<a href="/data/">Data</a>
+			<a href="/manual/">Manual</a>
+			<a href="#" id="expandtopnav" class="icon" aria-label="Expand menu"><i class="fa fa-bars"></i></a>
+		</nav>
+		
+		<!-- Welcome Splash -->
+		<div id="welcome-modal" class="welcome-modal">
+			<span class="modal-close">&times;</span>
+			<div class="modal-body">
+				<h3>Transport and Accessability Explorer</h3>
+				<p style="background-color: #f58291"><b>Beta Tool</b>: This tool is still in development and may contain preliminary analysis, bugs, or incomplete features. Beta tools are intended to provide an early look at upcoming features and so results should be treated with care. The tool may change at any time without warning. We are interested in your feedback and you can report issues or bugs on <a href="https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/issues" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
+				
+				<p>The Transport and Accessability Explorer provides more detail on transport realted topics. For a full explination of the tool please see the <a href="/manual/#transportandaccessibilityexplorer">manual</a>. You can also access sections of the manual via the help buttons (<i class="fa fa-question-circle" aria-hidden="true"></i>).</p>
+				
+				<p>Last updated: <span id="updatedate"></span>. You may need to <a href="https://www.minitool.com/news/f5-vs-ctrl-f5.html" target="_blank" rel="noopener noreferrer">clear your browser cache</a> to see the latest updates.</p>
+				<!-- <div id="osmupdatedate"></div> -->
+			</div>
+		</div>
+		
+		<!-- Cookies Warning  -->
+		<div id="cookiewarning" class="cookiewarning">
+			<p>We use cookies to measure how you use our website so we can understand how you interact with it, which helps us to make improvements. <a href="/privacy">Find out more.</a></p>
+			<p>
+				<button class="button buttonOK" value="1"><strong>OK</strong></button>
+				<button class="button buttonNO" value=""><strong>No</strong></button>
+			</p>
+		</div>
+		
+		<!-- Main Content -->
+		<div class="mapcontent">
+			<div id="map"></div>
+		</div>
+		
+		<!-- Basemap control box -->
+		<div id="basemapcontrol" style="display: none;">
+			<h3>Basemap</h3>
+			<form id="basemapform">
+				<!-- Values will be populated -->
+			</form>
+			<p><label class="switch"><input type="checkbox" id="placenamescheckbox" checked="checked" /><span class="slider round"></span></label> Place names</p>
+			<p title="Makes the map look smoother and clearer (not suitable for lower-powered devices)"><label class="switch"><input type="checkbox" id="antialiascheckbox" /><span class="slider round"></span></label> Anti-alias</p>
+		</div>
+		
+		<!-- Show Layer Selection Panel  Button-->
+		<div id="showrightbox" class="showrightbox">
+			<button class="float_button" aria-label="Show layers"><i class="fa fa-bars"></i></button>
+		</div>
+		
+		<!-- Layer Selection Panel -->
+		<div id="rightbox" class="rightbox">
+			<button class="close-button" aria-label="Hide layers"><i class="fas fa-times"></i></button>
+			<b> Layer Controls</b>
+			
+			<button id="autoopen" class="accordion">Neighbouhoods</button>
+			<div class="panel">
+				<p><label><input type="checkbox" class="showlayer" data-layer="zones" value="false">Show layer</label></p>
+				<p>
+					<select name="field" class="updatelayer" data-layer="zones" aria-label="Neighbouhood  layer">
+						<option value="change_bus_2008_2023" selected>Change in buses/hour (2008-2023)</option>
+						<option value="tph_daytime_avg_2023_3">Buses/hour (daytime average)</option>
+						<option value="tph_daytime_avg_2023_2">Trains/hour (daytime average)</option>
+						<option value="tph_daytime_avg_2023_0">Trams/hour (daytime average)</option>
+						<option value="tph_daytime_avg_2023_1">Subway/hour (daytime average)</option>
+						<option value="tph_daytime_avg_2023_4">Ferries/hour (daytime average)</option>
+					</select>
+					<button aria-label="Help purpose" class="helpbutton" data-help="transport-zones"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+				</p>
+				<div id="zoneslegend" class="legendHorizontal">
+					<div class="l_rHorizontal">
+						<div class="lb"><span style="background-color: #ffffff"></span>&nbsp;</div>
+					</div>
+				</div>
+				
+				<!--
+				<p><label class="switch"><input type="checkbox" name="daysymetricmode" class="updatelayer" data-layer="zones" checked><span class="slider round"></span></label> Dasymetric</p>
+			
+			<p><label><input type="checkbox" class="showlayer" data-layer="buildings" value="true">Show Buildings</label></p>
+			-->
+			</div>
+			
+			<button class="accordion">Boundaries</button>
+			<div class="panel">
+				<p><label><input type="checkbox" data-layer="wards" class="showlayer" value="false">Wards</label>
+				<button aria-label="Help" class="helpbutton" data-help="boundaries-wards"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<div class="legendHorizontal">
+					<div class="l_rHorizontal">
+						<div class="lbHorizontal"><span style="background-color: #206b07"></span></div>
+					</div>
+				</div>
+				<p><label><input type="checkbox" data-layer="la" class="showlayer" value="false">Local Authorities</label>
+				<button aria-label="Help" class="helpbutton" data-help="boundaries-la"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<div class="legendHorizontal">
+					<div class="l_rHorizontal">
+						<div class="lbHorizontal"><span style="background-color: #6b0707"></span></div>
+					</div>
+				</div>
+				<p><label><input type="checkbox" data-layer="parish" class="showlayer" value="false">Parish</label>
+				<button aria-label="Help" class="helpbutton" data-help="boundaries-parish"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<div class="legendHorizontal">
+					<div class="l_rHorizontal">
+						<div class="lbHorizontal"><span style="background-color: #6b0763"></span></div>
+					</div>
+				</div>
+				<p><label><input type="checkbox" data-layer="westminster" class="showlayer" value="false">Westminster Constituency</label>
+				<button aria-label="Help" class="helpbutton" data-help="boundaries-westminster"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<div class="legendHorizontal">
+					<div class="l_rHorizontal">
+						<div class="lbHorizontal"><span style="background-color: #07366b"></span></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Help box -->
+		<div id="help_modal" class="modal">
+			<span class="modal-close">&times;</span>
+			<div id="helpcontent">
+				<p><em>Help content loading&hellip;</em></p>
+			</div>
+		</div>
+		
+		
+		<!-- Modal -->
+		<div class="modal" id="zones-chartsmodal" style="display: none;">
+			<div class="modal-header">
+				<span class="modal-close">×</span>
+				<h2 class="modal-title">Zone Summary: XXXXX</h2>
+			</div>
+			<div class="modal-body">
+			  
+			   <!-- Tab links -->
+        <div class="tab">
+          <button class="tablinks" onclick="modalTab(event, 'pna')" id="defaultOpen">Accessibility & Proximity</button>
+          <button class="tablinks" onclick="modalTab(event, 'ptfreq')">Public Transport Frequency</button>
+        </div>
+			  
+			  <div id="pna" class="tabcontent">
+			    
+			    <p>An Accessibility-Proximity analysis attempts to capture whether a neighbourhood is under or over-provided with services. One of the core principles of sustainable transport is that people's needs should be near where they live. Nearby services reduce travel distances and reduce energy consumption and emissions. They also make it more likely that people can use healthy and sustainable modes of travel like walking and cycling. Short travel distances also save people time and money.</p> 
+<p>Ideally, everything you need would be nearby, but that is not always practical. Especially as the number of services we need varies. For example, we have far more hairdressers than speech therapists because many people regularly go to the hairdressers, and very few people need a speech therapist. So, we look at the ratio between the number of people and the number of services. For example, if there are 1,500 people within a 15-minute walk of your home, that could support around two hairdressers. But if only one hairdresser was within that distance, we would consider your neighbourhood underserved.</p>
+<p>We can do this calculation for all kinds of services and produce a score between -3 and +3, where 0 means your neighbourhood has services in about the same proportion as the national average. A positive score means you have more of that kind of service than average, and a negative score means you have less than average. The chart and table below summarise the scores for 385 types of service listed in the <a href="https://www.ordnancesurvey.co.uk/products/points-of-interest" target="_blank" rel="noopener noreferrer">Ordnance Survey Points of Intrest</a>Ordnance Survey Points of Intrest</p> 
+
+<p><img src="/images/ui/transport_access_scale.webp" alt="Access-Proximity Scale" loading="lazy" style="width:800px; max-width:100%"></p>
+
+<p><i>The scale shows how to intepret the Access and Proximity scores</i></p>
+
+<p>We look at different time and distance bands because some services are common (like hairdressers) while others are rare (like speech therapists). We measure travel time by walking and/or public transport for 15, 30, 45, and 60 minutes (Accessibility) and straight line distance (Proximity) for 0.75, 1.5, 2.25, and 3 miles. For example, you may have no plasterers within 0.75 miles of your home but plenty of plasterers within 1.5 miles of your home, and that is probably fine. But if your nearest postbox was 1.5 miles away, you would probably consider that too far.</p> 
+<p>The chart and table below present the same information in two different formats. This is to help you explore how service provision varies from place to place.</p>
+
+
+  			  <div class="chart-text">
+  					<h4 class="chart-title">Accessibility & Proximity Summary Table</h4>
+  					<p>This chart shows the 30 minute / 1.5 mile data from the table below.</p>
+  				</div>
+  				<div class="chart-wrapper" id="access-chartrow" style="display: block;">
+  					<div class="chart-container-wide">
+  						<canvas id="access-chart"></canvas>
+  					</div>
+  				</div>
+  				
+  				<div >
+  				  <h4>Accessibility & Proximity Summary Table</h4>
+  				  <div id="access-table"></div>
+  				  
+  				  
+  				</div>
+				</div>
+				
+				<div id="ptfreq" class="tabcontent">
+  			  <div class="chart-text">
+  					<h4 class="chart-title">Public Transport Frequnecy</h4>
+  					<p>This comes from an analysis of historical public transport timetable data. The chart shows the frequncy of the service (trips per hour) passing through or near the selected neighbouhood. Five different time periods are shown Morning peak (6-10am),
+Midday (10am-3pm),Afternoon peak (3-6pm),Evening (6-10pm), Night (10pm-6am). The chart shows each year from 2004 - 2023, note that 2012 and 2013 are missing due to lack of data. You can select the type of public transport and day of the week from the drop down menu. 
+
+<p>Please note that this analysis is based on a collection of hsitorical timetables. Some data is missing and there are known limitations. For more information see the <a href="/manual">manual</a>.</p>
+
+  
+  					
+  					<p>Chart Options</p>
+  					<select id="select_mode" name="select_mode" onchange="makeChartFrequency()">
+                <option value="3" selected>Bus</option>
+                <option value="2">Rail</option>
+                <option value="0">Tram/Light Rail</option>
+                <option value="1">Metro/Underground</option>
+                <option value="4">Ferry</option>
+            </select>
+  					
+  					<select id="select_day" name="select_day" onchange="makeChartFrequency()">
+                <option value="weekday" selected>Weekday Average</option>
+                <option value="Sat" >Saturday</option>
+                <option value="Sun" >Sunday</option>
+            </select>
+
+  				</div>
+  				<div class="chart-wrapper" id="frequency-chartrow" style="display: block;">
+  					<div class="chart-container-wide">
+  						<canvas id="frequency-chart"></canvas>
+  					</div>
+  				</div>
+  				
+  				
+				</div>
+				
+			</div>
+		</div>
+		
+		
+		<div id="overlay"></div>
+		
+		
+		
+	</body>
+	
+</html>

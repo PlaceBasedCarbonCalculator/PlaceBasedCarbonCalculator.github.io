@@ -1,0 +1,655 @@
+.accordion {
+    backdrop-filter: blur(10px);
+    background-color: rgba(0, 0, 0,0.2);
+    color: #fff;
+    cursor: pointer;
+    padding: 12px;
+    width: 100%;
+    text-align: left;
+    border: 1px solid rgba(0, 0, 0, 0.36);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    outline: none;
+    transition: 0.4s;
+    font-size: 1em;
+    font-family: Arial, sans-serif;
+}
+.accordion:after {
+  content: '+'; 
+  font-size: 30px;
+  color:#ffffff;
+  line-height: 0.5;
+  float: right;
+  margin-left: 5px;
+}
+.active, .accordion:hover {
+  background: rgba( 129, 7, 7, 0.3 );
+  border: 1px solid rgba(177, 5, 5, 0.36);
+}
+.accordion.active:after {
+  content: '−'; 
+}
+
+.panel {
+    padding: 0 5px;
+    display: none;
+    overflow: hidden;
+}
+
+.legenddot{
+  border-radius: 50%; 
+  display: inline-block; 
+  height: 10px; 
+  margin-right: 5px; 
+  width: 10px;
+}
+
+.showlayer.hidden {
+  display: none;
+}
+
+.rightbox {
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  background-color: rgba(255,255,255,0.3);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, .1);
+  border-radius: 5px;
+  border: 0px;
+  top: 65px;
+  max-height: calc(100% - 110px);
+  padding: 6px;
+  position: absolute;
+  right: 0px;
+  z-index: 3;
+  width: 289px;
+  overflow:auto;
+}
+.rightbox button.close-button {
+  float: right;
+  height: 34px;
+  width: 34px;
+  background-color: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+.showrightbox {
+  top: 70px;
+  position: absolute;
+  right: 12px;
+  z-index: 2;
+  width: 30px;
+  height: 25px;
+  
+}
+.showrightbox .float_button {
+  cursor: pointer;
+}
+
+.float_button{
+  height:35px;
+  width:35px;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, .1);
+  border-radius: 5px;
+  border: 0px;
+  background-color: rgba(255,255,255,0.2);
+  backdrop-filter: blur(15px);
+}
+
+#map {
+  background: linear-gradient(0deg, rgba(36,0,0,1) 56%, rgb(249 209 89) 62%, rgb(81 151 173) 80%, rgb(2 92 179) 95%);
+  width:100%;
+  height:100%;
+}
+
+#searchbutton {
+  background-color: white;
+}
+
+.welcome-modal {
+  position: fixed;
+  top: 10%; 
+  max-width: 800px;
+  height: 80%;
+  background-color: white;
+  border: solid 1px #444;
+  border-radius: 10px;
+  z-index: 1003;
+  padding: 20px;
+  overflow: auto; 
+  margin-left: 5%;
+  margin-right: 5%;
+}
+p.welcome-end {
+    font-size: 0.9em;
+    font-weight: normal;
+}
+
+#help_modal {
+  position: absolute;
+  display: none;
+  top: 50px;
+  left: 50%;
+  width: 80%;
+  max-width: 800px;
+  max-height: 85%;
+  background-color: white;
+  border: solid 1px #444;
+  border-radius: 10px;
+  z-index: 1002;
+  padding: 20px;
+  overflow: auto; 
+  margin: 0 -50% 0 -45%;
+}
+p.help-end {
+    font-size: 0.9em;
+    font-weight: normal;
+}
+
+
+#overlay {
+  position: fixed; 
+  width: 100%; 
+  height: 100%; 
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5); 
+  z-index: 10; 
+  cursor: pointer;
+}
+
+
+/* Responvie image widths*/
+.responsive {
+  width: 100%;
+  height: auto;
+}
+
+.helpbutton {
+  cursor: pointer;
+  background: transparent;
+  border: none !important;
+  min-width: 15px;
+  min-height: 15px;
+}
+
+.fa-question-circle {
+  color: #0b38e6;
+}
+
+/* Basemap selection */
+
+
+input[type="radio"][id^="bm"] {
+  display: none;
+}
+
+
+.radio-inline {
+  display: inline;
+  float: left;
+}
+
+.basemap label {
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
+
+
+.basemap label::before {
+  transition-duration: 0.4s;
+  transform: scale(0);
+}
+
+
+.basemap label img {
+  height: 40px;
+  width: 40px;
+  border-radius: 5px;
+  transition-duration: 0.4s;
+  transform-origin: 50% 50%;
+}
+
+
+.basemap :checked+label img {
+  transform: scale(0.9);
+  box-shadow: 0 0 20px #0060df;
+  z-index: -1;
+}
+
+
+/* Legend */
+/* Horizontal Mode */
+.legendHorizontal {
+  width: 100%;
+  text-align: center;
+  display: table;
+  table-layout: fixed;
+  font-size: 10px;
+
+}
+
+.l_rHorizontal{
+  display: table-row;
+}
+
+.lbHorizontal{
+  display: table-cell;
+}
+
+.legendHorizontal div span {
+  display: inline-block;
+  height: 15px;
+  width: 100%;
+  border: 1px solid black;
+}
+
+/* Vertical Mode */
+.legendVertical {
+  height: 100%; /* Set the height to 100% for vertical layout */
+  text-align: left;
+  display: table;
+  table-layout: fixed;
+  font-size: 12px;
+  color: black;
+  
+}
+
+.l_rVertical {
+  display: table-cell; /* Change to table-cell for vertical layout */
+}
+
+.lbVertical {
+  display: table-row; /* Change to table-row for vertical layout */
+}
+
+.legendVertical div span {
+  display: inline-block;
+  width: 20px; /* Swap height and width for vertical bars */
+  height: 10px; /* Set the width to 100% for vertical bars */
+  border: 1px solid black;
+  margin-right: 10px;
+}
+
+
+/* Basemap Control */
+
+/* Basemap selection */
+
+#basemapform input {
+  display: none;
+  float: left;
+}
+
+#basemapform label {
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
+
+#basemapform label::before {
+  transition-duration: 0.4s;
+  transform: scale(0);
+}
+
+#basemapform label img {
+  height: 40px;
+  width: 40px;
+  border-radius: 5px;
+  transition-duration: 0.4s;
+  transform-origin: 50% 50%;
+}
+
+#basemapform :checked+label img {
+  transform: scale(0.9);
+  box-shadow: 0 0 20px #ac1a40;
+  z-index: -1;
+}
+
+
+#basemapcontrol {
+  backdrop-filter: blur(15px);
+  background-color: rgba(255,255,255,0.3);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, .1);
+  border-radius: 5px;
+  border: 0px;
+  max-height: calc(100% - 110px);
+  top: 260px;
+  max-height: calc(100% - 150px);
+  padding: 6px;
+  position: absolute;
+  left: 50px;
+  z-index: 5;
+  width: 220px;
+  overflow:auto;
+}
+
+.basemapcontrol:hover {
+  display:block;
+}
+
+ /* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #e9e9ed;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 15px;
+  width: 15px;
+  left: 2px;
+  bottom: 3px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #ac1a40;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #9c9c9c;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(20px);
+  -ms-transform: translateX(20px);
+  transform: translateX(20px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 20px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+} 
+
+
+/* Map popup */
+.layerpopup {
+  min-width: 300px;
+  max-width: 400px;
+}
+
+.mappopup {
+  line-height: 10px;
+}
+
+.mappopup.h4 {
+  line-height: 12px;
+}
+
+.layerpopup table th, .layerpopup table td {
+  padding: 2px 4px;
+}
+
+.layerpopup table th {
+  text-align: left;
+}
+
+.layerpopup table td {
+  text-align: right;
+}
+
+/* Custom MapLibre Buttons */
+.maplibregl-ctrl-top-left {
+  left: 0;
+  /*top: 60px;*/
+}
+
+.maplibregl-ctrl-group button {
+  height: 36px;
+  width: 35px;
+}
+
+.maplibregl-ctrl-geocoder {
+  backdrop-filter: blur(15px);
+  background-color: rgba(255,255,255,0.4);
+  box-shadow: 0 0 0 2px rgba(0,0,0,.1);
+}
+
+.maplibregl-ctrl-geocoder.maplibregl-ctrl-geocoder--collapsed {
+  height: 36px;
+  width: 35px;
+  min-width: 35px;
+}
+
+.maplibregl-ctrl-geocoder--icon {
+  fill: #333333;
+}
+
+.maplibregl-ctrl-geocoder .suggestions {
+  left: 50px;
+}
+
+
+.maplibregl-ctrl-group {
+  /*background: none;*/
+  backdrop-filter: blur(15px);
+  background-color: rgba(255,255,255,0.4);
+}
+
+.externallink {
+  white-space: nowrap;
+}
+
+/* Modals */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 1000; /* Sit on top */
+  left: 20px;
+  top: 70px;
+  bottom: 10px;
+  right: 50px;
+  padding: 0px;
+  overflow: auto; /* Enable scroll if needed */
+  background-color: #fefefe;
+  animation-name: fadeIn;
+  animation-duration: 0.4s;
+  max-width: 1200px;
+}
+
+@media screen and (max-width: 760px) {
+  .modal {
+    left: 0px;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+  }
+}
+
+@media screen and (min-width: 761px) {
+  .modal {
+    left: 20px;
+    top: 70px;
+    bottom: 10px;
+    right: 50px;
+    max-width: 1200px;
+  }
+  
+  .modal-body {
+    padding: 15px;
+  }
+}
+
+/* Prevent images from overflowing the box size */
+.modal img {
+  max-width: 100%;
+}
+
+/* The Close Button */
+.modal-close {
+  color: black;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.modal-close:hover, .modal-close:focus {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal-header .modal-close {
+  color: white;
+}
+
+.modal-header {
+  padding: 2px 16px;
+  background-color: #717e82;
+  color: white;
+}
+
+.modalcolumn {
+  float: left;
+  width: 49%;
+}
+
+/* Clear floats after the columns */
+.modalrow:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Add Animation */
+@-webkit-keyframes slideIn {
+  from {bottom: -300px; opacity: 0} 
+  to {bottom: 0; opacity: 1}
+}
+
+@keyframes slideIn {
+  from {bottom: -300px; opacity: 0}
+  to {bottom: 0; opacity: 1}
+}
+
+@-webkit-keyframes fadeIn {
+  from {opacity: 0} 
+  to {opacity: 1}
+}
+
+@keyframes fadeIn {
+  from {opacity: 0} 
+  to {opacity: 1}
+}
+
+.chart-wrapper {
+  width: 100%;
+  clear: both;
+  margin: 30px 0;
+  padding: 30px 0;
+  border-top: 1px solid #eee;
+}
+.chart-wrapper h4 {
+  margin-top: 0;
+  padding-top: 0;
+}
+.chart-container {
+  height: 400px;
+  width: 100%;
+}
+.chart-container-wide {
+  height: 600px;
+  width: 100%;
+}
+.chart-text {
+  width: 100%;
+  padding-right: 0;
+}
+
+@media screen and (min-width: 56.25rem) {
+  .chart-container {
+  position: relative;
+  float: right;
+  height: 400px;
+  width: 50%;
+  }
+  .chart-container-wide {
+  position: relative;
+  float: right;
+  height: 600px;
+  width: 100%;
+  }
+  .chart-text {
+  position: relative;
+  float: left;
+  width: 45%;
+  padding-right: 4%;
+  }
+}
+
+/* Tabs in the modal */
+ /* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+	font-family: Raleway, sans-serif;
+	font-size: 1em;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+  content: "";
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 0 16px 8px 16px;
+  border: 1px solid #ccc;
+  border-top: none;
+} 
+
+.tabcontent:after {
+  content: "";
+  display: table;
+  clear: both;
+}

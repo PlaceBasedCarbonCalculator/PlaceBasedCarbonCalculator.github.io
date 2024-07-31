@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="Description" content="An interactive map showing the carbon footprint of each neighbourhood in Great Britain">
+  
+  <link rel="stylesheet" href="/css/homepage.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet">
+  <link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet">
+  
+  <!-- Peload Images -->
+  <link rel="preload" as="image" href="/images/ui/parallax/mobile.webp"       media="max-width:600px">
+  <link rel="preload" as="image" href="/images/ui/parallax/parallax0.webp"    media="min-width: 601px; max-resolution: 144dpi">
+  <link rel="preload" as="image" href="/images/ui/parallax/parallax0@2x.webp" media="min-width: 601px; min-resolution: 144dpi">
+  <link rel="preload" as="image" href="/images/ui/parallax/parallax1.webp"    media="min-width: 601px; max-resolution: 144dpi">
+  <link rel="preload" as="image" href="/images/ui/parallax/parallax1@2x.webp" media="min-width: 601px; min-resolution: 144dpi">
+  <link rel="preload" as="image" href="/images/ui/parallax/parallax2.webp"    media="min-width: 601px; max-resolution: 144dpi">
+  <link rel="preload" as="image" href="/images/ui/parallax/parallax2@2x.webp" media="min-width: 601px; min-resolution: 144dpi">
+  <link rel="preload" as="image" href="/images/ui/parallax/parallax3.webp"    media="min-width: 601px; max-resolution: 144dpi">
+  <link rel="preload" as="image" href="/images/ui/parallax/parallax3@2x.webp" media="min-width: 601px; min-resolution: 144dpi">
+  <link rel="preload" as="image" href="/images/ui/parallax/parallax4.webp"    media="min-width: 601px; max-resolution: 144dpi">
+  <link rel="preload" as="image" href="/images/ui/parallax/parallax4@2x.webp" media="min-width: 601px; min-resolution: 144dpi">
+  <link rel="preload" as="image" href="/images/ui/parallax/parallax5.webp"    media="min-width: 601px; max-resolution: 144dpi">
+  <link rel="preload" as="image" href="/images/ui/parallax/parallax5@2x.webp" media="min-width: 601px; min-resolution: 144dpi">
+  <link rel="preload" as="image" href="/images/ui/parallax/parallax6.webp"    media="min-width: 601px; max-resolution: 144dpi">
+  <link rel="preload" as="image" href="/images/ui/parallax/parallax6@2x.webp" media="min-width: 601px; min-resolution: 144dpi">
+  <link rel="preload" as="image" href="/images/ui/parallax/parallax7.webp"    media="min-width: 601px; max-resolution: 144dpi">
+  <link rel="preload" as="image" href="/images/ui/parallax/parallax7@2x.webp" media="min-width: 601px; min-resolution: 144dpi">
+  <link rel="preload" as="image" href="/images/ui/parallax/parallax8.webp"    media="min-width: 601px; max-resolution: 144dpi">
+  <link rel="preload" as="image" href="/images/ui/parallax/parallax8@2x.webp" media="min-width: 601px; min-resolution: 144dpi">
+  
+  <!--  Social Media Tags -->
+  <meta property="og:title" content="Carbon & Place">
+  <meta property="og:description" content="An interactive map showing the carbon footprint of each neighbourhood in Great Britain">
+  <meta property="og:image" content="/images/thumbnail.jpg">
+  <meta property="twitter:image" content="/images/thumbnail.jpg">
+  <meta property="og:url" content="https://www.carbon.place">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:site_name" content="Carbon & Place">
+  <meta name="twitter:image:alt" content="Carbon & Place thumbnail">
+  
+  <title>Carbon & Place</title>
+  <!-- PWA support -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/images/icons/192.png">
+  <meta name="apple-mobile-web-app-status-bar" content="#ac1a40">
+  <meta name="theme-color" content="#ac1a40">
+  <script src="/app.js" defer></script>
+
+  
+ 
+  <!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q11V10CDRV"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag () {dataLayer.push (arguments);}
+		gtag('js', new Date ());
+		gtag('config', 'G-Q11V10CDRV');
+	</script>
+	
+	
+</head>
+<body>
+<!-- Menu -->
+<nav>
+	<a href="/"><img src="/images/ui/logo.webp" alt="Carbon & Place Logo" class="logo" /></a>
+	<a href="#main">Tools</a>
+	<a href="/about/">About</a>
+	<a href="/data/">Data</a>
+	<a href="/manual/">Manual</a>
+	<a href="#" id="expandtopnav" class="icon" aria-label="Expand menu"><i class="fa fa-bars"></i></a>
+</nav> 
+
+<!-- Cookies Warning  -->
+<div id="cookiewarning" class="cookiewarning">
+	<p>We use cookies to measure how you use our website so we can understand how you interact with it, which helps us to make improvements. <a href="/privacy">Find out more.</a></p>
+	<p>
+		<button class="button buttonOK" value="1"><strong>OK</strong></button>
+		<button class="button buttonNO" value=""><strong>No</strong></button>
+	</p>
+</div>
+
+<!-- Art -->
+<div id="page">
+	<div class="parapic" id="parallaxoff">
+	</div>
+	<div class="parapic" id="parallax">
+		<div class="parapic_layer parallax" id="parapic-0" data-speed="2"></div>
+		<div class="parapic_layer parallax" id="parapic-1" data-speed="5"></div>
+		<div class="parapic_layer parallax" id="parapic-2" data-speed="11"></div>
+		<div class="parapic_layer parallax" id="parapic-3" data-speed="30"></div>
+		<div class="parapic_layer parallax" id="parapic-4" data-speed="45"></div>
+		<div class="parapic_layer parallax" id="parapic-5" data-speed="60"></div>
+		<div class="parapic_layer parallax" id="parapic-6" data-speed="80"></div>
+		<div class="parapic_layer parallax" id="parapic-7" data-speed="90"></div>
+		<div class="parapic_layer" id="parapic-8" data-speed="100"></div>
+	</div>
+
+	<div id="main">
+	    <!-- Description -->
+      <div class="titlestrip">
+      <h1>Welcome to Carbon & Place</h1>
+      <p><b>We provide free tools to allow communities, planners, and policymakers in the UK to understand their local carbon footprint.</b></p>
+      <p>Based on the latest research and the best available data, we explore how carbon footprints change between neighbourhoods and how the path to net-zero will vary between places.</p>
+      </div>
+      
+      <div id="install" class="installstrip"  hidden>
+        <p style="float: left"><b>Install the Carbon & Place App</b></p>
+        <button  class="buttonInstall" ><b>Install</b></button>
+      </div>
+      
+      <div class="toolstrip" style="background: rgb(36,0,0); background: linear-gradient(307deg, rgba(36,0,0,1) 0%, rgba(199,13,13,1) 10%, rgba(255,98,98,1) 50%, rgba(255,255,255,1) 100%);">
+        <h3>Place-Based Carbon Calculator (legacy)</h3>
+        <a href="/legacy"><img src="/images/ui/legacy.webp" alt="Place-Based Carbon Calculator Thumbnail" class="tool_thumbnail"></a>
+        <p>Launched in 2020 by the Centre for Research in Energy Demand Solutions (CREDS). The PBCC allows you to view how neighbourhood carbon footprints vary across England. This version of the PBCC is now being archived in preparation for the launch of a new version (see below).</p>
+        <p><a href="/legacy" class="opentool">Place-Based Carbon Calculator</a></p>
+      </div>
+      
+      <div class="titlestrip">
+        <h2>Beta Tools</h2>
+        <p>Get a sneak peek at some of the tools we have under development. Beta tools are intended to provide an early look at upcoming features and so results should be treated with care. The tools may change at any time without warning. We are interested in your feedback and you can report issues or bugs on <a href="https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/issues" target="_blank" rel="noopener noreferrer">GitHub</a></p>
+      </div>
+      
+      <div class="toolstrip" style="background: rgb(11,36,0); background: linear-gradient(307deg, rgba(11,36,0,1) 0%, rgba(41,199,13,1) 10%, rgba(119,255,98,1) 50%, rgba(255,255,255,1) 100%);">
+        <h3>Transport and Accessibility Explorer</h3>
+        <a href="/transport/#/zones/#8/51.482/-0.151"><img src="/images/ui/transport.webp" alt="Transport and Accessibility Thumbnail" class="tool_thumbnail" loading="lazy"></a>
+        <p>Transport is the largest source of emissions in the UK. This tool examines how travel options vary across the country.</p>
+        <p><a href="/transport/#/zones/#8/51.482/-0.151" class="opentool">Transport and Accessibility Explorer</a></p>
+      </div>  
+      
+      <div class="toolstrip" style="background: rgb(36,29,0); background: linear-gradient(307deg, rgba(36,29,0,1) 0%, rgba(199,180,13,1) 10%, rgba(255,234,98,1) 50%, rgba(255,255,255,1) 100%);">
+        <h3>Land Use and Planning Explorer</h3>
+        <a href="/landuse"><img src="/images/ui/landuse.webp" alt="Land Use and Planning Thumbnail" class="tool_thumbnail" loading="lazy"></a>
+        <p>How we use land and what we put in different places matters, explore how land is used across Great Britain.</p>
+        <p><a href="/landuse" class="opentool">Land Use and Planning Explorer</a></p>
+      </div>  
+      
+      <div class="toolstrip" style="background: rgb(20,0,36); background: linear-gradient(307deg, rgba(20,0,36,1) 0%, rgba(121,13,199,1) 10%, rgba(179,98,255,1) 50%, rgba(255,255,255,1) 100%);">
+        <h3>Land Ownership Explorer</h3>
+        <a href="/landownership/#/landowners/#8/51.482/-0.151"><img src="/images/ui/landownership.webp" alt="Land Ownership Thumbnail" class="tool_thumbnail" loading="lazy"></a>
+        <p>Land owners have the power to define and redefine places. Explore Land Registry data about UK and foreign companies that own land in England and Wales.</p>
+        <p><a href="/landownership/#/landowners/#8/51.482/-0.151" class="opentool">Land Ownership Explorer</a></p>
+      </div>
+      
+      <div class="titlestrip">
+        <h2>Learn More</h2>
+        <p>The manual explains how to use the tools and provides background context.</p>
+        <p><a href="/manual" class="opentool">Manual</a></p>
+        <p>Much of our data is free to download and reuse.</p>
+        <p><a href="/data" class="opentool">Data Downloads</a></p>
+        <p> </p>
+        <h2>Coming Soon</h2>
+        <p>We have more tools coming soon, check back for updates.</p>
+        
+      </div> 
+
+      <div class="toolstrip" style="background: rgb(36,0,0); background: linear-gradient(307deg, rgba(36,0,0,1) 0%, rgba(199,13,13,1) 10%, rgba(255,98,98,1) 50%, rgba(255,255,255,1) 100%);">  
+        <h3>Place-Based Carbon Calculator (Version 2)</h3>
+        <img src="/images/ui/pbcc.webp" alt="Place-Based Carbon Calculator Thumbnail" class="tool_thumbnail" loading="lazy">
+        <p>A new version of the Place-Based Carbon Calculator with updated data expanded coverage and much more is coming soon.</p>
+      </div>
+      
+      <div class="toolstrip" style="background: rgb(0,8,36); background: linear-gradient(307deg, rgba(0,8,36,1) 0%, rgba(13,60,199,1) 10%, rgba(98,137,255,1) 50%, rgba(255,255,255,1) 100%);"> 
+        <h3>Retrofit Explorer</h3>
+        <img src="/images/ui/retrofit.webp" alt="Retrofit Thumbnail" class="tool_thumbnail" loading="lazy">
+        <p>Britain has some of the coldest and leakiest buildings in Europe, what can be done to fix them? A new tool is coming soon.</p>
+      </div>
+      
+      
+      <!-- Footer -->
+      <div class="titlestrip">
+        <p><h3>Carbon & Place is funded and developed with the help of:</h3></p>
+        <div>
+          <a href="https://www.edrc.ac.uk/" target="_blank" aria-label="EDRC homepage"><img class="logos" alt="EDRC Logo" src="/images/ui/edrc-logo.webp" loading="lazy"></a>
+          <a href="https://www.creds.ac.uk/" target="_blank" aria-label="CREDS homepage"><img class="logos" alt="CREDS Logo" src="/images/ui/CREDS-logo.svg" loading="lazy"></a>
+          <a href="https://www.ukri.org/councils/epsrc/" target="_blank" aria-label="EPSRC homepage"><img class="logos" alt="EPSRC Logo" src="/images/ui/EPSRC.webp" loading="lazy"></a>
+          <a href="https://www.leeds.ac.uk/" target="_blank" aria-label="University of Leeds homepage"><img class="logos" alt="University of Leeds Logo" src="/images/ui/leeds.webp" loading="lazy"></a>
+          <a href="https://friendsoftheearth.uk/" target="_blank" aria-label="Friends of the Earth UK homepage"><img class="logos" alt="Friends of the Earth Logo" src="/images/ui/FOE_logo.webp" loading="lazy"></a>
+          <a href="https://www.manchester.ac.uk/" target="_blank" aria-label="University of Manchester homepage"><img class="logos" alt="University of Manchester Logo" src="/images/ui/manchester.webp" loading="lazy"></a>
+          <a href="https://transportforthesoutheast.org.uk/" target="_blank" aria-label="TFSE homepage"><img class="logos" alt="TFSE Logo" src="/images/ui/tfse.webp" loading="lazy"></a>
+          <a href="https://uk.steergroup.com/" target="_blank"><img class="logos" aria-label="Steer homepage" alt="Steer Logo" src="/images/ui/steer.webp" loading="lazy"></a>
+        </div>
+      </div>
+	  </div>
+
+</div>
+
+<script type="text/javascript" src="/js/parallax.js"></script>
+<script type="text/javascript" src="/js/common-nonmap.js"></script>
+
+<!-- Map dependencies not needed on homepage but cached for other pages-->
+<link rel="prefetch" as="script" href="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.js"/>
+<link rel="prefetch" as="script" href="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"/>
+<link rel="prefetch" as="script" href="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"/>
+<link rel="prefetch" as="style"  href="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.css"/>
+<link rel="prefetch" as="script" href="https://unpkg.com/pmtiles@3.0.6/dist/pmtiles.js" />
+<link rel="prefetch" as="script" href="/js/lib/geocoder/maplibre-gl-geocoder.min.js" />
+<link rel="prefetch" as="script" href="https://unpkg.com/@popperjs/core@2" />
+<link rel="prefetch" as="script" href="https://unpkg.com/tippy.js@6" />
+
+
+</body></html>

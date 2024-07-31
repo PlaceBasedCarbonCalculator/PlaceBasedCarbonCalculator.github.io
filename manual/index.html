@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="Description" content="Carbon & Place Manual">
+<title>Manual</title>
+
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/manual.css">
+<!-- Set Up Icon -->
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+<!-- PWA support -->
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/images/icons/192.png">
+<meta name="apple-mobile-web-app-status-bar" content="#ac1a40">
+<meta name="theme-color" content="#ac1a40">
+<script src="/app.js" defer></script>
+
+<!-- Third Party Scrips -->
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/manual.css">
+<link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet">
+<link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet">
+
+<!-- Markdown conversion -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
+
+
+</head>
+<body>
+
+<!-- Menu -->
+<nav>
+	<a href="/"><img src="/images/ui/logo.webp" alt="Carbon & Place Logo" class="logo" /></a>
+	<a href="/about/">About</a>
+	<a href="/data/">Data</a>
+	<a href="/manual/">Manual</a>
+	<a href="#" id="expandtopnav" class="icon" aria-label="Expand menu"><i class="fa fa-bars"></i></a>
+</nav> 
+
+<!-- Cookies Warning  -->
+<div id="cookiewarning" class="cookiewarning">
+	<p>We use cookies to measure how you use our website so we can understand how you interact with it, which helps us to make improvements. <a href="/privacy">Find out more.</a></p>
+	<p>
+		<button class="button buttonOK" value="1"><strong>OK</strong></button>
+		<button class="button buttonNO" value=""><strong>No</strong></button>
+	</p>
+</div>
+
+<div class="editlinkdiv">
+  <p><a id="editlink" href="#" title="Contribute to improving our documentation">Edit this page</a></p>
+</div>
+
+
+<div id="content" class="content">
+  <!-- Content from .md will be loaded here -->
+</div>
+
+
+<script src="/js/common-nonmap.js"></script>
+<script src="/js/settings-common.js"></script>
+<script src="/js/manual.js" async defer></script>
+
+
+</body>
+</html>

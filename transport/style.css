@@ -1,0 +1,41 @@
+.very-poor {
+  background-color: #d73027;
+}
+
+.poor {
+  background-color: #fc8d59;
+}
+
+.below-average {
+  background-color: #fee08b;
+}
+
+.average {
+  background-color: #ffffbf;
+}
+
+.above-average {
+  background-color: #d9ef8b;
+}
+
+.good {
+  background-color: #91cf60;
+}
+
+.very-good {
+  background-color: #1a9850;
+}
+
+.insufficient {
+  background-color: #F2F2F2;
+}
+
+#access-table {
+  width: 100%;
+}
+
+#access-table table {
+  width: 100%;
+  max-width: 760px;
+  font-size: 12px;
+}

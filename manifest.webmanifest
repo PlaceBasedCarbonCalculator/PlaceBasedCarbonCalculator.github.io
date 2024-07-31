@@ -1,0 +1,76 @@
+{
+  "name": "Carbon & Place",
+  "short_name": "Carbon & Place",
+  "start_url": "./",
+  "scope": "./",
+  "icons": [
+    {
+      "src": "/images/icons/48.png",
+      "sizes": "48x48",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icons/96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icons/192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icons/512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icons/48.png",
+      "sizes": "48x48",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/images/icons/96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/images/icons/192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/images/icons/512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+
+  ],
+  "theme_color": "#AC1A40",
+  "background_color": "#717e82",
+  "display": "standalone",
+  "id": "CarbonPlacePWA",
+  "description": "Carbon & Place provides free tools to allow communities, planners, and policymakers in the UK to understand their local carbon footprint.",
+  "dir": "ltr",
+  "lang": "en",
+  "orientation": "any",
+  "display_override": [
+    "standalone",
+    "window-controls-overlay",
+    "minimal-ui",
+    "browser"
+  ],
+  "categories": [
+    "education",
+    "government",
+    "politics"
+  ]
+}

@@ -1,0 +1,299 @@
+html {
+  scroll-behavior: smooth;
+}
+
+h2 {
+    padding-left: 0px;
+}
+
+nav {
+  height: 60px;
+  backdrop-filter: blur(10px);
+  background-color: rgba(0,0,0,0.6);
+  overflow: hidden;
+  color: #ffffff;
+  z-index: 1100;
+  position: absolute;
+  width: 100%;
+}
+nav a {
+  float: left;
+  display: table-cell;
+  color: #f2f2f2;
+  padding-top: auto;
+  padding-bottom: auto;
+  padding-left: 13px;
+  padding-right: 13px;
+  height: 60px;
+  line-height: 60px;
+  text-decoration: none;
+}
+nav a.selected {
+  background-color: #777;
+}
+nav a:hover {
+  background-color: gray;
+  color: #fff;
+  text-decoration: none;
+}
+nav a.active {
+  background-color: #B8BEC1;
+  color: white;
+}
+nav .icon {
+  display: none;
+}
+.main-title {
+	font-size: 1em;
+}
+.main-title a {
+	text-transform: none;
+}
+a.smaller {
+	font-size: 0.85em;
+	text-transform: none;
+	line-height: 1.3;
+}
+.logo {
+	display: none;
+}
+
+.titlestrip {
+  color: black;
+  padding-left: max(20px, calc(50% - 500px));
+  padding-right: max(20px, calc(50% - 500px));
+  bottom: 0;
+  left: 0;
+  background-color: #ffffff;
+  overflow: auto;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.toolstrip {
+  color: black;
+  bottom: 0;
+  left: 0;
+  padding-left: max(20px, calc(50% - 500px));
+  padding-right: max(20px, calc(50% - 500px));
+  overflow: auto;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.opentool {
+  padding: 10px;
+  background-color: green;
+  line-height: 2.3;
+}
+
+a.opentool {
+  color: #ffffff
+}
+a.opentool:hover{
+  color: #ffffff
+}
+a.opentool:visited{
+  color: #ffffff
+}
+
+.tool_thumbnail {
+  float: right;
+  width: 335px;
+  max-width: calc(100%);
+  padding-left: 10px;
+  padding-bottom: 10px;
+}
+
+
+#tools {
+  min-height: 300px;
+  padding: 10px;
+  overflow: auto;
+  background: rgb(42,42,42);
+  background: linear-gradient(322deg, rgba(42,42,42,1) 0%, rgba(128,128,128,1) 35%, rgba(244,244,244,1) 100%); 
+}
+
+.card {
+  border-radius: 15px;
+  margin: 10px;
+  border: 2px solid rgba(255, 255, 255, .5);
+  padding: 20px;
+  float: left;
+  width: 300px;
+  height: 150px;
+  box-shadow: inset 0 0 2000px rgba(255, 255, 255, .5);
+  transition: .2s ease-out;
+}
+
+.card:hover {
+  box-shadow: 0 3px 10px rgba(0,0,0,.2);
+  transform: translate3d(0,-2px,0);
+}
+
+.logos {
+  height: 50px;
+  float: left;
+  margin: 10px;
+}
+
+.parapic, .parapic_layer {
+	height: 800px;
+}
+
+
+#main {
+	margin-left: auto;
+	margin-right: auto;
+	z-index: 100;
+	position: relative;
+}
+
+#parallaxoff {
+	background-image: url('/images/ui/parallax/mobile.webp');
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: auto 100%;
+}
+
+.parapic {
+	position: relative;
+	z-index: 10;
+}
+
+.parapic_layer {
+	background-position: bottom center;
+	background-size: auto 800px;
+	background-repeat: repeat-x;
+	width: 100%;
+	position: absolute;
+}
+.parapic_layer.parallax {
+	position: fixed;
+}
+
+/* Small Screen Mode */
+@media screen and (max-height: 800px) {
+  .parapic, .parapic_layer {
+  	height: 600px;
+  }
+  .parapic_layer {
+  	background-size: auto 600px;
+  }
+}
+
+#parapic-0 {
+	background-image: url('/images/ui/parallax/parallax0.webp');
+	background-color: #fff0f0;
+}
+#parapic-1 {
+	background-image: url('/images/ui/parallax/parallax1.webp');
+}
+#parapic-2 {
+	background-image: url('/images/ui/parallax/parallax2.webp');
+}
+#parapic-3 {
+	background-image: url('/images/ui/parallax/parallax3.webp');
+}
+#parapic-4 {
+	background-image: url('/images/ui/parallax/parallax4.webp');
+}
+#parapic-5 {
+	background-image: url('/images/ui/parallax/parallax5.webp');
+}
+#parapic-6 {
+	background-image: url('/images/ui/parallax/parallax6.webp');
+}
+#parapic-7 {
+	background-image: url('/images/ui/parallax/parallax7.webp');
+}
+#parapic-8 {
+	background-image: url('/images/ui/parallax/parallax8.webp');
+}
+#parapic-scrim {
+	background-color: #fff0f0;
+	opacity: 0;
+}
+
+@media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi){ 
+  #parapic-0 {
+		background-image: url('/images/ui/parallax/parallax0@2x.webp');
+		background-color: #fff0f0;
+	}
+	#parapic-1 {
+		background-image: url('/images/ui/parallax/parallax1@2x.webp');
+	}
+	#parapic-2 {
+		background-image: url('/images/ui/parallax/parallax2@2x.webp');
+	}
+	#parapic-3 {
+		background-image: url('/images/ui/parallax/parallax3@2x.webp');
+	}
+	#parapic-4 {
+		background-image: url('/images/ui/parallax/parallax4@2x.webp');
+	}
+	#parapic-5 {
+		background-image: url('/images/ui/parallax/parallax5@2x.webp');
+	}
+	#parapic-6 {
+		background-image: url('/images/ui/parallax/parallax6@2x.webp');
+	}
+	#parapic-7 {
+		background-image: url('/images/ui/parallax/parallax7@2x.webp');
+	}
+	#parapic-8 {
+		background-image: url('/images/ui/parallax/parallax8@2x.webp');
+	}
+}
+/* Mobile Mode */
+@media screen and (max-width: 600px) {
+	#parallaxoff {
+		display: block;
+	}
+	#parallax {
+		display: none;
+	}
+	.parapic, .parapic_layer {
+		height: 550px;
+	}
+}
+/* Desktop Mode */
+@media screen and (min-width: 601px) {
+  #parallaxoff {
+  	display: none;
+  }
+  #parallax {
+    display: block;
+  }
+}
+
+.buttonInstall {
+  border: none;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+  background-color: white;
+  color: #ac1a40;
+    /*position: absolute;*/
+    float: right;
+    right: 10%;
+    width: 200px;
+    max-width: 36%;
+    border-radius: 25px;
+}
+
+.installstrip {
+  font-size: 14px;
+  color: white;
+  background-color: #ac1a40;
+  bottom: 0;
+  left: 0;
+  padding-left: 20px;
+  padding-right: 20px;
+  overflow: auto;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+

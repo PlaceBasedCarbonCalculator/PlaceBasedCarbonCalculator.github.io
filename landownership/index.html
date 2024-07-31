@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+	
+	<head>
+		
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="Description" content="An interactive map of Land ownership in Enland and Wales">
+		
+		<!-- Favicon -->
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+		<link rel="icon" href="/favicon.ico" type="image/x-icon">
+		
+		<!-- Social media -->
+		<meta property="og:title" content="Carbon & Place">
+		<meta property="og:description" content="An interactive map of Land ownership in Enland and Wales">
+		<meta property="og:image" content="/images/thumbnail.jpg">
+		<meta property="twitter:image" content="/images/thumbnail.jpg">
+		<meta property="og:url" content="https://www.carbon.place">
+		<meta name="twitter:card" content="summary_large_image">
+		<meta property="og:site_name" content="Carbon & Place">
+		<meta name="twitter:image:alt" content="Carbon & Place thumbnail">
+		<title>Land Ownership Explorer</title>
+		
+		<!-- PWA support -->
+		<link rel="manifest" href="/manifest.webmanifest">
+		<link rel="apple-touch-icon" href="/images/icons/192.png">
+		<meta name="apple-mobile-web-app-status-bar" content="#ac1a40">
+		<meta name="theme-color" content="#ac1a40">
+		<script src="/app.js" defer></script>
+		
+		<!-- Map dependencies -->
+		<script src="https://unpkg.com/pmtiles@3.0.6/dist/pmtiles.js"></script>
+		<script src="/js/lib/geocoder/maplibre-gl-geocoder.min.js"></script>
+		<link rel="stylesheet" href="/js/lib/geocoder/maplibre-gl-geocoder-small.css" type="text/css"/>
+		<script src="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.js"></script>
+		<link href="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.css" rel="stylesheet" />
+		
+		<!-- Styles -->
+		<link rel="stylesheet" href="/css/main.css">
+		<link rel="stylesheet" href="/css/map.css">
+		
+		<!-- Carbon & Place application -->
+		<script src="/js/settings-common.js"></script>
+		<script src="/js/datasets-common.js"></script>
+		<script src="datasets.js"></script>
+		<script src="/js/ui-common.js"></script>
+		<script src="ui.js"></script>
+		<script>
+			document.addEventListener ('DOMContentLoaded', function () {
+			  capUi.initialise (settings, datasets);
+			});
+		</script>
+		
+		<!-- Font Awesome -->
+		<link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet"defer>
+		<link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet"defer>
+		
+		<!-- Markdown conversion -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"defer></script>
+		
+		<!-- Tooltips -->
+		<script src="https://unpkg.com/@popperjs/core@2"defer></script>
+		<script src="https://unpkg.com/tippy.js@6"defer></script>
+		
+		<!-- Charts -->
+		<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1" defer></script>
+		
+		
+	</head>
+	
+	<body>
+		
+		<!-- Menu -->
+		<nav>
+			<a href="/"><img src="/images/ui/logo.webp" alt="Carbon & Place Logo" class="logo" /></a>
+			<a href="/about/">Land Ownership Explorer</a>
+			<a href="/about/">About</a>
+			<a href="/data/">Data</a>
+			<a href="/manual/">Manual</a>
+			<a href="#" id="expandtopnav" class="icon" aria-label="Expand menu"><i class="fa fa-bars"></i></a>
+		</nav>
+		
+		<!-- Welcome Splash -->
+		<div id="welcome-modal" class="welcome-modal">
+			<span class="modal-close" style="visibility:hidden;">&times;</span> 
+			<div>
+				<h3>Land Ownership Explorer</h3>
+				
+				<p style="background-color: #f58291"><b>Beta Tool</b>: This tool is still in development and may contain preliminary analysis, bugs, or incomplete features. Beta tools are intended to provide an early look at upcoming features and so results should be treated with care. The tool may change at any time without warning. We are interested in your feedback and you can report issues or bugs on <a href="https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/issues" target="_blank" rel="noopener noreferrer">GitHub</a></p>
+				
+				<p>This map is intended to aid public understanding of land ownership in England and Wales. It maps data published by the <a href="https://www.gov.uk/government/organisations/land-registry">Land Registry</a>. For more information on data and methods see the <a href="/manual/#landownershipexplorer">Manual</a>. You can also access sections of the manual via the help buttons (<i class="fa fa-question-circle" aria-hidden="true"></i>)</p>
+				
+        <div style="background-color: #a5cffa; padding: 5px">
+          <p><b>To view the map, please provide the information below:</b></p>
+          <form method="POST" action="https://script.google.com/macros/s/AKfycbxNzqg-ewbcHJCqRNgzPPWhCyPXZAdlTNVpepVN6o59oKRTqKj3n-8WR7oG50_CQYOT/exec" target="dummyframe">
+          <label for="Name">Full name </label>
+          <input id="namebox" name="Name" type="text" placeholder="Full name" required=""><br>
+          <label for="Consent">I agree to the terms of use for this site (see below): </label>
+          <input id="Consentcheckbox" name="Consent" type="checkbox" required=""><br>
+          <label for="Cookies">I agree to the use of Google Analytics cookies: </label>
+          <input id="Cookiescheckbox" name="Cookies" type="checkbox" required=""><br>
+          <button type="submit" onclick="closewelcome()">Take me to the map</button>
+        </form></div>
+        
+        <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+        
+        <h2>Why do you ask for my name?</h2>
+        <p>The <a href="https://use-land-property-data.service.gov.uk/datasets/ccod/licence/view" target="_blank" rel="noopener noreferrer">licence</a> for the data published by the Land Registry requires that we <i>"maintain End-User Records ... for the purpose of auditing compliance with the terms of this Licence and/or for the prevention and/or detection of crime"</i>. Therefore we ask for your name and record the time you visited the site. We won't share this data with anybody unless the Land Registry requires us to as part of an audit. </p>
+        
+        <h2>Terms of use</h2>
+        <p>This website is for personal, non-commercial use. The information is illustrative and may contain errors or missing data. You must not attempt to scrape or bulk download the data. You cannot embed or reproduce the maps or data without written consent. Any use of this map must be consistent with the <a href="https://use-land-property-data.service.gov.uk/datasets/ccod/licence/view" target="_blank" rel="noopener noreferrer">Land Registry licence</a>. Data within the Land Ownership Explorer is not covered by the Open Data licence that applies to the rest of this site.</p>
+        
+        <h2>Copyright Notice</h2>
+        <p>This information is subject to Crown copyright and database rights 2022 and is reproduced with the <a href="https://use-land-property-data.service.gov.uk/datasets/inspire#conditions" target="_blank" rel="noopener noreferrer">permission of HM Land Registry</a>.</p>
+        <p>The polygons (including the associated geometry, namely x, y co-ordinates) are subject to Crown copyright and database rights 2022 Ordnance Survey 100026316.</p>
+        <p>Contains OS data © Crown copyright and database right 2022</p>
+        <p>Contains Royal Mail data © Royal Mail copyright and Database right 2022</p>
+        <p>Contains National Statistics data © Crown copyright and database right 2022</p>
+        
+        <h2>Cookies Notice</h2>
+        <p>We use Google Analytics as part of the requirement to log the usage of Land Registry data. These services may set third-party cookies.</p>
+        <p>Last updated: <span id="updatedate"></span>. You may need to <a href="https://www.minitool.com/news/f5-vs-ctrl-f5.html" target="_blank" rel="noopener noreferrer">clear your browser cache</a> to see the latest updates.</p>
+				
+			</div>
+		</div>
+		
+		
+		<!-- Cookies Warning  -->
+		<div id="cookiewarning" class="cookiewarning">
+			<p>We use cookies to measure how you use our website so we can understand how you interact with it, which helps us to make improvements. <a href="/privacy">Find out more.</a></p>
+			<p>
+				<button class="button buttonOK" value="1"><strong>OK</strong></button>
+				<button class="button buttonNO" value=""><strong>No</strong></button>
+			</p>
+		</div>
+		
+		<!-- Main Content -->
+		<div class="mapcontent">
+			<div id="map"></div>
+		</div>
+		
+		<!-- Basemap control box -->
+		<div id="basemapcontrol" style="display: none;">
+			<h3>Basemap</h3>
+			<p>
+			<form id="basemapform">
+				<!-- Values will be populated -->
+			</form>
+			</p>
+			<p><label class="switch"><input type="checkbox" id="placenamescheckbox" checked="checked" /><span class="slider round"></span></label> Place names</p>
+			<p><label class="switch"><input type="checkbox" id="antialiascheckbox" /><span class="slider round"></span></label> Anti-alias</p>
+		</div>
+		
+		<!-- Show Layer Selection Panel  Button-->
+		<div id="showrightbox" class="showrightbox">
+			<button class="float_button" aria-label="Show layers"><i class="fa fa-bars"></i></button>
+		</div>
+		
+		<!-- Layer Selection Panel -->
+		<div id="rightbox" class="rightbox">
+			<button class="close-button" aria-label="Hide layers"><i class="fas fa-times"></i></button>
+			<b> Layer Controls</b>
+			
+			<button id="autoopen" class="accordion" checked="true">Land Owners</button>
+			<div class="panel">
+				<p><label><input type="checkbox" id="landownerscheckbox" data-layer="landowners" class="showlayer" value="false">Show Layer</label> 
+				<button aria-label="Help purpose" class="helpbutton" data-help="landownership-points"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p> 
+				<select name="landowner_field" data-layer="landowners" class="updatelayer" aria-label="Land owners type">
+						<option value="Category" selected>Organisation type</option>
+            <option value="geocode_type">Geocoding accuracy</option>
+            <option value="Country">Country of registration</option>
+            <option value="Tenure">Tenure</option>
+					</select>
+				<p></p>
+				
+				<div class="legendVertical" id="landownerslegend">
+					<div class="l_rVertical">
+						<div class="lbvertical"><span style="background-color: #313695"></span>Primary</div>
+						<div class="lbvertical"><span style="background-color: #a50026"></span>Seconday</div>
+						<div class="lbvertical"><span style="background-color: #43f22c"></span>Other</div>
+					</div>
+				</div>
+				
+			</div>
+			<button class="accordion">INSPIRE Polygons</button>
+			<div class="panel">
+				<p><label><input type="checkbox" id="inspirecheckbox" data-layer="inspire" class="showlayer" value="false">Show Layer</label>
+				<button aria-label="Help purpose" class="helpbutton" data-help="landownership-inspire"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<div class="legend">
+					<div class="l_r">
+						<div class="lb"><span style="background-color: #bc80bd"></span></div>
+					</div>
+				</div>
+			</div>
+			<button class="accordion">Boundaries</button>
+			<div class="panel">
+				<p><label><input type="checkbox" data-layer="wards" class="showlayer" value="false">Wards</label>
+				<button aria-label="Help" class="helpbutton" data-help="boundaries-wards"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<div class="legendHorizontal">
+					<div class="l_rHorizontal">
+						<div class="lbHorizontal"><span style="background-color: #206b07"></span></div>
+					</div>
+				</div>
+				<p><label><input type="checkbox" data-layer="la" class="showlayer" value="false">Local Authorities</label>
+				<button aria-label="Help" class="helpbutton" data-help="boundaries-la"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<div class="legendHorizontal">
+					<div class="l_rHorizontal">
+						<div class="lbHorizontal"><span style="background-color: #6b0707"></span></div>
+					</div>
+				</div>
+				<p><label><input type="checkbox" data-layer="parish" class="showlayer" value="false">Parish</label>
+				<button aria-label="Help" class="helpbutton" data-help="boundaries-parish"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<div class="legendHorizontal">
+					<div class="l_rHorizontal">
+						<div class="lbHorizontal"><span style="background-color: #6b0763"></span></div>
+					</div>
+				</div>
+				<p><label><input type="checkbox" data-layer="westminster" class="showlayer" value="false">Westminster Constituency</label>
+				<button aria-label="Help" class="helpbutton" data-help="boundaries-westminster"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<div class="legendHorizontal">
+					<div class="l_rHorizontal">
+						<div class="lbHorizontal"><span style="background-color: #07366b"></span></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Help box -->
+		<div id="help_modal" class="modal">
+			<span class="modal-close">&times;</span>
+			<div id="helpcontent">
+				<p><em>Help content loading&hellip;</em></p>
+			</div>
+		</div>
+		
+		<div id="overlay"></div>
+		
+		<!-- Template for chart modals, including a sub-template for the chart boxes, plus overlay -->
+		<template id="chart-modal">
+			<div class="modal">
+				<div class="modal-content">
+					<div class="modal-header">
+						<span class="modal-close">&times;</span>
+						<h2 class="modal-title">Summary</h2>
+					</div>
+					<div class="modal-body">
+						<template class="chart-template">
+							<div class="wrapper">
+								<div class="chart-text">
+									<h4 class="chart-title"></h4>
+									<p class="chart-description"></p>
+								</div>
+								<div class="chart-container" >
+									<canvas></canvas>
+								</div>
+							</div>
+						</template>
+					</div>
+					<div class="modal-footer"></div>
+				</div>
+			</div>
+		</template>
+		<!-- <div id="overlay"></div> -->
+		
+		<!-- Template for map popup -->
+		<template id="landowners-popup">
+			<div class="mappopup">
+				<h4>Land Registry Title</h4>
+				<table>
+					<tr><th>Variable</th><th>Value</th></tr>
+					<tr><th>Title</td><td>{Title}</td></tr>
+					<tr><th>Tenure</td><td>{Tenure}</td></tr>
+					<tr><th>Property Address</td><td>{Property_Address}</td></tr>
+					<tr><th>Company No.</td><td>{Company_No}</td></tr>
+					<tr><th>Country</td><td>{Country}</td></tr>
+					<tr><th>Category</td><td>{Category}</td></tr>
+					<tr><th>Geocoded address</td><td>{geocoded_address}</td></tr>
+					<tr><th>Geocode type</td><td>{geocode_type}</td></tr>
+					<tr><th>Proprietor</td><td>{Proprietor}</td></tr>
+				</table>
+		</template>
+		
+	</body>
+	
+</html>
