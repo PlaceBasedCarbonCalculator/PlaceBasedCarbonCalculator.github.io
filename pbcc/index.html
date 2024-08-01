@@ -30,48 +30,42 @@
 		<script src="/app.js" defer></script>
 		
 		<!-- Map dependencies -->
-		<script src="/js/lib/pmtiles/index-2.11.0.js"></script>
+		<script src="https://unpkg.com/pmtiles@3.0.6/dist/pmtiles.js"></script>
 		<script src="/js/lib/geocoder/maplibre-gl-geocoder.min.js"></script>
 		<link rel="stylesheet" href="/js/lib/geocoder/maplibre-gl-geocoder-small.css" type="text/css"/>
-		<script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
-		<link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
-		
-		<!-- Sliders -->
-		<link href="/js/lib/noUiSlider_15_7_0/nouislider.min.css" rel="stylesheet">
-		<script src="/js/lib/noUiSlider_15_7_0/nouislider.min.js"></script>
-		
-		<!-- Font Awesome -->
-		<link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet">
-		<link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet">
-		
-		<!-- Markdown conversion -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
-		
-		<!-- Tooltips -->
-		<script src="https://unpkg.com/@popperjs/core@2"></script>
-		<script src="https://unpkg.com/tippy.js@6"></script>
-		
-		<!-- Charts -->
-		<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1" defer></script>
+		<script src="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.js"></script>
+		<link href="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.css" rel="stylesheet" />
 		
 		<!-- Styles -->
 		<link rel="stylesheet" href="/css/main.css">
 		<link rel="stylesheet" href="/css/map.css">
-		<!--
-		<link rel="stylesheet" href="/css/modal.css" defer>
-		-->
 		
+
 		<!-- Carbon & Place application -->
 		<script src="/js/settings-common.js"></script>
 		<script src="/js/datasets-common.js"></script>
 		<script src="datasets.js"></script>
 		<script src="/js/ui-common.js"></script>
-		<script src="ui.js"></script>
+		<script src="ui.js" defer></script>
 		<script>
 			document.addEventListener ('DOMContentLoaded', function () {
 			  capUi.initialise (settings, datasets);
 			});
 		</script>
+		
+		<!-- Font Awesome -->
+		<link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet" defer>
+		<link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet" defer>
+		
+		<!-- Markdown conversion -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js" defer></script>
+		
+		<!-- Tooltips -->
+		<script src="https://unpkg.com/@popperjs/core@2" defer></script>
+		<script src="https://unpkg.com/tippy.js@6" defer></script>
+		
+		<!-- Charts -->
+		<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1" defer></script>
 		
 	</head>
 	
@@ -179,6 +173,8 @@
 			-->
 		</div>
 		
+		<div id="overlay"></div>
+		
 		<!-- Help box -->
 		<div id="help_modal" class="modal">
 			<span class="modal-close">&times;</span>
@@ -194,18 +190,115 @@
 				<h2 class="modal-title">Zone Summary: XXXXX</h2>
 			</div>
 			<div class="modal-body">
-	
-					<div class="chart-wrapper" id="overview-chartrow">
-					  <div class="chart-text">
-							<h4 class="chart-title">Historical Emissions</h4>
-							<p class="chart-description">Estimated per person emissions 2010 to 2020</p>
-						</div>
-						<div class="chart-container">
-							<canvas id="overview-chart"></canvas>
-						</div>
-					</div>
-					
-					<div class="chart-wrapper" id="plefIgnore-chartrow">
+			  
+			 <!-- Tab links -->
+        <div class="tab">
+          <button class="tablinks" onclick="modalTab(event, 'overview')" id="defaultOpen">Overview</button>
+          <button class="tablinks" onclick="modalTab(event, 'history')">Historical</button>
+          <button class="tablinks" onclick="modalTab(event, 'future')">Future Scenarios</button>
+        </div>
+			  
+			  <div id="overview" class="tabcontent">
+			    
+			    <h3>Overview</h3>
+			    
+			    <div style="min-height:300px">
+          <div class="chart-container" style="height:400px">
+        			<canvas id="overview-chart"></canvas>
+        	</div>
+          <table>
+        		  <tr>
+        			<th>Name</th>
+        			<th>Grade</th>
+        			<th>kgCO<sub>2</sub>e per person</th>
+        			</tr>
+        		  <tr>
+        			<td>Total</td>
+        			
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 50 height = 50 id = "data_total_emissions_grade" alt = "Grade Image"></td>
+        			<td align='right' id="data_total_emissions_percap">NA</td>
+        		  </tr>
+        		  <tr>
+        			<td>Electricity</td>
+        			
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 50 height = 50 id = "data_elec_emissions_grade" alt = "Grade Image"></td>
+        			<td align='right' id="data_elec_emissions_household">NA</td>
+        		  </tr>
+        		  <tr>
+        			<td>Gas</td>
+        			
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 50 height = 50 id = "data_gas_emissions_grade" alt = "Grade Image"></td>
+        			<td align='right' id="data_gas_emissions_household">NA</td>
+        		  </tr>
+        		  <tr>
+        			<td>Other Heating</td>
+        			
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 50 height = 50 id = "data_other_heating_emissions_grade" alt = "Grade Image"></td>
+        			<td align='right' id="data_other_heating_emissions">NA</td>
+        		  </tr>
+        		  <tr>
+        			<td>Car Driving</td>
+        			
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 50 height = 50 id = "data_car_emissions_grade" alt = "Grade Image"></td>
+        			<td align='right' id="data_car_emissions">NA</td>
+        		  </tr>
+        		  <tr>
+        			<td>Van Driving</td>
+        			
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 50 height = 50 id = "data_van_emissions_grade" alt = "Grade Image"></td>
+        			<td align='right' id="data_van_emissions">NA</td>
+        		  </tr>
+        		  <tr>
+        			<td>Flights</td>
+        			
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 50 height = 50 id = "data_flights_emissions_grade" alt = "Grade Image"></td>
+        			<td align='right' id="data_flights_emissions">NA</td>
+        		  </tr>
+        		  <tr>
+        			<td>Consumption of goods and services</td>
+        			
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 50 height = 50 id = "data_consumption_emissions_grade" alt = "Grade Image"></td>
+        			<td align='right' id="data_consumption_emissions">NA</td>
+        		  </tr>
+        		</table>
+          </div>
+          <div>
+          <p>This report card is customised for each Lower Super Output Area (LSOA) on the map. The title at the top gives the       <abbr title="Lower Super Output Area">LSOA</abbr>'s unique ID, the Office for National Statistics area classification, and the Ward name. Wards are usually            larger than <abbr title="Lower Super Output Area">LSOA</abbr>s, but unlike <abbr title="Lower Super Output Area">LSOA</abbr>s have recognisable local names.
+          This tab gives an overview of the <abbr title="Lower Super Output Area">LSOA</abbr>s total carbon footprint, while other tabs give more detail and additional         context about parts of the carbon footprint.
+          </p>
+          <p>The bar chart shows the total carbon footprint per person in units of kilogrammes of carbon dioxide equivalent.        The first column shows the footprint of the selected <abbr title="Lower Super Output Area">LSOA</abbr>. The second column shows the average footprint of <abbr title="Lower Super Output Area">LSOA</abbr>s in       the same local authority. The third column shows the average footprint of all <abbr title="Lower Super Output Area">LSOA</abbr>s in England. The fourth column         shows the average footprint of <abbr title="Lower Super Output Area">LSOA</abbr>s with the same area classification. The Office for National Statistics (ONS)          produced the area classifications, which group areas into one of 24 categories based on social, economic, geographic,       and demographic factors.  Thus, this column represents the average of similar areas with similar people.
+          The horizontal black line represents the UK's target footprint per person set out in the Committee on Climate             Change's <a href="https://www.theccc.org.uk/publication/sixth-carbon-budget/" target="_blank" rel="noopener">6th Carbon Budget</a>, covering 2032 to 2037. It is intended to provide an indication of how far we must go in the next ten years if we are to have any chance of reaching net-zero by 2050.
+          </p>
+          <h3>Understanding the grades</h3>
+          <p><img src="/images/ui/grades.webp" style="width:100%; max-width:700px" alt="How grades are calculated" loading="lazy"></p>
+          <p>Many values have been given a grade from A+ to F- to help you understand how this <abbr title="Lower Super Output Area">LSOA</abbr> compares to others. The         grades are relative to the average <abbr title="Lower Super Output Area">LSOA</abbr>, so areas with an A+ to C- grade are better than average, while areas with a       D+ to F- grade are worse than average. Most areas are close to the average, so theses grade bands are wide,               representing 7% of <abbr title="Lower Super Output Area">LSOA</abbr>s. Towards the extremes, the grade bands narrow, so only the best 1% of <abbr title="Lower Super Output Area">LSOA</abbr>s get an A+ grade       . In some cases, it is not possible to calculate a grade due to missing data, so a NA value will be shown.</p>
+			    
+			    
+			  </div>
+			  
+			  </div>
+			  
+			  <div id="history" class="tabcontent">
+			    
+			    <h3>Historical Emissions</h3>
+			    
+			    	<div class="chart-wrapper" id="overview-chartrow">
+  					  <div class="chart-text">
+  							<h4 class="chart-title">Historical Emissions</h4>
+  							<p class="chart-description">Estimated per person emissions 2010 to 2020</p>
+  						</div>
+  						<div class="chart-container">
+  							<canvas id="historical-chart"></canvas>
+  						</div>
+  					</div>
+			    
+			  </div>
+			  
+			  <div id="future" class="tabcontent">
+			    
+			    <h3>Future Scenarios</h3>
+			    
+			    <div class="chart-wrapper" id="plefIgnore-chartrow">
 						<div class="chart-text">
 							<h4 class="chart-title">PLEF Ignore</h4>
 							<p class="chart-description">Forcast per person emissions under the PLEF Ignore scenario. Left column is a grandfathered downscaling, right column is an equity downscaling</p>
@@ -244,33 +337,17 @@
 							<canvas id="plefTransform-chart"></canvas>
 						</div>
 					</div>
+			  </div>
+	
+				
+					
+					
 					
 					
 
 				</div>
 		</div>
 		
-		<div id="overlay"></div>
-		
-		<!-- Template for map popup -->
-		<!-- 
-		<template id="landowners-popup">
-			<div class="mappopup">
-				<h4>Land Registry Title</h4>
-				<table>
-					<tr><th>Variable</th><th>Value</th></tr>
-					<tr><th>Title</td><td>{Title}</td></tr>
-					<tr><th>Tenure</td><td>{Tenure}</td></tr>
-					<tr><th>Property Address</td><td>{Property_Address}</td></tr>
-					<tr><th>Company No.</td><td>{Company_No}</td></tr>
-					<tr><th>Country</td><td>{Country}</td></tr>
-					<tr><th>Category</td><td>{Category}</td></tr>
-					<tr><th>Geocoded address</td><td>{geocoded_address}</td></tr>
-					<tr><th>Geocode type</td><td>{geocode_type}</td></tr>
-					<tr><th>Proprietor</td><td>{Proprietor}</td></tr>
-				</table>
-		</template>
-		-->
 		
 	</body>
 	
