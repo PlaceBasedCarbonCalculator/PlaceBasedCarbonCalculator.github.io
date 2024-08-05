@@ -43,7 +43,7 @@ const settings = {
 	},
 	
 	// Buildings/placenames tiles URL; can use %tileserverUrl to represent the above
-	buildingsTilesUrl: 'pmtiles://%tileserverUrl/buildings.pmtiles',
+	buildingsTilesUrl: 'pmtiles://%tileserverUrl/buildings_v2.pmtiles',
 	placenamesTilesUrl: 'pmtiles://%tileserverUrl/oszoom_names.pmtiles',
 	
 	// Manual
