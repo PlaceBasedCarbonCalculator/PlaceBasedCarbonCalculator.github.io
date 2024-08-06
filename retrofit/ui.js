@@ -81,28 +81,28 @@ makeChartPostcode = function(){
     datasets: [
       {
         label: 'Gas',
-        data: postcodeLocationData][''],
+        data: postcodeLocationData['gm'],
         backgroundColor: '#00000',
         stack: 'Stack 0',
       },
       {
         label: 'Electric (all)',
-        data: postcodeLocationData][''],
+        data: postcodeLocationData['ema'],
         backgroundColor: '#00000',
         stack: 'Stack 1',
       },
       {
         label: 'Electric (Standard)',
-        data: postcodeLocationData][''],
+        data: postcodeLocationData['ems'],
         backgroundColor: '#00000',
         stack: 'Stack 2',
       },
       {
         label: 'Electric (Economy 7)',
-        data: postcodeLocationData][''],
+        data: postcodeLocationData['eme'],
         backgroundColor: '#00000',
         stack: 'Stack 2',
-      },
+      }
     ]
   };
   
