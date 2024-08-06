@@ -832,6 +832,8 @@ const capUi = (function () {
 		  // Function to create a chart modal
 			const chartsModal = function (mapLayerId, chartDefinition) {
 				
+				console.log("Making chartsModal for: " + mapLayerId)
+				
 				// Initialise the HTML structure for this modal
 				//initialiseChartsModalHtml (mapLayerId);
 				
@@ -843,6 +845,8 @@ const capUi = (function () {
 				
 				// Open modal on clicking the supported map layer
 				_map.on ('click', mapLayerId, function (e) {
+				  
+				  
 					
 					// Ensure the source matches
 					let clickedFeatures = _map.queryRenderedFeatures(e.point);
@@ -852,6 +856,7 @@ const capUi = (function () {
 						//return el.source != 'composite';
 					});
 					if (clickedFeatures[0].sourceLayer != mapLayerId) {
+						console.log("click blocked: " + clickedFeatures[0].sourceLayer + " != " + mapLayerId);
 						return;
 					}
 					
@@ -859,7 +864,7 @@ const capUi = (function () {
 					const featureProperties = e.features[0].properties;
 					const locationId = featureProperties[chartDefinition.propertiesField];
 					//const dataUrl = chartDefinition.dataUrl.replace('%id', locationId);
-					
+					console.log(locationId)
 					
 					// Set the title
 					// TODO this is run muliple times when muliple data sources, but still works
@@ -1124,7 +1129,7 @@ const capUi = (function () {
 		{
 			// Identify the modal
 			const modal = document.getElementById(modalId);
-      console.log("Modal setup" + modalId);
+      console.log("Modal setup: " + modalId);
 			// When the user clicks on <span> (x), close the modal
 			const closeButton = document.querySelector('#' + modalId + ' .modal-close');
 			closeButton.addEventListener('click', function () {

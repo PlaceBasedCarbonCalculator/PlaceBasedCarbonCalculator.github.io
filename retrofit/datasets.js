@@ -10,7 +10,7 @@ const datasets_extra = {
 			'type': 'vector',
 				'url': 'pmtiles://%tileserverUrl/postcodes.pmtiles',
 				},
-			'source-layer': 'postcodes',
+			'source-layer': 'postcode',
 			'paint': {
 				'fill-color': '#9c9898',
 				'fill-opacity': 0.8,
@@ -80,7 +80,26 @@ const datasets_extra = {
 	
 	// Chart definitions, indexed by map layer ID
 	charts: {
-	  
+	  postcodes : {
+	    // Data fields
+  			// #!# Should use a main server URL setting
+  			dataUrl: 'https://pbcc.blob.core.windows.net/pbcc-data/Postcode/%id.json',
+  			propertiesField: 'postcode',
+  			titleField: 'postcode',
+  			
+  			// Title
+  			titlePrefix: 'Postcode Summary: ',
+  			
+  			charts: [
+  				[
+  					// Access Proximity
+  					'access_proximity',
+  					'Access Proximity',
+  					'Description goes here',
+  					'Access by public transport'
+  				]
+  		  ]
+	  }
 	},
 	
 	// Popups
@@ -97,12 +116,7 @@ const datasets = mergeObjects(datasets_extra, datasets_common);
 // Function to determine the style column
 function getStyleColumn (layerId, datasets)
 {
-  
-  
 	const style_col_selected = datasets.lineColours.postcodes.hasOwnProperty(layerId) ? layerId : '_';
-	//return datasets.lineColours.zones[style_col_selected];
-	
-	console.log(datasets.lineColours.postcodes['Grade']);
 	return datasets.lineColours.postcodes['Grade'];
 }
 
@@ -112,10 +126,7 @@ function postcodesStyling (layerId, map, settings, datasets, createLegend /* cal
 	// Update the legend (even if map layer is off)
 	const field = document.querySelector ('select.updatelayer[data-layer="postcodes"][name="field"]').value
 	createLegend (datasets.legends.postcodes, "Grade", 'postcodeslegend'); // Fixed Legeng for Grades
-	
-	console.log(field);
-	console.log(layerId);
-	
+
 	// Set paint properties
 	//map.setPaintProperty (layerId, 'fill-color', ['step', ['get', field], getStyleColumn (field, datasets)]);
 	//map.setPaintProperty (layerId, 'fill-color', '#000000');
@@ -126,6 +137,9 @@ function postcodesStyling (layerId, map, settings, datasets, createLegend /* cal
 	const buildingColour = getBuildingsColour(settings);
 	map.setPaintProperty ('buildings', 'fill-extrusion-color', (buildingColour || '#9c9898'));
 	map.setLayoutProperty ('buildings', 'visibility', (buildingColour ? 'visible' : 'none'));
+	map.setPaintProperty (layerId, 'fill-outline-color', 'rgba(0, 0, 0, 0.2)'); 
+	
+	
 }
 
 // Function to determine the buildings colour
@@ -134,7 +148,6 @@ function getBuildingsColour (settings)
 	// Default to gray
 	return '#9c9898';
 }
-
 
 
 

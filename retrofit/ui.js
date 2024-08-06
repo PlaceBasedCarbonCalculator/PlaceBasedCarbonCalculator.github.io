@@ -5,7 +5,7 @@ var electricChart;
 var metersChart;
 var postcodeLocationData = {};
 
-manageCharts =  function (chartDefinition, locationData){
+manageCharts =  function (locationId){
   capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/Postcode/' + locationId + '.json')
         .then(function (postcodeData) {
             postcodeLocationData = postcodeData;
