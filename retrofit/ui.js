@@ -20,6 +20,7 @@ manageCharts =  function (chartDefinition, locationData){
 
 makeChartPostcode = function(){
   
+  console.log("Make postcode charts");
   // Access Chart
   // Destroy old chart
 	if(emissionsChart){

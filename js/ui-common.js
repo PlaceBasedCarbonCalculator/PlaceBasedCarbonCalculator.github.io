@@ -691,7 +691,7 @@ const capUi = (function () {
 		
 		toggleLayer: function (layerId)
 		{
-			console.log ('Toggling layer ' + layerId);
+			//console.log ('Toggling layer ' + layerId);
 			
 			// Check for a dynamic styling callback and run it if present
 			if (_datasets.layerStyling[layerId]) {
@@ -703,6 +703,7 @@ const capUi = (function () {
 			// Set the visibility of the layer, based on the checkbox value
 			const isVisible = document.querySelector ('input.showlayer[data-layer="' + layerId + '"]').checked;
 			_map.setLayoutProperty(layerId, 'visibility', (isVisible ? 'visible' : 'none'));
+			console.log ('Toggling layer ' + layerId + ' visability ' + isVisible);
 			
 			// Update the layer state for the URL
 			capUi.layerStateUrl ();

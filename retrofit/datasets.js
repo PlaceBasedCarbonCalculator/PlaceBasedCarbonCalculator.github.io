@@ -118,8 +118,9 @@ function postcodesStyling (layerId, map, settings, datasets, createLegend /* cal
 	
 	// Set paint properties
 	//map.setPaintProperty (layerId, 'fill-color', ['step', ['get', field], getStyleColumn (field, datasets)]);
+	//map.setPaintProperty (layerId, 'fill-color', '#000000');
 	map.setPaintProperty (layerId, 'fill-color', ['match', ['get', field], ...getStyleColumn (field, datasets)]);
-	map.setPaintProperty (layerId, 'fill-opacity', 0.8); // Very faded-out in daysymetric mode, as the buildings are coloured
+	map.setPaintProperty (layerId, 'fill-opacity', 0.8); 
 	
 	// Set buildings layer colour/visibility
 	const buildingColour = getBuildingsColour(settings);
