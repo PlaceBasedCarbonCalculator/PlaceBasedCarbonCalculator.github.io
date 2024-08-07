@@ -10,7 +10,7 @@ const datasets_extra = {
 			'type': 'vector',
 				'url': 'pmtiles://%tileserverUrl/postcodes.pmtiles',
 				},
-			'source-layer': 'postcode',
+			'source-layer': 'postcodes',
 			'paint': {
 				'fill-color': '#9c9898',
 				'fill-opacity': 0.8,
