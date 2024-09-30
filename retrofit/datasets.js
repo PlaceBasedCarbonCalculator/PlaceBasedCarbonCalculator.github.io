@@ -80,7 +80,8 @@ const datasets_extra = {
 	
 	// Chart definitions, indexed by map layer ID
 	charts: {
-	  postcodes : {
+	  postcodes: {
+	    postcodes : {
 	    // Data fields
   			// #!# Should use a main server URL setting
   			dataUrl: 'https://pbcc.blob.core.windows.net/pbcc-data/Postcode/%id.json',
@@ -100,6 +101,8 @@ const datasets_extra = {
   				]
   		  ]
 	  }
+	  }
+	  
 	},
 	
 	// Popups

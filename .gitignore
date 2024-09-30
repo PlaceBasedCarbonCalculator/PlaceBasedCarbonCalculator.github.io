@@ -43,3 +43,4 @@ vignettes/*.pdf
 /data/json/
 /rastertiles
 PlaceBasedCarbonCalculator.github.io.Rproj
+BingSiteAuth.xml

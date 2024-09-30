@@ -864,7 +864,6 @@ const capUi = (function () {
 					const featureProperties = e.features[0].properties;
 					const locationId = featureProperties[chartDefinition.propertiesField];
 					//const dataUrl = chartDefinition.dataUrl.replace('%id', locationId);
-					console.log(locationId)
 					
 					// Set the title
 					// TODO this is run muliple times when muliple data sources, but still works

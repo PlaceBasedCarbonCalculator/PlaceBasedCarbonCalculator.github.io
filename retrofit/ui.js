@@ -41,40 +41,50 @@ makeChartPostcode = function(){
 	const setting_gas = document.getElementById("select_gas").value;
   const setting_electricity = document.getElementById("select_electricity").value;
   
+  let data_emissions_gas;
+  let data_emissions_elec;
+  let data_elec_all;
+  let data_elec_std;
+  let data_elec_eco7;
+  let data_gas;
+  
+
   // Get data
   // Not doing emissions for standard and eco7 meters
   if(setting_emissions == "total"){
-     const data_emissions_gas = postcodeLocationData[''];
-     const data_emissions_elec = postcodeLocationData[''];
+     data_emissions_gas = postcodeLocationData['Bgt'];
+     data_emissions_elec = postcodeLocationData['Beta'];
   } else if (setting_emissions == "mean") {
-     const data_emissions_gas = postcodeLocationData[''];
-     const data_emissions_elec = postcodeLocationData[''];
+     data_emissions_gas = postcodeLocationData['Egm'];
+     data_emissions_elec = postcodeLocationData['Eema'];
   } else if (setting_emissions == "median") {
-     const data_emissions_gas = postcodeLocationData[''];
-     const data_emissions_elec = postcodeLocationData[''];
+     data_emissions_gas = postcodeLocationData['Dgm'];
+     data_emissions_elec = postcodeLocationData['Dema'];
   }
   
   if(setting_emissions == "total"){
-     const data_elec_all = postcodeLocationData[''];
-     const data_elec_std = postcodeLocationData[''];
-     const data_elec_eco7 = postcodeLocationData[''];
+     data_elec_all = postcodeLocationData['eta'];
+     data_elec_std = postcodeLocationData['ets'];
+     data_elec_eco7 = postcodeLocationData['ete'];
   } else if (setting_emissions == "mean") {
-     const data_elec_all = postcodeLocationData[''];
-     const data_elec_std = postcodeLocationData[''];
-     const data_elec_eco7 = postcodeLocationData[''];
+     data_elec_all = postcodeLocationData['Bema'];
+     data_elec_std = postcodeLocationData['Bems'];
+     data_elec_eco7 = postcodeLocationData['Beme'];
   } else if (setting_emissions == "median") {
-     const data_elec_all = postcodeLocationData[''];
-     const data_elec_std = postcodeLocationData[''];
-     const data_elec_eco7 = postcodeLocationData[''];
+     data_elec_all = postcodeLocationData['Cems'];
+     data_elec_std = postcodeLocationData['Cema'];
+     data_elec_eco7 = postcodeLocationData['Ceme'];
   }
   
   if(setting_emissions == "total"){
-     const data_gas = postcodeLocationData[''];
+     data_gas = postcodeLocationData['gt'];
   } else if (setting_emissions == "mean") {
-     const data_gas = postcodeLocationData[''];
+     data_gas = postcodeLocationData['Bgm'];
   } else if (setting_emissions == "median") {
-     const data_gas = postcodeLocationData[''];
+     data_gas = postcodeLocationData['Cgm'];
   }
+  
+  console.log(data_elec_all);
   
   const labels = [2015,2016,2017,2018,2019,2020,2021,2022]
   const dataMeters = {
@@ -83,25 +93,25 @@ makeChartPostcode = function(){
       {
         label: 'Gas',
         data: postcodeLocationData['gm'],
-        backgroundColor: '#00000',
+        backgroundColor: '#2b8cbe',
         stack: 'Stack 0',
       },
       {
         label: 'Electric (all)',
         data: postcodeLocationData['ema'],
-        backgroundColor: '#00000',
+        backgroundColor: '#b30000',
         stack: 'Stack 1',
       },
       {
         label: 'Electric (Standard)',
         data: postcodeLocationData['ems'],
-        backgroundColor: '#00000',
+        backgroundColor: '#e34a33',
         stack: 'Stack 2',
       },
       {
         label: 'Electric (Economy 7)',
         data: postcodeLocationData['eme'],
-        backgroundColor: '#00000',
+        backgroundColor: '#fdcc8a',
         stack: 'Stack 2',
       }
     ]
@@ -114,14 +124,14 @@ makeChartPostcode = function(){
         {
           label: 'Gas',
           data: data_emissions_gas,
-          borderColor: '#00000',
-          backgroundColor: '#00000',
+          borderColor: '#2b8cbe',
+          backgroundColor: '#2b8cbe',
         },
         {
           label: 'Electricity',
           data: data_emissions_elec,
-          borderColor: '#00000',
-          backgroundColor: '#00000',
+          borderColor: '#b30000',
+          backgroundColor: '#b30000',
         }
       ]
     };
@@ -132,24 +142,36 @@ makeChartPostcode = function(){
         {
           label: 'All meters',
           data: data_elec_all,
-          borderColor: '#00000',
-          backgroundColor: '#00000',
+          borderColor: '#b30000',
+          backgroundColor: '#b30000',
         },
         {
           label: 'Standard Meters',
           data: data_elec_std,
-          borderColor: '#00000',
-          backgroundColor: '#00000',
+          borderColor: '#e34a33',
+          backgroundColor: '#e34a33',
         },
         {
           label: 'Economy 7 Meters',
           data: data_elec_eco7,
-          borderColor: '#00000',
-          backgroundColor: '#00000',
+          borderColor: '#fdcc8a',
+          backgroundColor: '#fdcc8a',
         }
       ]
     };
 	
+	
+	const dataGas = {
+    labels: labels,
+      datasets: [
+        {
+          label: 'All meters',
+          data: data_gas,
+          borderColor: '#2b8cbe',
+          backgroundColor: '#2b8cbe',
+        }
+      ]
+    };
 	
 	var metersctx = document.getElementById('meters-chart').getContext('2d');
 	metersChart = new Chart(metersctx, {
