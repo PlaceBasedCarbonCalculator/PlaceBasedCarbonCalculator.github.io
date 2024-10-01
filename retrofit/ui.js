@@ -1,7 +1,7 @@
 // Local Chart Mangement
 var emissionsChart;
 var gasChart;
-var electricChart;
+var electricityChart;
 var metersChart;
 var postcodeLocationData = {};
 
@@ -29,8 +29,8 @@ makeChartPostcode = function(){
 	if(gasChart){
 		gasChart.destroy();
 	}
-	if(electricChart){
-		electricChart.destroy();
+	if(electricityChart){
+		electricityChart.destroy();
 	}
   if(metersChart){
 		metersChart.destroy();
@@ -62,29 +62,29 @@ makeChartPostcode = function(){
      data_emissions_elec = postcodeLocationData['Dema'];
   }
   
-  if(setting_emissions == "total"){
+  if(setting_electricity == "total"){
      data_elec_all = postcodeLocationData['eta'];
      data_elec_std = postcodeLocationData['ets'];
      data_elec_eco7 = postcodeLocationData['ete'];
-  } else if (setting_emissions == "mean") {
+  } else if (setting_electricity == "mean") {
      data_elec_all = postcodeLocationData['Bema'];
      data_elec_std = postcodeLocationData['Bems'];
      data_elec_eco7 = postcodeLocationData['Beme'];
-  } else if (setting_emissions == "median") {
+  } else if (setting_electricity == "median") {
      data_elec_all = postcodeLocationData['Cems'];
      data_elec_std = postcodeLocationData['Cema'];
      data_elec_eco7 = postcodeLocationData['Ceme'];
   }
   
-  if(setting_emissions == "total"){
+  if(setting_gas == "total"){
      data_gas = postcodeLocationData['gt'];
-  } else if (setting_emissions == "mean") {
+  } else if (setting_gas == "mean") {
      data_gas = postcodeLocationData['Bgm'];
-  } else if (setting_emissions == "median") {
+  } else if (setting_gas == "median") {
      data_gas = postcodeLocationData['Cgm'];
   }
   
-  console.log(data_elec_all);
+  
   
   const labels = [2015,2016,2017,2018,2019,2020,2021,2022]
   const dataMeters = {
@@ -178,12 +178,6 @@ makeChartPostcode = function(){
     type: 'bar',
       data: dataMeters,
       options: {
-        plugins: {
-          title: {
-            display: true,
-            text: 'Gas and Electricity Meters'
-          },
-        },
         responsive: true,
         interaction: {
           intersect: false,
@@ -191,9 +185,17 @@ makeChartPostcode = function(){
         scales: {
           x: {
             stacked: true,
+            title: {
+              display: true,
+              text: 'Year'
+            }
           },
           y: {
-            stacked: true
+            stacked: true,
+            title: {
+              display: true,
+              text: 'Meters'
+            }
           }
         }
       }
@@ -205,13 +207,23 @@ makeChartPostcode = function(){
     data: dataEmissions,
     options: {
       responsive: true,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: 'Emissions kgCO2e'
+          }
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Year'
+          }
+        }
+      },
       plugins: {
         legend: {
           position: 'top',
-        },
-        title: {
-          display: true,
-          text: 'Emissions'
         }
       }
     },
@@ -223,13 +235,24 @@ makeChartPostcode = function(){
     data: dataGas,
     options: {
       responsive: true,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: 'Gas Consumption kWh'
+          },
+          beginAtZero: true
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Year'
+          }
+        }
+      },
       plugins: {
         legend: {
           position: 'top',
-        },
-        title: {
-          display: true,
-          text: 'Emissions'
         }
       }
     },
@@ -241,13 +264,24 @@ makeChartPostcode = function(){
     data: dataElectricity,
     options: {
       responsive: true,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: 'Consumption kWh'
+          },
+          beginAtZero: true
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Year'
+          }
+        }
+      },
       plugins: {
         legend: {
           position: 'top',
-        },
-        title: {
-          display: true,
-          text: 'Emissions'
         }
       }
     },
