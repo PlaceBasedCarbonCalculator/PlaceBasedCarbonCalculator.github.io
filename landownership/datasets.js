@@ -204,6 +204,14 @@ const datasets_extra = {
 			preprocessingCallback: popupCallback,	// Defined below
 			smallValuesThreshold: 10,
 			literalFields: ['Gradient', 'Quietness'] // #!# Gradient and Quietness are capitalised unlike other
+		},
+		
+		'inspire': {
+			layerId: 'inspire',
+			templateId: 'inspire-popup',
+			preprocessingCallback: popupCallback,	// Defined below
+			smallValuesThreshold: 10,
+			literalFields: ['Gradient', 'Quietness'] // #!# Gradient and Quietness are capitalised unlike other
 		}
 
 	}
