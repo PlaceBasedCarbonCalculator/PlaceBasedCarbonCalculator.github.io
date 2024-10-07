@@ -62,8 +62,9 @@ const datasets_extra = {
 	
 	// Layer styling callbacks functions, each defined below
 	layerStyling: {
-	  postcodes:			postcodesStyling,
-	  epc_dom: EPCDomStyling
+	  postcodes:	postcodesStyling,
+	  epc_dom:    EPCDomStyling,
+	  epc_nondom: EPCNonDomStyling
 	},
 	
 	
@@ -118,13 +119,18 @@ const datasets_extra = {
   			['Park home' ,'#ff7f00']
 			],
 			'age': [
-				['A','#0e7e58'],
-  			['B' ,'#2aa45b'],
-  			['C','#8cbc42'],
-  			['D','#f6cc15'],
-  			['E' ,'#f2a867'],
-  			['F','#f17e23'],
-  			['G','#e31d3e']
+				['<1900','#9e0142'],
+  			['1900-1929' ,'#d53e4f'],
+  			['1930-1949','#f46d43'],
+  			['1950-1966','#fdae61'],
+  			['1967-1975' ,'#fee08b'],
+  			['1976-1982','#ffffbf'],
+  			['1983-1990','#e6f598'],
+  			['1991-1995','#abdda4'],
+  			['1996-2002' ,'#66c2a5'],
+  			['2003-2006','#3288bd'],
+  			['2007-2011','#5e4fa2'],
+  			['>2012','#934fa2']
 			],
 			'year': [
 				['<2014','#e31d3e'],
@@ -208,7 +214,44 @@ const datasets_extra = {
 			
 		},
 		
-		
+		epc_nondom: {
+			'band': [
+				['A','#0e7e58'],
+  			['B' ,'#2aa45b'],
+  			['C','#8cbc42'],
+  			['D','#f6cc15'],
+  			['E' ,'#f2a867'],
+  			['F','#f17e23'],
+  			['G','#e31d3e']
+			],
+			'transaction': [
+				['Detached','#1f78b4'],
+  			['Semi-Detached' ,'#33a02c'],
+  			['Mid-Terrace','#e31a1c'],
+  			['Enclosed Mid-Terrace','#ff7f00'],
+  			['End-Terrace' ,'#6a3d9a'],
+  			['Enclosed End-Terrace','#b15928']
+			],
+			'year': [
+				['<2014','#e31d3e'],
+  			['2016','#f17e23'],
+  			['2018','#f2a867'],
+  			['2020','#f6cc15'],
+  			['2022','#8cbc42'],
+  			['2024','#0e7e58']
+			],
+			'area': [
+				['<40','#4d9221'],
+  			['40-60' ,'#7fbc41'],
+  			['60-80','#b8e186'],
+  			['80-100','#e6f5d0'],
+  			['100-120' ,'#fde0ef'],
+  			['120-140','#f1b6da'],
+  			['140-160','#de77ae'],
+  			['>160','#c51b7d']
+			]
+			
+		},
 	},
 	
 	lineColours: {
@@ -265,13 +308,18 @@ const datasets_extra = {
   			'#000000'
 			],
 			'age': [
-				'A','#0e7e58',
-  			'B' ,'#2aa45b',
-  			'C','#8cbc42',
-  			'D','#f6cc15',
-  			'E' ,'#f2a867',
-  			'F','#f17e23',
-  			'G','#e31d3e',
+				'before 1900','#9e0142',
+  			'1900-1929' ,'#d53e4f',
+  			'1930-1949','#f46d43',
+  			'1950-1966','#fdae61',
+  			'1967-1975' ,'#fee08b',
+  			'1976-1982','#ffffbf',
+  			'1983-1990','#e6f598',
+  			'1991-1995','#abdda4',
+  			'1996-2002' ,'#66c2a5',
+  			'2003-2006','#3288bd',
+  			'2007-2011','#5e4fa2',
+  			'2012 onwards','#934fa2',
   			'#000000'
 			],
 			'year': [
@@ -362,6 +410,47 @@ const datasets_extra = {
 				'yes','#fdae61',
   			'no','#2c7bb6',
   			'#000000'
+			]
+			
+		},
+		
+		epc_nondom: {
+			'band': [
+				'A','#0e7e58',
+  			'B' ,'#2aa45b',
+  			'C','#8cbc42',
+  			'D','#f6cc15',
+  			'E' ,'#f2a867',
+  			'F','#f17e23',
+  			'G','#e31d3e',
+  			'#000000'
+			],
+			'transaction': [
+				'Detached','#1f78b4',
+  			'Semi-Detached' ,'#33a02c',
+  			'Mid-Terrace','#e31a1c',
+  			'Enclosed Mid-Terrace','#ff7f00',
+  			'End-Terrace' ,'#6a3d9a',
+  			'Enclosed End-Terrace','#b15928',
+  			'#000000'
+			],
+			'year': [
+				2014,'#e31d3e',
+  			2016,'#f17e23',
+  			2018,'#f6cc15',
+  			2020 ,'#f2a867',
+  			2022,'#8cbc42',
+  			2024,'#0e7e58'
+			],
+			'area': [
+				0,'#4d9221',
+  			40 ,'#7fbc41',
+  			60,'#b8e186',
+  			80,'#e6f5d0',
+  			100 ,'#fde0ef',
+  			120,'#f1b6da',
+  			140,'#de77ae',
+  			160,'#c51b7d'
 			]
 			
 		},
@@ -474,14 +563,39 @@ function EPCDomStyling (layerId, map, settings, datasets, createLegend /* callba
 	} else {
 	  map.setPaintProperty (layerId, 'circle-color', ['match', ['get', field], ...style]);
 	}
-	
-	
-
-	
 
 }
 
+// Function to determine the style column
+function getEPCNonDomStyleColumn (layerId, datasets)
+{
+	const style_col_selected = datasets.lineColours.epc_nondom.hasOwnProperty(layerId) ? layerId : '_';
+	//console.log(style_col_selected);
+	//console.log(datasets.lineColours.epc_dom[style_col_selected]);
+	return datasets.lineColours.epc_nondom[style_col_selected];
+}
 
+// Styling callback for data epc_dom (including buildings styling)
+function EPCNonDomStyling (layerId, map, settings, datasets, createLegend /* callback */)
+{
+	// Update the legend (even if map layer is off)
+	const field = document.querySelector ('select.updatelayer[data-layer="epc_nondom"][name="field"]').value
+
+	createLegend (datasets.legends.epc_nondom, field, 'epcnondomlegend');
+	//console.log("Field is ",field);
+	const style = getEPCNonDomStyleColumn (field, datasets);
+	//console.log(style);
+
+  let interpolate = ['area', 'year'];
+
+	// Set paint properties
+	if(interpolate.includes(field)){
+	  map.setPaintProperty (layerId, 'circle-color', ['interpolate', ['linear'], ['get', field], ...style]);
+	} else {
+	  map.setPaintProperty (layerId, 'circle-color', ['match', ['get', field], ...style]);
+	}
+
+}
 
 
 

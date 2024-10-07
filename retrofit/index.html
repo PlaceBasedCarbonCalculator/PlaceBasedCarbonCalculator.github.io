@@ -171,7 +171,7 @@
 					</select>
 					<button aria-label="Help purpose" class="helpbutton" data-help="retrofit-epc-dom"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
 				</p>
-				<div id="epcdomlegend" class="legendHorizontal">
+				<div id="epcdomlegend" class="legendVertical">
 					<div class="l_rHorizontal">
 						<div class="lb"><span style="background-color: #ffffff"></span>&nbsp;</div>
 					</div>
@@ -332,9 +332,11 @@
 				<h4>Domestic EPC</h4>
 				<table>
 					<tr><th>Variable</th><th>Value</th></tr>
-					<tr><th>Rating</td><td>{cur_rate}</td></tr>
+					<tr><th>Address</td><td>{addr}</td></tr>
+					<tr><th>Rating</td><td>{cur_rate} {cur_ee}/{per_ee}</td></tr>
 					<tr><th>Building type</td><td>{b_type} {p_type}</td></tr>
 					<tr><th>Building Age</td><td>{age}</td></tr>
+					<tr><th>Tenure</td><td>{tenure}</td></tr>
 					<tr><th>Last Assessed</td><td>{year}</td></tr>
 					<tr><th>Floor area</td><td>{area} (m2)</td></tr>
 					<tr><th>Roof</td><td>{roof_d} ({roof_ee})</td></tr>
@@ -342,9 +344,11 @@
 					<tr><th>Floor</td><td>{floor_d} ({floor_ee})</td></tr>
 					<tr><th>Windows</td><td>{wind_d} ({wind_ee})</td></tr>
 					<tr><th>Heating</td><td>{heat_d} ({heat_ee})</td></tr>
+					<tr><th>Heating Fuel</td><td>{fuel}</td></tr>
 					<tr><th>Heating Controls</td><td>{con_d} ({con_ee})</td></tr>
 					<tr><th>Hot water</td><td>{water_d} ({water_ee})</td></tr>
 					<tr><th>Solar Water Heating</td><td>{sol_wat}</td></tr>
+					<tr><th>Solar PV</td><td>{pv}</td></tr>
 					<tr><th>Lights</td><td>{light_ee}</td></tr>
 					
 				</table>
