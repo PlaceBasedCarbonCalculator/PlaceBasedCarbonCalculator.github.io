@@ -16,19 +16,61 @@ const datasets_extra = {
 				'fill-opacity': 0.8,
 				'fill-outline-color': '#000000'
 			}
+		},
+		
+		epc_dom: {
+			'id': 'epc_dom',
+			'type': 'circle',
+			'source': {
+			'type': 'vector',
+				'url': 'pmtiles://%tileserverUrl/epc_dom.pmtiles',
+				},
+			'source-layer': 'epc_dom',
+			'paint': {
+			  // make circles larger as the user zooms from z12 to z22
+        'circle-radius': {
+          'base': 2.5,
+          'stops': [
+            [8, 3],
+            [22, 180]
+          ]
+        }
+			}
+		},
+		
+		
+		epc_nondom: {
+			'id': 'epc_nondom',
+			'type': 'circle',
+			'source': {
+			'type': 'vector',
+				'url': 'pmtiles://%tileserverUrl/epc_nondom.pmtiles',
+				},
+			'source-layer': 'epc_nondom',
+			'paint': {
+			  // make circles larger as the user zooms from z12 to z22
+        'circle-radius': {
+          'base': 2.5,
+          'stops': [
+            [8, 3],
+            [22, 180]
+          ]
+        }
+			}
 		}
 	},
 	
 	// Layer styling callbacks functions, each defined below
 	layerStyling: {
 	  postcodes:			postcodesStyling,
+	  epc_dom: EPCDomStyling
 	},
 	
 	
 	// #!# These need to be merged with lineColours
 	legends: {
 
-		postcodes: {
+    postcodes: {
 			'Grade': [
 				['A+','#313695'],
   			['A' ,'#4575b4'],
@@ -48,8 +90,125 @@ const datasets_extra = {
   			['F+','#d73027'],
   			['F' ,'#d73027'],
   			['F-','#a50026']
+  		]
+    },
+		epc_dom: {
+			'cur_rate': [
+				['A','#0e7e58'],
+  			['B' ,'#2aa45b'],
+  			['C','#8cbc42'],
+  			['D','#f6cc15'],
+  			['E' ,'#f2a867'],
+  			['F','#f17e23'],
+  			['G','#e31d3e']
+			],
+			'b_type': [
+				['Detached','#1f78b4'],
+  			['Semi-Detached' ,'#33a02c'],
+  			['Mid-Terrace','#e31a1c'],
+  			['Enclosed Mid-Terrace','#ff7f00'],
+  			['End-Terrace' ,'#6a3d9a'],
+  			['Enclosed End-Terrace','#b15928']
+			],
+			'p_type': [
+				['Flat','#e31a1c'],
+  			['House' ,'#33a02c'],
+  			['Maisonette','#1f78b4'],
+  			['Bungalow','#6a3d9a'],
+  			['Park home' ,'#ff7f00']
+			],
+			'age': [
+				['A','#0e7e58'],
+  			['B' ,'#2aa45b'],
+  			['C','#8cbc42'],
+  			['D','#f6cc15'],
+  			['E' ,'#f2a867'],
+  			['F','#f17e23'],
+  			['G','#e31d3e']
+			],
+			'year': [
+				['<2014','#e31d3e'],
+  			['2016','#f17e23'],
+  			['2018','#f2a867'],
+  			['2020','#f6cc15'],
+  			['2022','#8cbc42'],
+  			['2024','#0e7e58']
+			],
+			'area': [
+				['<40','#4d9221'],
+  			['40-60' ,'#7fbc41'],
+  			['60-80','#b8e186'],
+  			['80-100','#e6f5d0'],
+  			['100-120' ,'#fde0ef'],
+  			['120-140','#f1b6da'],
+  			['140-160','#de77ae'],
+  			['>160','#c51b7d']
+			],
+			
+			'floor_ee': [
+				['Very Good','#2c7bb6'],
+  			['Good' ,'#abd9e9'],
+  			['Average','#ffffbf'],
+  			['Poor','#fdae61'],
+  			['Very Poor' ,'#d7191c']
+			],
+			'water_ee': [
+				['Very Good','#2c7bb6'],
+  			['Good' ,'#abd9e9'],
+  			['Average','#ffffbf'],
+  			['Poor','#fdae61'],
+  			['Very Poor' ,'#d7191c']
+			],
+			'wind_ee': [
+				['Very Good','#2c7bb6'],
+  			['Good' ,'#abd9e9'],
+  			['Average','#ffffbf'],
+  			['Poor','#fdae61'],
+  			['Very Poor' ,'#d7191c']
+			],
+			'wall_ee': [
+				['Very Good','#2c7bb6'],
+  			['Good' ,'#abd9e9'],
+  			['Average','#ffffbf'],
+  			['Poor','#fdae61'],
+  			['Very Poor' ,'#d7191c']
+			],
+			'roof_ee': [
+				['Very Good','#2c7bb6'],
+  			['Good' ,'#abd9e9'],
+  			['Average','#ffffbf'],
+  			['Poor','#fdae61'],
+  			['Very Poor' ,'#d7191c']
+			],
+			'heat_ee': [
+				['Very Good','#2c7bb6'],
+  			['Good' ,'#abd9e9'],
+  			['Average','#ffffbf'],
+  			['Poor','#fdae61'],
+  			['Very Poor' ,'#d7191c']
+			],
+			'con_ee': [
+				['Very Good','#2c7bb6'],
+  			['Good' ,'#abd9e9'],
+  			['Average','#ffffbf'],
+  			['Poor','#fdae61'],
+  			['Very Poor' ,'#d7191c']
+			],
+			'light_ee': [
+				['Very Good','#2c7bb6'],
+  			['Good' ,'#abd9e9'],
+  			['Average','#ffffbf'],
+  			['Poor','#fdae61'],
+  			['Very Poor' ,'#d7191c']
+			],
+		  'sol_wat': [
+				['yes','#fdae61'],
+  			['no','#2c7bb6']
 			]
+			
 		},
+		
+		
 	},
 	
 	lineColours: {
@@ -75,6 +234,136 @@ const datasets_extra = {
   			'F-','#a50026',
   			'#000000'
 			]
+		},
+		
+		epc_dom: {
+			'cur_rate': [
+				'A','#0e7e58',
+  			'B' ,'#2aa45b',
+  			'C','#8cbc42',
+  			'D','#f6cc15',
+  			'E' ,'#f2a867',
+  			'F','#f17e23',
+  			'G','#e31d3e',
+  			'#000000'
+			],
+			'b_type': [
+				'Detached','#1f78b4',
+  			'Semi-Detached' ,'#33a02c',
+  			'Mid-Terrace','#e31a1c',
+  			'Enclosed Mid-Terrace','#ff7f00',
+  			'End-Terrace' ,'#6a3d9a',
+  			'Enclosed End-Terrace','#b15928',
+  			'#000000'
+			],
+			'p_type': [
+				'Flat','#e31a1c',
+  			'House' ,'#33a02c',
+  			'Maisonette','#1f78b4',
+  			'Bungalow','#6a3d9a',
+  			'Park home' ,'#ff7f00',
+  			'#000000'
+			],
+			'age': [
+				'A','#0e7e58',
+  			'B' ,'#2aa45b',
+  			'C','#8cbc42',
+  			'D','#f6cc15',
+  			'E' ,'#f2a867',
+  			'F','#f17e23',
+  			'G','#e31d3e',
+  			'#000000'
+			],
+			'year': [
+				2014,'#e31d3e',
+  			2016,'#f17e23',
+  			2018,'#f6cc15',
+  			2020 ,'#f2a867',
+  			2022,'#8cbc42',
+  			2024,'#0e7e58'
+			],
+			'area': [
+				0,'#4d9221',
+  			40 ,'#7fbc41',
+  			60,'#b8e186',
+  			80,'#e6f5d0',
+  			100 ,'#fde0ef',
+  			120,'#f1b6da',
+  			140,'#de77ae',
+  			160,'#c51b7d'
+			],
+			
+			
+			'floor_ee': [
+				'Very Good','#2c7bb6',
+  			'Good' ,'#abd9e9',
+  			'Average','#ffffbf',
+  			'Poor','#fdae61',
+  			'Very Poor' ,'#d7191c',
+  			'#000000'
+			],
+			'water_ee': [
+				'Very Good','#2c7bb6',
+  			'Good' ,'#abd9e9',
+  			'Average','#ffffbf',
+  			'Poor','#fdae61',
+  			'Very Poor' ,'#d7191c',
+  			'#000000'
+			],
+			'wind_ee': [
+				'Very Good','#2c7bb6',
+  			'Good' ,'#abd9e9',
+  			'Average','#ffffbf',
+  			'Poor','#fdae61',
+  			'Very Poor' ,'#d7191c',
+  			'#000000'
+			],
+			'wall_ee': [
+				'Very Good','#2c7bb6',
+  			'Good' ,'#abd9e9',
+  			'Average','#ffffbf',
+  			'Poor','#fdae61',
+  			'Very Poor' ,'#d7191c',
+  			'#000000'
+			],
+			'roof_ee': [
+				'Very Good','#2c7bb6',
+  			'Good' ,'#abd9e9',
+  			'Average','#ffffbf',
+  			'Poor','#fdae61',
+  			'Very Poor' ,'#d7191c',
+  			'#000000'
+			],
+			'heat_ee': [
+				'Very Good','#2c7bb6',
+  			'Good' ,'#abd9e9',
+  			'Average','#ffffbf',
+  			'Poor','#fdae61',
+  			'Very Poor' ,'#d7191c',
+  			'#000000'
+			],
+			'con_ee': [
+				'Very Good','#2c7bb6',
+  			'Good' ,'#abd9e9',
+  			'Average','#ffffbf',
+  			'Poor','#fdae61',
+  			'Very Poor' ,'#d7191c',
+  			'#000000'
+			],
+			'light_ee': [
+				'Very Good','#2c7bb6',
+  			'Good' ,'#abd9e9',
+  			'Average','#ffffbf',
+  			'Poor','#fdae61',
+  			'Very Poor' ,'#d7191c',
+  			'#000000'
+			],
+		  'sol_wat': [
+				'yes','#fdae61',
+  			'no','#2c7bb6',
+  			'#000000'
+			]
+			
 		},
 	},
 	
@@ -107,7 +396,11 @@ const datasets_extra = {
 	
 	// Popups
 	popups: {
-	  
+	  'epc_dom': {
+			layerId: 'epc_dom',
+			templateId: 'epc_dom-popup',
+			preprocessingCallback: popupCallback,	// Defined below
+		}
 	}
 };
 
@@ -152,6 +445,41 @@ function getBuildingsColour (settings)
 	return '#9c9898';
 }
 
+
+// Function to determine the style column
+function getEPCDomStyleColumn (layerId, datasets)
+{
+	const style_col_selected = datasets.lineColours.epc_dom.hasOwnProperty(layerId) ? layerId : '_';
+	//console.log(style_col_selected);
+	//console.log(datasets.lineColours.epc_dom[style_col_selected]);
+	return datasets.lineColours.epc_dom[style_col_selected];
+}
+
+// Styling callback for data epc_dom (including buildings styling)
+function EPCDomStyling (layerId, map, settings, datasets, createLegend /* callback */)
+{
+	// Update the legend (even if map layer is off)
+	const field = document.querySelector ('select.updatelayer[data-layer="epc_dom"][name="field"]').value
+
+	createLegend (datasets.legends.epc_dom, field, 'epcdomlegend');
+	//console.log("Field is ",field);
+	const style = getEPCDomStyleColumn (field, datasets);
+	//console.log(style);
+
+  let interpolate = ['area', 'year'];
+
+	// Set paint properties
+	if(interpolate.includes(field)){
+	  map.setPaintProperty (layerId, 'circle-color', ['interpolate', ['linear'], ['get', field], ...style]);
+	} else {
+	  map.setPaintProperty (layerId, 'circle-color', ['match', ['get', field], ...style]);
+	}
+	
+	
+
+	
+
+}
 
 
 

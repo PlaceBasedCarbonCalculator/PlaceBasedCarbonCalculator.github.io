@@ -127,7 +127,7 @@
 			<button class="close-button" aria-label="Hide layers"><i class="fas fa-times"></i></button>
 			<b> Layer Controls</b>
 			
-			<button class="accordion">Postcodes</button>
+			<button class="accordion">Postcode Gas & Electric</button>
 			<div class="panel">
 				<p><label><input type="checkbox" class="showlayer" data-layer="postcodes" value="false" checked="checked">Show layer</label></p>
 				<p>
@@ -139,6 +139,60 @@
 					<button aria-label="Help purpose" class="helpbutton" data-help="retrofit-postcodes"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
 				</p>
 				<div id="postcodeslegend" class="legendHorizontal">
+					<div class="l_rHorizontal">
+						<div class="lb"><span style="background-color: #ffffff"></span>&nbsp;</div>
+					</div>
+				</div>
+				
+			
+			</div>
+			
+			<button class="accordion">Domestic EPC</button>
+			<div class="panel">
+				<p><label><input type="checkbox" class="showlayer" data-layer="epc_dom" value="false" checked="checked">Show layer</label></p>
+				<p>
+				  	<select name="field" class="updatelayer" data-layer="epc_dom" aria-label="Postcodes  layer">
+						<option value="cur_rate" selected>Rating</option>
+						<option value="b_type" >Building Type</option>
+						<option value="p_type" >Property Type</option>
+						<option value="age">Building Age</option>
+						<option value="year">Last Assessed</option>
+						<option value="area">Floor Area</option>
+						<option value="floor_ee" >Floor Rating</option>
+						<option value="water_ee" >Hot Water Rating</option>
+						<option value="wind_ee" >Windows Rating</option>
+						<option value="wall_ee" >Walls Rating</option>
+						<option value="roof_ee" >Roof Rating</option>
+						<option value="heat_ee" >Heating Rating</option>
+						<option value="con_ee" >Controls Rating</option>
+						<option value="light_ee" >Lighting Rating</option>
+						<option value="sol_wat" >Solar Thermal</option>
+						
+					</select>
+					<button aria-label="Help purpose" class="helpbutton" data-help="retrofit-epc-dom"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+				</p>
+				<div id="epcdomlegend" class="legendHorizontal">
+					<div class="l_rHorizontal">
+						<div class="lb"><span style="background-color: #ffffff"></span>&nbsp;</div>
+					</div>
+				</div>
+				
+			
+			</div>
+			
+			<button class="accordion">Non-Domestic EPC</button>
+			<div class="panel">
+				<p><label><input type="checkbox" class="showlayer" data-layer="epc_nondom" value="false" checked="checked">Show layer</label></p>
+				<p>
+				  	<select name="field" class="updatelayer" data-layer="epc_nondom" aria-label="Postcodes  layer">
+						<option value="band" selected>Rating</option>
+						<option value="transaction" >Transaction</option>
+						<option value="area" >Floor Area</option>
+						<option value="year">Last Assessed</option>
+					</select>
+					<button aria-label="Help purpose" class="helpbutton" data-help="retrofit-epc-nondom"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+				</p>
+				<div id="epcnondomlegend" class="legendHorizontal">
 					<div class="l_rHorizontal">
 						<div class="lb"><span style="background-color: #ffffff"></span>&nbsp;</div>
 					</div>
@@ -272,6 +326,29 @@
 		
 		<div id="overlay"></div>
 		
+		<!-- Template for map popup -->
+		<template id="epc_dom-popup">
+			<div class="mappopup">
+				<h4>Domestic EPC</h4>
+				<table>
+					<tr><th>Variable</th><th>Value</th></tr>
+					<tr><th>Rating</td><td>{cur_rate}</td></tr>
+					<tr><th>Building type</td><td>{b_type} {p_type}</td></tr>
+					<tr><th>Building Age</td><td>{age}</td></tr>
+					<tr><th>Last Assessed</td><td>{year}</td></tr>
+					<tr><th>Floor area</td><td>{area} (m2)</td></tr>
+					<tr><th>Roof</td><td>{roof_d} ({roof_ee})</td></tr>
+					<tr><th>Walls</td><td>{wall_d} ({wall_ee})</td></tr>
+					<tr><th>Floor</td><td>{floor_d} ({floor_ee})</td></tr>
+					<tr><th>Windows</td><td>{wind_d} ({wind_ee})</td></tr>
+					<tr><th>Heating</td><td>{heat_d} ({heat_ee})</td></tr>
+					<tr><th>Heating Controls</td><td>{con_d} ({con_ee})</td></tr>
+					<tr><th>Hot water</td><td>{water_d} ({water_ee})</td></tr>
+					<tr><th>Solar Water Heating</td><td>{sol_wat}</td></tr>
+					<tr><th>Lights</td><td>{light_ee}</td></tr>
+					
+				</table>
+		</template>
 
 	</body>
 	
