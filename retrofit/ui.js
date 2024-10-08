@@ -212,7 +212,8 @@ makeChartPostcode = function(){
           title: {
             display: true,
             text: 'Emissions kgCO2e'
-          }
+          },
+          beginAtZero: true
         },
         x: {
           title: {

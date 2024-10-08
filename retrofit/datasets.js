@@ -225,12 +225,13 @@ const datasets_extra = {
   			['G','#e31d3e']
 			],
 			'transaction': [
-				['Detached','#1f78b4'],
-  			['Semi-Detached' ,'#33a02c'],
-  			['Mid-Terrace','#e31a1c'],
-  			['Enclosed Mid-Terrace','#ff7f00'],
-  			['End-Terrace' ,'#6a3d9a'],
-  			['Enclosed End-Terrace','#b15928']
+				['Mandatory issue (Display in public building)','#1f78b4'],
+  			['Mandatory issue (Marketed sale)' ,'#33a02c'],
+  			['Mandatory issue (Non-marketed sale)','#e31a1c'],
+  			['Mandatory issue (Property on construction)','#ff7f00'],
+  			['Mandatory issue (Property to let)' ,'#6a3d9a'],
+  			['Voluntary (No legal requirement for an EPC)','#b15928'],
+  			['Voluntary re-issue (A valid EPC is already lodged)','#ffff99']
 			],
 			'year': [
 				['<2014','#e31d3e'],
@@ -426,12 +427,13 @@ const datasets_extra = {
   			'#000000'
 			],
 			'transaction': [
-				'Detached','#1f78b4',
-  			'Semi-Detached' ,'#33a02c',
-  			'Mid-Terrace','#e31a1c',
-  			'Enclosed Mid-Terrace','#ff7f00',
-  			'End-Terrace' ,'#6a3d9a',
-  			'Enclosed End-Terrace','#b15928',
+				'Mandatory issue (Display in public building)','#1f78b4',
+  			'Mandatory issue (Marketed sale)' ,'#33a02c',
+  		  'Mandatory issue (Non-marketed sale)','#e31a1c',
+  			'Mandatory issue (Property on construction)','#ff7f00',
+  			'Mandatory issue (Property to let)' ,'#6a3d9a',
+  			'Voluntary (No legal requirement for an EPC)','#b15928',
+  			'Voluntary re-issue (A valid EPC is already lodged)','#ffff99',
   			'#000000'
 			],
 			'year': [
