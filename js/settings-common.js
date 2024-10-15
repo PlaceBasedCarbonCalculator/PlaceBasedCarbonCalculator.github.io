@@ -33,6 +33,14 @@ const settings = {
 			title: 'Dark',
 			buildingColour: '#000000'
 		},
+		'osgb1888': {
+			title: 'Ordnance Survey 1888-1913',
+			buildingColour: false   // No buildings
+		},
+		'osgb25k1937': {
+			title: 'Ordnance Survey 1937-1961',
+			buildingColour: false   // No buildings
+		},
 	},
 	
 	// Tileserver for data layers
