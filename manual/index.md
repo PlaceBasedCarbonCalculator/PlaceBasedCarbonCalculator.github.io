@@ -39,6 +39,8 @@ The Carbon & Place provides different basemaps. The example below shows the base
 
 ![Basemap controls](/images/manual/basemap_controls.png)
 
+Basemaps include copyrighted material such as [Ordnance Survey](https://osdatahub.os.uk/downloads/open/OpenZoomstack) data, and third party maps produced by [National Library of Scotland](http://maps.nls.uk/projects/subscription-api/), [OpenStreetMap](https://www.openstreetmap.org/copyright), [Thunderforest](https://www.thunderforest.com/terms/), and [ESRI](https://www.arcgis.com/home/item.html?id=10df2279f9684e4a9f6a7f08febac2a9) satellite map. Please check the copyright status of the base map before reproducing screenshots from Carbon & Place. The default maps (OS greyscale, Outdoors, and Dark) are Open Data under the Open Government Licence and so are free to reuse.
+
 The Anti-alias option enables advanced rendering options that make the map look smoother and clearer. However, performance on low-end devices may be impaired when using anti-aliasing.
 
 ### Layer Controls

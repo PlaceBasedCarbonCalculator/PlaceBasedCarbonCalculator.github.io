@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "name": "osgb10k1888",
+  "name": "osgb1888",
   "center": [-1.464858786792547, 50.939150779110975],
   "zoom": 13.12365211904204,
   "bearing": -0.44200633613297663,
@@ -11,8 +11,10 @@
   "sources": {
     "satellite": {
       "type": "raster",
-      	"tiles": ["https://api.maptiler.com/tiles/uk-osgb10k1888/{z}/{x}/{y}.jpg?key=hg8meHLBBO4NjYntcQyo"],
-      	"tileSize": 256
+      	"tiles": ["https://api.maptiler.com/tiles/uk-osgb1888/{z}/{x}/{y}?key=hg8meHLBBO4NjYntcQyo"],
+      	"tileSize": 256,
+        "minzoom": 1,
+    	  "maxzoom": 17
     },
      "terrainSource": {
       "type": "raster-dem",

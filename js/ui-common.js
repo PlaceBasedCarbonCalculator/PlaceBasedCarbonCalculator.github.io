@@ -337,7 +337,7 @@ const capUi = (function () {
 			// Add attribution
 			map.addControl(new maplibregl.AttributionControl({
 				compact: true,
-				customAttribution: 'Contains OS data © Crown copyright 2024, Satellite map © ESRI 2024, © OpenStreetMap contributors'
+				customAttribution: 'Contains <a href="https://osdatahub.os.uk/downloads/open/OpenZoomstack">OS data</a> © Crown copyright 2024, © <a href="https://www.arcgis.com/home/item.html?id=10df2279f9684e4a9f6a7f08febac2a9">ESRI</a>, © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, © <a href="https://www.thunderforest.com/terms/">Thunderforest</a>, © <a href="http://maps.nls.uk/projects/subscription-api/">National Library of Scotland</a>'
 			}), 'bottom-left');
 			
 			// Antialias reload
