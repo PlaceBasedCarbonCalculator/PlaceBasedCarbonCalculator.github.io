@@ -584,6 +584,16 @@ const capUi = (function () {
 							map.setLayoutProperty(layerId, 'visibility', (checkbox.checked ? 'visible' : 'none'));
 						});
 					});
+					
+					// Listen for changes in the whole style (e.g. basemap changes)
+					map.on('styledata', () => {
+              console.log('Toggling place names');
+              const checkbox = document.getElementById('placenamescheckbox');
+  						Object.entries(placenameLayers).forEach(([layerId, layer]) => {
+  							map.setLayoutProperty(layerId, 'visibility', (checkbox.checked ? 'visible' : 'none'));
+  						});
+          });
+					
 				});
 		},
 		
