@@ -216,6 +216,9 @@
         <div class="tab">
           <button class="tablinks" onclick="modalTab(event, 'overview')" id="defaultOpen">Overview</button>
           <button class="tablinks" onclick="modalTab(event, 'history')">Historical</button>
+          <button class="tablinks" onclick="modalTab(event, 'housing')">Housing</button>
+          <button class="tablinks" onclick="modalTab(event, 'transport')">Transport</button>
+          <button class="tablinks" onclick="modalTab(event, 'demographics')">Demographics</button>
           <button class="tablinks" onclick="modalTab(event, 'future')">Future Scenarios</button>
         </div>
 			  
@@ -312,6 +315,80 @@
   							<canvas id="historical-chart"></canvas>
   						</div>
   					</div>
+			    
+			  </div>
+			  
+			  <div id="transport" class="tabcontent">
+			    
+			    <h3>Housing</h3>
+			    
+			  </div>
+			  
+			  <div id="housing" class="tabcontent">
+			    
+			    <h3>Housing</h3>
+			    
+			    
+			    <h3>Housing: Historical Trends</h3>
+			    
+			    <div class="chart-wrapper" id="dwellingsct-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Number of dwellings by council tax band</h4>
+					  <p class="chart-description">VOA</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="dwellingsct-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="dwellingstype-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Number of dwellings by building type</h4>
+					  <p class="chart-description">VOA</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="dwellingstype-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="dwellingsbedrooms-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Number of dwellings by bedrooms</h4>
+					  <p class="chart-description">VOA</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="dwellingsbedrooms-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="dwellingsage-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Number of dwellings by building age</h4>
+					  <p class="chart-description">VOA</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="dwellingsage-chart"></canvas>
+					</div>
+					</div>
+			    
+			  </div>
+			  
+			  <div id="demographics" class="tabcontent">
+			    
+			    <h3>Demographics</h3>
+			    
+			    <div class="chart-wrapper" id="population-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Population estimates and number of dwellings</h4>
+					  <p class="chart-description">ONS Population Estimates, VOA dwellings</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="population-chart"></canvas>
+					</div>
+					
+					
+				</div>
+			    
 			    
 			  </div>
 			  

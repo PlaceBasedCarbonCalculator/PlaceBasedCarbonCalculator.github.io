@@ -6,6 +6,13 @@ var plefSteerChart;
 var plefShiftChart;
 var plefTransformChart;
 var locationData = {};
+var voa2020LocationData = {};
+var voa2010LocationData = {};
+
+var dwellingsctChart;
+var dwellingstypeChart;
+var dwellingsbedroomsChart;
+var dwellingsageChart;
 
 manageCharts =  function (locationId){
   console.log("Managing Charts");
@@ -13,13 +20,32 @@ manageCharts =  function (locationId){
   capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/LSOA/' + locationId + '.json')
         .then(function (lsoaData) {
             locationData = lsoaData[0];
-            //makeChartOverview();
             makeChartHistorical();
             makeChartPLEF();
             maketableOverview();
         })
         .catch(function (error) {
             alert('Failed to get access data for this location, or to process it correctly. Please try refreshing the page.');
+            console.log(error);
+        });
+        
+    capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/voa_2010/' + locationId + '.json')
+        .then(function (lsoaData) {
+            voa2010LocationData = lsoaData;
+            makeChartVOA2010();
+        })
+        .catch(function (error) {
+            alert('Failed to get VOA 2010 data for this location, or to process it correctly. Please try refreshing the page.');
+            console.log(error);
+        });
+        
+    capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/voa_2020/' + locationId + '.json')
+        .then(function (lsoaData) {
+            voa2020LocationData = lsoaData;
+            makeChartVOA2020();
+        })
+        .catch(function (error) {
+            alert('Failed to get VOA 2020 data for this location, or to process it correctly. Please try refreshing the page.');
             console.log(error);
         });
   
@@ -65,12 +91,6 @@ makeChartOverview = function(){
 		overviewChart.destroy();
 	}
   
-  //console.log(chartDefinition.component[0]);
-  //console.log(chartDefinition.years[0]);
-  
-  console.log(locationData);
-  
-  
   // Create an object to store data for each category
   
   var component = [
@@ -107,7 +127,7 @@ makeChartOverview = function(){
 		});
 	});
 
-  console.log(data);
+  //console.log(data);
   
   data.labels = ['2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020'];
   
@@ -151,7 +171,7 @@ makeChartHistorical = function(){
   //console.log(chartDefinition.component[0]);
   //console.log(chartDefinition.years[0]);
   
-  console.log(locationData);
+  //console.log(locationData);
   
   
   // Create an object to store data for each category
@@ -190,7 +210,7 @@ makeChartHistorical = function(){
 		});
 	});
 
-  console.log(data);
+  //console.log(data);
   
   data.labels = ['2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020'];
   
@@ -221,6 +241,468 @@ makeChartHistorical = function(){
 	
   
 }
+
+
+makeChartVOA2010 = function(){
+  
+  // overview Chart
+  // Destroy old chart
+	if(dwellingsctChart){
+		dwellingsctChart.destroy();
+	}
+  
+  console.log(voa2010LocationData);
+ 
+	const years = voa2010LocationData['year'];	  
+	const bA = voa2010LocationData['banda'];
+  const bB = voa2010LocationData['bandb'];
+  const bC = voa2010LocationData['bandc'];
+  const bD = voa2010LocationData['bandd'];
+  const bE = voa2010LocationData['bande'];
+  const bF = voa2010LocationData['bandf'];
+  const bG = voa2010LocationData['bandg'];
+  const bH = voa2010LocationData['bandh'];
+  const bI = voa2010LocationData['bandi'];
+  
+  
+  var dwellingsctctx = document.getElementById('dwellingsct-chart').getContext('2d');
+	dwellingsctChart = new Chart(dwellingsctctx, {
+		type: 'bar',
+		data: {
+			labels: years,
+			datasets: [{
+				label: 'A',
+				data: bA,
+				backgroundColor: 'rgba(77,146,33, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: 'B',
+				data: bB,
+				backgroundColor: 'rgba(127,188,65, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: 'C',
+				data: bC,
+				backgroundColor: 'rgba(184,225,134, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: 'D',
+				data: bD,
+				backgroundColor: 'rgba(230,245,208, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: 'E',
+				data: bE,
+				backgroundColor: 'rgba(247,247,247, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},
+      {
+				label: 'F',
+				data: bF,
+				backgroundColor: 'rgba(253,224,239, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},
+      {
+				label: 'G',
+				data: bG,
+				backgroundColor: 'rgba(241,182,218, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},
+      {
+				label: 'H',
+				data: bH,
+				backgroundColor: 'rgba(222,119,174, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},
+      {
+				label: 'I',
+				data: bI,
+				backgroundColor: 'rgba(197,27,125, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},
+			]
+		},
+		options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+							y: {
+								stacked: true,
+								ticks: {
+									beginAtZero: true
+								}
+							},
+							x: {
+								stacked: true
+							}
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      }
+    }
+	});
+  
+  
+}
+
+
+makeChartVOA2020 = function(){
+  
+  // Destroy old chart
+	if(dwellingstypeChart){
+		dwellingstypeChart.destroy();
+	}
+	
+	if(dwellingsbedroomsChart){
+		dwellingsbedroomsChart.destroy();
+	}
+	
+	if(dwellingsageChart){
+		dwellingsageChart.destroy();
+	}
+  
+	const years = voa2020LocationData['year'];	  
+
+  var dwellingstypectx = document.getElementById('dwellingstype-chart').getContext('2d');
+	dwellingstypeChart = new Chart(dwellingstypectx, {
+		type: 'bar',
+		data: {
+			labels: years,
+			datasets: [{
+				label: 'Bungalow',
+				data: voa2020LocationData['bungalow'],
+				backgroundColor: 'rgba(105, 60, 153, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: 'Flat/Maisonette',
+				data: voa2020LocationData['flatmais'],
+				backgroundColor: 'rgba(227, 26, 28, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: 'Terraced',
+				data: voa2020LocationData['terraced'],
+				backgroundColor: 'rgba(17, 219, 13, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: 'Semi-Detached',
+				data: voa2020LocationData['semi'],
+				backgroundColor: 'rgba(14, 156, 11, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: 'Detached',
+				data: voa2020LocationData['detached'],
+				backgroundColor: 'rgba(8, 82, 7, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},
+      {
+				label: 'Annexe',
+				data: voa2020LocationData['annexe'],
+				backgroundColor: 'rgba(31, 120, 180, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},
+      {
+				label: 'Caravan/Boat/Mobile home',
+				data: voa2020LocationData['caravanboatmobilehome'],
+				backgroundColor: 'rgba(250, 124, 0, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},
+      {
+				label: 'Unknown',
+				data: voa2020LocationData['unknown'],
+				backgroundColor: 'rgba(135, 136, 138, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			}
+			]
+		},
+		options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+							y: {
+								stacked: true,
+								ticks: {
+									beginAtZero: true
+								}
+							},
+							x: {
+								stacked: true
+							}
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      }
+    }
+	});
+	
+	
+	var dwellingsbedroomsctx = document.getElementById('dwellingsbedrooms-chart').getContext('2d');
+	dwellingsbedroomsChart = new Chart(dwellingsbedroomsctx, {
+		type: 'bar',
+		data: {
+			labels: years,
+			datasets: [{
+				label: '1',
+				data: voa2020LocationData['bed1'],
+				backgroundColor: 'rgba(204,235,197, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: '2',
+				data: voa2020LocationData['bed2'],
+				backgroundColor: 'rgba(168,221,181, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: '3',
+				data: voa2020LocationData['bed3'],
+				backgroundColor: 'rgba(123,204,196, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: '4',
+				data: voa2020LocationData['bed4'],
+				backgroundColor: 'rgba(78,179,211, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: '5',
+				data: voa2020LocationData['bed5'],
+				backgroundColor: 'rgba(43,140,190, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},
+      {
+				label: '6+',
+				data: voa2020LocationData['bed6'],
+				backgroundColor: 'rgba(8,88,158, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			}
+			]
+		},
+		options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+							y: {
+								stacked: true,
+								ticks: {
+									beginAtZero: true
+								}
+							},
+							x: {
+								stacked: true
+							}
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      }
+    }
+	});
+	
+	
+	var dwellingsagectx = document.getElementById('dwellingsage-chart').getContext('2d');
+	dwellingsageChart = new Chart(dwellingsagectx, {
+		type: 'bar',
+		data: {
+			labels: years,
+			datasets: [{
+				label: 'pre 1900',
+				data: voa2020LocationData['bppre1900'],
+				backgroundColor: 'rgba(158, 1, 66, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: '1900-18',
+				data: voa2020LocationData['bp19001918'],
+				backgroundColor: 'rgba(213, 62, 79, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: '1919-29',
+				data: voa2020LocationData['bp19191929'],
+				backgroundColor: 'rgba(244, 109, 67, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: '1930-39',
+				data: voa2020LocationData['bp19301939'],
+				backgroundColor: 'rgba(244, 109, 67, 0.8)',
+				borderColor: 'rgba(253, 174, 97)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: '1945-54',
+				data: voa2020LocationData['bp19451954'],
+				backgroundColor: 'rgba(254,224,139, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},
+      {
+				label: '1955-64',
+				data: voa2020LocationData['bp19551964'],
+				backgroundColor: 'rgba(255,255,191, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},
+      {
+				label: '1965-72',
+				data: voa2020LocationData['bp19651972'],
+				backgroundColor: 'rgba(230,245,152, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},
+      {
+				label: '1973-82',
+				data: voa2020LocationData['bp19731982'],
+				backgroundColor: 'rgba(171,221,164, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},
+      {
+				label: '1983-92',
+				data: voa2020LocationData['bp19831992'],
+				backgroundColor: 'rgba(102,194,165, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},			
+      {
+				label: '1993-99',
+				data: voa2020LocationData['bp19931999'],
+				backgroundColor: 'rgba(50,136,189, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},			
+      {
+				label: '2000-08',
+				data: voa2020LocationData['bp20002008'],
+				backgroundColor: 'rgba(94,79,162, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},			
+      {
+				label: '2009-21',
+				data: voa2020LocationData['bp20092021'],
+				backgroundColor: 'rgba(144, 77, 159, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},			
+      {
+				label: '2022-24',
+				data: voa2020LocationData['bp20222024'],
+				backgroundColor: 'rgba(217, 22, 74, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			},
+      {
+				label: 'Unknown',
+				data: voa2020LocationData['bpunkw'],
+				backgroundColor: 'rgba(135, 136, 138, 0.8)',
+				borderColor: 'rgba(0,0,0,1)',
+				borderWidth: 1,
+				order: 1
+			}	
+			]
+		},
+		options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+							y: {
+								stacked: true,
+								ticks: {
+									beginAtZero: true
+								}
+							},
+							x: {
+								stacked: true
+							}
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      }
+    }
+	});
+  
+  
+}
+
 
 makeChartPLEF = function(){
   
