@@ -8,6 +8,7 @@ var plefTransformChart;
 var locationData = {};
 var voa2020LocationData = {};
 var voa2010LocationData = {};
+var communityPicLocationData = {};
 
 var dwellingsctChart;
 var dwellingstypeChart;
@@ -50,8 +51,38 @@ manageCharts =  function (locationId){
         });
   
   
+    capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/community_photo/' + locationId + '.json')
+        .then(function (lsoaData) {
+            communityPicLocationData = lsoaData;
+            makeCommunityPic();
+        })
+        .catch(function (error) {
+            alert('Failed to get Community Picture data for this location, or to process it correctly. Please try refreshing the page.');
+            console.log(error);
+        });
+  
   //makeChartOverview(chartDefinition, locationData[0]);
  // makeChartPLEF(chartDefinition, locationData[0])
+}
+
+
+
+makeCommunityPic = function(){
+  
+  const names = communityPicLocationData["i"];
+  const numbers = communityPicLocationData["p"];
+  const repeatedNames = numbers.flatMap((num, index) => Array(num).fill(names[index]));
+  
+  repeatedNames.forEach((name, index) => {
+      const img = document.getElementById(`ff${index}`);
+      if (img) {
+          img.src = `/images/ui/family_photos/${name}.webp`;
+          img.setAttribute('title', `${name}`.replaceAll('_', ' '));
+      }
+  });
+  
+  
+  console.log(repeatedNames);
 }
 
 maketableOverview = function(){
@@ -251,7 +282,7 @@ makeChartVOA2010 = function(){
 		dwellingsctChart.destroy();
 	}
   
-  console.log(voa2010LocationData);
+  //console.log(voa2010LocationData);
  
 	const years = voa2010LocationData['year'];	  
 	const bA = voa2010LocationData['banda'];

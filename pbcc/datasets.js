@@ -237,7 +237,7 @@ function getStyleColumn (layerId, datasets)
   
   
 	const style_col_selected = datasets.lineColours.zones.hasOwnProperty(layerId) ? layerId : '_';
-	console.log(datasets.lineColours.zones['Grade']);
+	//console.log(datasets.lineColours.zones['Grade']);
 	//return datasets.lineColours.zones[style_col_selected];
 	return datasets.lineColours.zones['Grade'];
 }

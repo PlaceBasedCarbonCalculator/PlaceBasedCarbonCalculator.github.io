@@ -56,6 +56,7 @@
 		<!-- Styles -->
 		<link rel="stylesheet" href="/css/main.css">
 		<link rel="stylesheet" href="/css/map.css">
+		<link rel="stylesheet" href="style.css">
 		
 
 		<!-- Carbon & Place application -->
@@ -334,7 +335,7 @@
 			    <div class="chart-wrapper" id="dwellingsct-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Number of dwellings by council tax band</h4>
-					  <p class="chart-description">VOA</p>
+					  <p class="chart-description">This chart shows the number of dwellings in each council tax band from 2010 to the present according to the <a href="https://www.gov.uk/government/statistics/council-tax-stock-of-properties-2024">Valuation Office Agency</a>. The VOA round this data to the nearest 10 dwellings, so minor inconsistencies may exist. Note that the I band is only used in Wales.</p>
 					</div>
 					<div class="chart-container">
 						<canvas id="dwellingsct-chart"></canvas>
@@ -344,7 +345,7 @@
 					<div class="chart-wrapper" id="dwellingstype-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Number of dwellings by building type</h4>
-					  <p class="chart-description">VOA</p>
+					  <p class="chart-description">This chart shows the number of dwellings by building type from 2020 to the present according to the <a href="https://www.gov.uk/government/statistics/council-tax-stock-of-properties-2024">Valuation Office Agency</a>. The VOA round this data to the nearest 10 dwellings, so minor inconsistencies may exist.</p>
 					</div>
 					<div class="chart-container">
 						<canvas id="dwellingstype-chart"></canvas>
@@ -354,7 +355,7 @@
 					<div class="chart-wrapper" id="dwellingsbedrooms-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Number of dwellings by bedrooms</h4>
-					  <p class="chart-description">VOA</p>
+					  <p class="chart-description">This chart shows the number of dwellings by the number of bedrooms from 2020 to the present according to the <a href="https://www.gov.uk/government/statistics/council-tax-stock-of-properties-2024">Valuation Office Agency</a>. The VOA round this data to the nearest 10 dwellings, so minor inconsistencies may exist.</p>
 					</div>
 					<div class="chart-container">
 						<canvas id="dwellingsbedrooms-chart"></canvas>
@@ -364,7 +365,7 @@
 					<div class="chart-wrapper" id="dwellingsage-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Number of dwellings by building age</h4>
-					  <p class="chart-description">VOA</p>
+					  <p class="chart-description">This chart shows the number of dwellings by building age from 2020 to the present according to the <a href="https://www.gov.uk/government/statistics/council-tax-stock-of-properties-2024">Valuation Office Agency</a>. The VOA round this data to the nearest 10 dwellings, so minor inconsistencies may exist.</p>
 					</div>
 					<div class="chart-container">
 						<canvas id="dwellingsage-chart"></canvas>
@@ -376,6 +377,61 @@
 			  <div id="demographics" class="tabcontent">
 			    
 			    <h3>Demographics</h3>
+			    <h4>Community Photo</h4>
+			    <div class="community_photos">
+			      <img class="family_photo" id="ff0" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff1" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff2" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff3" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff4" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff5" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff6" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff7" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff8" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff9" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff10" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff11" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff12" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff13" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff14" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff15" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff16" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff17" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff18" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff19" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff20" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff21" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff22" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff23" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff24" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff25" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff26" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff27" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff28" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff29" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff30" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff31" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff32" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff33" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff34" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff35" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff36" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff37" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff38" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff39" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff40" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff41" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff42" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff43" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff44" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff45" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff46" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      <img class="family_photo" id="ff47" src="images/ui/family_photos/unknown.png" loading="lazy">
+			      
+			    </div>
+			    
+			    <p>The community photo gives an at-a-glance overview of the deomgraphics of each neighbouhood based on the 2021 Census. Each image represents households based on household compostion, socio-economic classification (NS-SEC), and ethnicity. For more details see the <a href="/manual/#communityphoto">manual</a>.</p>
+			    
 			    
 			    <div class="chart-wrapper" id="population-chartrow" style="display: block;">
 					<div class="chart-text"> 
