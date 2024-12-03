@@ -61,6 +61,7 @@
 		<script src="/js/settings-common.js"></script>
 		<script src="/js/datasets-common.js"></script>
 		<script src="datasets.js"></script>
+		<script src="settings.js"></script>
 		<script src="/js/ui-common.js"></script>
 		<script src="ui.js" defer></script>
 		<script>
@@ -148,6 +149,38 @@
 		<div id="rightbox" class="rightbox">
 			<button class="close-button" aria-label="Hide layers"><i class="fas fa-times"></i></button>
 			<b> Layer Controls</b>
+			
+			
+			<button class="accordion">Neighbourhoods</button>
+			<div class="panel">
+				<p><label><input type="checkbox" class="showlayer" data-layer="zones" value="false" checked="checked">Show layer</label></p>
+				<p>
+					<select name="field" class="updatelayer" data-layer="zones" aria-label="Neighbouhood  layer">
+						<option value="epc_score_avg" selected>Average EPC score</option>
+						<option value="floor_area_avg" >Average floor area</option>
+						<option value="modal_age">Building age (most common)</option>
+						<option value="modal_wall" >Wall rating (most common)</option>
+						<option value="modal_roof">Roof rating (most common)</option>
+						<option value="modal_heat">Heating rating (most common)</option>
+						<option value="modal_window">Windows rating (most common)</option>
+						<option value="modal_mainheat">Heating type (most common)</option>
+						<option value="modal_mainfuel">Fuel type (most common)</option>
+						<option value="modal_floord">Floor type (most common)</option>
+						<option value="modal_type">Building type (most common)</option>
+						<option value="percent_EPC">% of homes with an EPC</option>
+					</select>
+					<button aria-label="Help purpose" class="helpbutton" data-help="retrofit-zones"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+				</p>
+				<div id="zoneslegend" class="legendVertical">
+					<div class="l_rVertical">
+						<div class="lb"><span style="background-color: #ffffff"></span>&nbsp;</div>
+					</div>
+				</div>
+				
+				<p><label class="switch"><input type="checkbox" name="daysymetricmode" class="updatelayer" data-layer="zones" checked><span class="slider round"></span></label> Dasymetric</p>
+				
+			
+			</div>
 			
 			<button class="accordion">Postcode Gas & Electric</button>
 			<div class="panel">

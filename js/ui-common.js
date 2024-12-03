@@ -740,7 +740,7 @@ const capUi = (function () {
 			if(document.getElementById(selector).className == "legendHorizontal") {
 			  legendHtml = '<div class="l_rHorizontal">';
   			  selected = (legendColours.hasOwnProperty(selected) ? selected : '_');
-  			  //console.log(selected);
+  			  //console.log(legendColours[selected]);
   			  legendColours[selected].forEach(legendColour => {
   				legendHtml += `<div class="lbHorizontal"><span style="background-color: ${legendColour[1]}"></span>${legendColour[0]}</div>`;
   			})

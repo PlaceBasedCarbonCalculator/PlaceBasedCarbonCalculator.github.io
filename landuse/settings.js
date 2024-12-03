@@ -7,7 +7,3 @@ const settings_extra = {
 };
 
 const settings = { ...settings_common, ...settings_extra };
-
-  
-
-		

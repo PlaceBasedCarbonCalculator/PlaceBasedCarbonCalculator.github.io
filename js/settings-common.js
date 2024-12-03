@@ -1,6 +1,6 @@
 
 // Settings for this installation
-const settings = {
+const settings_common = {
 	
 	// Map position
 	initialPosition: {
