@@ -379,6 +379,248 @@
 		</div>
 		
 		
+		<div class="modal" id="zones-chartsmodal" style="display: none;">
+			<div class="modal-header">
+				<span class="modal-close">×</span>
+				<h2 class="modal-title">Neighbouhood Summary: XXXXX</h2>
+			</div>
+			<div class="modal-body">
+			  
+			  <p>This report summarises the Domestic Energy Performance Certificates from 2024. Not every home has an EPC, and some homes that no longer exist may have and EPC. If more than one EPC exists for the same dwelling only the most recent one is used.</p>
+			  
+			  <div class="chart-wrapper" id="epcrating-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">EPC ratings</h4>
+					  <p class="chart-description">A summary of the headline EPC ratings for deomestic buildings in this LSOA. From A (most energy efficent) to G (least energy efficent).</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="epcrating-chart"></canvas>
+					</div>
+				</div>
+  			
+  			
+  			<div class="chart-wrapper" id="buildingtype-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Building type</h4>
+					  <p class="chart-description">A summar of the types of domestic buildings.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="buildingtype-chart"></canvas>
+					</div>
+				</div>
+  			
+  			<div class="chart-wrapper" id="tenure-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Tenure</h4>
+					  <p class="chart-description">A summary of type of tenure as recored on the EPC. Not that is may have changed after the EPC was issued. Also as EPCs are required for rental properties but only required for owner-occupited properties at the time of sale, rental propery may be over-represented in the EPC data.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="tenure-chart"></canvas>
+					</div>
+				</div>
+  			
+  			
+  			<div class="chart-wrapper" id="age-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Building Age</h4>
+					  <p class="chart-description">A summary of the estimated construction date of dwellings.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="age-chart"></canvas>
+					</div>
+				</div>
+				
+				<div class="chart-wrapper" id="floor-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Floor rating</h4>
+					  <p class="chart-description">The floors' energy efficency is rated from Very Good to Very Poor. Not this classification only applies to grownd floor properties, so flats often are classified as "Dwelling Below". </p>
+					</div>
+					<div class="chart-container">
+						<canvas id="floor-chart"></canvas>
+					</div>
+				</div>
+				
+				
+				<div class="chart-wrapper" id="floord-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Floor Description</h4>
+					  <p class="chart-description">Ground floors of homes typically come in two types. Suspended floors are raised slightly above ground level and outside air can circualte in the void benith the floor to prevent mould and damp. This was common for homes built before the 1940s. Converslty solid floors are built directly on the ground usually of concrete and are more common in post-1940s homes. Both floor types can results in heat loss if not insualted, but the way the floors are insualted is different. This chart shows the disitrbution of different floor types.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="floord-chart"></canvas>
+					</div>
+				</div>
+				
+				
+				<div class="chart-wrapper" id="window-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Windows rating</h4>
+					  <p class="chart-description">The windows' energy efficency is rated from Very Good to Very Poor.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="window-chart"></canvas>
+					</div>
+				</div>
+				
+				<div class="chart-wrapper" id="glazing-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Glazing type</h4>
+					  <p class="chart-description">A summary of the type of glazing used.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="glazing-chart"></canvas>
+					</div>
+				</div>
+				
+				<div class="chart-wrapper" id="water-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Hot water system rating</h4>
+					  <p class="chart-description">The energy efficency of the hot water system is rated from Very Good to Very Poor.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="water-chart"></canvas>
+					</div>
+				</div>
+				
+				<div class="chart-wrapper" id="waterd-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Hot water system description</h4>
+					  <p class="chart-description">A description of how hot water is provided. The most common approach is for hot water to be provided by the main heating system. However some homes have separte space and water heating systems.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="waterd-chart"></canvas>
+					</div>
+				</div>
+				
+				
+				
+				
+				<div class="chart-wrapper" id="wall-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Walls rating</h4>
+					  <p class="chart-description">The external walls' energy efficency is rated from Very Good to Very Poor.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="wall-chart"></canvas>
+					</div>
+				</div>
+				
+				<div class="chart-wrapper" id="walld-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Walls description</h4>
+					  <p class="chart-description">A dewcription of the construction of the external walls. The most common types of wall a brick or block cality walls, which are cheap and easy to insulate with cavity wall insualtion. Other types of wall require more expensive internal or external insulation.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="walld-chart"></canvas>
+					</div>
+				</div>
+				
+				<div class="chart-wrapper" id="roof-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Roof rating</h4>
+					  <p class="chart-description">The roofs energy efficency is rated from Very Good to Very Poor. Dwellings with another dwelling above, such as flats are consider to not have a roof and a recorded as "Dwelling Above" only the top floor flat would have a roof rating.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="roof-chart"></canvas>
+					</div>
+				</div>
+				
+				<div class="chart-wrapper" id="roofd-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Roof Description</h4>
+					  <p class="chart-description">Description</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="roofd-chart"></canvas>
+					</div>
+				</div>
+				
+				<div class="chart-wrapper" id="mainheat-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">mainheat</h4>
+					  <p class="chart-description">Description</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="mainheat-chart"></canvas>
+					</div>
+				</div>
+				
+				<div class="chart-wrapper" id="mainheatdesc-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">mainheatdesc</h4>
+					  <p class="chart-description">Description</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="mainheatdesc-chart"></canvas>
+					</div>
+				</div>
+				
+				<div class="chart-wrapper" id="mainfuel-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">mainfuel</h4>
+					  <p class="chart-description">Description</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="mainfuel-chart"></canvas>
+					</div>
+				</div>
+				
+				<div class="chart-wrapper" id="mainheatcontrol-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">mainheatcontrol</h4>
+					  <p class="chart-description">Description</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="mainheatcontrol-chart"></canvas>
+					</div>
+				</div>
+				
+				<div class="chart-wrapper" id="controld-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">controld</h4>
+					  <p class="chart-description">Description</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="controld-chart"></canvas>
+					</div>
+				</div>
+				
+				
+				<div class="chart-wrapper" id="light-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">light</h4>
+					  <p class="chart-description">Description</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="light-chart"></canvas>
+					</div>
+				</div>
+				
+				<div class="chart-wrapper" id="solarpv-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">solarpv</h4>
+					  <p class="chart-description">Description</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="solarpv-chart"></canvas>
+					</div>
+				</div>
+				
+				<div class="chart-wrapper" id="solarthermal-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">solarthermal</h4>
+					  <p class="chart-description">Description</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="solarthermal-chart"></canvas>
+					</div>
+				</div>
+				
+				
+			</div>
+		</div>
+		
+		
 		<div id="overlay"></div>
 		
 		<!-- Template for map popup -->

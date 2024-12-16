@@ -731,8 +731,30 @@ const datasets_extra = {
   				]
   		  ]
 	  }
-	  }
+	  },
 	  
+	  zones: {
+	    zones : {
+	    // Data fields
+  			// #!# Should use a main server URL setting
+  			dataUrl: 'https://pbcc.blob.core.windows.net/pbcc-data/epc_dom/%id.json',
+  			propertiesField: 'LSOA21CD',
+  			titleField: 'LSOA21CD',
+  			
+  			// Title
+  			titlePrefix: 'Neighbourhood Summary: ',
+  			
+  			charts: [
+  				[
+  					// Access Proximity
+  					'access_proximity',
+  					'Access Proximity',
+  					'Description goes here',
+  					'Access by public transport'
+  				]
+  		  ]
+	  }
+	  }
 	},
 	
 	// Popups

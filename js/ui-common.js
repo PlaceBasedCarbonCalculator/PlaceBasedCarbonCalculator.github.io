@@ -887,9 +887,9 @@ const capUi = (function () {
 					
 					// Display the modal
 					location_modal.show();
-					
+					console.log(mapLayerId);
 					// Tool Specific Function in each ui.js
-					manageCharts(locationId);
+					manageCharts(locationId, mapLayerId);
 					
 					
 				});
