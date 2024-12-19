@@ -686,6 +686,10 @@ Emissions are graded from A+ (lowest per household emissions) to F- (highest per
 
 Clicking on any postcode will display the report card for that postcode with more details.
 
+*Note* Postcode boundaries are copyright of Royal Mail and so we cannot provide data download of the post code data. 
+
+The map has gaps where no data is available this can because all the buildings within the postcode are non-domestic or because there are only a few domestic properties within the postcode and so data has been suppressed to protect privacy.
+
 <!-- /#retrofit-postcodes -->
 
 <!-- #retrofit-epc-dom -->
@@ -699,4 +703,21 @@ Clicking on any postcode will display the report card for that postcode with mor
 <!-- /#retrofit-epc-nondom -->
 
 
-### Map Layers
+### Report Card
+
+#### Neighbouhoods
+
+
+#### Postcodes
+
+The report card provide historical data (2015 - 2022) about domestic gas and electricity consumption.
+
+For each postcode data is provided as:
+
+* Mean: Average values (i.e. total divided by number of homes)
+* Median: Middle values (i.e. half of homes are above and half of homes are below)
+* Total: All homes added together
+
+Electricity consumption is further divided by meter type (all, standard, economy 7). Economy 7 meters are an old type of meter that could charge two different rates based on time of day. These are less common now, and are being replaced by smart metres (included in the standard category).
+
+To protect privacy DESNZ removes data for postcodes that only cover a small number of properties or may remove a particular type of meter if it is uncommon (e.g. Economy 7). This can results in gaps in the data.

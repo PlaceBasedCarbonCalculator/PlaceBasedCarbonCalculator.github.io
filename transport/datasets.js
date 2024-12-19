@@ -277,18 +277,19 @@ function zonesStyling (layerId, map, settings, datasets, createLegend /* callbac
 	createLegend (datasets.legends.zones, field, 'zoneslegend'); // Fixed Legeng for Grades
 	
 	// Get UI state
-	// const daysymetricMode = document.querySelector ('input.updatelayer[data-layer="zones"][name="daysymetricmode"]').checked;
+	const daysymetricMode = document.querySelector ('input.updatelayer[data-layer="zones"][name="daysymetricmode"]').checked;
 	
 	// Set paint properties
 	//map.setPaintProperty (layerId, 'fill-color', ['step', ['get', field], getStyleColumn (field, datasets)]);
 	// map.setPaintProperty (layerId, 'fill-color', ['interpolate', ['linear'], ['get', field], ...getStyleColumn (field, datasets)]);
 	//console.log({'fill-color' : ['interpolate', ['linear'], ['get', field], ...getStyleColumn (field, datasets)]});
 	map.setPaintProperty (layerId, 'fill-color', ['interpolate', ['linear'], ['get', field], ...getStyleColumn (field, datasets)]);
-	map.setPaintProperty (layerId, 'fill-opacity', 0.8);
+	map.setPaintProperty (layerId, 'fill-opacity', (daysymetricMode ? 0.1 : 0.8)); // Very faded-out in daysymetric mode, as the buildings are coloured
 	map.setPaintProperty (layerId, 'fill-outline-color', 'rgba(0, 0, 0, 0.2)'); 
 	
 	// Set buildings layer colour/visibility
 	const buildingColour = getBuildingsColour(settings);
+	console.log(buildingColour);
 	map.setPaintProperty ('buildings', 'fill-extrusion-color', (buildingColour || '#9c9898'));
 	//map.setPaintProperty ('buildings', 'fill-extrusion-color', '#9c9898');
 	map.setLayoutProperty ('buildings', 'visibility', (buildingColour ? 'visible' : 'none'));
@@ -299,7 +300,7 @@ function zonesStyling (layerId, map, settings, datasets, createLegend /* callbac
 function getBuildingsColour (settings)
 {
 	// If datazones is off, buildings shown, if vector style, as static colour appropriate to the basemap
-	/*
+	
 	if (!document.querySelector ('input.showlayer[data-layer="zones"]').checked) {
 		const styleName = document.querySelector('#basemapform input:checked').value;	// Same as nptUi.getBasemapStyle()
 		return settings.basemapStyles[styleName].buildingColour;
@@ -308,9 +309,9 @@ function getBuildingsColour (settings)
 	// If dasymetric mode, use a colour set based on the layer
 	if (document.querySelector ('input.updatelayer[data-layer="zones"][name="daysymetricmode"]').checked) {
 		const field = document.querySelector ('select.updatelayer[data-layer="zones"][name="field"]').value;
-		return ['match', ['get', field], ...getStyleColumn (field, datasets)];
+		return ['interpolate', ['linear'], ['get', field], ...getStyleColumn (field, datasets)];
 	}
-	*/
+	
 	// Default to gray
 	return '#9c9898';
 }
