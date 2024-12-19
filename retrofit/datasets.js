@@ -79,10 +79,11 @@ const datasets_extra = {
 	
 	// Layer styling callbacks functions, each defined below
 	layerStyling: {
+	  zones: zonesStyling,
 	  postcodes:	postcodesStyling,
 	  epc_dom:    EPCDomStyling,
-	  epc_nondom: EPCNonDomStyling,
-	  zones: zonesStyling
+	  epc_nondom: EPCNonDomStyling
+	  
 	},
 	
 	
@@ -875,7 +876,7 @@ function EPCNonDomStyling (layerId, map, settings, datasets, createLegend /* cal
 function zonesStyling (layerId, map, settings, datasets, createLegend /* callback */)
 {
 	
-	console.log("zoneStyling")
+	console.log("zoneStyling");
 	// Update the legend (even if map layer is off)
 	const field = document.querySelector ('select.updatelayer[data-layer="zones"][name="field"]').value
 	createLegend (datasets.legends.zones, field, 'zoneslegend'); // Fixed Legeng for Grades
@@ -891,9 +892,14 @@ function zonesStyling (layerId, map, settings, datasets, createLegend /* callbac
 	
 	// Set buildings layer colour/visibility
 	const buildingColour = getBuildingsColour(settings);
-	map.setPaintProperty ('buildings', 'fill-extrusion-color', (buildingColour || '#9c9898'));
-	//map.setPaintProperty ('buildings', 'fill-extrusion-color', '#9c9898');
+	console.log((buildingColour || '#9c9898'));
 	map.setLayoutProperty ('buildings', 'visibility', (buildingColour ? 'visible' : 'none'));
+	
+	console.log("before");
+	map.setPaintProperty ('buildings', 'fill-extrusion-color', (buildingColour || '#9c9898'))
+	console.log("after");
+	
+	
 }
 
 // Function to determine the buildings colour
@@ -913,6 +919,7 @@ function getBuildingsColour (settings)
 	}
 	
 	// Default to gray
+	console.log("Default to gray")
 	return '#9c9898';
 }
 

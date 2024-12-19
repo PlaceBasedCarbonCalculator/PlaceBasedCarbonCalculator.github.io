@@ -380,7 +380,7 @@ makeChartLSOA = function(){
  
 	buildingtypeChart = makePieChart(buildingtypeChart,'buildingtype-chart','Building type',
   buildingtypeData,
-  ['#c2e699','#78c679','#31a354','#006837','#e31a1c','#fbb4b9','#7a0177','#f768a1','#c51b8a','#1f78b4','#fa7c00','#101010'],
+  ['#c2e699','#78c679','#31a354','#006837','#e31a1c','#fbb4b9','#7a0177','#f768a1','#c51b8a','#1f78b4','#fa7c00','#c0c0c0'],
   ['Detached house','Semi-detached house','Mid-terrace house','End-terrace house',
 			'Flat','Detached bungalow','Semi-detached bungalow','Mid-terrace bungalow',
 			'End-terrace bungalow','Maisonette','Park home','Other']);
@@ -396,7 +396,7 @@ makeChartLSOA = function(){
  
   tenureChart = makePieChart(tenureChart,'tenure-chart','Tenure',
   tenureData,
-  ['#c2e699','#78c679','#31a354','#006837'],
+  ['#c2e699','#78c679','#31a354','#c0c0c0'],
   ['Owner','Private rent','Social rent','Unknown']);
   
   // Age
@@ -641,7 +641,7 @@ makeChartLSOA = function(){
   mainfuelChart = makePieChart(mainfuelChart,'mainfuel-chart','',
   mainfuelData,
   ['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628'],
-  ['mainsgas','electric','oil','coal','lpg','biomass','dualfuel']);
+  ['Mains gas','Electric','Oil','Coal','LPG','Biomass','Dual fuel']);
   
   // mainheatcontrol
   

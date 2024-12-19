@@ -261,6 +261,7 @@ function zonesStyling (layerId, map, settings, datasets, createLegend /* callbac
 	
 	// Set buildings layer colour/visibility
 	const buildingColour = getBuildingsColour(settings);
+	console.log((buildingColour || '#9c9898'));
 	map.setPaintProperty ('buildings', 'fill-extrusion-color', (buildingColour || '#9c9898'));
 	//map.setPaintProperty ('buildings', 'fill-extrusion-color', '#9c9898');
 	map.setLayoutProperty ('buildings', 'visibility', (buildingColour ? 'visible' : 'none'));

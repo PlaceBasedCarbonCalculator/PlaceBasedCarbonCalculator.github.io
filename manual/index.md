@@ -635,4 +635,68 @@ There are a few limitations to the family photo method that should be understood
 
 ## Retrofit Explorer
 
-Coming Soon
+### Map Layers
+
+<!-- #retrofit-zones -->
+#### Neighboughoods
+
+![Retrofit Neighboughoods](/images/manual/retrofit-zones.png)
+
+The Neighbourhoods layer summarises data from the domestic Energy Performance Certificates (EPCs) registered of England, Wales, and Scotland. Note that for data about individual buildings you should use the Domestic EPC layer.
+
+Clicking on any neighbourhood will display the report card for that neighbourhood with more details.
+
+The drop down menu enables you to change the characteristics visualised.
+
+* Average EPC score
+* Average floor area
+* Building age (most common)
+* Wall rating (most common)
+* Roof rating (most common)
+* Heating rating (most common)
+* Windows rating (most common)
+* Heating type (most common)
+* Fuel type (most common)
+* Floor type (most common)
+* Building type (most common)
+* % of homes with an EPC
+
+Note that this data is a summary of the homes with an EPC rather than every home in the in neighbourhood, and that EPCs can be out of date. The percentage of homes with and EPC layer helps to identify neighbourhoods where EPC data may be unrepresentative.  
+
+<!-- /#retrofit-zones -->
+
+<!-- #retrofit-postcodes -->
+#### Postcode Gas & Electric
+
+![Retrofit Postcodes](/images/manual/retrofit-postcodes.png)
+
+This layer provides a map of the [postcode gas and electricty consumption](https://www.gov.uk/government/publications/postcode-level-domestic-gas-and-electricity-consumption-about-the-data) data published by the Department of Energy Security and Net Zero.
+
+It provides the most geographically detailed picture of domestic gas and electricity consumption.
+
+The drop down menu enables you to change the characteristics visualised.
+
+* Combined Emissions: Electricity emissions + Gas (when available)
+* Gas Emissions
+* Electricity Emissions
+
+Emissions are graded from A+ (lowest per household emissions) to F- (highest per houshold emissions.)
+
+*Note* that in many rural areas homes are not on the gas grid and use other fuels (e.g. oil) for heating. This can give a confusing picture of emissions in the combined emissions view as some areas have their heating emissions missing.
+
+Clicking on any postcode will display the report card for that postcode with more details.
+
+<!-- /#retrofit-postcodes -->
+
+<!-- #retrofit-epc-dom -->
+#### Domestic EPC
+
+<!-- /#retrofit-epc-dom -->
+
+<!-- #retrofit-epc-nondom -->
+#### Non-domestic EPC
+
+<!-- /#retrofit-epc-nondom -->
+
+
+### Map Layers
