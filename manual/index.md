@@ -100,7 +100,7 @@ Building heights are calculated by comparing the difference between the DTM and 
 Several types of administrative boundaries can be added to the map. These help with navigating and understanding when responsibilities transfer between organisations. 
 
 <!-- #boundaries-la -->
-##### Lower Tier Local Authority 2023
+##### Lower Tier Local Authority 2024
 
 ![Lower Tier Local Authority](/images/manual/la.png)
 
@@ -110,16 +110,16 @@ District, Borough, or City Councils: These councils cover smaller areas than cou
 
 Unitary Authorities: In some areas, a single tier of local government provides all the services mentioned above. Additionally, there are parish, community, and town councils that operate at a level below district and borough councils, addressing local issues like allotments, public clocks, and community centres.
 
-[Original Data Source](https://geoportal.statistics.gov.uk/search?q=BDY_LAD%202023&sort=Title%7Ctitle%7Casc)
+[Original Data Source](https://geoportal.statistics.gov.uk/search?q=BDY_LAD%202024&sort=Title%7Ctitle%7Casc)
 <!-- /#boundaries-la -->
 <!-- #boundaries-wards -->
-##### Wards 2023
+##### Wards 2024
 
 ![Ward](/images/manual/ward.png)
 
 Wards in the United Kingdom are electoral districts at the sub-national level, represented by one or more councillors.
 
-[Original Data Source](https://geoportal.statistics.gov.uk/search?q=BDY_WD%202023&sort=Title%7Ctitle%7Casc)
+[Original Data Source](https://geoportal.statistics.gov.uk/search?q=BDY_WD%202024&sort=Title%7Ctitle%7Casc)
 <!-- /#boundaries-wards -->
 <!-- #boundaries-parish -->
 ##### Parish 2023
@@ -665,6 +665,13 @@ The drop-down menu enables you to change the visualised characteristics.
 
 Note that this data summarises the homes with an EPC rather than every home in the neighbourhood and that EPCs can be outdated. The percentage of homes with an EPC layer helps to identify neighbourhoods where EPC data may be unrepresentative.  
 
+##### Data Sources
+
+[England and Wales](https://epc.opendatacommunities.org/)
+
+[Scotland](https://www.scottishepcregister.org.uk/)
+
+
 <!-- /#retrofit-zones -->
 
 <!-- #retrofit-postcodes -->
@@ -672,7 +679,7 @@ Note that this data summarises the homes with an EPC rather than every home in t
 
 ![Retrofit Postcodes](/images/manual/retrofit-postcodes.png)
 
-This layer provides a map of the [postcode gas and electricity consumption](https://www.gov.uk/government/publications/postcode-level-domestic-gas-and-electricity-consumption-about-the-data) data published by the Department of Energy Security and Net Zero.
+This layer provides a map of the postcode gas and electricity consumption data published by the Department of Energy Security and Net Zero.
 
 It provides the most geographically detailed picture of domestic gas and electricity consumption.
 
@@ -691,6 +698,12 @@ Clicking on any postcode will display the report card for that postcode with mor
 *Note* Postcode boundaries are copyright of Royal Mail so we cannot provide data download of the postcode data. 
 
 The map has gaps where no data is available. This can be because all the buildings within the postcode are non-domestic or because there are only a few domestic properties within the postcode, and so data has been suppressed to protect privacy.
+
+##### Data Sources
+
+[Postcode gas and electricity consumption](https://www.gov.uk/government/publications/postcode-level-domestic-gas-and-electricity-consumption-about-the-data)
+
+[Postcode boundaries](https://digimap.edina.ac.uk/) (Academic use only)
 
 <!-- /#retrofit-postcodes -->
 
@@ -719,6 +732,15 @@ The drop-down menu enables you to change the visualised characteristics.
 
 Clicking on any EPC will display a popup with more details.
 
+Please note that the Scotland EPC register is separate and slightly different to the England and Wales register. In Carbon & Place we have harmonised the datasets and this can results in slight inconstancies with the Scottish data. For example Scotland uses slightly different age bands, and these have been mapped to the closest equivalent used in England and Wales.
+
+##### Data Sources
+
+[England and Wales](https://epc.opendatacommunities.org/)
+
+[Scotland](https://www.scottishepcregister.org.uk/)
+
+
 
 <!-- /#retrofit-epc-dom -->
 
@@ -735,6 +757,15 @@ The drop-down menu enables you to change the visualised characteristics.
 * Last Assessed: Year that the EPC was issued
 
 Clicking on any EPC will display a popup with more details.
+
+Please note that the Scotland EPC register is separate and slightly different to the England and Wales register. In Carbon & Place we have harmonised the datasets and this can results in slight inconstancies with the Scottish data. For example Scotland uses slightly different age bands, and these have been mapped to the closest equivalent used in England and Wales.
+
+##### Data Sources
+
+[England and Wales](https://epc.opendatacommunities.org/)
+
+[Scotland](https://www.scottishepcregister.org.uk/)
+
 
 
 <!-- /#retrofit-epc-nondom -->
