@@ -560,79 +560,6 @@ The land ownership points can be coloured on four variables:
 
 
 
-## Place-Based Carbon Calculator
-
-Coming Soon
-<!-- #purpose -->
-Section
-<!-- /#purpose -->
-
-<!-- #pbcc-zones -->
-Zones Help
-<!-- /#pbcc-zones -->
-
-
-<!-- #pbcc-community-photo -->
-#### Community Photo
-
-The community photo is intended to give an at-a-glance overview of the demographics of each neighbourhood. Each neighbourhood's photo is made up of 48 household photos distributed in proportion to their occurrence in the 2021 census. 
-
-The appropriate household photos are automatically selected from a set of about 200 household archives based on three variables.
-
-[Household composition](https://www.ons.gov.uk/census/census2021dictionary/variablesbytopic/demographyvariablescensus2021/householdcomposition/classifications) 
-
-Household composition considers the number and age of people in a household and how people are related to each other.
-
-* ![family_photo](/images/ui/family_photos/higher_OnePersonOver66_White.webp) **OnePersonOver66**: One-person household: Aged 66 years and over 
-* ![family_photo](/images/ui/family_photos/higher_OnePersonOther_White.webp) **OnePersonOther**: One-person household: Aged 65 years or under 
-* ![family_photo](/images/ui/family_photos/higher_FamilyOver66_White.webp) **FamilyOver66**: Single family household: All aged 66 years and over 
-* ![family_photo](/images/ui/family_photos/higher_CoupleNoChildren_White.webp) **CoupleNoChildren**: Single-family household: Married, civil partnership, or cohabiting couple: No children 
-* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_White.webp) **CoupleChildren**: Single-family household: Married, civil partnership, or cohabiting couple: Dependent children 
-* ![family_photo](/images/ui/family_photos/higher_CoupleNonDepChildren_White.webp) **CoupleNonDepChildren**: Single-family household: Married, civil partnership, or cohabiting couple: All children non-dependent 
-* ![family_photo](/images/ui/family_photos/higher_LoneParent_White.webp) **LoneParent**: Single-family household: Lone parent family: With dependent children 
-* ![family_photo](/images/ui/family_photos/higher_LoneParentNonDepChildren_White.webp) **LoneParentNonDepChildren**: Single-family household: Lone parent family: All children non-dependent 
-* ![family_photo](/images/ui/family_photos/higher_OtherNoChildren_White.webp) **OtherNoChildren**: Other household types: Other related household: Other family composition 
-* ![family_photo](/images/ui/family_photos/higher_OtherChildren_White.webp) **OtherChildren**: Other household types: With dependent children 
-* ![family_photo](/images/ui/family_photos/higher_OtherIncStudentOrOver66_White.webp) **OtherIncStudentOrOver66**: Other household types: Other, including all full-time students and all aged 66 years and over. 
-
-A dependent child is a person aged 0 to 15 years in a household, or a person aged 16 to 18 years who is in full-time education and lives in a family with their parent, parents, grandparent or grandparents.
-
-[National Statistics Socio-Economic Classification (NS-SEC) of the household reference person](https://www.ons.gov.uk/methodology/classificationsandstandards/otherclassifications/thenationalstatisticssocioeconomicclassificationnssecrebasedonsoc2010)
-
-NS-SEC classifies people based on their jobs.
-
-* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_White.webp) **Higher**: Higher managerial, administrative, and professional occupations
-* ![family_photo](/images/ui/family_photos/intermediate_CoupleChildren_White.webp) **Intermediate**: Intermediate occupations 
-* ![family_photo](/images/ui/family_photos/routine_CoupleChildren_White.webp) **Routine**: Routine and manual occupations 
-* ![family_photo](/images/ui/family_photos/students_OtherIncStudentOrOver66_White.webp) **Students**: Full time students including students that also work
-* ![family_photo](/images/ui/family_photos/unemployed_CoupleChildren_White.webp) **Unemployed**: Never worked and long-term unemployed
-* ![family_photo](/images/ui/family_photos/DNA_OnePersonOther_White.webp) **Does Not Apply**: A small number of households that cannot be classified.
-
-Note that the NS-SEC classification applied to the household reference person. This is usually the person who pays the rent/mortgage. In the case of joint contributions, the higher earner is chosen. This means that only the NS-SEC of the highest earner is depicted in the family photo. For example, in a couple where one person was a banker and the other a gardener, the household would be represented by the “Higher” category and show two people in higher roles.
-
-Retired people's NS-SEC classification is based on their previous job. 
-
-[Ethnicity](https://www.ons.gov.uk/peoplepopulationandcommunity/culturalidentity/ethnicity/bulletins/ethnicgroupenglandandwales/census2021)
-
-
-
-* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_White.webp) **White**: White (74.4% of population)
-* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_Black.webp) **Black**: Black, Black British, Black Welsh, Caribbean or African (4.0% of population)
-* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_Other.webp) **Other**: Asian, Asian British, Asian Welsh, Mixed, Multiple, or Other ethnic group (14.3% of population)
-
-#### Notable limitations
-
-There are a few limitations to the family photo method that should be understood. Mostly, these come from the trade-off between accuracy and an easy-to-understand summary of a complex population. 
-
-**Not all households are represented**: As hundreds of households are summarised into 48 pictures, unusual households are not shown. Typically, around 90% of households are represented and representation is above 75% in almost all neighbourhoods. But only the most common 65% of households are represented in a few truly diverse locations.
-
-**Some characteristics are not included**: For example, gender and sexuality are not included in the analysis. This leads to some obvious simplifications, such as a person living alone over 66 is always a woman, and someone living alone under 65 is always a man. There are also no same-sex couples in the family photos. This is due to a practical limitation of the data. The more categories you add to the analysis, the more likely it is that you identify individual households. The ONS prevents the publication of disclosive datasets, so we have to constrain our analysis to a few broad categories. 
-
-**Mixed ethnicity households are not shown**: A limitation of the input data is that we can’t tell the ethnic composition within households. Therefore, all of the family pictures are a single ethnicity. For example, if there was a neighbourhood made up of exclusive black women and white men, the community photo would be 50% white couples and 50% black couples. In practice mixed ethnicity couples are only common in London and the South East, where they make up as much as [20% of households in some areas](https://www.ons.gov.uk/census/maps/choropleth/identity/multiple-ethnic-groups-in-household/hh-multi-ethnic-group/ethnic-groups-differ-within-partnerships/) .
-
-<!-- /#pbcc-community-photo -->
-
-
 ## Retrofit Explorer
 
 The retrofit explorer tool focuses on buildings and their energy consumption from heating and electricity. It provides access to detailed information on buildings and energy and how that leads to carbon emissions.
@@ -793,3 +720,76 @@ Electricity consumption is further divided by meter type (all, standard, economy
 To protect privacy, DESNZ removes data for postcodes that only cover a small number of properties or may remove a particular type of meter if it is uncommon (e.g., Economy 7). This can result in gaps in the data.
 
 Postcodes, unlike the LSOAs used in the rest of Carbon & Place, are not designed for data reporting and change fairly often to meet mail delivery needs. This can be a challenge for presenting historical data. So, in Carbon & Place, we only show data for the current postcode areas; this means historical data is missing in some locations.
+
+
+## Place-Based Carbon Calculator
+
+Coming Soon
+<!-- #purpose -->
+Section
+<!-- /#purpose -->
+
+<!-- #pbcc-zones -->
+Zones Help
+<!-- /#pbcc-zones -->
+
+
+<!-- #pbcc-community-photo -->
+#### Community Photo
+
+The community photo is intended to give an at-a-glance overview of the demographics of each neighbourhood. Each neighbourhood's photo is made up of 48 household photos distributed in proportion to their occurrence in the 2021 census. 
+
+The appropriate household photos are automatically selected from a set of about 200 household archives based on three variables.
+
+[Household composition](https://www.ons.gov.uk/census/census2021dictionary/variablesbytopic/demographyvariablescensus2021/householdcomposition/classifications) 
+
+Household composition considers the number and age of people in a household and how people are related to each other.
+
+* ![family_photo](/images/ui/family_photos/higher_OnePersonOver66_White.webp) **OnePersonOver66**: One-person household: Aged 66 years and over 
+* ![family_photo](/images/ui/family_photos/higher_OnePersonOther_White.webp) **OnePersonOther**: One-person household: Aged 65 years or under 
+* ![family_photo](/images/ui/family_photos/higher_FamilyOver66_White.webp) **FamilyOver66**: Single family household: All aged 66 years and over 
+* ![family_photo](/images/ui/family_photos/higher_CoupleNoChildren_White.webp) **CoupleNoChildren**: Single-family household: Married, civil partnership, or cohabiting couple: No children 
+* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_White.webp) **CoupleChildren**: Single-family household: Married, civil partnership, or cohabiting couple: Dependent children 
+* ![family_photo](/images/ui/family_photos/higher_CoupleNonDepChildren_White.webp) **CoupleNonDepChildren**: Single-family household: Married, civil partnership, or cohabiting couple: All children non-dependent 
+* ![family_photo](/images/ui/family_photos/higher_LoneParent_White.webp) **LoneParent**: Single-family household: Lone parent family: With dependent children 
+* ![family_photo](/images/ui/family_photos/higher_LoneParentNonDepChildren_White.webp) **LoneParentNonDepChildren**: Single-family household: Lone parent family: All children non-dependent 
+* ![family_photo](/images/ui/family_photos/higher_OtherNoChildren_White.webp) **OtherNoChildren**: Other household types: Other related household: Other family composition 
+* ![family_photo](/images/ui/family_photos/higher_OtherChildren_White.webp) **OtherChildren**: Other household types: With dependent children 
+* ![family_photo](/images/ui/family_photos/higher_OtherIncStudentOrOver66_White.webp) **OtherIncStudentOrOver66**: Other household types: Other, including all full-time students and all aged 66 years and over. 
+
+A dependent child is a person aged 0 to 15 years in a household, or a person aged 16 to 18 years who is in full-time education and lives in a family with their parent, parents, grandparent or grandparents.
+
+[National Statistics Socio-Economic Classification (NS-SEC) of the household reference person](https://www.ons.gov.uk/methodology/classificationsandstandards/otherclassifications/thenationalstatisticssocioeconomicclassificationnssecrebasedonsoc2010)
+
+NS-SEC classifies people based on their jobs.
+
+* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_White.webp) **Higher**: Higher managerial, administrative, and professional occupations
+* ![family_photo](/images/ui/family_photos/intermediate_CoupleChildren_White.webp) **Intermediate**: Intermediate occupations 
+* ![family_photo](/images/ui/family_photos/routine_CoupleChildren_White.webp) **Routine**: Routine and manual occupations 
+* ![family_photo](/images/ui/family_photos/students_OtherIncStudentOrOver66_White.webp) **Students**: Full time students including students that also work
+* ![family_photo](/images/ui/family_photos/unemployed_CoupleChildren_White.webp) **Unemployed**: Never worked and long-term unemployed
+* ![family_photo](/images/ui/family_photos/DNA_OnePersonOther_White.webp) **Does Not Apply**: A small number of households that cannot be classified.
+
+Note that the NS-SEC classification applied to the household reference person. This is usually the person who pays the rent/mortgage. In the case of joint contributions, the higher earner is chosen. This means that only the NS-SEC of the highest earner is depicted in the family photo. For example, in a couple where one person was a banker and the other a gardener, the household would be represented by the “Higher” category and show two people in higher roles.
+
+Retired people's NS-SEC classification is based on their previous job. 
+
+[Ethnicity](https://www.ons.gov.uk/peoplepopulationandcommunity/culturalidentity/ethnicity/bulletins/ethnicgroupenglandandwales/census2021)
+
+
+
+* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_White.webp) **White**: White (74.4% of population)
+* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_Black.webp) **Black**: Black, Black British, Black Welsh, Caribbean or African (4.0% of population)
+* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_Other.webp) **Other**: Asian, Asian British, Asian Welsh, Mixed, Multiple, or Other ethnic group (14.3% of population)
+
+#### Notable limitations
+
+There are a few limitations to the family photo method that should be understood. Mostly, these come from the trade-off between accuracy and an easy-to-understand summary of a complex population. 
+
+**Not all households are represented**: As hundreds of households are summarised into 48 pictures, unusual households are not shown. Typically, around 90% of households are represented and representation is above 75% in almost all neighbourhoods. But only the most common 65% of households are represented in a few truly diverse locations.
+
+**Some characteristics are not included**: For example, gender and sexuality are not included in the analysis. This leads to some obvious simplifications, such as a person living alone over 66 is always a woman, and someone living alone under 65 is always a man. There are also no same-sex couples in the family photos. This is due to a practical limitation of the data. The more categories you add to the analysis, the more likely it is that you identify individual households. The ONS prevents the publication of disclosive datasets, so we have to constrain our analysis to a few broad categories. 
+
+**Mixed ethnicity households are not shown**: A limitation of the input data is that we can’t tell the ethnic composition within households. Therefore, all of the family pictures are a single ethnicity. For example, if there was a neighbourhood made up of exclusive black women and white men, the community photo would be 50% white couples and 50% black couples. In practice mixed ethnicity couples are only common in London and the South East, where they make up as much as [20% of households in some areas](https://www.ons.gov.uk/census/maps/choropleth/identity/multiple-ethnic-groups-in-household/hh-multi-ethnic-group/ethnic-groups-differ-within-partnerships/) .
+
+<!-- /#pbcc-community-photo -->
