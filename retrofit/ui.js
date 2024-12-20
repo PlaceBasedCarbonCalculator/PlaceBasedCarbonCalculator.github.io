@@ -412,14 +412,15 @@ makeChartLSOA = function(){
   lsoaLocationData.a19911995,
   lsoaLocationData.a19962002,
   lsoaLocationData.a20032006,
-  lsoaLocationData.Bap
+  lsoaLocationData.Bap,
+  lsoaLocationData.au,
   ];
  
   ageChart = makePieChart(ageChart,'age-chart','Building Age',
   ageData,
-  ['#9e0142','#d53e4f','#f46d43','#fdae61','#fee08b','#ffffbf','#e6f598','#abdda4','#66c2a5','#3288bd','#5e4fa2','#934fa2'],
+  ['#9e0142','#d53e4f','#f46d43','#fdae61','#fee08b','#ffffbf','#e6f598','#abdda4','#66c2a5','#3288bd','#5e4fa2','#934fa2','#c0c0c0'],
   ['pre-1900','1900-1929','1930-1949','1950-1966','1967-1975','1976-1982',
-  '1983-1990','1991-1995','1996-2002','2003-2006','post-2012']);
+  '1983-1990','1991-1995','1996-2002','2003-2006','post-2012','Unknown']);
   
   
   // floor
