@@ -53,6 +53,11 @@
   <priority>0.80</priority>
 </url>
 <url>
+  <loc>https://www.carbon.place/retrofit/</loc>
+  <lastmod>2024-10-16T13:55:48+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
   <loc>https://www.carbon.place/about/faq/</loc>
   <lastmod>2024-10-16T13:55:48+00:00</lastmod>
   <priority>0.64</priority>
