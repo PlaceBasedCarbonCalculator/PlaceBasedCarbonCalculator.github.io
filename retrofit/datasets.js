@@ -764,6 +764,11 @@ const datasets_extra = {
 			layerId: 'epc_dom',
 			templateId: 'epc_dom-popup',
 			preprocessingCallback: popupCallback,	// Defined below
+		},
+		'epc_nondom': {
+			layerId: 'epc_nondom',
+			templateId: 'epc_nondom-popup',
+			preprocessingCallback: popupCallback,	// Defined below
 		}
 	}
 };
