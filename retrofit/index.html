@@ -1,462 +1,672 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="Description" content="An interactive map showing the carbon footprint of each neighbourhood in England">
-  
-  <!--  Social Media Tags -->
-  <meta property="og:title" content="Place-Based Carbon Calculator">
-  <meta property="og:description" content="An interactive map showing the carbon footprint of each neighbourhood in England">
-  <meta property="og:image" content="/images/thumbnail.jpg">
-  <meta property="twitter:image" content="/images/thumbnail.jpg">
-  <meta property="og:url" content="https://www.carbon.place">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta property="og:site_name" content="Carbon & Place">
-  <meta name="twitter:image:alt" content="Carbon & Place thumbnail">
-  
-  <title>Place-Based Carbon Calculator</title>
-  <!-- PWA support -->
-  <link rel="manifest" href="/manifest.webmanifest">
-  <link rel="apple-touch-icon" href="/images/icons/192.png">
-  <meta name="apple-mobile-web-app-status-bar" content="#ac1a40">
-  <meta name="theme-color" content="#ac1a40">
-  <script src="/app.js" defer></script>
-  
-  <!-- Set Up map -->
-  <script src="/js/lib/pmtiles/index-2.11.0.js"></script> <!-- v2.7.1 -->
-  <script src="/js/lib/geocoder/maplibre-gl-geocoder.min.js"></script>
-  <link rel="stylesheet" href="/js/lib/geocoder/maplibre-gl-geocoder-small.css" type="text/css"/>
-  <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
-  <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
-  
-  <!-- Set Up CSS -->
-  <link rel="stylesheet" href="/css/main.css">
-  <link rel="stylesheet" href="/css/modal.css" defer>
-  
+	
+	<head>
+		
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="Description" content="An interactive map of land use">
+		
+		<!-- Google tag (gtag.js) -->
+  	<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q11V10CDRV"></script>
+  	<script>
+  		window.dataLayer = window.dataLayer || [];
+  		function gtag () {dataLayer.push (arguments);}
+  		gtag('js', new Date ());
+  		gtag('config', 'G-Q11V10CDRV');
+  	</script>
+  	
+  	<!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-TXQZCMJT');</script>
+    <!-- End Google Tag Manager -->
+		
+		<!-- Favicon -->
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+		<link rel="icon" href="/favicon.ico" type="image/x-icon">
+		
+		<!-- Social media -->
+		<meta property="og:title" content="Carbon & Place">
+		<meta property="og:description" content="An interactive map of land use">
+		<meta property="og:image" content="/images/thumbnail.jpg">
+		<meta property="twitter:image" content="/images/thumbnail.jpg">
+		<meta property="og:url" content="https://www.carbon.place">
+		<meta name="twitter:card" content="summary_large_image">
+		<meta property="og:site_name" content="Carbon & Place">
+		<meta name="twitter:image:alt" content="Carbon & Place thumbnail">
+		<title>Retrofit Explorer</title>
+		
+		<!-- PWA support -->
+		<link rel="manifest" href="/manifest.webmanifest">
+		<link rel="apple-touch-icon" href="/images/icons/192.png">
+		<meta name="apple-mobile-web-app-status-bar" content="#ac1a40">
+		<meta name="theme-color" content="#ac1a40">
+		<script src="/app.js" defer></script>
+		
+		<!-- Map dependencies -->
+		<script src="https://unpkg.com/pmtiles@3.0.6/dist/pmtiles.js"></script>
+		<script src="/js/lib/geocoder/maplibre-gl-geocoder.min.js"></script>
+		<link rel="stylesheet" href="/js/lib/geocoder/maplibre-gl-geocoder-small.css" type="text/css"/>
+		<script src="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.js"></script>
+		<link href="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.css" rel="stylesheet" />
+		
+		<!-- Styles -->
+		<link rel="stylesheet" href="/css/main.css">
+		<link rel="stylesheet" href="/css/map.css">
 
-  <link href="/js/lib/noUiSlider_15_7_0/nouislider.min.css" rel="stylesheet">
-  <script src="/js/lib/noUiSlider_15_7_0/nouislider.min.js"></script>
-  
-  <link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet">
-  <link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet">
-  
-  <!-- Markdown conversion -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
-  
-  <!-- Tooltips -->
-  <script src="https://unpkg.com/@popperjs/core@2"></script>
-  <script src="https://unpkg.com/tippy.js@6"></script>
-  
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QZMHV92YXJ"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-  
-    gtag('config', 'G-QZMHV92YXJ');
-  </script>
-
-  
-  <!-- Set Up Icon -->
-  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
-  
-</head>
-<body style="overflow:hidden">
-  
-<!-- Menu -->
-<div class="nav-wrapper">
-	<div class="topnav" id="myTopnav">
-		<div class="main-title">
-		  	<a href="/">Place-Based Carbon Calculator</a>
+		<!-- Carbon & Place application -->
+		<script src="/js/settings-common.js"></script>
+		<script src="/js/datasets-common.js"></script>
+		<script src="datasets.js"></script>
+		<script src="settings.js"></script>
+		<script src="/js/ui-common.js"></script>
+		<script src="ui.js" defer></script>
+		<script>
+			document.addEventListener ('DOMContentLoaded', function () {
+			  capUi.initialise (settings, datasets);
+			});
+		</script>
+		
+		<!-- Font Awesome -->
+		<link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet" defer>
+		<link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet" defer>
+		
+		<!-- Markdown conversion -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js" defer></script>
+		
+		<!-- Tooltips -->
+		<script src="https://unpkg.com/@popperjs/core@2" defer></script>
+		<script src="https://unpkg.com/tippy.js@6" defer></script>
+		
+		<!-- Charts -->
+		<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1" defer></script>
+		
+	</head>
+	
+	<body>
+	  
+	  <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TXQZCMJT"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) --> 
+		
+		<!-- Menu -->
+		<nav>
+			<a href="/"><img src="/images/ui/logo.webp" alt="Carbon & Place Logo" class="logo" /></a>
+			<a href="/retrofit">Retrofit Explorer</a>
+			<a href="/about/">About</a>
+			<a href="/data/">Data</a>
+			<a href="/manual/">Manual</a>
+			<a href="#" id="expandtopnav" class="icon" aria-label="Expand menu"><i class="fa fa-bars"></i></a>
+		</nav>
+		
+		<!-- Welcome Splash -->
+		<div id="welcome-modal" class="welcome-modal">
+			<span class="modal-close">&times;</span>
+			<div>
+				<h3>Retrofit Explorer</h3>
+				<p style="background-color: #f58291"><b>Beta Tool</b>: This tool is still in development and may contain preliminary analysis, bugs, or incomplete features. Beta tools are intended to provide an early look at upcoming features and so results should be treated with care. The tool may change at any time without warning. We are interested in your feedback and you can report issues or bugs on <a href="https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/issues" target="_blank" rel="noopener noreferrer">GitHub</a></p>
+				
+				<p>The Retrofit Explorer provides more detail buildings in the UK. For a full explanation of the tool please see the <a href="/manual/#retrofitexplorer">manual</a>. You can also access sections of the manual via the help buttons (<i class="fa fa-question-circle" aria-hidden="true"></i>)</p>
+				
+				<p>Last updated: <span id="updatedate"></span>. You may need to <a href="https://www.minitool.com/news/f5-vs-ctrl-f5.html">clear your browser cache</a> to see the latest updates.</p>
+			</div>
 		</div>
-		   <a href="/about">About</a>
-		   <a href="/data">Data</a>
-		   <a href="/manual">Manual</a>
-		   <a class="smaller" href="/privacy">Privacy &amp; accessibility</a>
-		   <a href="#" id="expandtopnav" class="icon" aria-label="Expand Menu"><i class="fa fa-bars"></i></a>
-	</div>
-		<div class="logo">
-			<img src="/images/ui/logo.png" alt="PBCC Logo" height="40">
-		</div>	
-</div>
+		
+		<!-- Cookies Warning  -->
+		<div id="cookiewarning" class="cookiewarning">
+			<p>We use cookies to measure how you use our website so we can understand how you interact with it, which helps us to make improvements. <a href="/privacy">Find out more.</a></p>
+			<p>
+				<button class="button buttonOK" value="1"><strong>OK</strong></button>
+				<button class="button buttonNO" value=""><strong>No</strong></button>
+			</p>
+		</div>
+		
+		<!-- Main Content -->
+		<div class="mapcontent">
+			<div id="map"></div>
+		</div>
+		
+		<!-- Basemap control box -->
+		<div id="basemapcontrol" style="display: none;">
+			<h3>Basemap</h3>
+			<form id="basemapform">
+				<!-- Values will be populated -->
+			</form>
+			<p><label class="switch"><input type="checkbox" id="placenamescheckbox" checked="checked" /><span class="slider round"></span></label> Place names</p>
+			<p title="Makes the map look smoother and clearer (not suitable for lower-powered devices)"><label class="switch"><input type="checkbox" id="antialiascheckbox" /><span class="slider round"></span></label> Anti-alias</p>
+		</div>
+		
+		<!-- Show Layer Selection Panel  Button-->
+		<div id="showrightbox" class="showrightbox">
+			<button class="float_button" aria-label="Show layers"><i class="fa fa-bars"></i></button>
+		</div>
+		
+		<!-- Layer Selection Panel -->
+		<div id="rightbox" class="rightbox">
+			<button class="close-button" aria-label="Hide layers"><i class="fas fa-times"></i></button>
+			<b> Layer Controls</b>
+			
+			
+			<button class="accordion">Neighbourhoods</button>
+			<div class="panel">
+				<p><label><input type="checkbox" class="showlayer" data-layer="zones" value="false">Show layer</label></p>
+				<p>
+					<select name="field" class="updatelayer" data-layer="zones" aria-label="Neighbourhood  layer">
+						<option value="epc_score_avg">Average EPC score</option>
+						<option value="floor_area_avg" >Average floor area</option>
+						<option value="modal_age">Building age (most common)</option>
+						<option value="modal_wall" >Wall rating (most common)</option>
+						<option value="modal_roof">Roof rating (most common)</option>
+						<option value="modal_heat">Heating rating (most common)</option>
+						<option value="modal_window">Windows rating (most common)</option>
+						<option value="modal_mainheat">Heating type (most common)</option>
+						<option value="modal_mainfuel">Fuel type (most common)</option>
+						<option value="modal_floord">Floor type (most common)</option>
+						<option value="modal_type">Building type (most common)</option>
+						<option value="percent_EPC">% of homes with an EPC</option>
+					</select>
+					<button aria-label="Help purpose" class="helpbutton" data-help="retrofit-zones"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+				</p>
+				<div id="zoneslegend" class="legendVertical">
+					<div class="l_rVertical">
+						<div class="lb"><span style="background-color: #ffffff"></span>&nbsp;</div>
+					</div>
+				</div>
+				
+				<p><label class="switch"><input type="checkbox" name="daysymetricmode" class="updatelayer" data-layer="zones" checked><span class="slider round"></span></label> Dasymetric</p>
+				
+			
+			</div>
+			
+			<button class="accordion">Postcode Gas & Electric</button>
+			<div class="panel">
+				<p><label><input type="checkbox" class="showlayer" data-layer="postcodes" value="false">Show layer</label></p>
+				<p>
+				  	<select name="field" class="updatelayer" data-layer="postcodes" aria-label="Postcodes  layer">
+						<option value="combined" selected>Combined Emissions</option>
+						<option value="gas" >Gas Emissions</option>
+						<option value="elec">Electricity Emissions</option>
+					</select>
+					<button aria-label="Help purpose" class="helpbutton" data-help="retrofit-postcodes"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+				</p>
+				<div id="postcodeslegend" class="legendHorizontal">
+					<div class="l_rHorizontal">
+						<div class="lb"><span style="background-color: #ffffff"></span>&nbsp;</div>
+					</div>
+				</div>
+				
+			
+			</div>
+			
+			<button class="accordion">Domestic EPC</button>
+			<div class="panel">
+				<p><label><input type="checkbox" class="showlayer" data-layer="epc_dom" value="false">Show layer</label></p>
+				<p>
+				  	<select name="field" class="updatelayer" data-layer="epc_dom" aria-label="Postcodes  layer">
+						<option value="cur_rate" selected>Rating</option>
+						<option value="b_type" >Building Type</option>
+						<option value="p_type" >Property Type</option>
+						<option value="age">Building Age</option>
+						<option value="year">Last Assessed</option>
+						<option value="area">Floor Area</option>
+						<option value="floor_ee" >Floor Rating</option>
+						<option value="water_ee" >Hot Water Rating</option>
+						<option value="wind_ee" >Windows Rating</option>
+						<option value="wall_ee" >Walls Rating</option>
+						<option value="roof_ee" >Roof Rating</option>
+						<option value="heat_ee" >Heating Rating</option>
+						<option value="con_ee" >Controls Rating</option>
+						<option value="light_ee" >Lighting Rating</option>
+						<option value="sol_wat" >Solar Thermal</option>
+						
+					</select>
+					<button aria-label="Help purpose" class="helpbutton" data-help="retrofit-epc-dom"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+				</p>
+				<div id="epcdomlegend" class="legendVertical">
+					<div class="l_rHorizontal">
+						<div class="lb"><span style="background-color: #ffffff"></span>&nbsp;</div>
+					</div>
+				</div>
+				
+			
+			</div>
+			
+			<button class="accordion">Non-Domestic EPC</button>
+			<div class="panel">
+				<p><label><input type="checkbox" class="showlayer" data-layer="epc_nondom" value="false">Show layer</label></p>
+				<p>
+				  	<select name="field" class="updatelayer" data-layer="epc_nondom" aria-label="Postcodes  layer">
+						<option value="band" selected>Rating</option>
+						<option value="transaction" >Transaction</option>
+						<option value="area" >Floor Area</option>
+						<option value="year">Last Assessed</option>
+					</select>
+					<button aria-label="Help purpose" class="helpbutton" data-help="retrofit-epc-nondom"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+				</p>
+				<div id="epcnondomlegend" class="legendVertical">
+					<div class="l_rVertical">
+						<div class="lb"><span style="background-color: #ffffff"></span>&nbsp;</div>
+					</div>
+				</div>
+				
+			
+			</div>
+			
+			<button class="accordion">Boundaries</button>
+			
+			<div class="panel">
+				<p><label><input type="checkbox" data-layer="wards" class="showlayer" value="false">Wards</label>
+				<button aria-label="Help" class="helpbutton" data-help="boundaries-wards"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<div class="legendHorizontal">
+					<div class="l_rHorizontal">
+						<div class="lbHorizontal"><span style="background-color: #206b07"></span></div>
+					</div>
+				</div>
+				<p><label><input type="checkbox" data-layer="la" class="showlayer" value="false">Local Authorities</label>
+				<button aria-label="Help" class="helpbutton" data-help="boundaries-la"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<div class="legendHorizontal">
+					<div class="l_rHorizontal">
+						<div class="lbHorizontal"><span style="background-color: #6b0707"></span></div>
+					</div>
+				</div>
+				<p><label><input type="checkbox" data-layer="parish" class="showlayer" value="false">Parish</label>
+				<button aria-label="Help" class="helpbutton" data-help="boundaries-parish"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<div class="legendHorizontal">
+					<div class="l_rHorizontal">
+						<div class="lbHorizontal"><span style="background-color: #6b0763"></span></div>
+					</div>
+				</div>
+				<p><label><input type="checkbox" data-layer="westminster" class="showlayer" value="false">Westminster Constituency</label>
+				<button aria-label="Help" class="helpbutton" data-help="boundaries-westminster"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<div class="legendHorizontal">
+					<div class="l_rHorizontal">
+						<div class="lbHorizontal"><span style="background-color: #07366b"></span></div>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+		
+		<!-- Help box -->
+		<div id="help_modal" class="modal">
+			<span class="modal-close">&times;</span>
+			<div id="helpcontent">
+				<p><em>Help content loading&hellip;</em></p>
+			</div>
+		</div>
+		
+		
+		<!-- Modal -->
+		<div class="modal" id="postcodes-chartsmodal" style="display: none;">
+			<div class="modal-header">
+				<span class="modal-close">×</span>
+				<h2 class="modal-title">Postcode Summary: XXXXX</h2>
+			</div>
+			<div class="modal-body">
+			  
+			  This page provides a summary of the <a href="https://www.gov.uk/government/publications/postcode-level-domestic-gas-and-electricity-consumption-about-the-data" target="_blank" rel="noopener noreferrer"> Postcode level domestic gas and electricity consumption data</a> published by the Department of Energy Security and Net Zero (DESNZ). 
+			  
+			  <div class="chart-wrapper" id="emissions-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Historical domestic gas and electricity emissions</h4>
+					  <p class="chart-description">This chart shows the annual emissions from this postcode of gas and domestic buildings' electricity consumption. Use the drop down menu to select either total, median, or mean emissions. Note that some areas are off the gas grid, so no emissions are reported. In these places, heating may be provided by some other fuel type, such as coal, wood, or oil. Emissions have been calculated by Carbon & Place by multiplying energy consumption by annual emissions factors for the UK. For electricity consumption, emissions per kWh have declined in recent years, resulting in falling emissions even if electricity consumption has remained constant.</p>
+					  <p>Chart type: 
+      				<select id="select_emissions" name="select_emissions" onchange="makeChartPostcode()">
+                  <option value="median" selected>Median</option>
+                  <option value="mean">Mean</option>
+                  <option value="total">Total</option>
+              </select></p>
+					</div>
+					<div class="chart-container">
+						<canvas id="emissions-chart"></canvas>
+					</div>
+				</div>
+  			
+  			
+  			<div class="chart-wrapper" id="gas-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Historical gas consumption</h4>
+					  <p class="chart-description">This chart shows domestic buildings' annual gas consumption in kilowatt hours in this postcode. Use the drop down menu to select either total, median, or mean emissions. Note that some areas are off the gas grid, so no emissions are reported. In these places, heating may be provided by some other fuel type, such as coal, wood, or oil.</p>
+					  
+					  <p>Chart type: <select id="select_gas" name="select_gas" onchange="makeChartPostcode()">
+            <option value="median" selected>Median</option>
+            <option value="mean">Mean</option>
+            <option value="total">Total</option>
+            </select></p>
+					</div>
+					<div class="chart-container">
+						<canvas id="gas-chart"></canvas>
+					</div>
+				</div>
+				
+				
+				<div class="chart-wrapper" id="electricity-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Historical electricity consumption</h4>
+					  <p class="chart-description">This chart shows the annual electricity consumption in kilowatt hours by domestic buildings in this postcode. Use the drop down menu to select either total, median, or mean emissions. Consumption estimates are provided for different meter types (all, standard, and economy 7). However, data is not always available for all meter types.</p>
+					  
+					  <p>Chart type: <select id="select_electricity" name="select_electricity" onchange="makeChartPostcode()">
+            <option value="median" selected>Median</option>
+            <option value="mean">Mean</option>
+            <option value="total">Total</option>
+            </select></p>
+					</div>
+					
+					<div class="chart-container">
+						<canvas id="electricity-chart"></canvas>
+					</div>
+				</div>
+				
+				<div class="chart-wrapper" id="meters-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Historical gas and electricity meters</h4>
+					  <p class="chart-description">This chart shows this postcode's total number of domestic gas and electricity meters. Electricity meters are also broken down into standard and economy 7 metres. In theory, the total number of all electricity meters should match the total of standard and economy 7 meters. However, there can be slight differences or even missing data due to how the data is reported. Therefore, two columns are shown for electricity meters to show the different counts.</p>
+					  <p>Changes in the number of meters may indicate house building/demolition and the difference between gas and electricity meters can indicate the presence of off-gas grid homes.</p>
+					</div>
+					
+					<div class="chart-container">
+						<canvas id="meters-chart"></canvas>
+					</div>
+				</div>
+  				
+				
+				
+			</div>
+		</div>
+		
+		
+		<div class="modal" id="zones-chartsmodal" style="display: none;">
+			<div class="modal-header">
+				<span class="modal-close">×</span>
+				<h2 class="modal-title">Neighbourhood Summary</h2>
+			</div>
+			<div class="modal-body">
+			  
+			  <p>This report summarises the Domestic Energy Performance Certificates from 2024. Since 2008, houses in the UK have had to get an Energy Performance Certificate (EPC) when they are sold or rented. An EPC requires a qualified assessor to visit the dwelling and take measurements of the building's construction and energy efficiency, which makes EPCs a valuable tool for understanding the energy use and carbon emissions from our homes. However, EPCs have significant problems. Research has shown that the EPC grades are not great at predicting real-world energy use and that as many as 80% of EPCs contain at least one error. EPCs are also not a representative sample of houses as they are only required under specific circumstances (e.g., when a house is sold). EPCs are likely to under-estimate the uptake of retrofit measures, as many people make home improvements just after buying a house. Thus, the EPC may be out of date shortly after it is issued. For all these reasons, EPC data should be treated with care. We have chosen to include it here as it is the best available data and helps draw attention to the low quality of housing data in the UK. For this tool, we took an extract of the EPC database from 2020 and summarised the results for each LSOA. In cases where a property had more than on EPC, only the most recent EPC was considered. Some of the data presented here are scraped from the text description written in the EPCs, so some missing data and double counting may exist. That means this data must be seen as indicative rather than conclusive.</p>
+			  
+			  <div class="chart-wrapper" id="epcrating-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">EPC ratings</h4>
+					  <p class="chart-description">The EPC score is the headline result rating homes on a scale from A (most efficient) to G (least efficient). To meet the climate targets, we need all homes to be A or B graded as soon as possible.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="epcrating-chart"></canvas>
+					</div>
+				</div>
+  			
+  			
+  			<div class="chart-wrapper" id="buildingtype-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Building type</h4>
+					  <p class="chart-description">A summary of the types of domestic buildings.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="buildingtype-chart"></canvas>
+					</div>
+				</div>
+  			
+  			<div class="chart-wrapper" id="tenure-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Tenure</h4>
+					  <p class="chart-description">A summary of type of tenure as recorded on the EPC. Not that is may have changed after the EPC was issued. Also as EPCs are required for rental properties but only required for owner-occupied properties at the time of sale, rental property may be over-represented in the EPC data.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="tenure-chart"></canvas>
+					</div>
+				</div>
+  			
+  			
+  			<div class="chart-wrapper" id="age-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Building Age</h4>
+					  <p class="chart-description">A summary of the estimated construction date of dwellings.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="age-chart"></canvas>
+					</div>
+				</div>
+				
+				
+				<div class="chart-wrapper" id="wall-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Walls rating</h4>
+					  <p class="chart-description">About 35% of heat is lost through a house's walls, so insulating the walls is an excellent way to reduce energy use. Most homes built after the 1920s have cavity walls that are easy and cheap to insulate with blown glass fibre wool. However, care must be taken to install the insulation correctly to prevent damp crossing the cavity, particularly in places that get driving rain or have stone cavity walls. In these properties, expanding foam of polystyrene bead insulation can be more expensive but reduce the risk of damp and mould growth. Older homes with solid walls require either external or internal insulation. These options are more expensive than cavity wall insulation, and internal insulation requires redecoration of the rooms. </p>
+					</div>
+					<div class="chart-container">
+						<canvas id="wall-chart"></canvas>
+					</div>
+				</div>
+				
+				<div class="chart-wrapper" id="walld-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Walls description</h4>
+					  <p class="chart-description">A description of the construction of the external walls. The most common type of wall are brick or block cavity walls, which are cheap and easy to insulate with cavity wall insulation. Other types of wall require more expensive internal or external insulation.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="walld-chart"></canvas>
+					</div>
+				</div>
+				
+				<div class="chart-wrapper" id="roof-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Roof rating</h4>
+					  <p class="chart-description">About 25% of heat is lost through the roof of the property. For homes with pitched roofs, loft insulation is one of the cheapest and easiest forms of insulation. The uptake of loft insulation has been reasonably high due to low cost and government incentives. However, many homes have less than the recommended minimum of 300mm of insulation, and flat roofs remain challenging to insulate. Dwellings with another dwelling above, such as flats are consider to not have a roof and a recorded as "Dwelling Above" only the top floor flat would have a roof rating.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="roof-chart"></canvas>
+					</div>
+				</div>
+				
+				<div class="chart-wrapper" id="roofd-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Roof Description</h4>
+					  <p class="chart-description">The type of roof affects how the building can be insulated. Pitched roofs are the easiest to insulate, while flat roofs are harder to insulate.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="roofd-chart"></canvas>
+					</div>
+				</div>
+				
+				<div class="chart-wrapper" id="floor-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Floor rating</h4>
+					  <p class="chart-description">About 15% of heat is lost through the floors of homes. EPCs are especially bad at recording the floor construction, so there is often a lot of missing data. Many homes built before the 1950s have suspended timber floors, which are relatively simple to insulate either by accessing the crawl space under the floor and attaching insulation to the underside or by lifting the floorboards. Homes built after the 1960s are more likely to have solid concrete floors. These are difficult to insulate as you either have to dig into the concrete slab or insulate on top of the slap, raising the floor level. Not this classification only applies to ground floor properties, so flats often are classified as "Dwelling Below". </p>
+					</div>
+					<div class="chart-container">
+						<canvas id="floor-chart"></canvas>
+					</div>
+				</div>
+				
+				
+				<div class="chart-wrapper" id="floord-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Floor Description</h4>
+					  <p class="chart-description">Ground floors of homes typically come in two types. Suspended floors are raised slightly above ground level and outside air can circulate in the void beneath the floor to prevent mould and damp. This was common for homes built before the 1940s. Conversely solid floors are built directly on the ground usually of concrete and are more common in post-1940s homes. Both floor types can result in heat loss if not insulated, but the way the floors are insulated is different. This chart shows the distribution of different floor types.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="floord-chart"></canvas>
+					</div>
+				</div>
+				
+				
+				<div class="chart-wrapper" id="window-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Windows rating</h4>
+					  <p class="chart-description">Around 10% of heat is lost through windows and doors. Most houses now have double-glazing, although many have the less efficient early forms of double-glazing. New double or triple glazing is an expensive option for energy saving. However, it is often installed as it is perceived to add value to the property.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="window-chart"></canvas>
+					</div>
+				</div>
+				
+				<div class="chart-wrapper" id="glazing-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Glazing type</h4>
+					  <p class="chart-description">A summary of the type of glazing used.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="glazing-chart"></canvas>
+					</div>
+				</div>
+				
+				
+				<div class="chart-wrapper" id="mainheat-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Main heating system rating</h4>
+					  <p class="chart-description">This chart shows the efficiency rating of heating systems. An efficient heating system uses less energy than an inefficient system to provide the same amount of heating. Note that a very efficient heating system may not be low carbon. For example a modern condensing gas boiler has an efficiency of over 90% yet is it still a high carbon heating source as it is fuelled by gas.  For more details see the heating descriptions below.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="mainheat-chart"></canvas>
+					</div>
+				</div>
+				
+				<div class="chart-wrapper" id="mainheatdesc-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Main heating system description</h4>
+					  <p class="chart-description">Most homes in England have gas central heating, often with a condensing boiler. If properly installed and maintained, these have high efficiencies (above 90%). As gas is a fossil fuel, we need to replace all gas boilers with low carbon heating systems such as heat pumps as soon as possible. While heat pumps are even more efficient than gas boilers, they are significantly more expensive to install (around £10,000 for a new heat pump vs £2,000 for a new gas boiler). It is more common to find homes heated with oil boilers, storage heaters, or even coal fires off the gas grid. These heating types are both high carbon and expensive to operate, so heat pumps can be more financially attractive.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="mainheatdesc-chart"></canvas>
+					</div>
+				</div>
+				
+				<div class="chart-wrapper" id="mainfuel-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Main fuel description</h4>
+					  <p class="chart-description">Description of the main type of heating fuel used in the home.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="mainfuel-chart"></canvas>
+					</div>
+				</div>
+				
+				<div class="chart-wrapper" id="mainheatcontrol-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Heating Control Rating</h4>
+					  <p class="chart-description">Heating controls help save energy by turning off the heating when it is not needed. Common types of heating control include thermostats, timers, and Thermostatic Radiator Valves (TRVs). Upgrading heating controls can be a low-cost way to get a small reduction in energy use.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="mainheatcontrol-chart"></canvas>
+					</div>
+				</div>
+				
+				<div class="chart-wrapper" id="controld-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Heating Control Description</h4>
+					  <p class="chart-description">Heating controls can come in lots of different combinations, but some of the most common combinations are shown in this charts. A good heating system should have a programmer to allow you to decide when in the day you want heating; ad thermostat so that the heating system turns off once the house is warm, and Thermostatic Radiator Valves (TRVs) to enable room-to-room adjustments. More complex heating systems have heating zones enabling different settings for different parts of the home.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="controld-chart"></canvas>
+					</div>
+				</div>
+				
+				
+				<div class="chart-wrapper" id="water-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Hot water system rating</h4>
+					  <p class="chart-description">The energy efficiency of the hot water system is rated from Very Good to Very Poor.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="water-chart"></canvas>
+					</div>
+				</div>
+				
+				<div class="chart-wrapper" id="waterd-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Hot water system description</h4>
+					  <p class="chart-description">A description of how hot water is provided. The most common approach is for hot water to be provided by the main heating system. However some homes have separate space and water heating systems.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="waterd-chart"></canvas>
+					</div>
+				</div>
+				
+				
+				<div class="chart-wrapper" id="light-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Lights Rating</h4>
+					  <p class="chart-description">Lights are one of the easiest energy efficiency measures to adopt. Modern LED bulbs are highly efficient and affordable. Since the ban on inefficient light bulbs in 2016 and 2019 a gradual phase out of inefficient lighting is expected. This may not yet be reflected in EPC data as EPC can be several year out of date.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="light-chart"></canvas>
+					</div>
+				</div>
+				
+				<div class="chart-wrapper" id="solarpv-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Solar Photovoltaics</h4>
+					  <p class="chart-description">Solar PV panels generate electricity from sunlight. While the cost of PV panels has dropped significantly in recent years the cost of installing them on the roof of a building can still be high. Homes with solar panels can use the electricity or sell it to the grid. </p>
+					</div>
+					<div class="chart-container">
+						<canvas id="solarpv-chart"></canvas>
+					</div>
+				</div>
+				
+				<div class="chart-wrapper" id="solarthermal-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Solar Thermal</h4>
+					  <p class="chart-description">Solar Thermal panels provide hot water from sunlight. Often in the UK they are pre-heating the water and some other technology (such as immersion heater) is needed to bring the water up to full temperature.  However, they can be a cost effective way to reduce energy demand for hot water even on cloudy days.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="solarthermal-chart"></canvas>
+					</div>
+				</div>
+				
+				
+			</div>
+		</div>
+		
+		
+		<div id="overlay"></div>
+		
+		<!-- Template for map popup -->
+		<template id="epc_dom-popup">
+			<div class="mappopup">
+				<h4>Domestic EPC</h4>
+				<table>
+					<tr><th>Variable</th><th>Value</th></tr>
+					<tr><th>Address</td><td>{addr}</td></tr>
+					<tr><th>Rating</td><td>{cur_rate} {cur_ee}/{per_ee}</td></tr>
+					<tr><th>Building type</td><td>{b_type} {p_type}</td></tr>
+					<tr><th>Building Age</td><td>{age}</td></tr>
+					<tr><th>Tenure</td><td>{tenure}</td></tr>
+					<tr><th>Last Assessed</td><td>{year}</td></tr>
+					<tr><th>Floor area</td><td>{area} (m2)</td></tr>
+					<tr><th>Roof</td><td>{roof_d} ({roof_ee})</td></tr>
+					<tr><th>Walls</td><td>{wall_d} ({wall_ee})</td></tr>
+					<tr><th>Floor</td><td>{floor_d} ({floor_ee})</td></tr>
+					<tr><th>Windows</td><td>{wind_d} ({wind_ee})</td></tr>
+					<tr><th>Heating</td><td>{heat_d} ({heat_ee})</td></tr>
+					<tr><th>Heating Fuel</td><td>{fuel}</td></tr>
+					<tr><th>Heating Controls</td><td>{con_d} ({con_ee})</td></tr>
+					<tr><th>Hot water</td><td>{water_d} ({water_ee})</td></tr>
+					<tr><th>Solar Water Heating</td><td>{sol_wat}</td></tr>
+					<tr><th>Solar PV</td><td>{pv}</td></tr>
+					<tr><th>Lights</td><td>{light_ee}</td></tr>
+					
+				</table>
+		</template>
+		
+		
+		<template id="epc_nondom-popup">
+			<div class="mappopup">
+				<h4>Non-Domestic EPC</h4>
+				<table>
+					<tr><th>Variable</th><th>Value</th></tr>
+					<tr><th>Address</td><td>{adr2}</td></tr>
+					<tr><th>Rating</td><td>{band} ({rating})</td></tr>
+					<tr><th>Building type</td><td>{type}</td></tr>
+					<tr><th>Transaction</td><td>{transaction}</td></tr>
+					<tr><th>Last Assessed</td><td>{year}</td></tr>
+					<tr><th>Floor area</td><td>{area} (m2)</td></tr>
+					<tr><th>Fuel</td><td>{fuel}</td></tr>
+				</table>
+		</template>
 
-<!-- Overlay for modal dialogs -->
-<div id="overlay"></div>
-
-<!-- Welcome Splash -->
-<div id="welcome" class="welcome">
-<span class="modal-close">&times;</span>
-<div>
-<h3>Place-Based Carbon Calculator</h3>
-<p>Lorim Ipsum</p>
-<div id="updatedate"></div>
-</div>
-</div>
-
-<!-- Cookies Warning  -->
-<div id='cookiewarning' class='cookiewarning'>
-  <p>We use cookies to measure how you use our website so we can understand how you interact with it, which helps us to make improvements. <a href="/privacy">Find out more.</a></p>
-  <p>
-    <button onclick="cookiebutton(true)" class="button button1"><b>OK</b></button>
-    <button onclick="cookiebutton(false)" class="button button2"><b>No</b></button>
-  </p>
-</div>
-<script src="/js/ga_optout.js"></script>
-
-
-
-<!-- Main Content -->
-<div class="content" style="overflow:hidden">
-<div id="map"></div>
-</div>
-
-<!-- Floating Objects -->
-<div id="basemapcontrol" class="basemapcontrol" style="display:none;">
-  <p style="margin-top:5px;margin-bottom:5px"><b>&nbsp Basemap</b></p>
-  <p>
-  <form id="basemapform" onchange="switch_style()" class="basemap">
-  <input type="radio" id="bm1" value="greyscale_nobuild" name="basemap" class="radio-inline"checked/>
-    <label for="bm1"><img src="/images/ui/greyscale_50.png" title="OS Greyscale" loading="lazy"/></label>
-  <input type="radio" id="bm2" value="satellite" name="basemap"class="radio-inline"/>
-    <label for="bm2"><img src="/images/ui/satellite_50.png" title="Satellite" loading="lazy"/></label>
-  <input type="radio" id="bm3" value="opencyclemap" name="basemap"class="radio-inline"/>
-    <label for="bm3"><img src="/images/ui/opencyclemap_50.png" title="OpenCycleMap" loading="lazy"/></label>
-  <input type="radio" id="bm5" value="dark_nobuild" name="basemap"class="radio-inline"/>
-    <label for="bm5"><img src="/images/ui/dark.PNG" title="Dark" loading="lazy"/></label>
-  <input type="radio" id="bm6" value="google_nobuild" name="basemap"class="radio-inline"/>
-    <label for="bm6"><img src="/images/ui/google.PNG" title="Outdoors" loading="lazy"/></label>
-  </form>
-  </p>
-  <p><label class="switch"><input type="checkbox" id="placenamescheckbox" checked><span class="slider round"></span></label> Place Names</p>
-  <p><label class="switch"><input type="checkbox" id="antialiascheckbox" /><span class="slider round"></span></label> Anti-alias</p>
-</div>
-
-<!-- Show Layer Selection Panel  Button-->
-<div id="showrightbox" class="showrightbox">
-  <button class="float_button" aria-label="Show layers"><i class="fa fa-bars"></i></button>
-</div>
-
-<!-- Layer Selection Panel -->
-<div id="rightbox" class="rightbox">
-
-<button class="close-button" aria-label="Hide layers"><i class="fas fa-times"></i></button>
-<b> Layer Controls</b>
-
-<button class="accordion">Neighbourhoods</button>
-<div class="panel">
-  <p><label><input type="checkbox" id="data_zonescheckbox" class="updatelayer" value="false">Show Layer</label></p>
-
-  <p>
-    <select id="data_zones_selector" name="data_zones_selector" class="updatelayer" aria-label="Data zone layer">
-      <option value="pcycle">% commuter cycling (baseline)</option>
-      <option value="pcycle_go_dutch" selected>% commuter cycling (Go Dutch)</option>
-      <option value="population_density">Population density (per hectare)</option>
-      <option value="SIMD2020v2_Decile">Index of Multiple Deprivation (2020)</option>
-      <option value="drive_petrol">Drive time to petrol station</option>
-      <option value="drive_GP">Drive time to GP</option>
-      <option value="drive_post">Drive time to post office</option>
-      <option value="drive_retail">Drive time to retail centre</option>
-      <option value="drive_primary">Drive time to primary school</option>
-      <option value="drive_secondary">Drive time to secondary school</option>
-      <option value="PT_GP">Public transport time to GP</option>
-      <option value="PT_post">Public transport time to post office</option>
-      <option value="PT_retail">Public transport time to retail centre</option>
-      <option value="broadband">% without superfast broadband</option>
-    </select>
-    <button aria-label="Help purpose" class="helpbutton" data-help="data_zones"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
-  </p>
-  
-  <div id="dzlegend" class="legend">
-  <div class="l_r">
-  <div class="lb"><span style="background-color: #ffffff"></span>&nbsp</div>
-	</div>
-	</div>
-  
-  <p><label class="switch"><input type="checkbox" id="data_zones_checkbox_dasymetric" class="updatelayer" checked><span class="slider round"></span></label> Dasymetric</p>
-  
-</div>
-
-<button class="accordion">Other Layers</button>
-<div class="panel">
-
-  <p><label><input type="checkbox" id="schoolscheckbox" class="updatelayer" value="false">Schools</label></p>
-  <div class="legend"><div class="l_r">
-  <div class="lb"><span style="background-color: #313695"></span>Primary</div>
-  <div class="lb"><span style="background-color: #a50026"></span>Seconday</div>
-  <div class="lb"><span style="background-color: #43f22c"></span>Other</div>
-	</div></div>
-  
-  <p><label><input type="checkbox" id="wardscheckbox" class="updatelayer" value="false">Wards</label></p>
-  <div class="legend"><div class="l_r">
-  <div class="lb"><span style="background-color: #206b07"></span></div>
-	</div></div>
-  
-  <p><label><input type="checkbox" id="holyroodcheckbox" class="updatelayer" value="false">Scottish Parliament Constituencies</label></p>
-  <div class="legend"><div class="l_r">
-  <div class="lb"><span style="background-color: #537bfc"></span></div>
-	</div></div>
+	</body>
 	
-	<p><label><input type="checkbox" id="scot_regionscheckbox" class="updatelayer" value="false">Scottish Parliament Regions</label></p>
-  <div class="legend"><div class="l_r">
-  <div class="lb"><span style="background-color: #bab106"></span></div>
-	</div></div>
-	
-	<p><label><input type="checkbox" id="lacheckbox" class="updatelayer" value="false">Local Authorities</label></p>
-  <div class="legend"><div class="l_r">
-  <div class="lb"><span style="background-color: #6b0707"></span></div>
-	</div></div>
-	
-	<p><label><input type="checkbox" id="cohesivenetworkcheckbox" class="updatelayer" value="false">Cohesive network</label></p>
-  <div class="legend"><div class="l_r">
-  <div class="lb"><span style="background-color: #1230b4"></span>1</div>
-  <div class="lb"><span style="background-color: #894cf7"></span>2</div>
-  <div class="lb"><span style="background-color: #f07984"></span>3</div>
-  <div class="lb"><span style="background-color: #fff551"></span>3</div>
-	</div></div>
-	
-
-</div>
-</div>
-
-<!-- Help Box -->
-<div id="help_modal" class="modal">
-  <span class="modal-close">&times;</span>
-  <div id="helpcontent">
-    <p><em>Help content loading&hellip;</em></p>
-  </div>
-</div>
-
-
-<!-- The DataZone Modal -->
-<div id="zone_modal" class="modal">
-
-<!-- Modal content -->
-<div class="modal-content">
-<div class="modal-header">
-  <span class="modal-close">&times;</span>
-  <div id="zone-modal-title">
-    <h2>Zone Summary</h2></div>
-  </div>
-  <div class="modal-body">
-
-  <div class="wrapper">
-  	  <div class="chart-text">
-  	    <h4>Commuters leaving</h4>
-  	    <p>The bar chart shows estimated mode shares under different scenarios for commuters leaving this zone. (i.e they live here and commute to another zone).</p>
-  	 </div>
-  	 	<div class="chart-container" >
-  			<canvas id="commuteOriginChart"></canvas>
-  		</div>
-	</div>
-  
-  <div class="wrapper">
-  	  <div class="chart-text">
-  	    <h4>Commuters arriving</h4>
-  	    <p>The bar chart shows estimated mode shares under different scenarios for commuters arriving this zone. (i.e they wprk here and live in another zone).</p>
-  	 </div>
-  	 	<div class="chart-container" >
-  			<canvas id="commuteDestinationChart"></canvas>
-  		</div>
-	</div>
-
-  <div class="wrapper">
-  	  <div class="chart-text">
-  	    <h4>Primary school children</h4>
-  	    <p>The bar chart shows estimated mode shares under different scenarios for primary school childen that live in this zone.</p>
-  	 </div>
-  	 	<div class="chart-container" >
-  			<canvas id="primaryOrginChart"></canvas>
-  		</div>
-	</div>
-
-  <div class="wrapper">
-  	  <div class="chart-text">
-  	    <h4>Secondary school children</h4>
-  	    <p>The bar chart shows estimated mode shares under different scenarios for secondary school childen that live in this zone.</p>
-  	 </div>
-  	 	<div class="chart-container" >
-  			<canvas id="secondaryOriginChart"></canvas>
-  		</div>
-	</div>
-	
-	<div class="wrapper">
-  	  <div class="chart-text">
-  	    <h4>Shoppers leaving</h4>
-  	    <p>The bar chart shows estimated mode shares of shopping trips under different scenarios for trips leaving this zone.</p>
-  	 </div>
-  	 	<div class="chart-container" >
-  			<canvas id="shoppingOriginChart"></canvas>
-  		</div>
-	</div>
-  
-  <div class="wrapper">
-  	  <div class="chart-text">
-  	    <h4>Shoppers arriving</h4>
-  	    <p>The bar chart shows estimated mode shares of shopping trips under different scenarios for trips arriving this zone.</p>
-  	 </div>
-  	 	<div class="chart-container" >
-  			<canvas id="shoppingDestinationChart"></canvas>
-  		</div>
-	</div>
-	
-	
-	<div class="wrapper">
-  	  <div class="chart-text">
-  	    <h4>Leisure trips leaving</h4>
-  	    <p>The bar chart shows estimated mode shares of leisure trips under different scenarios for trips leaving this zone.</p>
-  	 </div>
-  	 	<div class="chart-container" >
-  			<canvas id="leisureOriginChart"></canvas>
-  		</div>
-	</div>
-  
-  <div class="wrapper">
-  	  <div class="chart-text">
-  	    <h4>Leisure trips arriving</h4>
-  	    <p>The bar chart shows estimated mode shares of leisure trips under different scenarios for trips arriving this zone.</p>
-  	 </div>
-  	 	<div class="chart-container" >
-  			<canvas id="leisureDestinationChart"></canvas>
-  		</div>
-	</div>
-	
-	<div class="wrapper">
-  	  <div class="chart-text">
-  	    <h4>visiting friends and family trips leaving</h4>
-  	    <p>The bar chart shows estimated mode shares of trips for visiting friends and family under different scenarios for trips leaving this zone.</p>
-  	 </div>
-  	 	<div class="chart-container" >
-  			<canvas id="visitingOriginChart"></canvas>
-  		</div>
-	</div>
-  
-  <div class="wrapper">
-  	  <div class="chart-text">
-  	    <h4>visiting friends and family trips arriving</h4>
-  	    <p>The bar chart shows estimated mode shares of trips for visiting friends and family under different scenarios for trips arriving this zone.</p>
-  	 </div>
-  	 	<div class="chart-container" >
-  			<canvas id="visitingDestinationChart"></canvas>
-  		</div>
-	</div>
-	
-
-</div>
-<div class="modal-footer">
-</div>
-</div>
-
-
-</div>
-
-<!-- The School Modal -->
-<div id="school_modal" class="modal">
-
-<!-- Modal content -->
-<div class="modal-content">
-<div class="modal-header">
-    <span class="modal-close">&times;</span>
-    <div id="school-modal-title"><h2>School Summary</h2></div>
-</div>
-<div class="modal-body">
-  
-  <div class="wrapper">
-  	  <div class="chart-text">
-  	    <h4>Primary school modal split</h4>
-  	    <p>The bar chart shows extimated mode shares for primary school children under different scenarios.</p>
-  	 </div>
-  	 	<div class="chart-container" >
-  			<canvas id="primaryChart"></canvas>
-  		</div>
-	</div>
-  
-  <div class="wrapper">
-  	  <div class="chart-text">
-  	    <h4>Secondary school modal split</h4>
-  	    <p>The bar chart shows extimated mode shares for secondary school children under different scenarios.</p>
-  	 </div>
-  	 	<div class="chart-container" >
-  			<canvas id="secondaryChart"></canvas>
-  		</div>
-	</div>
-	
-	<div class="wrapper">
-  	  <div class="chart-text">
-  	    <h4>Route characteristics</h4>
-  	    <p>Summary of the route characteristics.</p>
-  	 </div>
-  	 	<div class="chart-container" >
-  			<canvas id="secondaryChart"></canvas>
-  		</div>
-	</div>
-
-
-</div>
-<div class="modal-footer">
-</div>
-</div>
-
-
-</div>
-
-
-<!-- Template for map popup -->
-<template id="rnet-popup">
-  <div class="mappopup">
-
-    <p>Cyclists: {_ncycle}</p>
-    <p>Gradient: {Gradient}%</p>
-    <p>Cycle-friendliness: {Quietness}%</p>
-    <p><a class="externallink" target="_blank" href="{_streetViewUrl}">Google Street View <i class="fa fa-external-link" aria-hidden="true"></i></a> <a class="externallink" target="_blank" href="{_osmUrl}">OpenStreetMap <i class="fa fa-external-link" aria-hidden="true"></i></a></p>
-
-    <button class="accordion">All network details</button>
-    
-    <div class="panel" id="popuppanel">
-
-      <h4>Fast/Direct network</h4>
-      <table>
-        <tr><th></th><th>Baseline</th><th>Go Dutch</th><th>Ebikes</th></tr>
-        <tr><th>All</td><td>{all_fastest_bicycle}</td><td>{all_fastest_bicycle_go_dutch}</td><td>{all_fastest_bicycle_ebike}</td></tr>
-        <tr><th>Commute</td><td>{commute_fastest_bicycle}</td><td>{commute_fastest_bicycle_go_dutch}</td><td>{commute_fastest_bicycle_ebike}</td></tr>
-        <tr><th>Primary</td><td>{primary_fastest_bicycle}</td><td>{primary_fastest_bicycle_go_dutch}</td><td>{primary_fastest_bicycle_ebike}</td></tr>
-        <tr><th>Secondary</td><td>{secondary_fastest_bicycle}</td><td>{secondary_fastest_bicycle_go_dutch}</td><td>{secondary_fastest_bicycle_ebike}</td></tr>
-        <tr><th>Utility</td><td>{utility_fastest_bicycle}</td><td>{utility_fastest_bicycle_go_dutch}</td><td>{utility_fastest_bicycle_ebike}</td></tr>
-      </table>
-
-      <h4>Quiet/Indirect network</h4>
-      <table>
-        <tr><th></th><th>Baseline</th><th>Go Dutch</th><th>Ebikes</th></tr>
-        <tr><th>All</td><td>{all_quietest_bicycle}</td><td>{all_quietest_bicycle_go_dutch}</td><td>{all_quietest_bicycle_ebike}</td></tr>
-        <tr><th>Commute</td><td>{commute_quietest_bicycle}</td><td>{commute_quietest_bicycle_go_dutch}</td><td>{commute_quietest_bicycle_ebike}</td></tr>
-        <tr><th>Primary</td><td>{primary_quietest_bicycle}</td><td>{primary_quietest_bicycle_go_dutch}</td><td>{primary_quietest_bicycle_ebike}</td></tr>
-        <tr><th>Secondary</td><td>{secondary_quietest_bicycle}</td><td>{secondary_quietest_bicycle_go_dutch}</td><td>{secondary_quietest_bicycle_ebike}</td></tr>
-        <tr><th>Utility</td><td>{utility_quietest_bicycle}</td><td>{utility_quietest_bicycle_go_dutch}</td><td>{utility_quietest_bicycle_ebike}</td></tr>
-      </table>
-  
-  </div>
-</template>
-
-
-
-<script src="/js/modal.js"></script>
-<script src="/js/welcome.js"></script>
-<script src="/js/accordion.js"></script>
-<script src="/js/gui.js"></script>
-<script src="/js/map.js"></script>
-<script src="/js/layer_control.js"></script>
-<script src="/js/ga_optout.js" defer></script>
-<script src="/js/help.js" defer></script>
-<script src="/js/popup.js" defer></script>
-<script src="/js/charts.js" defer></script>
-<script src="/js/sliders.js" defer></script>
-<script src="/js/tooltips.js" defer></script>
-
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1" defer></script>
-
-</body>
 </html>
- 

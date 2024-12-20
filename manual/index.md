@@ -8,7 +8,7 @@ Short extracts of this manual can be accessed throughout the tools via the <i cl
 
 ## Common User Interface
 
-Most of Carbon & Place's tools are map-based and have map controls for easy navigation and layer controls to customize data visibility. This section describes features that appear in multiple tools. 
+Most of Carbon & Place's tools are map-based, with map controls for easy navigation and layer controls to customise data visibility. This section describes features that appear in multiple tools. 
 
 ### Accessing Carbon & Place
 
@@ -39,6 +39,8 @@ The Carbon & Place provides different basemaps. The example below shows the base
 
 ![Basemap controls](/images/manual/basemap_controls.png)
 
+Basemaps include copyrighted material such as [Ordnance Survey](https://osdatahub.os.uk/downloads/open/OpenZoomstack) data, and third party maps produced by [National Library of Scotland](http://maps.nls.uk/projects/subscription-api/), [OpenStreetMap](https://www.openstreetmap.org/copyright), [Thunderforest](https://www.thunderforest.com/terms/), and [ESRI](https://www.arcgis.com/home/item.html?id=10df2279f9684e4a9f6a7f08febac2a9) satellite map. Please check the copyright status of the base map before reproducing screenshots from Carbon & Place. The default maps (OS greyscale, Outdoors, and Dark) are Open Data under the Open Government Licence and so are free to reuse.
+
 The Anti-alias option enables advanced rendering options that make the map look smoother and clearer. However, performance on low-end devices may be impaired when using anti-aliasing.
 
 ### Layer Controls
@@ -57,7 +59,7 @@ LSOAs are small statistical areas designed to have roughly the same population (
 
 In addition to being used by the ONS to publish Census statistics, LSOAs are widely used by the Government and Academia to publish small-area datasets. This means that information on a wide range of topics is available for LSOAs, and they are a valuable unit of comparison.
 
-While LSOAs are small, they still contain thousands of people, so any data about them is still an average of many people rather than individually specific. There will still be a lot of variation within an LSOA, so think about how different you are from your neighbours. Small area statistics can be useful as neighbours often have much in common. They may live in similar homes, access the same shops and services, and send their children to the same schools. Many of the choices we make are, at least in part, affected by where we live. Thus, studying the differences between people and places can help us understand some of the biggest and most complex issues of our time.
+While LSOAs are small, they still contain thousands of people. Hence, any data about them is still an average of many people rather than individually specific. There will still be much variation within an LSOA, so consider how different you are from your neighbours. Small area statistics can be useful as neighbours often have much in common. They may live in similar homes, access the same shops and services, and send their children to the same schools. Many of the choices we make are, at least in part, affected by where we live. Thus, studying the differences between people and places can help us understand some of our time's most significant and most complex issues.
 
 <!-- #dasymetric -->
 #### Dasymetric Mapping
@@ -85,9 +87,9 @@ Maps are traditionally flat, but our lives are not 2D. Terrain affects the weath
 
 The underlying data that enables 3D features in Carbon & Place is a high-resolution [Digital Terrain Model](https://en.wikipedia.org/wiki/Digital_elevation_model) (DTM) and Digital Surface Model (DSM) of Great Britain. A DTM is basically a big picture where every pixel contains the elevation of the ground. The difference between a DTM and a DSM is that DTMs measure ground level while the DSM includes things on top of the ground, such as buildings and trees.
  
-The DTM and DSM are created from [LIDAR](https://en.wikipedia.org/wiki/Lidar) data published by the [Environment Agency](https://www.data.gov.uk/dataset/f0db0249-f17b-4036-9e65-309148c97ce4/national-lidar-programme), [Welsh](https://datamap.gov.wales/maps/lidar-viewer/), and [Scottish](https://remotesensingdata.gov.scot/data#/list) Governments. Individual datasets from between 2010 and the present have been stitched together into a single map with about a 2m x 2m pixel resolution. Unfortunately, the coverage of the new DTM is not universal. In England, coverage is over 95%, but in Wales, it is about 70%, and in Scotland, only about 40% (mostly in southern and central Scotland), so we had to infill with [50m data](https://www.ordnancesurvey.co.uk/products/os-terrain-50) in places. Fortunately, the coverage is concentrated in the most populated places, so a higher proportion of people are covered even if the beauty of the Scottish and Welsh mountains is slightly lost.
+The DTM and DSM are created from [LIDAR](https://en.wikipedia.org/wiki/Lidar) data published by the [Environment Agency](https://www.data.gov.uk/dataset/f0db0249-f17b-4036-9e65-309148c97ce4/national-lidar-programme), [Welsh](https://datamap.gov.wales/maps/lidar-viewer/), and [Scottish](https://remotesensingdata.gov.scot/data#/list) Governments. Individual datasets from between 2010 and the present have been stitched together into a single map with about a 2m x 2m pixel resolution. Unfortunately, the coverage of the new DTM is not universal. In England, coverage is over 95%. However, in Wales, it is about 70%. In Scotland, only about 40% (mostly in southern and central Scotland), so we had to infill with [50m data](https://www.ordnancesurvey.co.uk/products/os-terrain-50) in places. Fortunately, the coverage is concentrated in the most populated places, so a higher proportion of people are covered even if the beauty of the Scottish and Welsh mountains is slightly lost.
 
-Building heights are calculated by comparing the difference between the DTM and the DSM. Each building footprint is given a single height based on the maximum difference between the two datasets. This simple approach does not account for buildings with sloping roofs or multiple levels. However the purpose of the 3D buildings in Carbon & Place is to visually distinguish different building types (e.g. houses and blocks of flats) that may not be clear on a 2D map, for this purpose the approximate height of the buildings is sufficient. 
+Building heights are calculated by comparing the difference between the DTM and the DSM. Each building footprint is given a single height based on the maximum difference between the two datasets. This simple approach does not account for buildings with sloping roofs or multiple levels. However, the purpose of the 3D buildings in Carbon & Place is to visually distinguish different building types (e.g., houses, and blocks of flats) that may not be clear on a 2D map. For this purpose, the approximate height of the buildings is sufficient. 
 
 ![3D buildings](/images/manual/3dbuildings.png)
 
@@ -95,29 +97,29 @@ Building heights are calculated by comparing the difference between the DTM and 
 
 #### Administrative Boundaries
 
-Several types of administrative boundaries can be added to the map. These help with navigating it and understanding when responsibilities transfer between organisations. 
+Several types of administrative boundaries can be added to the map. These help with navigating and understanding when responsibilities transfer between organisations. 
 
 <!-- #boundaries-la -->
-##### Lower Tier Local Authority 2023
+##### Lower Tier Local Authority 2024
 
 ![Lower Tier Local Authority](/images/manual/la.png)
 
 A local authority district (abbreviated as LAD) is a subnational division for local government purposes. These districts provide local services such as rubbish collection, housing, and planning applications. There are two main types of local authority districts in England:
 
-District, Borough, or City Councils: These councils cover smaller areas than county councils and offer more localized services. They handle tasks like rubbish collection, recycling, and Council Tax collection.
+District, Borough, or City Councils: These councils cover smaller areas than county councils and offer more localised services. They handle tasks like rubbish collection, recycling, and Council Tax collection.
 
 Unitary Authorities: In some areas, a single tier of local government provides all the services mentioned above. Additionally, there are parish, community, and town councils that operate at a level below district and borough councils, addressing local issues like allotments, public clocks, and community centres.
 
-[Original Data Source](https://geoportal.statistics.gov.uk/search?q=BDY_LAD%202023&sort=Title%7Ctitle%7Casc)
+[Original Data Source](https://geoportal.statistics.gov.uk/search?q=BDY_LAD%202024&sort=Title%7Ctitle%7Casc)
 <!-- /#boundaries-la -->
 <!-- #boundaries-wards -->
-##### Wards 2023
+##### Wards 2024
 
 ![Ward](/images/manual/ward.png)
 
 Wards in the United Kingdom are electoral districts at the sub-national level, represented by one or more councillors.
 
-[Original Data Source](https://geoportal.statistics.gov.uk/search?q=BDY_WD%202023&sort=Title%7Ctitle%7Casc)
+[Original Data Source](https://geoportal.statistics.gov.uk/search?q=BDY_WD%202024&sort=Title%7Ctitle%7Casc)
 <!-- /#boundaries-wards -->
 <!-- #boundaries-parish -->
 ##### Parish 2023
@@ -180,7 +182,7 @@ The Accessibility-Proximity analysis attempts to capture whether a neighbourhood
 
 The creation of these plots is straightforward.  
 
-First, the [Ordnance Survey Points of Interest](https://www.ordnancesurvey.co.uk/products/points-of-interest) (POI) have been selected as a list of destinations people may wish to access. The POI data includes a broader set of destinations than is usually considered in accessibility metrics. In total, 2,477,906 locations are divided into 385 different categories. Second, the 34,753 2011 Lower Super Output Area population-weighted centroids are used as origins to measure accessibility. Third, public transport isochrones and circular buffers are produced around each centroid. In this case, the 15, 30, 45, and 60-minute isochrones are paired with 0.75, 1.5, 2.25, and 3-mile buffers implying a 3-mph walking speed. Fourth, the number of each type of POI is counted for each time and distance band. This is divided by the resident population within the measured area to provide a per capita measure. For example, in Great Britain there are 6.46 restaurants per 10,000 people. Finally, the results are presented as a scatter plot with the Proximity (distance) count on the x-axis and accessibility (time) count on the y-axis. For both axes, the scale is normalised to show the number of standard deviations from the national average, so the average location would appear in the centre of the graph.
+First, the [Ordnance Survey Points of Interest](https://www.ordnancesurvey.co.uk/products/points-of-interest) (POI) have been selected as a list of destinations people may wish to access. The POI data includes a broader set of destinations than is usually considered in accessibility metrics. In total, 2,477,906 locations are divided into 385 different categories. Second, the 34,753 2011 Lower Super Output Area population-weighted centroids are used as origins to measure accessibility. Third, public transport isochrones and circular buffers are produced around each centroid. In this case, the 15, 30, 45, and 60-minute isochrones are paired with 0.75, 1.5, 2.25, and 3-mile buffers implying a 3-mph walking speed. Fourth, the number of each type of POI is counted for each time and distance band. This is divided by the resident population within the measured area to provide a per capita measure. For example, in Great Britain, there are 6.46 restaurants for 10,000 people. Finally, the results are presented as a scatter plot with the proximity (distance) count on the x-axis and accessibility (time) count on the y-axis. For both axes, the scale is normalised to show the number of standard deviations from the national average, so the average location would appear in the centre of the graph.
 
 ##### Accessibility & Proximity Summary Table
 
@@ -199,7 +201,7 @@ The public transport frequency analysis attempts to capture the frequency (trips
 
 1. **Reduced waiting times**. If there is a bus every 5 minutes you don't have to wait long if you miss one.
 2. **Reduced connection times**. If your journey involves multiple steps, a frequency service means you won't be waiting long to make a connection. It also reduces the impact of missing a connection, as the next option will be along soon.
-3. **Turn up and go service**. When public transport is frequent people don't need to plan their journeys or consult the timetable. They can arrive at a stop and be confident that the next service will be along soon.
+3. **Turn up and go service**. When public transport is frequent, people don't need to plan their journeys or consult the timetable. They can arrive at a stop and be confident that the next service will be along soon.
 4. **Reduced impact of delays**. If the service is frequent it can mitigate the effect of disruptions. E.g. It is frustrating if there is one bus per hour and it is 10 minutes late. But if there was one bus every 10 minutes and they are all 10 minutes late would you even notice?
 
 Frequency often varies throughout the day. It is common for there to be more services during rush hour and fewer in the evening and at weekends. While this makes sense, the service can become inconvenient if frequency in off-peak times drops too low. In many places across the UK, public transport only serves 9-5 commuters and is poor in the evenings and weekends, which makes public transport unusable for shift workers, leisure trips, etc. This can create a vicious cycle where a low frequency of service leads to low ridership, so the frequency is further reduced to save money.
@@ -212,7 +214,7 @@ To analyse how public transport varies, it was necessary to gather historical ti
 Each of these data sources provided the timetables in different formats. So, they were converted into a standardised format using the [UK2GTFS](https://itsleeds.github.io/UK2GTFS/) package. 
 
 
-Due to the retrospective nature of the data collection, it is difficult to say with certainty what proportion of the timetables have been gathered in any given year or place. For most of these datasets, contributing was voluntary, and in specific places, it is clear that data is missing. However, it seems unlikely that transport companies would volunteer a partial timetable, so we have proceeded on the basis that if a timetable is provided, it is complete. In most cases, the timetables are provided on a one-file-per-route basis. Thus, missing data is often detectable by rapid changes in services from year to year. For example, a bus service that ran every half-hour in 2006, was missing in 2007/8, and returned in 2009 is more likely to reflect missing data rather than an abrupt change in service patterns.
+Due to the retrospective nature of the data collection, it is difficult to say with certainty what proportion of the timetables have been gathered in any given year or place. For most of these datasets, contributing was voluntary, and in specific locations, it is clear that data is missing. However, it seems unlikely that transport companies would volunteer a partial timetable, so we have proceeded on the basis that if a timetable is provided, it is complete. In most cases, the timetables are provided on a one-file-per-route basis. Thus, missing data is often detectable by rapid changes in services from year to year. For example, a bus service that ran every half-hour in 2006, was missing in 2007/8, and returned in 2009 is more likely to reflect missing data rather than an abrupt change in service patterns.
 
 Each of these data sources provided the timetables in different formats. So they were converted into a standardised format using the [UK2GTFS](https://itsleeds.github.io/UK2GTFS/) package. For each year a one month snapshot of the timetable was produced. This month is usually October but in some year other months had to be used due to a lack of data.
 
@@ -224,7 +226,7 @@ To produce the statistics shown in the tool, we counted the number of trips acce
 
 ##### Missing Data / Data Quality
 
-The national timetables have been assembled from a patchwork of different datasets, and there are some known gaps. Data from 2004 to 2007 is patchy in many places, and there is no data at all for 2012 and 2013. Rail data is also missing from 2014 to 2017. The table below shows an overview of the bus data quality.
+The national timetables have been assembled from a patchwork of different datasets, and there are some known gaps. Data from 2004 to 2007 is patchy in many places, and there is no data at all for 2012 and 2013. Rail data from 2014 to 2017 is also missing. The table below shows an overview of the bus data quality.
 
 ![Timetable missing data](/images/manual/transport_bus_data.png)
 
@@ -234,7 +236,7 @@ The raw data (especially in the earlier years) contains errors such as missing s
 
 ##### Interpretation
 
-At this very local scale, timetable data is complex and messy. A sudden drop in service could be due to missing data or reflect a short-term effect, e.g., a bus being redirected during road works. So, the results for any specific place and time should be treated with care. Where this data is useful is when it shows consistent trends over time and across multiple areas. 
+At this very local scale, timetable data is complex and messy. A sudden drop in service could be due to missing data or reflect a short-term effect, e.g., a bus being redirected during road works. So, the results for any specific place and time should be treated with care. This data is useful when it shows consistent trends over time and across multiple areas. 
 
 One of the strongest patterns to emerge from the data is that in most of the country, the weekday rush hour bus service is worse than the service in the London suburbs on a Sunday night. Since 2008, bus services have declined significantly across the UK except in London, where they have remained roughly the same.
 
@@ -279,7 +281,7 @@ Road noise is a type of environmental noise pollution generated by traffic on ro
 
 Road noise is typically caused by several factors, including vehicle movement along the road, vehicle vibrations, and engine and exhaust noise. The noise can vary depending on the type of vehicle, its speed, and the proximity of the road to buildings and other structures.
 
-Road noise can negatively impact human health and wellbeing, including sleep disturbance, annoyance, stress, and cognitive impairment. It can also impact wildlife and the environment, such as disrupting animal behaviour and causing habitat fragmentation.
+Road noise can negatively impact human health and wellbeing, including sleep disturbance, annoyance, stress, and cognitive impairment. It can also impact wildlife and the environment by disrupting animal behaviour and causing habitat fragmentation.
 <!-- /#landuse-roadnoise -->
 
 <!-- #landuse-landfill -->
@@ -288,7 +290,7 @@ Historic landfills in England are sites where waste was disposed of in the past,
 
 Many historic landfills in England were operational during the 20th century when waste management practices were not as regulated as they are today. These sites were often located in areas considered undesirable at the time, such as low-lying land, quarries, or areas with limited access.
 
-Today, many historic landfills pose a risk to human health and the environment, mainly if they are not adequately managed and monitored. They can contribute to soil and water pollution, as well as generate methane gas, which is a potent greenhouse gas that can contribute to climate change.
+Today, many historic landfills pose a risk to human health and the environment, mainly if they are not adequately managed and monitored. They can contribute to soil and water pollution and generate methane gas, a potent greenhouse gas that can contribute to climate change.
 
 The UK government has established a framework for managing historic landfills, which includes assessing the risks posed by these sites, implementing measures to mitigate those risks, and monitoring the sites over time. The management of historic landfills is typically the responsibility of local authorities, with support from national government agencies as needed.
 <!-- /#landuse-landfill -->
@@ -297,7 +299,7 @@ The UK government has established a framework for managing historic landfills, w
 #### Areas of Outstanding Natural Beauty
 Areas of Outstanding Natural Beauty (AONBs) are designated landscapes in England, Wales, and Northern Ireland that have exceptional natural beauty and significance. Similar to national parks, they focus on protecting and enhancing the natural and cultural landscape rather than on recreation and tourism.
 
-AONBs are typically characterized by their unique and diverse landscapes, including rolling hills, coastlines, forests, moorland, and other distinctive features. They are managed by local partnerships made up of local authorities, landowners, and other stakeholders, who work together to balance conservation and sustainable development in the area.
+AONBs are typically characterised by their unique and diverse landscapes, including rolling hills, coastlines, forests, moorland, and other distinctive features. They are managed by local partnerships made up of local authorities, landowners, and other stakeholders, who work together to balance conservation and sustainable development in the area.
 
 The first AONBs were designated in England and Wales in the 1940s, and today, there are 46 AONBs in England, covering around 18% of the country's land area. In Northern Ireland, there are 8 AONBs, covering around 25% of the country's land area, while in Wales, there are 5 AONBs, covering around 25% of the country's land area.
 
@@ -306,11 +308,11 @@ AONBs provide a range of benefits, including conserving biodiversity and cultura
 
 <!-- #landuse-ancientwoodland -->
 #### Ancient woodlands
-Ancient woodlands in England are areas of woodland that have been continuously wooded since at least 1600 AD and are therefore considered to be of significant ecological and historical value. They are often characterized by a complex and diverse ecosystem, with a variety of tree species, plant life, and wildlife.
+Ancient woodlands in England are areas of woodland that have been continuously wooded since at least 1600 AD and are therefore considered to be of significant ecological and historical value. They are often characterised by a complex and diverse ecosystem, with a variety of tree species, plant life, and wildlife.
 
 Ancient woodlands in England can be found in a range of different landscapes, including lowland and upland areas. They can include broadleaved woodland, coniferous woodland, and mixed woodland. They may also contain features such as ponds, streams, and meadows.
 
-Ancient woodlands in England are protected under national planning policy, which requires that they are given the highest level of protection from development, and that their biodiversity and historical significance are preserved. However, despite this protection, many ancient woodlands in England have been lost or damaged over time, through factors such as development, forestry, and agriculture.
+Ancient woodlands in England are protected under a national planning policy, which requires that they are given the highest level of protection from development and that their biodiversity and historical significance are preserved. However, despite this protection, many ancient woodlands in England have been lost or damaged over time, through factors such as development, forestry, and agriculture.
 
 To help protect and restore ancient woodlands in England, various initiatives have been established, such as the Woodland Trust's Ancient Woodland Restoration Project, which aims to restore and reconnect fragmented ancient woodlands, and the Forestry Commission's Woodland Creation Planning Grant, which provides funding to establish new woodland areas in England. These initiatives aim to help ensure that ancient woodlands in England continue to provide important ecological and historical benefits for future generations.
 <!-- /#landuse-ancientwoodland -->
@@ -330,13 +332,13 @@ Conservation areas can provide a range of benefits, including the preservation o
 #### Greenbelt
 The Greenbelt is a planning policy in England that aims to prevent urban sprawl and protect the countryside and other open spaces around cities and towns. It is a zone of land surrounding urban areas where new development is restricted, aiming to preserve the natural environment and promote sustainable development.
 
-The greenbelt was first established in England in the 1950s, in response to concerns about the impact of rapid urbanisation and the loss of green spaces and agricultural land. Today, the greenbelt covers around 13% of the land area in England, and is designated by local authorities through the planning system.
+The Greenbelt was first established in England in the 1950s in response to concerns about the impact of rapid urbanisation and the loss of green spaces and agricultural land. Today, the Greenbelt covers around 13% of the land area in England, and is designated by local authorities through the planning system.
 
-The policy of the greenbelt places restrictions on development within the designated areas, and seeks to protect the countryside and other open spaces from urbanisation. This means that new development is generally not permitted, with some exceptions for certain types of development, such as agricultural use, public utilities, and infrastructure.
+The Greenbelt policy restricts development within the designated areas and seeks to protect the countryside and other open spaces from urbanisation. This means that new development is generally not permitted, with some exceptions for certain types of development, such as agricultural use, public utilities, and infrastructure.
 
-The greenbelt has a number of benefits, including the preservation of the natural environment, the protection of biodiversity and wildlife, and the provision of recreational opportunities for local communities. It also helps to maintain the character and identity of urban areas, by preventing the spread of urbanisation into surrounding areas.
+The Greenbelt has several benefits, including preserving the natural environment, protecting biodiversity and wildlife, and providing recreational opportunities for local communities. It also helps maintain the character and identity of urban areas by preventing the spread of urbanisation into surrounding areas.
 
-However, there are also some criticisms of the Greenbelt policy, including concerns about the impact on housing affordability, as well as arguments that the policy is too rigid and inflexible and may prevent the development of much-needed infrastructure and other essential services.
+However, there are also some criticisms of the Greenbelt policy, including concerns about its impact on housing affordability and arguments that it is too rigid and inflexible and may prevent the development of much-needed infrastructure and other essential services.
 <!-- /#landuse-greenbelt -->
 
 <!-- #landuse-listedbuildings -->
@@ -347,7 +349,7 @@ Buildings and structures can be listed for various reasons, such as their histor
 
 Listed buildings in England are graded into three categories: Grade I, Grade II Star, and Grade II. Grade I buildings are considered to be of exceptional interest, while Grade II Star and Grade II buildings are of lesser interest but still considered to be of special significance.
 
-England has around 500,000 listed buildings, ranging from castles and stately homes to more humble structures such as cottages and farmhouses. Listed buildings can be found in both urban and rural areas, and are often seen as important landmarks and part of the country's cultural heritage.
+England has around 500,000 listed buildings, ranging from castles and stately homes to more humble structures such as cottages and farmhouses. Listed buildings can be found in both urban and rural areas and are often seen as important landmarks and part of the country's cultural heritage.
 
 Listing a building or structure can provide a range of benefits, including the preservation of historic and architectural features, the protection of cultural heritage, and the promotion of tourism and education. However, it can also place restrictions on the use and development of the building, and may require additional costs for maintenance and repair.
 <!-- /#landuse-listedbuildings -->
@@ -358,12 +360,12 @@ National parks are large areas of land in England that are protected for their n
 
 There are currently ten national parks in England, covering approximately 9% of the country's land area. Each park has its own unique character and landscape, ranging from the rugged peaks of the Lake District to the rolling hills of the South Downs.
 
-National parks are managed by local authorities and other organizations, such as the National Trust and the Forestry Commission, in collaboration with local communities and stakeholders. Each park's management aims to balance the protection of the natural environment and cultural heritage with the needs of local communities and visitors.
+National parks are managed by local authorities and other organisations, such as the National Trust and the Forestry Commission, in collaboration with local communities and stakeholders. Each park's management aims to balance the protection of the natural environment and cultural heritage with the needs of local communities and visitors.
 <!-- /#landuse-nationalparks -->
 
 <!-- #landuse-naturereserves -->
 #### Nature reserves
-Nature reserves are areas of land and/or water managed to conserve and protect the natural environment, including plant and animal species, habitats, and ecosystems. They are established by governments, non-governmental organizations, or private individuals or groups and are generally open to the public for education, research, and recreation.
+Nature reserves are areas of land and/or water managed to conserve and protect the natural environment, including plant and animal species, habitats, and ecosystems. They are established by governments, non-governmental organisations, or private individuals or groups and are generally open to the public for education, research, and recreation.
 
 Nature reserves may be established to protect areas of special ecological, scientific, or cultural importance, or to restore and conserve habitats damaged or degraded by human activities. They can be found in various settings, including forests, wetlands, grasslands, and coastal areas.
 
@@ -389,7 +391,7 @@ Registered Parks and Gardens are an important part of England's heritage and pro
 #### RAMSAR
 RAMSAR sites are wetlands designated under the Ramsar Convention, an international treaty established in 1971 to protect wetlands of international importance. The treaty is named after the city of Ramsar in Iran, where it was signed.
 
-Wetlands are defined as areas of marsh, fen, peatland, or water, whether natural or artificial, permanent or temporary, with water that is static or flowing, fresh, brackish, or salt. They include areas of marine water the depth of which at low tide does not exceed six meters.
+Wetlands are defined as areas of marsh, fen, peatland, or water, whether natural or artificial, permanent or temporary, with water that is static or flowing, fresh, brackish, or salt. They include areas of marine water, the depth of which at low tide does not exceed six meters.
 
 The main goal of the Ramsar Convention is to conserve wetlands and their resources and to promote their wise use for the benefit of present and future generations. The convention is designed to ensure that wetlands are managed sustainably, balancing human needs with the protection of the natural environment.
 
@@ -406,7 +408,7 @@ SACs are designated based on scientific criteria, such as the presence of rare o
 
 In the UK, there are currently over 600 SACs, covering a variety of habitats such as woodlands, heathlands, grasslands, and wetlands, as well as marine habitats such as reefs, sandbanks, and estuaries. These sites are home to many rare and threatened species, such as otters, water voles, dormice, bats, birds of prey, and various invertebrates, plants and fungi.
 
-The management of SACs in the UK is carried out by a range of organizations, including government bodies, conservation organizations, landowners, and local communities. Management measures may include habitat restoration, monitoring and research, access management, and control of invasive species and other threats to biodiversity.
+The management of SACs in the UK is carried out by a range of organisations, including government bodies, conservation organisations, landowners, and local communities. Management measures may include habitat restoration, monitoring and research, access management, and control of invasive species and other threats to biodiversity.
 <!-- /#landuse-SAC -->
 
 <!-- #landuse-scheduledmonuments -->
@@ -428,7 +430,7 @@ SPAs are designated based on scientific criteria, such as the presence of rare o
 
 In the UK, there are currently over 260 SPAs, covering a variety of habitats such as coastal and estuarine areas, wetlands, and uplands. These sites are home to a wide range of bird species, such as seabirds, waders, wildfowl, and raptors, and some sites are of international importance, supporting populations of rare or threatened species.
 
-SPAs in the UK are managed by various organizations, including government bodies, conservation organizations, landowners, and local communities. Management measures may include habitat restoration, monitoring and research, access management, and control of disturbance and other threats to bird populations.
+SPAs in the UK are managed by various organisations, including government bodies, conservation organisations, landowners, and local communities. Management measures may include habitat restoration, monitoring and research, access management, and control of disturbance and other threats to bird populations.
 <!-- /#landuse-SPA -->
 
 <!-- #landuse-SSSI -->
@@ -446,15 +448,15 @@ SSSIs are an important part of the UK's natural heritage, providing habitats for
 
 <!-- #landuse-worldheritagesite -->
 #### World Heritage Sites
-World Heritage Sites are places of significant cultural, historical, or natural importance recognized by the United Nations Educational, Scientific and Cultural Organization (UNESCO) as being of universal value to humanity. They are considered among the most important and irreplaceable sites on the planet and are protected by international treaties.
+World Heritage Sites are places of significant cultural, historical, or natural importance recognised by the United Nations Educational, Scientific and Cultural Organization (UNESCO) as being of universal value to humanity. They are considered among the most important and irreplaceable sites on the planet and are protected by international treaties.
 
 There are currently over 1,100 World Heritage Sites in more than 160 countries. These sites are chosen for their outstanding universal value, authenticity, and integrity. They include natural wonders, cultural landmarks, and historic monuments.
 
 To be considered for World Heritage status, a site must meet one or more of the ten criteria established by UNESCO, including cultural and natural significance and aesthetic and historical value. Sites must also have adequate protection and management plans to ensure their preservation.
 
-Once a site is designated as a World Heritage Site, it becomes part of a global network of protected areas and is eligible for funding and support from UNESCO and other international organizations. The management and conservation of World Heritage Sites is typically the responsibility of the government or other authority in charge of the site.
+Once a site is designated as a World Heritage Site, it becomes part of a global network of protected areas and is eligible for funding and support from UNESCO and other international organisations. The management and conservation of World Heritage Sites is typically the responsibility of the government or other authority in charge of the site.
 
-World Heritage Sites are an important part of the world's cultural and natural heritage and are recognized as having universal value to all humanity. They serve as a reminder of the achievements of past civilizations, the wonders of nature, and the need to protect and preserve our shared cultural and natural heritage for future generations.
+World Heritage Sites are an important part of the world's cultural and natural heritage. They are recognised as having universal value to all humanity. They remind us of the achievements of past civilisations, the wonders of nature, and the need to protect and preserve our shared cultural and natural heritage for future generations.
 <!-- /#landuse-worldheritagesite -->
 
 <!-- #landuse-food_hygiene -->
@@ -466,7 +468,7 @@ A 2023 extract of the [Food Standards Agency hygiene ratings](https://ratings.fo
 ## Land Ownership Explorer
 
 ### Introduction
-It is hard to discuss issues around place without eventually coming to the topic of land ownership. Land owners, through a combination of action and inaction, sculpted the country into what it is today. Ultimately, they decide where the homes and jobs are, what is farmland, and what is left for nature. Despite their enormous power, land ownership is not democratically allocated. A small elite owns a large proportion of the land in the UK, and data about who owns what is often hard to come by.
+It is hard to discuss issues around place without eventually coming to the topic of land ownership. Landowners, through a combination of action and inaction, sculpted the country into what it is today. Ultimately, they decide where the homes and jobs are, what is farmland, and what is left for nature. Despite their enormous power, land ownership is not democratically allocated. A small elite owns a large proportion of the land in the UK, and data about who owns what is often hard to come by.
 
 The Land Ownership Explorer is intended to cast a little light on the issue of land ownership by providing a more accessible form of official Land Registry datasets.
 
@@ -477,13 +479,13 @@ The Land Ownership Explorer is intended to cast a little light on the issue of l
 
 The INSPIRE polygons area created by the Land Registry for England and Wales shows all the freehold land in England and Wales. They are published as Open Data with a few conditions. Unfortunately, the Land Registry does not provide an easy service to view the INSPIRE data.
 
-This layer shows a cleaned 2022 snapshot of the INSPRIRE Polygons. Land registry maps are often digitised versions of old paper maps. Therefore, the titles are often split into grids, where a property crosses the boundary of one paper map and another. An automated method was used to rejoin split polygons to give a more straightforward overview of large landowners. The process is not perfect and some square titles remain. Also, some polygons have been merged, and some INSPIRE IDs are missing. For merged polygons, they have been given one of the INSPIRE IDs from the unmerged polygons, but which one they get is essentially random.
+This layer shows a cleaned 2022 snapshot of the INSPRIRE Polygons. Land registry maps are often digitised versions of old paper maps. Therefore, the titles are often split into grids, where a property crosses the boundary of one paper map and another. An automated method was used to rejoin split polygons to give a more straightforward overview of large landowners. The process is not perfect, and some square titles remain. Also, some polygons have been merged, and some INSPIRE IDs are missing. For merged polygons, they have been given one of the INSPIRE IDs from the unmerged polygons, but which one they get is essentially random.
 
 ![Grid Detection](/images/manual/grid_detection.JPG)
 *An example of the cleaning process: Polygon boarders aligned with the grid have been detected and highlighted in red.
 While this is not perfect, the INSPIRE Polygon data is very messy. It helps clean up the data and clarifies where large titles are.*
 
-Due to the large size of the dataset, it is not possible to show every land title in the country simultaneously. Thus, when zoomed out, only the large polygons are shown.
+Due to the large dataset size, it is impossible to show every land title in the country simultaneously. Thus, when zoomed out, only the large polygons are shown.
 
 ![INSPIRE zoomed out](/images/manual/inspire_out.JPG)
 *When zoomed out, only the largest polygons are shown*
@@ -493,9 +495,9 @@ Due to the large size of the dataset, it is not possible to show every land titl
 
 Not all land is registered, so there are gaps on the map. Registration became compulsory in 1990 and is only required when land is sold, so around 14% of land in England and Wales is still unregistered.
 
-There are some overlapping polygons; this can happen when more than one owner exists. For example, London Underground may own the tunnel, but another person owns the land on the surface. Solar power companies sometimes purchase air rights above the ground to prevent buildings that might cast shadows on rooftop panels.
+Some polygons overlap, which can happen when more than one owner exists. For example, the London Underground may own the tunnel, but another person owns the land on the surface. Solar power companies sometimes purchase air rights above the ground to prevent buildings from casting shadows on rooftop panels.
 
-You can also click on the polygons to see the INSPIRE ID, which can be used to purchase the full title, the Local Authority name, and the area in square metres.
+You can also click on the polygons to see the INSPIRE ID, which you can use to purchase the full title, the Local Authority name, and the area in square metres.
 <!-- /#landownership-inspire -->
 
 <!-- #landownership-points -->
@@ -518,7 +520,7 @@ But consider another example:
 *1-4 Crown Row, Bracknell (RG12 0TH), 3, 14, 17, 18, 21, 26, 29, 31, 45, 49, 50, 55-70, 74, 75, 77-81, 84, 85, 91-95, 101, 103, 104, 106, 110, 111 Dalcross, Bracknell (RG12 0UJ), 71-73, 76, 82, 83, 86, 87 Dalcross, Bracknell (RG12 0UL), 1, 6, 9, 11 Fencote, Bracknell (RG12 0TD), 6, 8, 9, 12, 19, 22, 25, 47, 50 Garswood, Bracknell (RG12 0TY), 52, 60, 61, 65, 67, 80 Garswood, Bracknell (RG12 0TZ), 2, 10, 14, 16, 18, 36, 40, 42-44, 58-60, 72, 76, 79, 80 Helmsdale, Bracknell (RG12 0TA), 12, 13, 15, 45, 64-67, 82, 86, 87, 96, 97-99, 108, 112-115, 118, 126, 129, 138 Helmsdale, Bracknell (RG12 0TB), 1, 6, 11, 15, 23, 24, 28, 32, 33, 42-51, 67, 68, 72, 79, 80 Keepers Coombe, Bracknell (RG12 0TW, 10, 12-14, 21, 22, 25-27, 29-31, 34-36, 41 Keepers Coombe, Bracknell (RG12 0TN), 1-9, 21, 22, 26, 27, 31, 32 Kimmeridge, Bracknell (RG12 0UD), 86, 89-93(odd), 94, 100, 102, 107, 122, 125 Leaves Green, Bracknell, (RG12 0TE), 1-6, 8-10, 13-26, 33, 34, 48-50, 54, 58, 59, 63-80 Leaves Green, Bracknell (RG1*
 
 
-In this case, a single dot on the map does not clearly convey the extent of this land ownership. However, it is possible to parse this into 233 unique addresses that the text refers to. The title may have even more addresses as it has been cut off mid-postcode at 999 characters, which suggests it has been truncated. Nevertheless identifying the knowable 233 addresses helps improve our understanding of land ownership even if it is incomplete.
+In this case, a single dot on the map does not clearly convey the extent of this land ownership. However, it is possible to parse this into 233 unique addresses that the text refers to. The title may have even more addresses as it has been cut off mid-postcode at 999 characters, which suggests it has been truncated. Nevertheless, identifying the knowable 233 addresses helps improve our understanding of land ownership, even if it is incomplete.
 
 While this kind of text parsing is never 100% successful, it is worth doing. For example, 9,034 freehold titles contain multiple postcodes. When they are broken up, they actually refer to 168,911 unique property addresses. 
 
@@ -528,7 +530,7 @@ In the most complex cases, there are many locations that are `land in front/behi
 
 This is an imperfect process; the data is unstructured and complex, so there will be errors and missing data. The points may not be in the correct locations. For example, "the field behind 4 to 6 Privet Drive" is not the same as "4 Privet Drive, 5 Privet Drive, and 6 Privet Drive", but we can't geocode "the field behind" so the code will detect three addresses and create three points one for each house. Therefore, it is best to think of the points as in the vicinity of the correct address rather than an exact location.
 
-Other problems occur when the information the Land Registry provides is vague. For example, "3 Church Lane, London", there are many Church lanes in London, so it is hard to locate the correct address. The Land Registry also provides the Local Authority name so that can narrow it down a bit, but in some cases the same title will appear in multiple places on the map due to the ambiguous nature of the address.
+Other problems occur when the information the Land Registry provides is vague. For example, "3 Church Lane, London", there are many Church lanes in London, so it is hard to locate the correct address. The Land Registry also provides the Local Authority name so that it can be narrowed down a bit, but in some cases, the same title will appear in multiple places on the map due to the ambiguous nature of the address.
 
 ##### Layer Options
 
@@ -536,7 +538,7 @@ The land ownership points can be coloured on four variables:
 
 1. Organisation Type: The type of organisation, not that the dataset does not contain privately owned property
 2. Geocoding Accuracy: The precision of the point on the map. The most common option is Address (Green), which means the full address has been located. However, in some cases, only the road, postcode, or region could be identified. These points will be further from their correct location.
-3. Country of Registration: Which country is the property owner based in.
+3. Country of Registration: Where is the property owner based?
 4. Tenure: Is the property title for the freehold or leasehold?
 
 ##### Popup
@@ -546,7 +548,7 @@ The land ownership points can be coloured on four variables:
 
 * Title: The title number held by the Land Registry
 * Tenure: Freehold or	Leasehold
-* Property Address: As recorded by the Land Registry (may be multiple addresses)
+* Property Address: As recorded by the Land Registry (maybe multiple addresses)
 * Company No: Company Number resisted with Companies House
 * Country: Country of Registration
 * Category: Type of organisation
@@ -556,6 +558,168 @@ The land ownership points can be coloured on four variables:
 
 <!-- /#landownership-points -->
 
+
+
+## Retrofit Explorer
+
+The retrofit explorer tool focuses on buildings and their energy consumption from heating and electricity. It provides access to detailed information on buildings and energy and how that leads to carbon emissions.
+
+### Map Layers
+
+<!-- #retrofit-zones -->
+#### Neighbourhoods
+
+![Retrofit Neighboughoods](/images/manual/retrofit-zones.png)
+
+The Neighbourhoods layer summarises data from the domestic Energy Performance Certificates (EPCs) registered in England, Wales, and Scotland. Note that you should use the Domestic EPC layer for data about individual buildings.
+
+Clicking on any neighbourhood will display the report card for that neighbourhood with more details.
+
+The drop-down menu enables you to change the visualised characteristics.
+
+* Average EPC score
+* Average floor area
+* Building age (most common)
+* Wall rating (most common)
+* Roof rating (most common)
+* Heating rating (most common)
+* Windows rating (most common)
+* Heating type (most common)
+* Fuel type (most common)
+* Floor type (most common)
+* Building type (most common)
+* % of homes with an EPC
+
+Note that this data summarises the homes with an EPC rather than every home in the neighbourhood and that EPCs can be outdated. The percentage of homes with an EPC layer helps to identify neighbourhoods where EPC data may be unrepresentative.  
+
+##### Data Sources
+
+[England and Wales](https://epc.opendatacommunities.org/)
+
+[Scotland](https://www.scottishepcregister.org.uk/)
+
+
+<!-- /#retrofit-zones -->
+
+<!-- #retrofit-postcodes -->
+#### Postcode Gas & Electric
+
+![Retrofit Postcodes](/images/manual/retrofit-postcodes.png)
+
+This layer provides a map of the postcode gas and electricity consumption data published by the Department of Energy Security and Net Zero.
+
+It provides the most geographically detailed picture of domestic gas and electricity consumption.
+
+The drop-down menu enables you to change the visualised characteristics.
+
+* Combined Emissions: Electricity emissions + Gas (when available)
+* Gas Emissions
+* Electricity Emissions
+
+Emissions are graded from A+ (lowest per household emissions) to F- (highest per household emissions.)
+
+*Note* that homes are not on the gas grid in many rural areas and use other fuels (e.g. oil) for heating. This can give a confusing picture of emissions in the combined emissions view, as some areas have their heating emissions missing.
+
+Clicking on any postcode will display the report card for that postcode with more details.
+
+*Note* Postcode boundaries are copyright of Royal Mail so we cannot provide data download of the postcode data. 
+
+The map has gaps where no data is available. This can be because all the buildings within the postcode are non-domestic or because there are only a few domestic properties within the postcode, and so data has been suppressed to protect privacy.
+
+##### Data Sources
+
+[Postcode gas and electricity consumption](https://www.gov.uk/government/publications/postcode-level-domestic-gas-and-electricity-consumption-about-the-data)
+
+[Postcode boundaries](https://digimap.edina.ac.uk/) (Academic use only)
+
+<!-- /#retrofit-postcodes -->
+
+<!-- #retrofit-epc-dom -->
+#### Domestic EPC
+
+The Domestic EPC layer shows homes with domestic Energy Performance Certificates. The map is based on a national extract from June 2024. Only the most recent one is shown when a building has more than one EPC.
+
+The drop-down menu enables you to change the visualised characteristics.
+
+* Rating: Energy efficiency rating (A best, G worst)
+* Building Type
+* Property Type 
+* Building Age: Estimated time of construction
+* Last Assessed: The year the most recent EPC was issued
+* Floor Area: Total floor area m2
+* Floor Rating: Energy efficiency rating (Very Good to Very Poor)
+* Hot Water Rating: Energy efficiency rating (Very Good to Very Poor)
+* Windows Rating: Energy efficiency rating (Very Good to Very Poor)
+* Walls Rating: Energy efficiency rating (Very Good to Very Poor)
+* Roof Rating: Energy efficiency rating (Very Good to Very Poor)
+* Heating Rating: Energy efficiency rating (Very Good to Very Poor)
+* Controls Rating: Energy efficiency rating (Very Good to Very Poor)
+* Lighting Rating: Energy efficiency rating (Very Good to Very Poor)
+* Solar Thermal: Has solar thermal heating (Yes/No)
+
+Clicking on any EPC will display a popup with more details.
+
+Please note that the Scotland EPC register is separate and slightly different to the England and Wales register. In Carbon & Place we have harmonised the datasets and this can results in slight inconstancies with the Scottish data. For example Scotland uses slightly different age bands, and these have been mapped to the closest equivalent used in England and Wales.
+
+##### Data Sources
+
+[England and Wales](https://epc.opendatacommunities.org/)
+
+[Scotland](https://www.scottishepcregister.org.uk/)
+
+
+
+<!-- /#retrofit-epc-dom -->
+
+<!-- #retrofit-epc-nondom -->
+#### Non-domestic EPC
+
+The Non-domestic EPC layer shows buildings with non-domestic Energy Performance Certificates. The map is based on a national extract from June 2024. Only the most recent one is shown when a building has more than one EPC.
+
+The drop-down menu enables you to change the visualised characteristics.
+
+* Rating: Energy efficiency rating (A best, G worst)
+* Transaction: The type of transaction that caused an EPC to be issued
+* Floor Area: Total floor area (m2)
+* Last Assessed: Year that the EPC was issued
+
+Clicking on any EPC will display a popup with more details.
+
+Please note that the Scotland EPC register is separate and slightly different to the England and Wales register. In Carbon & Place we have harmonised the datasets and this can results in slight inconstancies with the Scottish data. For example Scotland uses slightly different age bands, and these have been mapped to the closest equivalent used in England and Wales.
+
+##### Data Sources
+
+[England and Wales](https://epc.opendatacommunities.org/)
+
+[Scotland](https://www.scottishepcregister.org.uk/)
+
+
+
+<!-- /#retrofit-epc-nondom -->
+
+
+### Report Card
+
+#### Neighbourhoods
+
+The neighbourhood report card summarises the domestic EPCs in each neighbourhood.  
+
+
+#### Postcodes
+
+The report card provides historical data (2015 - 2022) about domestic gas and electricity consumption.
+
+For each postcode, data is provided as follows:
+
+* Mean: Average values (i.e. total divided by number of homes)
+* Median: Middle values (i.e. half of homes are above and half of homes are below)
+* Total: All homes added together
+
+Electricity consumption is further divided by meter type (all, standard, economy 7). Economy 7 meters are an old type of meter that could charge two different rates based on time of day. These are less common now and are being replaced by smart meters (included in the standard category).
+
+To protect privacy, DESNZ removes data for postcodes that only cover a small number of properties or may remove a particular type of meter if it is uncommon (e.g., Economy 7). This can result in gaps in the data.
+
+Postcodes, unlike the LSOAs used in the rest of Carbon & Place, are not designed for data reporting and change fairly often to meet mail delivery needs. This can be a challenge for presenting historical data. So, in Carbon & Place, we only show data for the current postcode areas; this means historical data is missing in some locations.
 
 
 ## Place-Based Carbon Calculator
@@ -570,6 +734,62 @@ Zones Help
 <!-- /#pbcc-zones -->
 
 
-## Retrofit Explorer
+<!-- #pbcc-community-photo -->
+#### Community Photo
 
-Coming Soon
+The community photo is intended to give an at-a-glance overview of the demographics of each neighbourhood. Each neighbourhood's photo is made up of 48 household photos distributed in proportion to their occurrence in the 2021 census. 
+
+The appropriate household photos are automatically selected from a set of about 200 household archives based on three variables.
+
+[Household composition](https://www.ons.gov.uk/census/census2021dictionary/variablesbytopic/demographyvariablescensus2021/householdcomposition/classifications) 
+
+Household composition considers the number and age of people in a household and how people are related to each other.
+
+* ![family_photo](/images/ui/family_photos/higher_OnePersonOver66_White.webp) **OnePersonOver66**: One-person household: Aged 66 years and over 
+* ![family_photo](/images/ui/family_photos/higher_OnePersonOther_White.webp) **OnePersonOther**: One-person household: Aged 65 years or under 
+* ![family_photo](/images/ui/family_photos/higher_FamilyOver66_White.webp) **FamilyOver66**: Single family household: All aged 66 years and over 
+* ![family_photo](/images/ui/family_photos/higher_CoupleNoChildren_White.webp) **CoupleNoChildren**: Single-family household: Married, civil partnership, or cohabiting couple: No children 
+* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_White.webp) **CoupleChildren**: Single-family household: Married, civil partnership, or cohabiting couple: Dependent children 
+* ![family_photo](/images/ui/family_photos/higher_CoupleNonDepChildren_White.webp) **CoupleNonDepChildren**: Single-family household: Married, civil partnership, or cohabiting couple: All children non-dependent 
+* ![family_photo](/images/ui/family_photos/higher_LoneParent_White.webp) **LoneParent**: Single-family household: Lone parent family: With dependent children 
+* ![family_photo](/images/ui/family_photos/higher_LoneParentNonDepChildren_White.webp) **LoneParentNonDepChildren**: Single-family household: Lone parent family: All children non-dependent 
+* ![family_photo](/images/ui/family_photos/higher_OtherNoChildren_White.webp) **OtherNoChildren**: Other household types: Other related household: Other family composition 
+* ![family_photo](/images/ui/family_photos/higher_OtherChildren_White.webp) **OtherChildren**: Other household types: With dependent children 
+* ![family_photo](/images/ui/family_photos/higher_OtherIncStudentOrOver66_White.webp) **OtherIncStudentOrOver66**: Other household types: Other, including all full-time students and all aged 66 years and over. 
+
+A dependent child is a person aged 0 to 15 years in a household, or a person aged 16 to 18 years who is in full-time education and lives in a family with their parent, parents, grandparent or grandparents.
+
+[National Statistics Socio-Economic Classification (NS-SEC) of the household reference person](https://www.ons.gov.uk/methodology/classificationsandstandards/otherclassifications/thenationalstatisticssocioeconomicclassificationnssecrebasedonsoc2010)
+
+NS-SEC classifies people based on their jobs.
+
+* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_White.webp) **Higher**: Higher managerial, administrative, and professional occupations
+* ![family_photo](/images/ui/family_photos/intermediate_CoupleChildren_White.webp) **Intermediate**: Intermediate occupations 
+* ![family_photo](/images/ui/family_photos/routine_CoupleChildren_White.webp) **Routine**: Routine and manual occupations 
+* ![family_photo](/images/ui/family_photos/students_OtherIncStudentOrOver66_White.webp) **Students**: Full time students including students that also work
+* ![family_photo](/images/ui/family_photos/unemployed_CoupleChildren_White.webp) **Unemployed**: Never worked and long-term unemployed
+* ![family_photo](/images/ui/family_photos/DNA_OnePersonOther_White.webp) **Does Not Apply**: A small number of households that cannot be classified.
+
+Note that the NS-SEC classification applied to the household reference person. This is usually the person who pays the rent/mortgage. In the case of joint contributions, the higher earner is chosen. This means that only the NS-SEC of the highest earner is depicted in the family photo. For example, in a couple where one person was a banker and the other a gardener, the household would be represented by the “Higher” category and show two people in higher roles.
+
+Retired people's NS-SEC classification is based on their previous job. 
+
+[Ethnicity](https://www.ons.gov.uk/peoplepopulationandcommunity/culturalidentity/ethnicity/bulletins/ethnicgroupenglandandwales/census2021)
+
+
+
+* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_White.webp) **White**: White (74.4% of population)
+* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_Black.webp) **Black**: Black, Black British, Black Welsh, Caribbean or African (4.0% of population)
+* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_Other.webp) **Other**: Asian, Asian British, Asian Welsh, Mixed, Multiple, or Other ethnic group (14.3% of population)
+
+#### Notable limitations
+
+There are a few limitations to the family photo method that should be understood. Mostly, these come from the trade-off between accuracy and an easy-to-understand summary of a complex population. 
+
+**Not all households are represented**: As hundreds of households are summarised into 48 pictures, unusual households are not shown. Typically, around 90% of households are represented and representation is above 75% in almost all neighbourhoods. But only the most common 65% of households are represented in a few truly diverse locations.
+
+**Some characteristics are not included**: For example, gender and sexuality are not included in the analysis. This leads to some obvious simplifications, such as a person living alone over 66 is always a woman, and someone living alone under 65 is always a man. There are also no same-sex couples in the family photos. This is due to a practical limitation of the data. The more categories you add to the analysis, the more likely it is that you identify individual households. The ONS prevents the publication of disclosive datasets, so we have to constrain our analysis to a few broad categories. 
+
+**Mixed ethnicity households are not shown**: A limitation of the input data is that we can’t tell the ethnic composition within households. Therefore, all of the family pictures are a single ethnicity. For example, if there was a neighbourhood made up of exclusive black women and white men, the community photo would be 50% white couples and 50% black couples. In practice mixed ethnicity couples are only common in London and the South East, where they make up as much as [20% of households in some areas](https://www.ons.gov.uk/census/maps/choropleth/identity/multiple-ethnic-groups-in-household/hh-multi-ethnic-group/ethnic-groups-differ-within-partnerships/) .
+
+<!-- /#pbcc-community-photo -->

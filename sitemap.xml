@@ -8,73 +8,78 @@
 
 
 <url>
-  <loc>https://placebasedcarboncalculator.github.io/</loc>
-  <lastmod>2024-07-15T17:40:03+00:00</lastmod>
+  <loc>https://www.carbon.place/</loc>
+  <lastmod>2024-10-16T13:55:48+00:00</lastmod>
   <priority>1.00</priority>
 </url>
 <url>
-  <loc>https://placebasedcarboncalculator.github.io/about/</loc>
-  <lastmod>2024-07-15T17:40:03+00:00</lastmod>
+  <loc>https://www.carbon.place/about/</loc>
+  <lastmod>2024-10-16T13:55:48+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://placebasedcarboncalculator.github.io/data/</loc>
-  <lastmod>2024-07-15T17:40:03+00:00</lastmod>
+  <loc>https://www.carbon.place/data/</loc>
+  <lastmod>2024-10-16T13:55:48+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://placebasedcarboncalculator.github.io/manual/</loc>
-  <lastmod>2024-07-15T17:40:03+00:00</lastmod>
+  <loc>https://www.carbon.place/manual/</loc>
+  <lastmod>2024-10-16T13:55:48+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://placebasedcarboncalculator.github.io/privacy/</loc>
-  <lastmod>2024-07-15T17:40:03+00:00</lastmod>
+  <loc>https://www.carbon.place/privacy/</loc>
+  <lastmod>2024-10-16T13:55:48+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://placebasedcarboncalculator.github.io/legacy/</loc>
-  <lastmod>2024-07-15T17:40:03+00:00</lastmod>
+  <loc>https://www.carbon.place/legacy/</loc>
+  <lastmod>2024-10-16T13:55:48+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://placebasedcarboncalculator.github.io/transport/</loc>
-  <lastmod>2024-07-15T17:40:03+00:00</lastmod>
+  <loc>https://www.carbon.place/transport/</loc>
+  <lastmod>2024-10-16T13:55:48+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://placebasedcarboncalculator.github.io/landuse/</loc>
-  <lastmod>2024-07-15T17:40:03+00:00</lastmod>
+  <loc>https://www.carbon.place/landuse/</loc>
+  <lastmod>2024-10-16T13:55:48+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://placebasedcarboncalculator.github.io/landownership/</loc>
-  <lastmod>2024-07-15T17:40:03+00:00</lastmod>
+  <loc>https://www.carbon.place/landownership/</loc>
+  <lastmod>2024-10-16T13:55:48+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://placebasedcarboncalculator.github.io/about/faq/</loc>
-  <lastmod>2024-07-15T17:40:03+00:00</lastmod>
+  <loc>https://www.carbon.place/retrofit/</loc>
+  <lastmod>2024-10-16T13:55:48+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.carbon.place/about/faq/</loc>
+  <lastmod>2024-10-16T13:55:48+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
-  <loc>https://placebasedcarboncalculator.github.io/legacy/about/</loc>
-  <lastmod>2024-07-15T17:40:03+00:00</lastmod>
+  <loc>https://www.carbon.place/legacy/about/</loc>
+  <lastmod>2024-10-16T13:55:48+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
-  <loc>https://placebasedcarboncalculator.github.io/legacy/data/</loc>
-  <lastmod>2024-07-15T17:40:03+00:00</lastmod>
+  <loc>https://www.carbon.place/legacy/data/</loc>
+  <lastmod>2024-10-16T13:55:48+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
-  <loc>https://placebasedcarboncalculator.github.io/legacy/la/</loc>
-  <lastmod>2024-07-15T17:40:03+00:00</lastmod>
+  <loc>https://www.carbon.place/legacy/la/</loc>
+  <lastmod>2024-10-16T13:55:48+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
-  <loc>https://placebasedcarboncalculator.github.io/legacy/privacy/</loc>
-  <lastmod>2024-07-15T17:40:03+00:00</lastmod>
+  <loc>https://www.carbon.place/legacy/privacy/</loc>
+  <lastmod>2024-10-16T13:55:48+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 

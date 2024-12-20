@@ -1,6 +1,6 @@
 
 // Settings for this installation
-const settings = {
+const settings_common = {
 	
 	// Map position
 	initialPosition: {
@@ -17,14 +17,6 @@ const settings = {
 			title: 'OS greyscale',
 			buildingColour: '#d1cfcf'
 		},
-		'satellite': {
-			title: 'Satellite',
-			buildingColour: false   // No buildings
-		},
-		'opencyclemap': {
-			title: 'OpenCycleMap',
-			buildingColour: false   // No buildings
-		},
 		'google_nobuild': {
 			title: 'Outdoors',
 			buildingColour: '#f0eded'
@@ -33,6 +25,31 @@ const settings = {
 			title: 'Dark',
 			buildingColour: '#000000'
 		},
+		'satellite': {
+			title: 'Satellite',
+			buildingColour: false   // No buildings
+		},
+		'opencyclemap': {
+			title: 'OpenCycleMap',
+			buildingColour: false   // No buildings
+		},
+		'osgb1888': {
+			title: 'Ordnance Survey 1888-1913',
+			buildingColour: false   // No buildings
+		},
+		'osgb1919': {
+			title: 'Ordnance Survey 1919',
+			buildingColour: false   // No buildings
+		},
+		'osgb25k1937': {
+			title: 'Ordnance Survey 1937-1961',
+			buildingColour: false   // No buildings
+		},
+		'osgb63k1955': {
+			title: 'Ordnance Survey 1955-61',
+			buildingColour: false   // No buildings
+		},
+		
 	},
 	
 	// Tileserver for data layers
@@ -43,7 +60,7 @@ const settings = {
 	},
 	
 	// Buildings/placenames tiles URL; can use %tileserverUrl to represent the above
-	buildingsTilesUrl: 'pmtiles://%tileserverUrl/buildings.pmtiles',
+	buildingsTilesUrl: 'pmtiles://%tileserverUrl/buildings_v2.pmtiles',
 	placenamesTilesUrl: 'pmtiles://%tileserverUrl/oszoom_names.pmtiles',
 	
 	// Manual

@@ -1,4 +1,5 @@
 // Data definitions, i.e. layers, charts, etc.
+// For PBCC tool
 const datasets_extra = {
 	
 	// Data layers
@@ -117,60 +118,33 @@ const datasets_extra = {
 		},
 	},
 	
-	// Chart definitions, indexed by map layer ID
+	
+	// Chart definitions, indexed by map layer ID, then datasource ID, different from NPT wich has one data soruce per modal per map layer
+	// I.e. charts > Layer clicked on to trigger modal > datasource to fill the modal
+	
 	charts: {
 	  zones: {
-	    
-	    // Data fields
-			// #!# Should use a main server URL setting
-			dataUrl: 'https://pbcc.blob.core.windows.net/pbcc-data/LSOA/%id.json',
-			propertiesField: 'LSOA21CD',
-			titleField: 'LSOA21CD',
-			
-			// Title
-			titlePrefix: 'Neighbourhood Summary: ',
-			
-			charts: [
-				[
-					// Commute Origin
-					'comm_orig',
-					'Total Footprint',
-					'Description goes here',
-					'kgCO2e per year'
-				]
-		  ],
-		  
-		  component: [
-		    // Label, field (e.g. Gas => dgkp2020), background colour, border colour
-				['Gas', 'dgkp', 'rgba(166,206,227, 0.8)', 'rgba(166,206,227, 1)'],
-				['Electricity', 'dekp', 'rgba(31,120,180, 0.8)', 'rgba(31,120,180, 1)'],
-				['Other Housing', 'osep', 'rgba(51,160,44, 0.8)', 'rgba(51,160,44, 1)'],
-				['Cars', 'cep', 'rgba(251,154,153, 0.8)', 'rgba(251,154,153, 1)'],
-				['Vans', 'vep', 'rgba(227,26,28, 0.8)', 'rgba(227,26,28, 1)'],
-				['Flights', 'efp', 'rgba(255,127,0, 0.8)', 'rgba(255,127,0, 1)'],
-				['Food & Drink', 'nep', 'rgba(202,178,214, 0.8)', 'rgba(202,178,214, 1)'],
-				['Consumable Goods', 'cep', 'rgba(106,61,154, 0.8)', 'rgba(106,61,154, 1)'],
-				['Recreation', 'rep', 'rgba(255,255,153, 0.8)', 'rgba(255,255,153, 1)'],
-				['Services', 'sep', 'rgba(177,89,40, 0.8)', 'rgba(177,89,40, 1)'],
-				
-		  ],
-		  
-	   years: [
-				['2010', '2010'],
-				['2011', '2011'],
-				['2012', '2012'],
-				['2013', '2013'],
-				['2014', '2014'],
-				['2015', '2015'],
-				['2016', '2016'],
-				['2017', '2017'],
-				['2018', '2018'],
-				['2019', '2019'],
-				['2020', '2020'],
-			]
-	   
-	  }
-	  
+	    zones: {
+	      // Data fields
+  			// #!# Should use a main server URL setting
+  			dataUrl: 'https://pbcc.blob.core.windows.net/pbcc-data/Access/%id.json',
+  			propertiesField: 'LSOA21CD',
+  			titleField: 'LSOA11CD',
+  			
+  			// Title
+  			titlePrefix: 'Neighbourhood Summary: LSOA ',
+  			
+  			charts: [
+  				[
+  					// Access Proximity
+  					'access_proximity',
+  					'Access Proximity',
+  					'Description goes here',
+  					'Access by public transport'
+  				]
+  		  ]
+	    }
+	  },
 	},
 	
 	// Popups
@@ -262,8 +236,9 @@ function renderChart (divId, title, datasets, labels)
 function getStyleColumn (layerId, datasets)
 {
   
-  console.log("Hi")
+  
 	const style_col_selected = datasets.lineColours.zones.hasOwnProperty(layerId) ? layerId : '_';
+	//console.log(datasets.lineColours.zones['Grade']);
 	//return datasets.lineColours.zones[style_col_selected];
 	return datasets.lineColours.zones['Grade'];
 }
@@ -282,9 +257,11 @@ function zonesStyling (layerId, map, settings, datasets, createLegend /* callbac
 	//map.setPaintProperty (layerId, 'fill-color', ['step', ['get', field], getStyleColumn (field, datasets)]);
 	map.setPaintProperty (layerId, 'fill-color', ['match', ['get', field], ...getStyleColumn (field, datasets)]);
 	map.setPaintProperty (layerId, 'fill-opacity', (daysymetricMode ? 0.1 : 0.8)); // Very faded-out in daysymetric mode, as the buildings are coloured
+	map.setPaintProperty (layerId, 'fill-outline-color', 'rgba(0, 0, 0, 0.2)'); 
 	
 	// Set buildings layer colour/visibility
 	const buildingColour = getBuildingsColour(settings);
+	console.log((buildingColour || '#9c9898'));
 	map.setPaintProperty ('buildings', 'fill-extrusion-color', (buildingColour || '#9c9898'));
 	//map.setPaintProperty ('buildings', 'fill-extrusion-color', '#9c9898');
 	map.setLayoutProperty ('buildings', 'visibility', (buildingColour ? 'visible' : 'none'));

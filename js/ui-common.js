@@ -245,6 +245,7 @@ const capUi = (function () {
 				minZoom: _settings.minZoom,
 				maxPitch: 85,
 				hash: false,	// Emulating the hash manually for now; see layerStateUrl
+				attributionControl: false, // Created manually below
 				antialias: document.getElementById('antialiascheckbox').checked
 			});
 			
@@ -296,12 +297,7 @@ const capUi = (function () {
 			
 			// Add placenames support
 			map.once('idle', function () {
-			  //console.log("Idle trigger place names");
 				capUi.placenames(map);
-				document.addEventListener ('@map/ready', function () {
-					capUi.placenames (map);
-				});
-				
 			});
 			
 			// Add geolocation control
@@ -336,7 +332,7 @@ const capUi = (function () {
 			// Add attribution
 			map.addControl(new maplibregl.AttributionControl({
 				compact: true,
-				customAttribution: 'Contains OS data © Crown copyright 2024, Satellite map © ESRI 2024, © OpenStreetMap contributors'
+				customAttribution: 'Contains <a href="https://osdatahub.os.uk/downloads/open/OpenZoomstack">OS data</a> © Crown copyright 2024, © <a href="https://www.arcgis.com/home/item.html?id=10df2279f9684e4a9f6a7f08febac2a9">ESRI</a>, © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, © <a href="https://www.thunderforest.com/terms/">Thunderforest</a>, © <a href="http://maps.nls.uk/projects/subscription-api/">National Library of Scotland</a>'
 			}), 'bottom-left');
 			
 			// Antialias reload
@@ -355,29 +351,6 @@ const capUi = (function () {
 				document.dispatchEvent(new Event('@map/ready', {
 					'bubbles': true
 				}));
-				
-				// Add Sky
-				map.setSky({
-              'sky-color': '#199EF3',
-              'sky-horizon-blend': 0.5,
-              'horizon-color': '#ffffff',
-              'horizon-fog-blend': 0.5,
-              'fog-color': '#0000ff',
-              'fog-ground-blend': 0.5,
-              'atmosphere-blend': [
-                  'interpolate',
-                  ['linear'],
-                  ['zoom'],
-                  0,
-                  1,
-                  10,
-                  1,
-                  12,
-                  0
-              ]
-        });
-				
-				
 				
 			});
 			
@@ -561,7 +534,7 @@ const capUi = (function () {
                     ],
                 'fill-extrusion-opacity': 0.9
 						}
-					}, 'roads 0 Guided Busway Casing');
+					}, 'roads 0 Guided Busway Casing');  
 				}
 			});
 		},
@@ -571,14 +544,6 @@ const capUi = (function () {
 		placenames: function (map)
 		{
 			
-			// Add the source, if not already present
-			if (!map.getSource ('placenames')) {
-				map.addSource ('placenames', {
-					'type': 'vector',
-					'url': _settings.placenamesTilesUrl.replace ('%tileserverUrl', _settings.tileserverUrl),
-				});
-			}
-			
 			// Load the style definition
 			// #!# The .json file is currently not a complete style definition, e.g. with version number etc.
 			fetch ('/tiles/partial-style_oszoom_names.json')
@@ -587,24 +552,50 @@ const capUi = (function () {
 				})
 				.then (function (placenameLayers) {
 					
-					// Register the list
-					placenameLayers = placenameLayers;
-
-					// Add each layer, respecting the initial checkbox state
-					Object.entries (placenameLayers).forEach (([layerId, layer]) => {
-						const checkbox = document.getElementById ('placenamescheckbox');
-						layer.visibility = (checkbox.checked ? 'visible' : 'none');
-						if (!map.getLayer (layerId)) {
-							map.addLayer (layer);
-						}
-					});
+					// Create a handle to the toggle handler; this is used to avoid compounding event listeners given that a @map/ready does not directly provide the ability to take down an existing handler, resulting in a dangling reference
+					let placenamesVisibilityHandler = null;
 					
-					// Listen for checkbox changes
-					document.getElementById('placenamescheckbox').addEventListener('click', (e) => {
-						const checkbox = document.getElementById('placenamescheckbox');
-						Object.entries(placenameLayers).forEach(([layerId, layer]) => {
-							map.setLayoutProperty(layerId, 'visibility', (checkbox.checked ? 'visible' : 'none'));
+					// Define load function
+					const loadPlacenames = function ()
+					{
+						// Add the source, if not already present
+						if (!map.getSource ('placenames')) {
+							map.addSource ('placenames', {
+								'type': 'vector',
+								'url': _settings.placenamesTilesUrl.replace ('%tileserverUrl', _settings.tileserverUrl),
+							});
+						}
+
+						// Add each placename layer, respecting the initial checkbox state
+					  const checkbox = document.getElementById ('placenamescheckbox');
+						Object.entries (placenameLayers).forEach (([layerId, layer]) => {
+							layer.layout.visibility = (checkbox.checked ? 'visible' : 'none');
+							if (!map.getLayer (layerId)) {
+								map.addLayer (layer);
+							}
 						});
+
+						// If an existing event listener exists, remove it to avoid compounding listeners unnecessarily
+						if (placenamesVisibilityHandler) {
+							document.getElementById('placenamescheckbox').removeEventListener('click', placenamesVisibilityHandler);
+						}
+
+						// Set handler function to change placenames visibility
+						placenamesVisibilityHandler = function () {
+							const checkbox = document.getElementById('placenamescheckbox');
+							Object.entries (placenameLayers).forEach (([layerId, layer]) => {
+								map.setLayoutProperty(layerId, 'visibility', (checkbox.checked ? 'visible' : 'none'));
+							});
+						};
+
+						// Listen for checkbox changes
+						document.getElementById('placenamescheckbox').addEventListener('click', placenamesVisibilityHandler);
+					};
+					
+					// Run initially and on style change
+					loadPlacenames ();
+					document.addEventListener ('@map/ready', function () {
+						loadPlacenames ();
 					});
 				});
 		},
@@ -714,7 +705,7 @@ const capUi = (function () {
 		
 		toggleLayer: function (layerId)
 		{
-			console.log ('Toggling layer ' + layerId);
+			//console.log ('Toggling layer ' + layerId);
 			
 			// Check for a dynamic styling callback and run it if present
 			if (_datasets.layerStyling[layerId]) {
@@ -726,6 +717,7 @@ const capUi = (function () {
 			// Set the visibility of the layer, based on the checkbox value
 			const isVisible = document.querySelector ('input.showlayer[data-layer="' + layerId + '"]').checked;
 			_map.setLayoutProperty(layerId, 'visibility', (isVisible ? 'visible' : 'none'));
+			console.log ('Toggling layer ' + layerId + ' visability ' + isVisible);
 			
 			// Update the layer state for the URL
 			capUi.layerStateUrl ();
@@ -748,7 +740,7 @@ const capUi = (function () {
 			if(document.getElementById(selector).className == "legendHorizontal") {
 			  legendHtml = '<div class="l_rHorizontal">';
   			  selected = (legendColours.hasOwnProperty(selected) ? selected : '_');
-  			  //console.log(selected);
+  			  //console.log(legendColours[selected]);
   			  legendColours[selected].forEach(legendColour => {
   				legendHtml += `<div class="lbHorizontal"><span style="background-color: ${legendColour[1]}"></span>${legendColour[0]}</div>`;
   			})
@@ -854,6 +846,8 @@ const capUi = (function () {
 		  // Function to create a chart modal
 			const chartsModal = function (mapLayerId, chartDefinition) {
 				
+				console.log("Making chartsModal for: " + mapLayerId)
+				
 				// Initialise the HTML structure for this modal
 				//initialiseChartsModalHtml (mapLayerId);
 				
@@ -865,6 +859,8 @@ const capUi = (function () {
 				
 				// Open modal on clicking the supported map layer
 				_map.on ('click', mapLayerId, function (e) {
+				  
+				  
 					
 					// Ensure the source matches
 					let clickedFeatures = _map.queryRenderedFeatures(e.point);
@@ -874,6 +870,7 @@ const capUi = (function () {
 						//return el.source != 'composite';
 					});
 					if (clickedFeatures[0].sourceLayer != mapLayerId) {
+						console.log("click blocked: " + clickedFeatures[0].sourceLayer + " != " + mapLayerId);
 						return;
 					}
 					
@@ -881,7 +878,6 @@ const capUi = (function () {
 					const featureProperties = e.features[0].properties;
 					const locationId = featureProperties[chartDefinition.propertiesField];
 					//const dataUrl = chartDefinition.dataUrl.replace('%id', locationId);
-					
 					
 					// Set the title
 					// TODO this is run muliple times when muliple data sources, but still works
@@ -891,9 +887,9 @@ const capUi = (function () {
 					
 					// Display the modal
 					location_modal.show();
-					
+					console.log(mapLayerId);
 					// Tool Specific Function in each ui.js
-					manageCharts(locationId);
+					manageCharts(locationId, mapLayerId);
 					
 					
 				});
@@ -1146,7 +1142,7 @@ const capUi = (function () {
 		{
 			// Identify the modal
 			const modal = document.getElementById(modalId);
-      console.log("Modal setup" + modalId);
+      console.log("Modal setup: " + modalId);
 			// When the user clicks on <span> (x), close the modal
 			const closeButton = document.querySelector('#' + modalId + ' .modal-close');
 			closeButton.addEventListener('click', function () {

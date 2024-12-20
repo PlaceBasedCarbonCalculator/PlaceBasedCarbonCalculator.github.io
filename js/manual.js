@@ -84,7 +84,7 @@ function createEditLink ()
   const slug = matches[1];
   
   // Assemble the link
-  const link = settings.manualEditingUrl.replace ('%id', slug);
+  const link = settings_common.manualEditingUrl.replace ('%id', slug);
   
   // Create new div and attach to body
   document.querySelector('#editlink').href = link;

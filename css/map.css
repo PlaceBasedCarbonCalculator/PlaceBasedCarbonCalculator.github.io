@@ -474,8 +474,8 @@ input:checked + .slider:before {
   padding: 0px;
   overflow: auto; /* Enable scroll if needed */
   background-color: #fefefe;
-  animation-name: fadeIn;
-  animation-duration: 0.4s;
+  animation-name: slideIn;
+  animation-duration: 0.5s;
   max-width: 1200px;
 }
 
@@ -543,24 +543,9 @@ input:checked + .slider:before {
 }
 
 /* Add Animation */
-@-webkit-keyframes slideIn {
-  from {bottom: -300px; opacity: 0} 
-  to {bottom: 0; opacity: 1}
-}
-
 @keyframes slideIn {
-  from {bottom: -300px; opacity: 0}
-  to {bottom: 0; opacity: 1}
-}
-
-@-webkit-keyframes fadeIn {
-  from {opacity: 0} 
-  to {opacity: 1}
-}
-
-@keyframes fadeIn {
-  from {opacity: 0} 
-  to {opacity: 1}
+  from {top: 100%; opacity: 1}
+  to {top: 70px; opacity: 1}
 }
 
 .chart-wrapper {
