@@ -5,10 +5,13 @@ var plefIgnoreChart;
 var plefSteerChart;
 var plefShiftChart;
 var plefTransformChart;
+var populationChart;
+
 var locationData = {};
 var voa2020LocationData = {};
 var voa2010LocationData = {};
 var communityPicLocationData = {};
+var populationLocationData = {};
 
 var dwellingsctChart;
 var dwellingstypeChart;
@@ -18,7 +21,7 @@ var dwellingsageChart;
 manageCharts =  function (locationId){
   console.log("Managing Charts");
   
-  capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/LSOA/' + locationId + '.json')
+  capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/pbcc_zones/V1/' + locationId + '.json')
         .then(function (lsoaData) {
             locationData = lsoaData[0];
             makeChartHistorical();
@@ -60,6 +63,18 @@ manageCharts =  function (locationId){
             alert('Failed to get Community Picture data for this location, or to process it correctly. Please try refreshing the page.');
             console.log(error);
         });
+        
+    capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/population/' + locationId + '.json')
+        .then(function (lsoaData) {
+            populationLocationData = lsoaData;
+            makeChartPopulation();
+        })
+        .catch(function (error) {
+            alert('Failed to get Community Picture data for this location, or to process it correctly. Please try refreshing the page.');
+            console.log(error);
+        });
+        
+    
   
   //makeChartOverview(chartDefinition, locationData[0]);
  // makeChartPLEF(chartDefinition, locationData[0])
@@ -82,7 +97,7 @@ makeCommunityPic = function(){
   });
   
   
-  console.log(repeatedNames);
+  //console.log(repeatedNames);
 }
 
 maketableOverview = function(){
@@ -124,6 +139,7 @@ makeChartOverview = function(){
   
   // Create an object to store data for each category
   
+  /*
   var component = [
 		    // Label, field (e.g. Gas => dgkp2020), background colour, border colour
 				['Gas', 'dgkp', 'rgba(166,206,227, 0.8)', 'rgba(166,206,227, 1)'],
@@ -137,6 +153,30 @@ makeChartOverview = function(){
 				['Recreation', 'rep', 'rgba(255,255,153, 0.8)', 'rgba(255,255,153, 1)'],
 				['Services', 'sep', 'rgba(177,89,40, 0.8)', 'rgba(177,89,40, 1)'],
 		  ]
+  */
+  
+  var component = [
+		    // Label, field (e.g. Gas => dgkp2020), background colour, border colour
+				['Gas', 'dgkp', 'rgba(166,206,227, 0.8)', 'rgba(166,206,227, 1)'],
+				['Electricity', 'dekp', 'rgba(31,120,180, 0.8)', 'rgba(31,120,180, 1)'],
+				['Other Heating', 'hokp', 'rgba(202,178,214, 0.8)', 'rgba(202,178,214, 1)'],
+				['Other Housing', 'Bhokp', 'rgba(51,160,44, 0.8)', 'rgba(51,160,44, 1)'],
+				['Cars', 'cep', 'rgba(251,154,153, 0.8)', 'rgba(251,154,153, 1)'],
+				['Vans', 'vep', 'rgba(227,26,28, 0.8)', 'rgba(227,26,28, 1)'],
+				['Bikes and Company Cars', 'cbep', 'rgba(227,26,28, 0.8)', 'rgba(227,26,28, 1)'],
+				['Flights', 'Cfkp', 'rgba(255,127,0, 0.8)', 'rgba(255,127,0, 1)'],
+				['Food & Drink', 'nep', 'rgba(202,178,214, 0.8)', 'rgba(202,178,214, 1)'],
+				['Alchohol & Tobacco', 'akp', 'rgba(202,178,214, 0.8)', 'rgba(202,178,214, 1)'],
+				['Clothing', 'ckp', 'rgba(106,61,154, 0.8)', 'rgba(106,61,154, 1)'],
+				['Communication', 'Bckp', 'rgba(106,61,154, 0.8)', 'rgba(106,61,154, 1)'],
+				['Furnishing', 'Bfkp', 'rgba(106,61,154, 0.8)', 'rgba(106,61,154, 1)'],
+				['Recreation', 'rkp', 'rgba(255,255,153, 0.8)', 'rgba(255,255,153, 1)'],
+				['Health', 'hkp', 'rgba(255,255,153, 0.8)', 'rgba(255,255,153, 1)'],
+				['Education', 'ekp', 'rgba(255,255,153, 0.8)', 'rgba(255,255,153, 1)'],
+				['Restaurant & Hotels', 'Brkp', 'rgba(177,89,40, 0.8)', 'rgba(177,89,40, 1)'],
+				['Miscellaneous', 'Brkp', 'rgba(177,89,40, 0.8)', 'rgba(177,89,40, 1)'],
+		  ]
+  
   
   
   var years =  ['2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020']
@@ -209,16 +249,25 @@ makeChartHistorical = function(){
   
   var component = [
 		    // Label, field (e.g. Gas => dgkp2020), background colour, border colour
-				['Gas', 'dgkp', 'rgba(166,206,227, 0.8)', 'rgba(166,206,227, 1)'],
-				['Electricity', 'dekp', 'rgba(31,120,180, 0.8)', 'rgba(31,120,180, 1)'],
-				['Other Housing', 'osep', 'rgba(51,160,44, 0.8)', 'rgba(51,160,44, 1)'],
-				['Cars', 'cep', 'rgba(251,154,153, 0.8)', 'rgba(251,154,153, 1)'],
-				['Vans', 'vep', 'rgba(227,26,28, 0.8)', 'rgba(227,26,28, 1)'],
-				['Flights', 'efp', 'rgba(255,127,0, 0.8)', 'rgba(255,127,0, 1)'],
-				['Food & Drink', 'nep', 'rgba(202,178,214, 0.8)', 'rgba(202,178,214, 1)'],
-				['Consumable Goods', 'cep', 'rgba(106,61,154, 0.8)', 'rgba(106,61,154, 1)'],
-				['Recreation', 'rep', 'rgba(255,255,153, 0.8)', 'rgba(255,255,153, 1)'],
-				['Services', 'sep', 'rgba(177,89,40, 0.8)', 'rgba(177,89,40, 1)'],
+				['Gas'                  , 'dgkp', 'rgb(184, 216, 233)', 'rgb(0,0,0)'],
+				['Electricity'          , 'dekp', 'rgb(71,142,190)'   , 'rgb(0,0,0)'],
+				['Other Heating'        , 'hokp', 'rgb(1,108,89)'     , 'rgb(0,0,0)'],
+				['Other Housing'        , 'Bhokp', 'rgb(37,52,148)'   , 'rgb(0,0,0)'],
+				['Furnishings'          , 'Bfkp', 'rgb(141,211,199)'  , 'rgb(0,0,0)'],
+				['Food & Drink'         , 'fkp' , 'rgb(213, 193, 222)', 'rgb(0,0,0)'],
+				['Alchohol & Tobacco'   , 'akp' , 'rgb(136, 100, 174)', 'rgb(0,0,0)'],
+				['Clothing'             , 'ckp' , 'rgb(231,41,138)'   , 'rgb(0,0,0)'],
+				['Communications'       , 'Bckp', 'rgb(217,217,217)'  , 'rgb(0,0,0)'],
+				['Recreation'           , 'rkp' , 'rgb(255, 255, 173)', 'rgb(0,0,0)'],
+				['Restaurants & Hotels' , 'Brkp', 'rgb(252, 246, 61)' , 'rgb(0,0,0)'],
+				['Health'               , 'hkp' , 'rgb(102,194,164)'  , 'rgb(0,0,0)'],
+				['Education'            , 'ekp' , 'rgb(229,245,249)'  , 'rgb(0,0,0)'],
+				['Miscellaneous'        , 'Brkp', 'rgb(75,75,75)'     , 'rgb(0,0,0)'],
+				['Vehicle Purchase'     , 'tvkp', 'rgb(255, 0, 0)'    , 'rgb(0,0,0)'],
+				['Cars'                 , 'cep' , 'rgb(128,0,38)'     , 'rgb(0,0,0)'],
+				['Vans'                 , 'vep' , 'rgb(189,0,38)'     , 'rgb(0,0,0)'],
+				['Bikes & Company Cars' , 'cbep', 'rgb(252,78,42)'    , 'rgb(0,0,0)'],
+				['Flights'              , 'Cfkp', 'rgb(254,178,76)'   , 'rgb(0,0,0)']
 		  ]
   
   
@@ -265,6 +314,17 @@ makeChartHistorical = function(){
 								stacked: true
 							},
 						},
+						plugins: {
+                legend: {
+                    position: 'right',
+                    reverse: true,
+                    labels: {
+                      font: {
+                          size: 10 // Adjust this value to make the text smaller
+                      }
+                    }
+                }
+            },
 						responsive: true,
 						maintainAspectRatio: false
 					}
@@ -272,7 +332,6 @@ makeChartHistorical = function(){
 	
   
 }
-
 
 makeChartVOA2010 = function(){
   
@@ -305,7 +364,7 @@ makeChartVOA2010 = function(){
 				label: 'A',
 				data: bA,
 				backgroundColor: 'rgba(77,146,33, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},
@@ -313,7 +372,7 @@ makeChartVOA2010 = function(){
 				label: 'B',
 				data: bB,
 				backgroundColor: 'rgba(127,188,65, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},
@@ -321,7 +380,7 @@ makeChartVOA2010 = function(){
 				label: 'C',
 				data: bC,
 				backgroundColor: 'rgba(184,225,134, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},
@@ -329,7 +388,7 @@ makeChartVOA2010 = function(){
 				label: 'D',
 				data: bD,
 				backgroundColor: 'rgba(230,245,208, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},
@@ -337,7 +396,7 @@ makeChartVOA2010 = function(){
 				label: 'E',
 				data: bE,
 				backgroundColor: 'rgba(247,247,247, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},
@@ -345,7 +404,7 @@ makeChartVOA2010 = function(){
 				label: 'F',
 				data: bF,
 				backgroundColor: 'rgba(253,224,239, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},
@@ -353,7 +412,7 @@ makeChartVOA2010 = function(){
 				label: 'G',
 				data: bG,
 				backgroundColor: 'rgba(241,182,218, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},
@@ -361,7 +420,7 @@ makeChartVOA2010 = function(){
 				label: 'H',
 				data: bH,
 				backgroundColor: 'rgba(222,119,174, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},
@@ -369,7 +428,7 @@ makeChartVOA2010 = function(){
 				label: 'I',
 				data: bI,
 				backgroundColor: 'rgba(197,27,125, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},
@@ -427,7 +486,7 @@ makeChartVOA2020 = function(){
 				label: 'Bungalow',
 				data: voa2020LocationData['bungalow'],
 				backgroundColor: 'rgba(105, 60, 153, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},
@@ -435,7 +494,7 @@ makeChartVOA2020 = function(){
 				label: 'Flat/Maisonette',
 				data: voa2020LocationData['flatmais'],
 				backgroundColor: 'rgba(227, 26, 28, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},
@@ -443,7 +502,7 @@ makeChartVOA2020 = function(){
 				label: 'Terraced',
 				data: voa2020LocationData['terraced'],
 				backgroundColor: 'rgba(17, 219, 13, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},
@@ -451,7 +510,7 @@ makeChartVOA2020 = function(){
 				label: 'Semi-Detached',
 				data: voa2020LocationData['semi'],
 				backgroundColor: 'rgba(14, 156, 11, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},
@@ -459,7 +518,7 @@ makeChartVOA2020 = function(){
 				label: 'Detached',
 				data: voa2020LocationData['detached'],
 				backgroundColor: 'rgba(8, 82, 7, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},
@@ -467,7 +526,7 @@ makeChartVOA2020 = function(){
 				label: 'Annexe',
 				data: voa2020LocationData['annexe'],
 				backgroundColor: 'rgba(31, 120, 180, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},
@@ -475,7 +534,7 @@ makeChartVOA2020 = function(){
 				label: 'Caravan/Boat/Mobile home',
 				data: voa2020LocationData['caravanboatmobilehome'],
 				backgroundColor: 'rgba(250, 124, 0, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},
@@ -483,7 +542,7 @@ makeChartVOA2020 = function(){
 				label: 'Unknown',
 				data: voa2020LocationData['unknown'],
 				backgroundColor: 'rgba(135, 136, 138, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			}
@@ -521,7 +580,7 @@ makeChartVOA2020 = function(){
 				label: '1',
 				data: voa2020LocationData['bed1'],
 				backgroundColor: 'rgba(204,235,197, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},
@@ -529,7 +588,7 @@ makeChartVOA2020 = function(){
 				label: '2',
 				data: voa2020LocationData['bed2'],
 				backgroundColor: 'rgba(168,221,181, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},
@@ -537,7 +596,7 @@ makeChartVOA2020 = function(){
 				label: '3',
 				data: voa2020LocationData['bed3'],
 				backgroundColor: 'rgba(123,204,196, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},
@@ -545,7 +604,7 @@ makeChartVOA2020 = function(){
 				label: '4',
 				data: voa2020LocationData['bed4'],
 				backgroundColor: 'rgba(78,179,211, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},
@@ -553,7 +612,7 @@ makeChartVOA2020 = function(){
 				label: '5',
 				data: voa2020LocationData['bed5'],
 				backgroundColor: 'rgba(43,140,190, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},
@@ -561,7 +620,7 @@ makeChartVOA2020 = function(){
 				label: '6+',
 				data: voa2020LocationData['bed6'],
 				backgroundColor: 'rgba(8,88,158, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			}
@@ -599,7 +658,7 @@ makeChartVOA2020 = function(){
 				label: 'pre 1900',
 				data: voa2020LocationData['bppre1900'],
 				backgroundColor: 'rgba(158, 1, 66, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},
@@ -607,7 +666,7 @@ makeChartVOA2020 = function(){
 				label: '1900-18',
 				data: voa2020LocationData['bp19001918'],
 				backgroundColor: 'rgba(213, 62, 79, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},
@@ -615,7 +674,7 @@ makeChartVOA2020 = function(){
 				label: '1919-29',
 				data: voa2020LocationData['bp19191929'],
 				backgroundColor: 'rgba(244, 109, 67, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},
@@ -631,7 +690,7 @@ makeChartVOA2020 = function(){
 				label: '1945-54',
 				data: voa2020LocationData['bp19451954'],
 				backgroundColor: 'rgba(254,224,139, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},
@@ -639,7 +698,7 @@ makeChartVOA2020 = function(){
 				label: '1955-64',
 				data: voa2020LocationData['bp19551964'],
 				backgroundColor: 'rgba(255,255,191, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},
@@ -647,7 +706,7 @@ makeChartVOA2020 = function(){
 				label: '1965-72',
 				data: voa2020LocationData['bp19651972'],
 				backgroundColor: 'rgba(230,245,152, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},
@@ -655,7 +714,7 @@ makeChartVOA2020 = function(){
 				label: '1973-82',
 				data: voa2020LocationData['bp19731982'],
 				backgroundColor: 'rgba(171,221,164, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},
@@ -663,7 +722,7 @@ makeChartVOA2020 = function(){
 				label: '1983-92',
 				data: voa2020LocationData['bp19831992'],
 				backgroundColor: 'rgba(102,194,165, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},			
@@ -671,7 +730,7 @@ makeChartVOA2020 = function(){
 				label: '1993-99',
 				data: voa2020LocationData['bp19931999'],
 				backgroundColor: 'rgba(50,136,189, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},			
@@ -679,7 +738,7 @@ makeChartVOA2020 = function(){
 				label: '2000-08',
 				data: voa2020LocationData['bp20002008'],
 				backgroundColor: 'rgba(94,79,162, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},			
@@ -687,7 +746,7 @@ makeChartVOA2020 = function(){
 				label: '2009-21',
 				data: voa2020LocationData['bp20092021'],
 				backgroundColor: 'rgba(144, 77, 159, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},			
@@ -695,7 +754,7 @@ makeChartVOA2020 = function(){
 				label: '2022-24',
 				data: voa2020LocationData['bp20222024'],
 				backgroundColor: 'rgba(217, 22, 74, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			},
@@ -703,7 +762,7 @@ makeChartVOA2020 = function(){
 				label: 'Unknown',
 				data: voa2020LocationData['bpunkw'],
 				backgroundColor: 'rgba(135, 136, 138, 0.8)',
-				borderColor: 'rgba(0,0,0,1)',
+				borderColor: 'rgb(0,0,0)',
 				borderWidth: 1,
 				order: 1
 			}	
@@ -734,6 +793,129 @@ makeChartVOA2020 = function(){
   
 }
 
+
+makeChartPopulation = function(){
+  
+  // overview Chart
+  // Destroy old chart
+	if(populationChart){
+		populationChart.destroy();
+	}
+  
+  //console.log(chartDefinition.component[0]);
+  //console.log(chartDefinition.years[0]);
+  
+  
+  
+  
+  // Create an object to store data for each category
+  
+  var component = [
+		    // Label, field (e.g. Gas => dgkp2020), background colour, border colour
+				['0-4'  , 'a'  , 'rgb(255, 0, 0)', 'rgb(0,0,0)'],
+				['5-9'  , 'Ba' , 'rgb(255, 64, 0)'   , 'rgb(0,0,0)'],
+				['10-14', 'Ca' , 'rgb(255, 128, 0)'     , 'rgb(0,0,0)'],
+				['15-19', 'Da' , 'rgb(255, 192, 0)'    , 'rgb(0,0,0)'],
+				['20-24', 'Ea' , 'rgb(255, 255, 0)'  , 'rgb(0,0,0)'],
+				['25-29', 'Fa' , 'rgb(192, 255, 0)', 'rgb(0,0,0)'],
+				['30-34', 'Ga' , 'rgb(128, 255, 0)', 'rgb(0,0,0)'],
+				['35-39', 'Ha' , 'rgb(64, 255, 0)'   , 'rgb(0,0,0)'],
+				['40-44', 'Ia' , 'rgb(0, 255, 0)'  , 'rgb(0,0,0)'],
+				['45-49', 'Ja' , 'rgb(0, 255, 64)', 'rgb(0,0,0)'],
+				['50-54', 'Ka' , 'rgb(0, 255, 128)' , 'rgb(0,0,0)'],
+				['55-59', 'La' , 'rgb(0, 255, 192)'  , 'rgb(0,0,0)'],
+				['60-64', 'Ma' , 'rgb(0, 255, 255)'  , 'rgb(0,0,0)'],
+				['65-69', 'Na' , 'rgb(0, 192, 255)'     , 'rgb(0,0,0)'],
+				['70-74', 'Oa' , 'rgb(0, 128, 255)'    , 'rgb(0,0,0)'],
+				['75-79', 'Pa' , 'rgb(0, 64, 255)'     , 'rgb(0,0,0)'],
+				['80-84', 'Qa' , 'rgb(0, 0, 255)'     , 'rgb(0,0,0)'],
+				['85+'  , '8'  , 'rgb(128, 0, 255)'    , 'rgb(0,0,0)'],
+				['Households'  , 'he'  , 'rgb(0, 0, 0)'    , 'rgb(0,0,0)'],
+				['Dwellings'  , 'ap'  , 'rgb(255, 0, 0)'    , 'rgb(255,0,0)']
+		  ]
+  
+  
+  var years =  ['2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022']
+  // Assemble the datasets to be shown
+  
+	const data = {datasets: []};
+	
+	//const data = {datasets: [populationLocationData]};
+	console.log(populationLocationData);
+	
+	/*
+	  component.forEach(comp => {
+		  console.log(years.map(year => locationData[comp[1] + year]))
+	  });
+  */
+  
+	component.forEach(comp => {
+		data.datasets.push({
+			label: comp[0],
+			//data: years.map(year => populationLocationData[comp[1]]),
+			data: populationLocationData[comp[1]],
+			backgroundColor: comp[2],
+			borderColor: comp[3],
+			borderWidth: 1,
+			order: 3,
+			stack: 'barStack'
+		});
+	});
+  
+  // Update type property for the last two datasets
+  data.datasets[18].type = 'line';
+  data.datasets[19].type = 'line';
+  data.datasets[18].borderWidth  = 4;
+  data.datasets[19].borderWidth  = 4;
+  
+  data.datasets[18].order  = 1;
+  data.datasets[19].order  = 2;
+  data.datasets[18].stack  = undefined;
+  data.datasets[19].stack  = undefined;
+
+  
+  console.log(data);
+  
+  data.labels = ['2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022'];
+  
+  var populationctx = document.getElementById('population-chart').getContext('2d');
+	populationChart = new Chart(populationctx, {
+    type: 'bar',
+					data: data,
+					options: {
+						scales: {
+							y: {
+								//stacked: true,
+								title: {
+									display: true,
+									text: 'population'
+								},
+								ticks: {
+									beginAtZero: true,
+								}
+							},
+							x: {
+								stacked: true
+							},
+						},
+						plugins: {
+                legend: {
+                    position: 'right',
+                    reverse: true,
+                    labels: {
+                      font: {
+                          size: 8 // Adjust this value to make the text smaller
+                      }
+                    }
+                }
+            },
+						responsive: true,
+						maintainAspectRatio: false
+					}
+  });
+	
+  
+}
 
 makeChartPLEF = function(){
   

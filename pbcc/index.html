@@ -156,13 +156,13 @@
 				<p><label><input type="checkbox" class="showlayer" data-layer="zones" value="false" checked="checked">Show layer</label></p>
 				<p>
 					<select name="field" class="updatelayer" data-layer="zones" aria-label="Neighbouhood  layer">
-						<option value="total_grade_2020" selected>Total Emissions</option>
-						<option value="dom_gas_grade_2020" >Gas</option>
-						<option value="dom_elec_grade_2020">Electricity</option>
-						<option value="car_grade_2020" >Car</option>
-						<option value="van_grade_2020">Van</option>
-						<option value="goods_services_combined_grade_2020">Goods & Services</option>
-						<option value="flights_grade_2020">Flights</option>
+						<option value="total_grade_2019" selected>Total Emissions</option>
+						<option value="dom_gas_grade_2019" >Gas</option>
+						<option value="dom_elec_grade_2019">Electricity</option>
+						<option value="car_grade_2019" >Car</option>
+						<option value="van_grade_2019">Van</option>
+						<option value="goods_services_combined_grade_2019">Goods & Services</option>
+						<option value="flights_grade_2019">Flights</option>
 					</select>
 					<button aria-label="Help purpose" class="helpbutton" data-help="pbcc-zones"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
 				</p>
@@ -322,7 +322,7 @@
 			  
 			  <div id="transport" class="tabcontent">
 			    
-			    <h3>Housing</h3>
+			    <h3>Transport</h3>
 			    
 			  </div>
 			  
@@ -437,7 +437,13 @@
 			    <div class="chart-wrapper" id="population-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Population estimates and number of dwellings</h4>
-					  <p class="chart-description">ONS Population Estimates, VOA dwellings</p>
+					  <p class="chart-description">This chart shows estimates of the population, number of dwellings, and number of households for each year since 2010. The number of people living within an area is fundamental variable for many of the calculations within the PBCC.  Unfortunately, we only know this with certainty in 2011 and 2021/22 when the Census were performed. Between those dates we use the ONS mid-year population estimates. The stacked bar chart shows the distribution of residents ages.</p>
+					  
+					  <p>Council Tax data provides a reasonably accurate record of the number of dwellings (red line) and can be used to track house building and demolition. Unfortunately, the ONS do not estimate the number of households each year and so we have estimated this number based on the know numbers for the 2011 and 2021/22 censuses and changes in the number of adults and dwellings in each year.</p>
+					  
+<p>Getting the number of households estimated accurately is important as many parts of the carbon footprint calculations are done on a per-household basis and only converted to a per-person basis at the final stage.</p>
+
+<p>This chart also contains adjustments for changes in the boundaries of LSOAs which occurred with each Census. Providing historical estimates of population within the 2021 boundaries.</p>
 					</div>
 					<div class="chart-container">
 						<canvas id="population-chart"></canvas>

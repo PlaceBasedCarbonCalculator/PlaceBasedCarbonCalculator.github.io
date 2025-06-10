@@ -10,7 +10,7 @@ const datasets_extra = {
 			'type': 'fill',
 			'source': {
 			'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/zones.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/zones_pbcc.pmtiles',
 				},
 			'source-layer': 'zones',
 			'paint': {
@@ -129,7 +129,7 @@ const datasets_extra = {
   			// #!# Should use a main server URL setting
   			dataUrl: 'https://pbcc.blob.core.windows.net/pbcc-data/Access/%id.json',
   			propertiesField: 'LSOA21CD',
-  			titleField: 'LSOA11CD',
+  			titleField: 'LSOA21CD',
   			
   			// Title
   			titlePrefix: 'Neighbourhood Summary: LSOA ',

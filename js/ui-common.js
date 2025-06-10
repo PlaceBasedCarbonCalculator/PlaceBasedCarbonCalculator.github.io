@@ -249,6 +249,19 @@ const capUi = (function () {
 				antialias: document.getElementById('antialiascheckbox').checked
 			});
 			
+			// Manage Sky
+			map.on('load', function () {
+				map.setSky({
+            "sky-color": "#ff1e00",
+            "sky-horizon-blend": 0.2,
+            "horizon-color": "#e3fbfc",
+            "horizon-fog-blend": 0.5,
+            "fog-color": "#e3fbfc",
+            "fog-ground-blend": 0.99
+        });
+			});
+			
+			
 			// Manage hash manually, while we need full control of hashes to contain layer state
 			capUi.manageMapHash (map);
 			
