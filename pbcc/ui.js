@@ -21,7 +21,7 @@ var dwellingsageChart;
 manageCharts =  function (locationId){
   console.log("Managing Charts");
   
-  capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/pbcc_zones/V1/' + locationId + '.json')
+  capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/pbcc_zones/V2/' + locationId + '.json')
         .then(function (lsoaData) {
             locationData = lsoaData[0];
             makeChartHistorical();
@@ -70,7 +70,7 @@ manageCharts =  function (locationId){
             makeChartPopulation();
         })
         .catch(function (error) {
-            alert('Failed to get Community Picture data for this location, or to process it correctly. Please try refreshing the page.');
+            alert('Failed to get Population data for this location, or to process it correctly. Please try refreshing the page.');
             console.log(error);
         });
         
@@ -104,11 +104,11 @@ maketableOverview = function(){
   //TODO: find other heating GRADE in data
   document.getElementById("data_total_emissions_percap").innerHTML = locationData.tkp2019;
   document.getElementById("data_elec_emissions_household").innerHTML = locationData.dekp2019;
-  document.getElementById("data_gas_emissions_household").innerHTML = locationData.geep2019;
+  document.getElementById("data_gas_emissions_household").innerHTML = locationData.dgkp2019;
   document.getElementById("data_other_heating_emissions").innerHTML = locationData.hokp2019;
   document.getElementById("data_car_emissions").innerHTML = locationData.cep2019;
   document.getElementById("data_van_emissions").innerHTML = locationData.vep2019;
-  document.getElementById("data_flights_emissions").innerHTML = locationData.efp2019;
+  document.getElementById("data_flights_emissions").innerHTML = locationData.Cfkp2019;
   document.getElementById("data_consumption_emissions").innerHTML = locationData.gsckp2019;
   
 	document.getElementById("data_total_emissions_grade").src = "/images/grades/" + locationData.tg2019 + ".webp";
