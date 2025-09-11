@@ -1,10 +1,24 @@
 // Local Chart Mangement
 var overviewChart;
 var historicalChart;
+
+var consumptionFoodChart;
+var consumptionAlcoholChart;
+var consumptionFurnishingsChart;
+var consumptionOtherHousingChart;
+var consumptionClothingChart;
+var consumptionCommunicationChart;
+var consumptionRecreationChart;
+var consumptionRestaurantsChart;
+var consumptionHealthChart;
+var consumptionEducationChart;
+var consumptionMiscellaneousChart;
+
 var plefIgnoreChart;
 var plefSteerChart;
 var plefShiftChart;
 var plefTransformChart;
+
 var populationChart;
 
 var locationData = {};
@@ -21,9 +35,9 @@ var dwellingsageChart;
 manageCharts =  function (locationId){
   console.log("Managing Charts");
   
-  capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/pbcc_zones/V2/' + locationId + '.json')
+  capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/historical_emissions/' + locationId + '.json')
         .then(function (lsoaData) {
-            locationData = lsoaData[0];
+            locationData = lsoaData;
             makeChartHistorical();
             makeChartPLEF();
             maketableOverview();
@@ -136,24 +150,9 @@ makeChartOverview = function(){
 	if(overviewChart){
 		overviewChart.destroy();
 	}
-  
+	
+	
   // Create an object to store data for each category
-  
-  /*
-  var component = [
-		    // Label, field (e.g. Gas => dgkp2020), background colour, border colour
-				['Gas', 'dgkp', 'rgba(166,206,227, 0.8)', 'rgba(166,206,227, 1)'],
-				['Electricity', 'dekp', 'rgba(31,120,180, 0.8)', 'rgba(31,120,180, 1)'],
-				['Other Housing', 'osep', 'rgba(51,160,44, 0.8)', 'rgba(51,160,44, 1)'],
-				['Cars', 'cep', 'rgba(251,154,153, 0.8)', 'rgba(251,154,153, 1)'],
-				['Vans', 'vep', 'rgba(227,26,28, 0.8)', 'rgba(227,26,28, 1)'],
-				['Flights', 'efp', 'rgba(255,127,0, 0.8)', 'rgba(255,127,0, 1)'],
-				['Food & Drink', 'nep', 'rgba(202,178,214, 0.8)', 'rgba(202,178,214, 1)'],
-				['Consumable Goods', 'cep', 'rgba(106,61,154, 0.8)', 'rgba(106,61,154, 1)'],
-				['Recreation', 'rep', 'rgba(255,255,153, 0.8)', 'rgba(255,255,153, 1)'],
-				['Services', 'sep', 'rgba(177,89,40, 0.8)', 'rgba(177,89,40, 1)'],
-		  ]
-  */
   
   var component = [
 		    // Label, field (e.g. Gas => dgkp2020), background colour, border colour
@@ -183,11 +182,7 @@ makeChartOverview = function(){
   // Assemble the datasets to be shown
   
 	const data = {datasets: []};
-	/*
-	  component.forEach(comp => {
-		  console.log(years.map(year => locationData[comp[1] + year]))
-	  });
-  */
+
 	component.forEach(comp => {
 		data.datasets.push({
 			label: comp[0],
@@ -203,7 +198,7 @@ makeChartOverview = function(){
   data.labels = ['2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020'];
   
   var overviewctx = document.getElementById('overview-chart').getContext('2d');
-	overviewChart = new Chart(overviewctx, {
+	consumptionFoodChart = new Chart(overviewctx, {
     type: 'bar',
 					data: data,
 					options: {
@@ -226,7 +221,7 @@ makeChartOverview = function(){
 						maintainAspectRatio: false
 					}
   });
-	
+  
   
 }
 
@@ -234,44 +229,50 @@ makeChartOverview = function(){
 makeChartHistorical = function(){
   
   // overview Chart
-  // Destroy old chart
-	if(overviewChart){
-		overviewChart.destroy();
-	}
+  // Destroy old charts
+	if(overviewChart){overviewChart.destroy()}
+  if(consumptionFoodChart){consumptionFoodChart.destroy()}
+  if(consumptionAlcoholChart){consumptionAlcoholChart.destroy()}
+  if(consumptionFurnishingsChart){consumptionFurnishingsChart.destroy()}
+  if(consumptionClothingChart){consumptionClothingChart.destroy()}
+  if(consumptionCommunicationChart){consumptionCommunicationChart.destroy()}
+  if(consumptionRecreationChart){consumptionRecreationChart.destroy()}
+  if(consumptionRestaurantsChart){consumptionRestaurantsChart.destroy()}
+  if(consumptionHealthChart){consumptionHealthChart.destroy()}
+  if(consumptionEducationChart){consumptionEducationChart.destroy()}
+  if(consumptionMiscellaneousChart){consumptionMiscellaneousChart.destroy()}
   
-  //console.log(chartDefinition.component[0]);
-  //console.log(chartDefinition.years[0]);
-  
-  //console.log(locationData);
-  
-  
+  if(consumptionOtherHousingChart){consumptionOtherHousingChart.destroy()}
+
   // Create an object to store data for each category
-  
+  //TODO: addtiona grades
   var component = [
-		    // Label, field (e.g. Gas => dgkp2020), background colour, border colour
-				['Gas'                  , 'dgkp', 'rgb(184, 216, 233)', 'rgb(0,0,0)'],
-				['Electricity'          , 'dekp', 'rgb(71,142,190)'   , 'rgb(0,0,0)'],
-				['Other Heating'        , 'hokp', 'rgb(1,108,89)'     , 'rgb(0,0,0)'],
-				['Other Housing'        , 'Bhokp', 'rgb(37,52,148)'   , 'rgb(0,0,0)'],
-				['Furnishings'          , 'Bfkp', 'rgb(141,211,199)'  , 'rgb(0,0,0)'],
-				['Food & Drink'         , 'fkp' , 'rgb(213, 193, 222)', 'rgb(0,0,0)'],
-				['Alchohol & Tobacco'   , 'akp' , 'rgb(136, 100, 174)', 'rgb(0,0,0)'],
-				['Clothing'             , 'ckp' , 'rgb(231,41,138)'   , 'rgb(0,0,0)'],
-				['Communications'       , 'Bckp', 'rgb(217,217,217)'  , 'rgb(0,0,0)'],
-				['Recreation'           , 'rkp' , 'rgb(255, 255, 173)', 'rgb(0,0,0)'],
-				['Restaurants & Hotels' , 'Brkp', 'rgb(252, 246, 61)' , 'rgb(0,0,0)'],
-				['Health'               , 'hkp' , 'rgb(102,194,164)'  , 'rgb(0,0,0)'],
-				['Education'            , 'ekp' , 'rgb(229,245,249)'  , 'rgb(0,0,0)'],
-				['Miscellaneous'        , 'Brkp', 'rgb(75,75,75)'     , 'rgb(0,0,0)'],
-				['Vehicle Purchase'     , 'tvkp', 'rgb(255, 0, 0)'    , 'rgb(0,0,0)'],
-				['Cars'                 , 'cep' , 'rgb(128,0,38)'     , 'rgb(0,0,0)'],
-				['Vans'                 , 'vep' , 'rgb(189,0,38)'     , 'rgb(0,0,0)'],
-				['Bikes & Company Cars' , 'cbep', 'rgb(252,78,42)'    , 'rgb(0,0,0)'],
-				['Flights'              , 'Cfkp', 'rgb(254,178,76)'   , 'rgb(0,0,0)']
+		    // Label, field (e.g. Gas => dgkp), background colour, border colour, gradelable
+				['Gas'                  , 'dgkp', 'rgb(184, 216, 233)', 'rgb(0,0,0)', 'dgg'],
+				['Electricity'          , 'dekp', 'rgb(71,142,190)'   , 'rgb(0,0,0)', 'deg'],
+				['Other Heating'        , 'hokp', 'rgb(1,108,89)'     , 'rgb(0,0,0)', 'hog'],
+				['Other Housing'        , 'Bhokp','rgb(37,52,148)'    , 'rgb(0,0,0)', 'Bhog'],
+				['Furnishings'          , 'Bfkp', 'rgb(141,211,199)'  , 'rgb(0,0,0)', 'Cfg'],
+				['Food & Drink'         , 'fkp' , 'rgb(213, 193, 222)', 'rgb(0,0,0)', 'Bfg'],
+				['Alcohol & Tobacco'   , 'akp' , 'rgb(136, 100, 174)', 'rgb(0,0,0)', 'ag'],
+				['Clothing'             , 'ckp' , 'rgb(231,41,138)'   , 'rgb(0,0,0)', 'Bcg'],
+				['Communications'       , 'Bckp', 'rgb(217,217,217)'  , 'rgb(0,0,0)', 'Ccg'],
+				['Recreation'           , 'rkp' , 'rgb(255, 255, 173)', 'rgb(0,0,0)', 'rg'],
+				['Restaurants & Hotels' , 'Brkp', 'rgb(252, 246, 61)' , 'rgb(0,0,0)', 'Brg'],
+				['Health'               , 'hkp' , 'rgb(102,194,164)'  , 'rgb(0,0,0)', 'hg'],
+				['Education'            , 'ekp' , 'rgb(229,245,249)'  , 'rgb(0,0,0)', 'eg'],
+				['Miscellaneous'        , 'Brkp', 'rgb(75,75,75)'     , 'rgb(0,0,0)', 'mg'],
+				['Vehicle Purchase'     , 'tvkp', 'rgb(255, 0, 0)'    , 'rgb(0,0,0)', ''],
+				['Cars'                 , 'ckp' , 'rgb(127,0,0)'      , 'rgb(0,0,0)', 'cg'],
+				['Vans'                 , 'vkp' , 'rgb(179,0,0)'      , 'rgb(0,0,0)', 'vg'],
+				['Bikes & Company Cars' , 'cbkp', 'rgb(215,48,31)'    , 'rgb(0,0,0)', 'cbg'],
+				['Vehicle Maintaince'   , 'tookp','rgb(253,187,132)'  , 'rgb(0,0,0)', ''],
+				['Public Transport'     , 'tpkp', 'rgb(254,232,200)'  , 'rgb(0,0,0)', ''],
+				['Flights'              , 'Cfkp', 'rgb(254,178,76)'   , 'rgb(0,0,0)', 'fg']
 		  ]
   
   
-  var years =  ['2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020']
+  //var years =  ['2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020']
   // Assemble the datasets to be shown
   
 	const data = {datasets: []};
@@ -283,16 +284,16 @@ makeChartHistorical = function(){
 	component.forEach(comp => {
 		data.datasets.push({
 			label: comp[0],
-			data: years.map(year => locationData[comp[1] + year]),
+			data: locationData[comp[1]],
+			gradelabel: locationData[comp[4]],
 			backgroundColor: comp[2],
 			borderColor: comp[3],
 			borderWidth: 1
 		});
 	});
 
-  //console.log(data);
   
-  data.labels = ['2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020'];
+  data.labels = locationData['y'];
   
   var overviewctx = document.getElementById('historical-chart').getContext('2d');
 	overviewChart = new Chart(overviewctx, {
@@ -320,7 +321,7 @@ makeChartHistorical = function(){
                     reverse: true,
                     labels: {
                       font: {
-                          size: 10 // Adjust this value to make the text smaller
+                          size: 8 // Adjust this value to make the text smaller
                       }
                     }
                 }
@@ -329,9 +330,157 @@ makeChartHistorical = function(){
 						maintainAspectRatio: false
 					}
   });
+  
+  var barChartOptions = {
+						scales: {
+							y: {
+								stacked: true,
+								title: {
+									display: true,
+									text: 'kgCO2e per person'
+								},
+								ticks: {
+									beginAtZero: true,
+								}
+							},
+							x: {
+								stacked: true
+							},
+						},
+						responsive: true,
+						maintainAspectRatio: false
+					};
+					
+	// Lables above bar plugin
+	const taxLabelPlugin = {
+  id: 'taxLabelPlugin',
+  afterDatasetsDraw(chart, args, options) {
+      const { ctx } = chart;
+      chart.data.datasets.forEach((dataset, datasetIndex) => {
+        const meta = chart.getDatasetMeta(datasetIndex);
+        meta.data.forEach((bar, index) => {
+          const value = dataset.gradelabel[index];
+          ctx.save();
+          ctx.fillStyle = 'black';
+          ctx.font = '12px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'bottom';
+          ctx.fillText(`${value}`, bar.x, bar.y - 5);
+          ctx.restore();
+        });
+      });
+    }
+  };
+  
+  
+	consumptionFoodChart = new Chart(document.getElementById('consumptionFoodct-chart').getContext('2d'), {
+    type: 'bar',
+		data: {
+      labels: data.labels,
+      datasets: data.datasets.filter(d => d.label === 'Food & Drink')
+    },
+		options: barChartOptions,
+		plugins: [taxLabelPlugin]
+  });
+  
+  consumptionAlcoholChart = new Chart(document.getElementById('consumptionAlcoholct-chart').getContext('2d'), {
+    type: 'bar',
+		data: {
+      labels: data.labels,
+      datasets: data.datasets.filter(d => d.label === 'Alcohol & Tobacco')
+    },
+		options: barChartOptions,
+		plugins: [taxLabelPlugin]
+  });
+  
+  consumptionFurnishingsChart = new Chart(document.getElementById('consumptionFurnishingsct-chart').getContext('2d'), {
+    type: 'bar',
+		data: {
+      labels: data.labels,
+      datasets: data.datasets.filter(d => d.label === 'Furnishings')
+    },
+		options: barChartOptions,
+		plugins: [taxLabelPlugin]
+  });
+  
+  consumptionClothingChart = new Chart(document.getElementById('consumptionClothingct-chart').getContext('2d'), {
+    type: 'bar',
+		data: {
+      labels: data.labels,
+      datasets: data.datasets.filter(d => d.label === 'Clothing')
+    },
+		options: barChartOptions,
+		plugins: [taxLabelPlugin]
+  });
+  
+  consumptionCommunicationChart = new Chart(document.getElementById('consumptionCommunicationct-chart').getContext('2d'), {
+    type: 'bar',
+		data: {
+      labels: data.labels,
+      datasets: data.datasets.filter(d => d.label === 'Communications')
+    },
+		options: barChartOptions,
+		plugins: [taxLabelPlugin]
+  });
+  
+  consumptionRecreationChart = new Chart(document.getElementById('consumptionRecreationct-chart').getContext('2d'), {
+    type: 'bar',
+		data: {
+      labels: data.labels,
+      datasets: data.datasets.filter(d => d.label === 'Recreation')
+    },
+		options: barChartOptions,
+		plugins: [taxLabelPlugin]
+  });
+  
+  consumptionRestaurantsChart = new Chart(document.getElementById('consumptionRestaurants-chart').getContext('2d'), {
+    type: 'bar',
+		data: {
+      labels: data.labels,
+      datasets: data.datasets.filter(d => d.label === 'Restaurants & Hotels')
+    },
+		options: barChartOptions,
+		plugins: [taxLabelPlugin]
+  });
+  
+  consumptionHealthChart = new Chart(document.getElementById('consumptionHealth-chart').getContext('2d'), {
+    type: 'bar',
+		data: {
+      labels: data.labels,
+      datasets: data.datasets.filter(d => d.label === 'Health')
+    },
+		options: barChartOptions,
+		plugins: [taxLabelPlugin]
+  });
+  
+  consumptionEducationChart = new Chart(document.getElementById('consumptionEducation-chart').getContext('2d'), {
+    type: 'bar',
+		data: {
+      labels: data.labels,
+      datasets: data.datasets.filter(d => d.label === 'Education')
+    },
+		options: barChartOptions,
+		plugins: [taxLabelPlugin]
+  });
+  
+  consumptionMiscellaneousChart = new Chart(document.getElementById('consumptionMiscellaneous-chart').getContext('2d'), {
+    type: 'bar',
+		data: {
+      labels: data.labels,
+      datasets: data.datasets.filter(d => d.label === 'Miscellaneous')
+    },
+		options: barChartOptions,
+		plugins: [taxLabelPlugin]
+  });
+  
 	
   
 }
+
+
+
+
+
 
 makeChartVOA2010 = function(){
   
@@ -841,7 +990,7 @@ makeChartPopulation = function(){
 	const data = {datasets: []};
 	
 	//const data = {datasets: [populationLocationData]};
-	console.log(populationLocationData);
+	//console.log(populationLocationData);
 	
 	/*
 	  component.forEach(comp => {
@@ -1220,7 +1369,7 @@ makeChartPLEF = function(){
   ]
 };
   
-  
+  /*
   var ctxIgnore = document.getElementById('plefIgnore-chart').getContext('2d');
 	plefIgnoreChart = new Chart(ctxIgnore, {
     type: 'bar',
@@ -1361,7 +1510,7 @@ makeChartPLEF = function(){
 						maintainAspectRatio: false
 					}
   });
-  
+  */
 }
 
 

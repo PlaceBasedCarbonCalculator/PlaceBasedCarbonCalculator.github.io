@@ -733,6 +733,18 @@ Section
 Zones Help
 <!-- /#pbcc-zones -->
 
+<!-- #pbcc-consumption -->
+#### Consumption Emissions
+While some household carbon emissions are produced in the home (e.g. when we burn gas for heating or cooking) much of the household carbon footprint comes from embodied emissions, the emissions that came from making the goods and services we use, for example, when we buy a product there are emissions associated with mining the resources, processing, manufacturing and transporting the product to us. Much of these emissions may have been produced abroad, but in a consumption-based carbon footprint (like the PBCC), we attribute responsibility for those emissions to the end user of the product.
+
+Thus, the things we buy and do can have a big impact on our overall carbon footprint. Unfortunately, consumption carbon footprints are difficult to calculate because you need a detailed understanding of what people buy, how and where it is made, and such data does not exist for every neighbourhood in Britain. Therefore, the data presented here is based on a model. But the key points are easy to understand.
+
+1. We take real data about the neighbourhood’s population, and create synthetic households to represent every household in the neighbourhood. These synthetic households reveal some basic characteristics. For instance, a household might be described as “a couple with one child, living in a semi-detached home that they own with a mortgage in a suburban area of a northern town, they have one car and an annual pre-tax household income around £45,000.”
+
+2. We take real data about the household spending of British households from the Living Costs and Food Survey (LCFS) and pair up each synthetic household with a real household from the LCFS.
+
+In short, to estimate your family’s spending habits, we select from the tens of thousands of families who have responded to the LCFS the one that most closely resembles yours and assume their spending habits are similar. For an individual household, this might not be a very good estimate, but doing it hundreds of times for all the households in a neighbourhood tends to smooth out the errors and give a good approximation of a neighbourhood's spending patterns.
+<!-- /#pbcc-consumption -->
 
 <!-- #pbcc-community-photo -->
 #### Community Photo

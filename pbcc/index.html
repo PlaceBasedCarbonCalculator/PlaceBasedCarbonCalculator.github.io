@@ -178,22 +178,36 @@
 			</div>
 			
 			<button class="accordion">Boundaries</button>
-			<!--
 			<div class="panel">
-				<p><label><input type="checkbox" id="wardscheckbox" class="updatelayer" value="false">Wards</label></p>
-				<div class="legend">
-					<div class="l_r">
-						<div class="lb"><span style="background-color: #206b07"></span></div>
+				<p><label><input type="checkbox" data-layer="wards" class="showlayer" value="false">Wards</label>
+				<button aria-label="Help" class="helpbutton" data-help="boundaries-wards"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<div class="legendHorizontal">
+					<div class="l_rHorizontal">
+						<div class="lbHorizontal"><span style="background-color: #206b07"></span></div>
 					</div>
 				</div>
-				<p><label><input type="checkbox" id="lacheckbox" class="updatelayer" value="false">Local Authorities</label></p>
-				<div class="legend">
-					<div class="l_r">
-						<div class="lb"><span style="background-color: #6b0707"></span></div>
+				<p><label><input type="checkbox" data-layer="la" class="showlayer" value="false">Local Authorities</label>
+				<button aria-label="Help" class="helpbutton" data-help="boundaries-la"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<div class="legendHorizontal">
+					<div class="l_rHorizontal">
+						<div class="lbHorizontal"><span style="background-color: #6b0707"></span></div>
+					</div>
+				</div>
+				<p><label><input type="checkbox" data-layer="parish" class="showlayer" value="false">Parish</label>
+				<button aria-label="Help" class="helpbutton" data-help="boundaries-parish"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<div class="legendHorizontal">
+					<div class="l_rHorizontal">
+						<div class="lbHorizontal"><span style="background-color: #6b0763"></span></div>
+					</div>
+				</div>
+				<p><label><input type="checkbox" data-layer="westminster" class="showlayer" value="false">Westminster Constituency</label>
+				<button aria-label="Help" class="helpbutton" data-help="boundaries-westminster"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<div class="legendHorizontal">
+					<div class="l_rHorizontal">
+						<div class="lbHorizontal"><span style="background-color: #07366b"></span></div>
 					</div>
 				</div>
 			</div>
-			-->
 		</div>
 		
 		<div id="overlay"></div>
@@ -220,6 +234,7 @@
           <button class="tablinks" onclick="modalTab(event, 'history')">Historical</button>
           <button class="tablinks" onclick="modalTab(event, 'housing')">Housing</button>
           <button class="tablinks" onclick="modalTab(event, 'transport')">Transport</button>
+          <button class="tablinks" onclick="modalTab(event, 'consumption')">Consumption</button>
           <button class="tablinks" onclick="modalTab(event, 'demographics')">Demographics</button>
           <button class="tablinks" onclick="modalTab(event, 'future')">Future Scenarios</button>
         </div>
@@ -323,6 +338,125 @@
 			  <div id="transport" class="tabcontent">
 			    
 			    <h3>Transport</h3>
+			    
+			  </div>
+			  
+			  <div id="consumption" class="tabcontent">
+			    
+			    <h3>Consumption of Goods and Services</h3>
+			    
+			    <p>Many household carbon emissions stem not from direct activities like buring gas for heating or cooking, but from embodied emissions—the carbon released during the production, transport, and delivery of goods and services we consume. These emissions, often generated abroad, are attributed to the end user in consumption-based carbon footprint models like the PBCC. Because detailed local data on purchasing habits and product origins is scarce, our estimates rely on modelling: synthetic households are created using demographic data and matched with real spending profiles from the Living Costs and Food Survey. While individual matches may be imperfect, aggregating across many households yields a reliable approximation of neighbourhood-level consumption emissions.</p>
+			    <p>For more information see the<a href="/manual/#placebasedcarboncalculator">manual</a></p>
+			    
+			    <div class="chart-wrapper" id="consumptionFoodct-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Food and non-alcoholic beverages</h4>
+					  <p class="chart-description">This category includes all edible goods purchased for home consumption—fresh produce, meat, dairy, packaged foods, and drinks like juice, tea, and bottled water. The carbon footprint here is shaped by agricultural practices (e.g. livestock farming, fertiliser use), food processing, packaging, refrigeration, and transport. Imported goods and highly processed items tend to have higher emissions. For example, beef and lamb are particularly carbon-intensive due to methane emissions and land use, while locally grown vegetables typically have a lower footprint.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionFoodct-chart"></canvas>
+					</div>
+					</div>
+			    
+          <div class="chart-wrapper" id="consumptionAlcoholct-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Alcoholic beverages, tobacco and narcotics</h4>
+					  <p class="chart-description">This covers purchases of beer, wine, spirits, cigarettes, and other recreational substances. These products often have high embodied emissions due to intensive farming (e.g. grapes, barley, tobacco), fermentation or chemical processing, and packaging. Transport and refrigeration also play a role, especially for imported alcohol. While not consumed in large quantities by all households, their production and distribution chains can be surprisingly carbon-heavy.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionAlcoholct-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="consumptionFurnishingsct-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Furnishings, household equipment and routine household maintenance</h4>
+					  <p class="chart-description">This includes furniture, appliances, cleaning products, tools, and materials for home upkeep. Emissions stem from the extraction and processing of raw materials (wood, metals, plastics), manufacturing, and long-distance shipping. Large appliances like fridges or washing machines have significant embodied carbon, and their energy use over time adds to the footprint. Even routine items like detergents or paint contribute through chemical production and packaging.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionFurnishingsct-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="consumptionOtherHousingct-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Other Housing</h4>
+					  <p class="chart-description"></p>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionOtherHousingct-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="consumptionClothingct-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Clothing and footwear</h4>
+					  <p class="chart-description">This category encompasses garments, shoes, and accessories. The fashion industry is a major source of emissions due to textile production (especially synthetics like polyester), dyeing, finishing, and global logistics. Fast fashion accelerates this impact by encouraging frequent purchases and short product lifespans. Natural fibres like cotton can also be carbon-intensive due to water use and fertilisers. Repairing, reusing, or buying second-hand clothing can significantly reduce emissions in this category.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionClothingct-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="consumptionCommunicationct-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Information and communication</h4>
+					  <p class="chart-description">Includes mobile phones, computers, internet subscriptions, and software services. While daily usage emissions are relatively low, the production of electronics involves mining rare earth elements, complex manufacturing, and global distribution. Devices like smartphones and laptops have high embodied carbon, and frequent upgrades amplify the impact. Cloud services and data centres also contribute, though their footprint is often less visible to consumers.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionCommunicationct-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="consumptionRecreationct-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Recreation, sport and culture</h4>
+					  <p class="chart-description">This broad category covers books, games, sports equipment, musical instruments, event tickets, and holidays. Emissions vary widely depending on the activity—digital entertainment has a modest footprint, while international travel or imported sporting goods can be substantial. Cultural consumption like cinema or concerts involves energy use in venues and transport. Leisure choices, especially travel-based ones, can be among the most carbon-intensive aspects of personal consumption.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionRecreationct-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="consumptionRestaurants-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Restaurants and accommodation services</h4>
+					  <p class="chart-description">Includes dining out, takeaways, hotels, and short-term stays. The carbon footprint here comes from food sourcing (often meat-heavy menus), energy use in kitchens and buildings, and waste generation. Accommodation adds emissions through heating, laundry, and cleaning services. Travel to and from these venues also contributes, especially for holidays involving flights or long drives. Choosing plant-based meals or eco-certified lodgings can help reduce impact.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionRestaurants-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="consumptionHealth-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Health</h4>
+					  <p class="chart-description">Covers medicines, medical devices, and healthcare services. While essential, the health sector has a notable carbon footprint due to pharmaceutical production, sterilisation processes, and energy-intensive facilities. Personal purchases like over-the-counter drugs or supplements have relatively small emissions, but hospital visits and specialised treatments involve complex supply chains and high energy use. The footprint here is less discretionary but still relevant in aggregate models.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionHealth-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="consumptionEducation-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Education services</h4>
+					  <p class="chart-description">Includes tuition fees, school supplies, books, and digital learning tools. Emissions are generally modest but come from building energy use, printed materials, and IT infrastructure. For households with children or students, this category reflects both direct spending and the broader carbon intensity of educational institutions. Online learning platforms tend to have lower footprints than traditional classroom settings, though device use and server energy still matter.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionEducation-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="consumptionMiscellaneous-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Miscellaneous</h4>
+					  <p class="chart-description"></p>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionMiscellaneous-chart"></canvas>
+					</div>
+					</div>
 			    
 			  </div>
 			  
@@ -459,6 +593,9 @@
 			    
 			    <h3>Future Scenarios</h3>
 			    
+			    <p>Coming Soon</p>
+			    
+			    <!--
 			    <div class="chart-wrapper" id="plefIgnore-chartrow">
 						<div class="chart-text">
 							<h4 class="chart-title">PLEF Ignore</h4>
@@ -500,7 +637,7 @@
 					</div>
 			  </div>
 	
-				
+				-->
 					
 					
 					

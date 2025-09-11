@@ -152,9 +152,7 @@ const datasets_extra = {
 	}
 };
 
-
-const datasets = { ...datasets_common, ...datasets_extra };
-
+const datasets = mergeObjects(datasets_extra, datasets_common);
 
 // Function to create all charts
 function createCharts (chartDefinition, locationData)
