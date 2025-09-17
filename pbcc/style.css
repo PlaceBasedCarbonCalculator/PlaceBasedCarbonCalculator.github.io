@@ -2,3 +2,10 @@
   width: 70px;
   height: 53px;
 }
+
+.overviewtable td {
+  padding: 0px;
+}
+.overviewtable tr {
+  padding: 0px;
+}

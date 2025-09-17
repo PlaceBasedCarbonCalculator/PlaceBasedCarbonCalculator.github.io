@@ -8,7 +8,7 @@ const settings_common = {
 		zoom: 8,
 	},
 	maxZoom: 19,
-	minZoom: 6,
+	minZoom: 5,
 	
 	// Basemap styles
 	basemapStyleDefault: 'greyscale_nobuild',

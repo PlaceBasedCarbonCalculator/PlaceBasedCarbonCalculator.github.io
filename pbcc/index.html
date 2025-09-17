@@ -156,13 +156,13 @@
 				<p><label><input type="checkbox" class="showlayer" data-layer="zones" value="false" checked="checked">Show layer</label></p>
 				<p>
 					<select name="field" class="updatelayer" data-layer="zones" aria-label="Neighbouhood  layer">
-						<option value="total_grade_2019" selected>Total Emissions</option>
-						<option value="dom_gas_grade_2019" >Gas</option>
-						<option value="dom_elec_grade_2019">Electricity</option>
-						<option value="car_grade_2019" >Car</option>
-						<option value="van_grade_2019">Van</option>
-						<option value="goods_services_combined_grade_2019">Goods & Services</option>
-						<option value="flights_grade_2019">Flights</option>
+						<option value="total_grade" selected>Total Emissions</option>
+						<option value="dom_gas_grade" >Gas</option>
+						<option value="dom_elec_grade">Electricity</option>
+						<option value="car_grade" >Car</option>
+						<option value="van_grade">Van</option>
+						<option value="goods_services_combined_grade">Goods & Services</option>
+						<option value="flights_grade">Flights</option>
 					</select>
 					<button aria-label="Help purpose" class="helpbutton" data-help="pbcc-zones"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
 				</p>
@@ -239,70 +239,173 @@
           <button class="tablinks" onclick="modalTab(event, 'future')">Future Scenarios</button>
         </div>
 			  
+			  <!-- Data Warning -->
+			  <div class="warningbox">
+			    <div class="warning" id="warning_1">
+			      The 2022 Census in Scotland significantly changed Data Zone boundaries, historic data has been adjusted to the new boundaries
+			    </div>
+			    <div class="warning" id="warning_2">
+			      This LSOA had a complex border change between 2011 and 2021, historical data uses closest matching LSOA
+			    </div>
+			    <div class="warning" id="warning_3">
+			      This LSOA was formed in 2021 by merging two LSOAs, historical data has been merged
+			    </div>
+			    <div class="warning" id="warning_4">
+			      This LSOA was formed in 2021 by splitting two LSOAs, historical data has been split
+			    </div>
+			    <div class="warning" id="warning_5">
+			      At some point this LSOA has had zero residents
+			    </div>
+			  </div>
+			  
 			  <div id="overview" class="tabcontent">
 			    
-			    <h3>Overview</h3>
+			    <h3>Overall Carbon Footprint</h3>
 			    
-			    <div style="min-height:300px">
-          <div class="chart-container" style="height:400px">
-        			<canvas id="overview-chart"></canvas>
+			    <div style="min-height:400px">
+			      
+			      <div class="chart-container" style="height:400px">
+          			<canvas id="overview-chart"></canvas>
+          	</div>
+			      
+			      <table>
+          	  <tr>
+          			<td><img src="/legacy/images/grades/undefined.jpg" width = 300 height = 300 id = "data_total_emissions_grade" alt = "Grade Image"></td>
+          		</tr>
+          		<tr>
+          		  <td align='right' id="data_total_emissions_percap">NA</td>
+          		</tr>
+        		</table>
         	</div>
-          <table>
+        	
+        	<div>
+        	  
+        	  <h4>Grade Breakdown</h4>
+        	  
+        	  <table class="overviewtable">
         		  <tr>
         			<th>Name</th>
         			<th>Grade</th>
         			<th>kgCO<sub>2</sub>e per person</th>
         			</tr>
         		  <tr>
-        			<td>Total</td>
-        			
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 50 height = 50 id = "data_total_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_total_emissions_percap">NA</td>
-        		  </tr>
-        		  <tr>
         			<td>Electricity</td>
-        			
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 50 height = 50 id = "data_elec_emissions_grade" alt = "Grade Image"></td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_elec_emissions_grade" alt = "Grade Image"></td>
         			<td align='right' id="data_elec_emissions_household">NA</td>
         		  </tr>
         		  <tr>
         			<td>Gas</td>
-        			
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 50 height = 50 id = "data_gas_emissions_grade" alt = "Grade Image"></td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_gas_emissions_grade" alt = "Grade Image"></td>
         			<td align='right' id="data_gas_emissions_household">NA</td>
         		  </tr>
         		  <tr>
         			<td>Other Heating</td>
-        			
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 50 height = 50 id = "data_other_heating_emissions_grade" alt = "Grade Image"></td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_other_heating_emissions_grade" alt = "Grade Image"></td>
         			<td align='right' id="data_other_heating_emissions">NA</td>
         		  </tr>
         		  <tr>
+        			<td>Other Housing</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_other_housing_emissions_grade" alt = "Grade Image"></td>
+        			<td align='right' id="data_other_housing_emissions">NA</td>
+        		  </tr>
+        		  <tr>
         			<td>Car Driving</td>
-        			
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 50 height = 50 id = "data_car_emissions_grade" alt = "Grade Image"></td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_car_emissions_grade" alt = "Grade Image"></td>
         			<td align='right' id="data_car_emissions">NA</td>
         		  </tr>
         		  <tr>
         			<td>Van Driving</td>
-        			
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 50 height = 50 id = "data_van_emissions_grade" alt = "Grade Image"></td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_van_emissions_grade" alt = "Grade Image"></td>
         			<td align='right' id="data_van_emissions">NA</td>
         		  </tr>
         		  <tr>
         			<td>Flights</td>
-        			
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 50 height = 50 id = "data_flights_emissions_grade" alt = "Grade Image"></td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_flights_emissions_grade" alt = "Grade Image"></td>
         			<td align='right' id="data_flights_emissions">NA</td>
         		  </tr>
         		  <tr>
+        			<td>Vehicle Purchase</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_vehicle_purchase_emissions_grade" alt = "Grade Image"></td>
+        			<td align='right' id="data_vehicle_purchase_emissions">NA</td>
+        		  </tr>
+        		  <tr>
         			<td>Consumption of goods and services</td>
-        			
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 50 height = 50 id = "data_consumption_emissions_grade" alt = "Grade Image"></td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_consumption_emissions_grade" alt = "Grade Image"></td>
         			<td align='right' id="data_consumption_emissions">NA</td>
         		  </tr>
+        		  <tr>
+        			<td>Funishings</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_furnishings_emissions_grade" alt = "Grade Image"></td>
+        			<td align='right' id="data_furnishings_emissions">NA</td>
+        		  </tr>
+        		  <tr>
+        			<td>Food and Drink</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_food_emissions_grade" alt = "Grade Image"></td>
+        			<td align='right' id="data_food_emissions">NA</td>
+        		  </tr>
+        		  <tr>
+        			<td>Alcohol & Tobacco</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_alcohol_emissions_grade" alt = "Grade Image"></td>
+        			<td align='right' id="data_alcohol_emissions">NA</td>
+        		  </tr>
+        		  <tr>
+        			<td>Clothing</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_clothing_emissions_grade" alt = "Grade Image"></td>
+        			<td align='right' id="data_clothing_emissions">NA</td>
+        		  </tr>
+        		  <tr>
+        			<td>Communications</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_communications_emissions_grade" alt = "Grade Image"></td>
+        			<td align='right' id="data_communications_emissions">NA</td>
+        		  </tr>
+        		  <tr>
+        			<td>Recreation</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_recreation_emissions_grade" alt = "Grade Image"></td>
+        			<td align='right' id="data_recreation_emissions">NA</td>
+        		  </tr>
+        		  <tr>
+        			<td>Restaurants & Hotels</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_restaurants_emissions_grade" alt = "Grade Image"></td>
+        			<td align='right' id="data_restaurants_emissions">NA</td>
+        		  </tr>
+        		  <tr>
+        			<td>Health</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_health_emissions_grade" alt = "Grade Image"></td>
+        			<td align='right' id="data_health_emissions">NA</td>
+        		  </tr>
+        		  <tr>
+        			<td>Education</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_education_emissions_grade" alt = "Grade Image"></td>
+        			<td align='right' id="data_education_emissions">NA</td>
+        		  </tr>
+        		  <tr>
+        			<td>Miscellaneous</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_miscellaneous_emissions_grade" alt = "Grade Image"></td>
+        			<td align='right' id="data_miscellaneous_emissions">NA</td>
+        		  </tr>
+        		  <tr>
+        			<td>Bikes & Company Cars</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_bikes_company_emissions_grade" alt = "Grade Image"></td>
+        			<td align='right' id="data_bikes_company_emissions">NA</td>
+        		  </tr>
+        		  <tr>
+        			<td>Vehicle Maintaince</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_vehicle_maintaince_emissions_grade" alt = "Grade Image"></td>
+        			<td align='right' id="data_vehicle_maintaince_emissions">NA</td>
+        		  </tr>
+        		  <tr>
+        			<td>Public Transport</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_public_transport_emissions_grade" alt = "Grade Image"></td>
+        			<td align='right' id="data_public_transport_emissions">NA</td>
+        		  </tr>
         		</table>
-          </div>
+        		
+        	</div>
+        	
+        	
+          
+        	
+          
           <div>
           <p>This report card is customised for each Lower Super Output Area (LSOA) on the map. The title at the top gives the       <abbr title="Lower Super Output Area">LSOA</abbr>'s unique ID, the Office for National Statistics area classification, and the Ward name. Wards are usually            larger than <abbr title="Lower Super Output Area">LSOA</abbr>s, but unlike <abbr title="Lower Super Output Area">LSOA</abbr>s have recognisable local names.
           This tab gives an overview of the <abbr title="Lower Super Output Area">LSOA</abbr>s total carbon footprint, while other tabs give more detail and additional         context about parts of the carbon footprint.
@@ -339,82 +442,153 @@
 			    
 			    <h3>Transport</h3>
 			    
+			    <div class="chart-wrapper" id="carEmissions-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Car Emissions</h4>
+					  <p class="chart-description"></p>
+					</div>
+					<div class="chart-container">
+						<canvas id="carEmissions-chart"></canvas>
+					</div>
+					</div>
+			    
+			    <div class="chart-wrapper" id="vanEmissions-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Van Emissions</h4>
+					  <p class="chart-description"></p>
+					</div>
+					<div class="chart-container">
+						<canvas id="vanEmissions-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="bikeCompany-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Motorbikes, Company Vehicles, and other types</h4>
+					  <p class="chart-description"></p>
+					</div>
+					<div class="chart-container">
+						<canvas id="bikeCompany-chart"></canvas>
+					</div>
+					</div>
+					
+					
+					<div class="chart-wrapper" id="consumptionFlights-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Flights Emissions</h4>
+					  <p class="chart-description"></p>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionFlights-chart"></canvas>
+					</div>
+					</div>
+			    
+			    
+			    <div class="chart-wrapper" id="consumptionVehiclePurchase-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Vehicle Purchase</h4>
+					  <p class="chart-description"></p>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionVehiclePurchase-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="consumptionVehicleOther-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Vehicle Maintaince & Other</h4>
+					  <p class="chart-description"></p>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionVehicleOther-chart"></canvas>
+					</div>
+					</div>
+					
+					
+			    
+			    
+			    
+			    
 			  </div>
 			  
 			  <div id="consumption" class="tabcontent">
 			    
 			    <h3>Consumption of Goods and Services</h3>
 			    
-			    <p>Many household carbon emissions stem not from direct activities like buring gas for heating or cooking, but from embodied emissions—the carbon released during the production, transport, and delivery of goods and services we consume. These emissions, often generated abroad, are attributed to the end user in consumption-based carbon footprint models like the PBCC. Because detailed local data on purchasing habits and product origins is scarce, our estimates rely on modelling: synthetic households are created using demographic data and matched with real spending profiles from the Living Costs and Food Survey. While individual matches may be imperfect, aggregating across many households yields a reliable approximation of neighbourhood-level consumption emissions.</p>
-			    <p>For more information see the<a href="/manual/#placebasedcarboncalculator">manual</a></p>
+			    <div class="chart-wrapper" id="consumptionTotal-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Consumption of Goods and Services</h4>
+					  <p class="chart-description">Many household carbon emissions stem not from direct activities like buring gas for heating or cooking, but from embodied emissions—the carbon released during the production, transport, and delivery of goods and services we consume. These emissions, often generated abroad, are attributed to the end user in consumption-based carbon footprint models like the PBCC. Because detailed local data on purchasing habits and product origins is scarce, our estimates rely on modelling: synthetic households are created using demographic data and matched with real spending profiles from the Living Costs and Food Survey. While individual matches may be imperfect, aggregating across many households yields a reliable approximation of neighbourhood-level consumption emissions. For more information see the <a href="/manual/#placebasedcarboncalculator">manual</a></p>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionTotal-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="extratext-chartrow" style="display: block;">
+					  <h3>Detailed Consumption of Goods and Services</h3>
+			      <p>The sections below provide more detail on the types of good and services that make up the consumption footprint. Note that within individual categories consumption can fluctuate between years, due to the use of different households in the Living Costs and Food Survey. This can result in some unusually high/low years of consumption.</p>
+					</div>
 			    
-			    <div class="chart-wrapper" id="consumptionFoodct-chartrow" style="display: block;">
+			    
+			    
+			    <div class="chart-wrapper" id="consumptionFood-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Food and non-alcoholic beverages</h4>
 					  <p class="chart-description">This category includes all edible goods purchased for home consumption—fresh produce, meat, dairy, packaged foods, and drinks like juice, tea, and bottled water. The carbon footprint here is shaped by agricultural practices (e.g. livestock farming, fertiliser use), food processing, packaging, refrigeration, and transport. Imported goods and highly processed items tend to have higher emissions. For example, beef and lamb are particularly carbon-intensive due to methane emissions and land use, while locally grown vegetables typically have a lower footprint.</p>
 					</div>
 					<div class="chart-container">
-						<canvas id="consumptionFoodct-chart"></canvas>
+						<canvas id="consumptionFood-chart"></canvas>
 					</div>
 					</div>
 			    
-          <div class="chart-wrapper" id="consumptionAlcoholct-chartrow" style="display: block;">
+          <div class="chart-wrapper" id="consumptionAlcohol-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Alcoholic beverages, tobacco and narcotics</h4>
 					  <p class="chart-description">This covers purchases of beer, wine, spirits, cigarettes, and other recreational substances. These products often have high embodied emissions due to intensive farming (e.g. grapes, barley, tobacco), fermentation or chemical processing, and packaging. Transport and refrigeration also play a role, especially for imported alcohol. While not consumed in large quantities by all households, their production and distribution chains can be surprisingly carbon-heavy.</p>
 					</div>
 					<div class="chart-container">
-						<canvas id="consumptionAlcoholct-chart"></canvas>
+						<canvas id="consumptionAlcohol-chart"></canvas>
 					</div>
 					</div>
 					
-					<div class="chart-wrapper" id="consumptionFurnishingsct-chartrow" style="display: block;">
+					<div class="chart-wrapper" id="consumptionFurnishings-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Furnishings, household equipment and routine household maintenance</h4>
 					  <p class="chart-description">This includes furniture, appliances, cleaning products, tools, and materials for home upkeep. Emissions stem from the extraction and processing of raw materials (wood, metals, plastics), manufacturing, and long-distance shipping. Large appliances like fridges or washing machines have significant embodied carbon, and their energy use over time adds to the footprint. Even routine items like detergents or paint contribute through chemical production and packaging.</p>
 					</div>
 					<div class="chart-container">
-						<canvas id="consumptionFurnishingsct-chart"></canvas>
+						<canvas id="consumptionFurnishings-chart"></canvas>
 					</div>
 					</div>
 					
-					<div class="chart-wrapper" id="consumptionOtherHousingct-chartrow" style="display: block;">
-					<div class="chart-text"> 
-					  <h4 class="chart-title">Other Housing</h4>
-					  <p class="chart-description"></p>
-					</div>
-					<div class="chart-container">
-						<canvas id="consumptionOtherHousingct-chart"></canvas>
-					</div>
-					</div>
-					
-					<div class="chart-wrapper" id="consumptionClothingct-chartrow" style="display: block;">
+					<div class="chart-wrapper" id="consumptionClothing-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Clothing and footwear</h4>
 					  <p class="chart-description">This category encompasses garments, shoes, and accessories. The fashion industry is a major source of emissions due to textile production (especially synthetics like polyester), dyeing, finishing, and global logistics. Fast fashion accelerates this impact by encouraging frequent purchases and short product lifespans. Natural fibres like cotton can also be carbon-intensive due to water use and fertilisers. Repairing, reusing, or buying second-hand clothing can significantly reduce emissions in this category.</p>
 					</div>
 					<div class="chart-container">
-						<canvas id="consumptionClothingct-chart"></canvas>
+						<canvas id="consumptionClothing-chart"></canvas>
 					</div>
 					</div>
 					
-					<div class="chart-wrapper" id="consumptionCommunicationct-chartrow" style="display: block;">
+					<div class="chart-wrapper" id="consumptionCommunication-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Information and communication</h4>
 					  <p class="chart-description">Includes mobile phones, computers, internet subscriptions, and software services. While daily usage emissions are relatively low, the production of electronics involves mining rare earth elements, complex manufacturing, and global distribution. Devices like smartphones and laptops have high embodied carbon, and frequent upgrades amplify the impact. Cloud services and data centres also contribute, though their footprint is often less visible to consumers.</p>
 					</div>
 					<div class="chart-container">
-						<canvas id="consumptionCommunicationct-chart"></canvas>
+						<canvas id="consumptionCommunication-chart"></canvas>
 					</div>
 					</div>
 					
-					<div class="chart-wrapper" id="consumptionRecreationct-chartrow" style="display: block;">
+					<div class="chart-wrapper" id="consumptionRecreation-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Recreation, sport and culture</h4>
 					  <p class="chart-description">This broad category covers books, games, sports equipment, musical instruments, event tickets, and holidays. Emissions vary widely depending on the activity—digital entertainment has a modest footprint, while international travel or imported sporting goods can be substantial. Cultural consumption like cinema or concerts involves energy use in venues and transport. Leisure choices, especially travel-based ones, can be among the most carbon-intensive aspects of personal consumption.</p>
 					</div>
 					<div class="chart-container">
-						<canvas id="consumptionRecreationct-chart"></canvas>
+						<canvas id="consumptionRecreation-chart"></canvas>
 					</div>
 					</div>
 					
@@ -463,6 +637,48 @@
 			  <div id="housing" class="tabcontent">
 			    
 			    <h3>Housing</h3>
+			    
+			    <h3>Housing: Emissions</h3>
+			    
+			    <div class="chart-wrapper" id="gasEmissions-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Gas</h4>
+					  <p class="chart-description"></p>
+					</div>
+					<div class="chart-container">
+						<canvas id="gasEmissions-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="electricityEmissions-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Electricty</h4>
+					  <p class="chart-description"></p>
+					</div>
+					<div class="chart-container">
+						<canvas id="electricityEmissions-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="heatingOther-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Other Heating</h4>
+					  <p class="chart-description"></p>
+					</div>
+					<div class="chart-container">
+						<canvas id="heatingOther-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="housingOther-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Housing Other</h4>
+					  <p class="chart-description"></p>
+					</div>
+					<div class="chart-container">
+						<canvas id="housingOther-chart"></canvas>
+					</div>
+					</div>
 			    
 			    
 			    <h3>Housing: Historical Trends</h3>
@@ -645,7 +861,7 @@
 
 				</div>
 		</div>
-		
+	  </div>
 		
 	</body>
 	

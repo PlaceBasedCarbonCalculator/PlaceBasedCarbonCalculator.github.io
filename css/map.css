@@ -638,3 +638,14 @@ input:checked + .slider:before {
   display: table;
   clear: both;
 }
+
+
+/** Warning box **/
+
+.warning {
+  background-color: #f8d7da; 
+  border-radius: 8px;        
+  padding: 4px;
+  margin: 1px;
+  display: none;
+}
