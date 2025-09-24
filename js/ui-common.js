@@ -832,6 +832,7 @@ const capUi = (function () {
 		},
 		*/
 		
+		/*
 		fetchJSON: function (dataUrl) {
     return fetch(dataUrl)
         .then(function (response) {
@@ -845,7 +846,17 @@ const capUi = (function () {
             console.log(error);
         });
     },
-
+    */
+    
+    fetchJSON: function (dataUrl) {
+    return fetch(dataUrl)
+        .then(function (response) {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        });
+    },
 		
 		// Function to handle chart creation
 		// Pulling out of common file as too different between tools

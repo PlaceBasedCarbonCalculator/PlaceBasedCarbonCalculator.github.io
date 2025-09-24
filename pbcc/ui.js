@@ -39,6 +39,9 @@ var voa2020LocationData = {};
 var voa2010LocationData = {};
 var communityPicLocationData = {};
 var populationLocationData = {};
+var lsoaOverviewData = {};
+var laHistoricalData = {};
+var oacHistoricalData = {};
 
 var dwellingsctChart;
 var dwellingstypeChart;
@@ -48,6 +51,41 @@ var dwellingsageChart;
 manageCharts =  function (locationId){
   console.log("Managing Charts");
   
+  const jsonurls = [
+    'https://pbcc.blob.core.windows.net/pbcc-data/historical_emissions/' + locationId + '.json',
+    'https://pbcc.blob.core.windows.net/pbcc-data/population/' + locationId + '.json',
+    'https://pbcc.blob.core.windows.net/pbcc-data/lsoa_overview/v1/' + locationId + '.json'
+  ];
+  
+  
+  
+  Promise.all(jsonurls.map(capUi.fetchJSON))
+    .then(([historicalData, populationData,OverviewData]) => {
+        locationData = historicalData;
+        populationLocationData = populationData;
+        lsoaOverviewData = OverviewData[0];
+        
+        const jsonurls2 = [
+          'https://pbcc.blob.core.windows.net/pbcc-data/oac_emissions/v1/' + lsoaOverviewData.lsoa_class_code + '.json',
+          'https://pbcc.blob.core.windows.net/pbcc-data/la_emissions/v1/' + lsoaOverviewData.LAD25CD + '.json'
+        ];
+        
+        Promise.all(jsonurls2.map(capUi.fetchJSON))
+        .then(([laData, oacData]) => {
+            laHistoricalData = laData;
+            oacHistoricalData = oacData;
+    
+            makeChartHistorical();
+            makeChartPopulation();
+        })
+
+    })
+    .catch(error => {
+        alert('Failed to load one or more datasets. Please try refreshing the page.');
+        console.error(error);
+    });
+  
+  /*
   capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/historical_emissions/' + locationId + '.json')
         .then(function (lsoaData) {
             locationData = lsoaData;
@@ -57,7 +95,7 @@ manageCharts =  function (locationId){
             alert('Failed to get access data for this location, or to process it correctly. Please try refreshing the page.');
             console.log(error);
         });
-        
+    */   
     capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/voa_2010/' + locationId + '.json')
         .then(function (lsoaData) {
             voa2010LocationData = lsoaData;
@@ -88,7 +126,7 @@ manageCharts =  function (locationId){
             alert('Failed to get Community Picture data for this location, or to process it correctly. Please try refreshing the page.');
             console.log(error);
         });
-        
+    /*   
     capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/population/' + locationId + '.json')
         .then(function (lsoaData) {
             populationLocationData = lsoaData;
@@ -98,7 +136,7 @@ manageCharts =  function (locationId){
             alert('Failed to get Population data for this location, or to process it correctly. Please try refreshing the page.');
             console.log(error);
         });
-        
+    */    
     
   
   //makeChartOverview(chartDefinition, locationData[0]);
@@ -286,15 +324,69 @@ makeChartHistorical = function(){
 				['Vehicle Purchase'     , 'tvkp', 'rgb(255, 0, 0)'    , 'rgb(0,0,0)', 'tvg' ,'data_vehicle_purchase_emissions','data_vehicle_purchase_emissions_grade'],
 				['Cars'                 , 'ckp' , 'rgb(127,0,0)'      , 'rgb(0,0,0)', 'cg'  ,'data_car_emissions','data_car_emissions_grade'],
 				['Vans'                 , 'vkp' , 'rgb(179,0,0)'      , 'rgb(0,0,0)', 'vg'  ,'data_van_emissions','data_van_emissions_grade'],
-				['Bikes & Company Cars' , 'cbkp', 'rgb(215,48,31)'    , 'rgb(0,0,0)', 'cbg' ,'data_bikes_company_emissions','data_bikes_company_emissions_grade'],
+				['Bikes & Company Vehicles' , 'cbkp', 'rgb(215,48,31)'    , 'rgb(0,0,0)', 'cbg' ,'data_bikes_company_emissions','data_bikes_company_emissions_grade'],
 				['Vehicle Maintaince'   , 'tookp','rgb(253,187,132)'  , 'rgb(0,0,0)', 'toog','data_vehicle_maintaince_emissions','data_vehicle_maintaince_emissions_grade'],
 				['Public Transport'     , 'tpkp', 'rgb(254,232,200)'  , 'rgb(0,0,0)', 'tpg' ,'data_public_transport_emissions','data_public_transport_emissions_grade'],
 				['Flights'              , 'Cfkp', 'rgb(254,178,76)'   , 'rgb(0,0,0)', 'fg'  ,'data_flights_emissions','data_flights_emissions_grade'],
 				['Goods & Services'     , 'gsckp', 'rgb(254,178,76)'  , 'rgb(0,0,0)', 'gscg','data_consumption_emissions','data_consumption_emissions_grade']
 		  ]
+		  
+  var component_la = [
+    // Label, field (e.g. Gas => dgkp), background colour, border colour, gradelable, tableValue, tableGrade
+		['Gas LA'                  , 'dom_gas_kgco2e_percap', 'rgb(62,51,100)', 'rgb(0,0,0)'],
+		['Electricity LA'          , 'dom_elec_kgco2e_percap', 'rgb(62,51,100)'   , 'rgb(0,0,0)'],
+		['Other Heating LA'        , 'heating_other_kgco2e_percap', 'rgb(62,51,100)'     , 'rgb(0,0,0)'],
+		['Other Housing LA'        , 'housing_other_kgco2e_percap','rgb(62,51,100)'    , 'rgb(0,0,0)'],
+		['Furnishings LA'          , 'furnish_kgco2e_percap', 'rgb(62,51,100)'  , 'rgb(0,0,0)'],
+		['Food & Drink LA'         , 'food_kgco2e_percap' , 'rgb(62,51,100)', 'rgb(0,0,0)'],
+		['Alcohol & Tobacco LA'    , 'alcohol_kgco2e_percap' , 'rgb(62,51,100)', 'rgb(0,0,0)'],
+		['Clothing LA'             , 'clothing_kgco2e_percap' , 'rgb(62,51,100)'   , 'rgb(0,0,0)'],
+		['Communications LA'       , 'communication_kgco2e_percap', 'rgb(62,51,100)'  , 'rgb(0,0,0)'],
+		['Recreation LA'           , 'recreation_kgco2e_percap' , 'rgb(62,51,100)', 'rgb(0,0,0)'],
+		['Restaurants & Hotels LA' , 'restaurant_kgco2e_percap', 'rgb(62,51,100)' , 'rgb(0,0,0)'],
+		['Health LA'               , 'health_kgco2e_percap' , 'rgb(62,51,100)'  , 'rgb(0,0,0)'],
+		['Education LA'            , 'education_kgco2e_percap' , 'rgb(62,51,100)'  , 'rgb(0,0,0)'],
+		['Miscellaneous LA'        , 'misc_kgco2e_percap', 'rgb(62,51,100)'     , 'rgb(0,0,0)'],
+		['Vehicle Purchase LA'     , 'transport_vehiclepurchase_kgco2e_percap', 'rgb(62,51,100)', 'rgb(0,0,0)'],
+		['Cars LA'                 , 'car_kgco2e_percap' , 'rgb(62,51,100)'      , 'rgb(0,0,0)'],
+		['Vans LA'                 , 'van_kgco2e_percap' , 'rgb(62,51,100)'      , 'rgb(0,0,0)'],
+		['Bikes & Company Vehicles LA' , 'company_bike_kgco2e_percap', 'rgb(62,51,100)'    , 'rgb(0,0,0)'],
+		['Vehicle Maintaince LA'   , 'transport_optranequip_other_kgco2e_percap','rgb(62,51,100)', 'rgb(0,0,0)'  ],
+		['Public Transport LA'     , 'transport_pt_kgco2e_percap', 'rgb(62,51,100)'  , 'rgb(0,0,0)'],
+		['Flights LA'              , 'flights_kgco2e_percap', 'rgb(62,51,100)'   , 'rgb(0,0,0)'],
+		['Goods & Services LA'     , 'goods_services_combined_kgco2e_percap', 'rgb(62,51,100)', 'rgb(0,0,0)']
+  ]
+  
+  var component_oac = [
+    // Label, field (e.g. Gas => dgkp), background colour, border colour, gradelable, tableValue, tableGrade
+		['Gas Similar Areas'                  , 'dom_gas_kgco2e_percap', 'rgb(255, 130, 157)', 'rgb(0,0,0)'],
+		['Electricity Similar Areas'          , 'dom_elec_kgco2e_percap', 'rgb(255, 130, 157)'   , 'rgb(0,0,0)'],
+		['Other Heating Similar Areas'        , 'heating_other_kgco2e_percap', 'rgb(255, 130, 157)'     , 'rgb(0,0,0)'],
+		['Other Housing Similar Areas'        , 'housing_other_kgco2e_percap','rgb(255, 130, 157)'    , 'rgb(0,0,0)'],
+		['Furnishings Similar Areas'          , 'furnish_kgco2e_percap', 'rgb(255, 130, 157)'  , 'rgb(0,0,0)'],
+		['Food & Drink Similar Areas'         , 'food_kgco2e_percap' , 'rgb(255, 130, 157)', 'rgb(0,0,0)'],
+		['Alcohol & Tobacco Similar Areas'    , 'alcohol_kgco2e_percap' , 'rgb(255, 130, 157)', 'rgb(0,0,0)'],
+		['Clothing Similar Areas'             , 'clothing_kgco2e_percap' , 'rgb(255, 130, 157)'   , 'rgb(0,0,0)'],
+		['Communications Similar Areas'       , 'communication_kgco2e_percap', 'rgb(255, 130, 157)'  , 'rgb(0,0,0)'],
+		['Recreation Similar Areas'           , 'recreation_kgco2e_percap' , 'rgb(255, 130, 157)', 'rgb(0,0,0)'],
+		['Restaurants & Hotels Similar Areas' , 'restaurant_kgco2e_percap', 'rgb(255, 130, 157)' , 'rgb(0,0,0)'],
+		['Health Similar Areas'               , 'health_kgco2e_percap' , 'rgb(255, 130, 157)'  , 'rgb(0,0,0)'],
+		['Education Similar Areas'            , 'education_kgco2e_percap' , 'rgb(255, 130, 157)'  , 'rgb(0,0,0)'],
+		['Miscellaneous Similar Areas'        , 'misc_kgco2e_percap', 'rgb(255, 130, 157)'     , 'rgb(0,0,0)'],
+		['Vehicle Purchase Similar Areas'     , 'transport_vehiclepurchase_kgco2e_percap', 'rgb(255, 130, 157)', 'rgb(0,0,0)'],
+		['Cars Similar Areas'                 , 'car_kgco2e_percap' , 'rgb(255, 130, 157)'      , 'rgb(0,0,0)'],
+		['Vans Similar Areas'                 , 'van_kgco2e_percap' , 'rgb(255, 130, 157)'      , 'rgb(0,0,0)'],
+		['Bikes & Company Vehicles Similar Areas' , 'company_bike_kgco2e_percap', 'rgb(255, 130, 157)'    , 'rgb(0,0,0)'],
+		['Vehicle Maintaince Similar Areas'   , 'transport_optranequip_other_kgco2e_percap','rgb(255, 130, 157)', 'rgb(0,0,0)'  ],
+		['Public Transport Similar Areas'     , 'transport_pt_kgco2e_percap', 'rgb(255, 130, 157)'  , 'rgb(0,0,0)'],
+		['Flights Similar Areas'              , 'flights_kgco2e_percap', 'rgb(255, 130, 157)'   , 'rgb(0,0,0)'],
+		['Goods & Services Similar Areas'     , 'goods_services_combined_kgco2e_percap', 'rgb(255, 130, 157)', 'rgb(0,0,0)']
+  ]
   
   
 	const data = {datasets: []};
+	const data_la = {datasets: []};
+	const data_oac = {datasets: []};
 
 	component.forEach(comp => {
 		data.datasets.push({
@@ -303,38 +395,71 @@ makeChartHistorical = function(){
 			gradelabel: locationData[comp[4]],
 			backgroundColor: comp[2],
 			borderColor: comp[3],
-			borderWidth: 1
+			borderWidth: 1,
+			stack: 'Stack 0'
 		});
 	});
+	
+	component_la.forEach(comp => {
+    const values = laHistoricalData[comp[1]] || [];
+    
+    data_la.datasets.push({
+      label: comp[0],
+      data: values,
+      gradelabel: Array.isArray(values) ? new Array(values.length).fill('') : [],
+      backgroundColor: comp[2],
+      borderColor: comp[3],
+      borderWidth: 1,
+      stack: 'Stack 1'
+    });
+  });
+  
+  component_oac.forEach(comp => {
+    const values = oacHistoricalData[comp[1]] || [];
+    
+    data_oac.datasets.push({
+      label: comp[0],
+      data: values,
+      gradelabel: Array.isArray(values) ? new Array(values.length).fill('') : [],
+      backgroundColor: comp[2],
+      borderColor: comp[3],
+      borderWidth: 1,
+      stack: 'Stack 2'
+    });
+  });
 
   data.labels = locationData['y'];
+  //data_la.labels = laHistoricalData['year'];
   
+  //const data2 = data;
+  //data2.datasets = data2.datasets + data_la.datasets;
+  
+  const combinedData = {
+    labels: locationData['y'],
+    datasets: [
+      ...data.datasets,
+      ...data_la.datasets,
+      ...data_oac.datasets
+    ]
+  };
+  
+    //console.log(laHistoricalData);
   
   // Make Overview table
   // Find the index of the label '2019' in data.labels
   const yearIndex = data.labels.indexOf(2019);
-  console.log(yearIndex);
+
+  // Find the dataset with label 'Furnishings'
+  //const furnishingsDataset = data.datasets.find(ds => ds.label === 'Furnishings')?.data?.[yearIndex];
   
-  
-  //for
-  
-
-// Find the dataset with label 'Furnishings'
-//const furnishingsDataset = data.datasets.find(ds => ds.label === 'Furnishings')?.data?.[yearIndex];
-
-const valueFor2019 = data.datasets.find(ds => ds.label === 'Furnishings').gradelabel[yearIndex]//?.data?.[yearIndex];
-// Get the value at the index corresponding to '2019'
-//const valueFor2019 = furnishingsDataset?.data?.[yearIndex];
-
-console.log(valueFor2019);
-
-
+  const valueFor2019 = data.datasets.find(ds => ds.label === 'Furnishings').gradelabel[yearIndex]//?.data?.[yearIndex];
+  // Get the value at the index corresponding to '2019'
 
   component.forEach(comp => {
     const [label, field, , , gradeField, valueId, gradeId] = comp;
     const dataset = data.datasets.find(ds => ds.label === label);
     if (!dataset) return;
-    console.log(label);
+    //console.log(label);
     // Set household emissions value
     document.getElementById(valueId).innerHTML = dataset.data[yearIndex];
   
@@ -345,40 +470,6 @@ console.log(valueFor2019);
     gradeImg.alt = `Grade ${grade}`;
   });
 
-  
-  
-  
-  //TODO: find other heating GRADE in data
-  /*
-  //document.getElementById("data_total_emissions_percap").innerHTML = data.datasets.find(ds => ds.label === 'Furnishings').data[yearIndex];
-  document.getElementById("data_elec_emissions_household").innerHTML = data.datasets.find(ds => ds.label === 'Electricty').data[yearIndex];
-  document.getElementById("data_gas_emissions_household").innerHTML = data.datasets.find(ds => ds.label === 'Gas').data[yearIndex];
-  document.getElementById("data_other_heating_emissions").innerHTML = data.datasets.find(ds => ds.label === 'Other Heating').data[yearIndex];
-  document.getElementById("data_car_emissions").innerHTML = data.datasets.find(ds => ds.label === 'Car').data[yearIndex];
-  document.getElementById("data_van_emissions").innerHTML = data.datasets.find(ds => ds.label === 'Van').data[yearIndex];
-  document.getElementById("data_flights_emissions").innerHTML = data.datasets.find(ds => ds.label === 'Flights').data[yearIndex];
-  document.getElementById("data_consumption_emissions").innerHTML = data.datasets.find(ds => ds.label === 'Goods & Service').data[yearIndex];
-  
-	//document.getElementById("data_total_emissions_grade").src = "/images/grades/" + locationData.tg2019 + ".webp";
-	//document.getElementById("data_total_emissions_grade").alt = "Grade " + locationData.tg2019;
-	document.getElementById("data_elec_emissions_grade").src  = "/images/grades/" + data.datasets.find(ds => ds.label === 'Electricty').gradelabel[yearIndex] + ".webp";
-	document.getElementById("data_elec_emissions_grade").alt = "Grade " + data.datasets.find(ds => ds.label === 'Electricty').gradelabel[yearIndex];
-	document.getElementById("data_gas_emissions_grade").src   = "/images/grades/" + data.datasets.find(ds => ds.label === 'Gas').gradelabel[yearIndex] + ".webp";
-	document.getElementById("data_gas_emissions_grade").alt = "Grade " + data.datasets.find(ds => ds.label === 'Other Heating').gradelabel[yearIndex];
-	document.getElementById("data_other_heating_emissions_grade").src   = "/images/grades/" + data.datasets.find(ds => ds.label === 'Other Heating').gradelabel[yearIndex] + ".webp";
-	document.getElementById("data_other_heating_emissions_grade").alt = "Grade " + data.datasets.find(ds => ds.label === 'Goods & Service').gradelabel[yearIndex];
-	document.getElementById("data_car_emissions_grade").src   = "/images/grades/" + data.datasets.find(ds => ds.label === 'Goods & Service').gradelabel[yearIndex] + ".webp";
-	document.getElementById("data_car_emissions_grade").alt = "Grade " + data.datasets.find(ds => ds.label === 'Goods & Service').gradelabel[yearIndex];
-	document.getElementById("data_van_emissions_grade").src   = "/images/grades/" + data.datasets.find(ds => ds.label === 'Goods & Service').gradelabel[yearIndex] + ".webp";
-	document.getElementById("data_van_emissions_grade").alt = "Grade " + data.datasets.find(ds => ds.label === 'Goods & Service').gradelabel[yearIndex];
-	document.getElementById("data_flights_emissions_grade").src   = "/images/grades/" + data.datasets.find(ds => ds.label === 'Goods & Service').gradelabel[yearIndex] + ".webp";
-	document.getElementById("data_flights_emissions_grade").alt = "Grade " + data.datasets.find(ds => ds.label === 'Goods & Service').gradelabel[yearIndex];
-	document.getElementById("data_consumption_emissions_grade").src   = "/images/grades/" + data.datasets.find(ds => ds.label === 'Goods & Service').gradelabel[yearIndex] + ".webp";
-	document.getElementById("data_consumption_emissions_grade").alt = "Grade " + data.datasets.find(ds => ds.label === 'Goods & Service').gradelabel[yearIndex];
-  */
-  
-  
-  
   
 	overviewChart = new Chart(document.getElementById('historical-chart').getContext('2d'), {
     type: 'bar',
@@ -458,22 +549,12 @@ console.log(valueFor2019);
       });
     }
   };
-  /*
-  overviewChart = new Chart(document.getElementById('historical-chart').getContext('2d'), {
-    type: 'bar',
-		data: {
-      labels: null,
-      datasets: data.datasets.filter(d => d.label != 'Goods & Services')
-    },
-		options: barChartOptions,
-		plugins: [taxLabelPlugin]
-  });
-  */
+  
   consumptionTotalChart = new Chart(document.getElementById('consumptionTotal-chart').getContext('2d'), {
     type: 'bar',
 		data: {
-      labels: data.labels,
-      datasets: data.datasets.filter(d => d.label === 'Goods & Services')
+      labels: combinedData.labels,
+      datasets: combinedData.datasets.filter(d => d.label.includes('Goods & Services'))
     },
 		options: barChartOptions,
 		plugins: [taxLabelPlugin]
@@ -482,8 +563,8 @@ console.log(valueFor2019);
 	consumptionFoodChart = new Chart(document.getElementById('consumptionFood-chart').getContext('2d'), {
     type: 'bar',
 		data: {
-      labels: data.labels,
-      datasets: data.datasets.filter(d => d.label === 'Food & Drink')
+      labels: combinedData.labels,
+      datasets: combinedData.datasets.filter(d => d.label.includes('Food & Drink'))
     },
 		options: barChartOptions,
 		plugins: [taxLabelPlugin]
@@ -492,8 +573,8 @@ console.log(valueFor2019);
   consumptionAlcoholChart = new Chart(document.getElementById('consumptionAlcohol-chart').getContext('2d'), {
     type: 'bar',
 		data: {
-      labels: data.labels,
-      datasets: data.datasets.filter(d => d.label === 'Alcohol & Tobacco')
+      labels: combinedData.labels,
+      datasets: combinedData.datasets.filter(d => d.label.includes('Alcohol & Tobacco'))
     },
 		options: barChartOptions,
 		plugins: [taxLabelPlugin]
@@ -502,8 +583,8 @@ console.log(valueFor2019);
   consumptionFurnishingsChart = new Chart(document.getElementById('consumptionFurnishings-chart').getContext('2d'), {
     type: 'bar',
 		data: {
-      labels: data.labels,
-      datasets: data.datasets.filter(d => d.label === 'Furnishings')
+      labels: combinedData.labels,
+      datasets: combinedData.datasets.filter(d => d.label.includes('Furnishings'))
     },
 		options: barChartOptions,
 		plugins: [taxLabelPlugin]
@@ -512,8 +593,8 @@ console.log(valueFor2019);
   consumptionClothingChart = new Chart(document.getElementById('consumptionClothing-chart').getContext('2d'), {
     type: 'bar',
 		data: {
-      labels: data.labels,
-      datasets: data.datasets.filter(d => d.label === 'Clothing')
+      labels: combinedData.labels,
+      datasets: combinedData.datasets.filter(d => d.label.includes('Clothing'))
     },
 		options: barChartOptions,
 		plugins: [taxLabelPlugin]
@@ -522,8 +603,8 @@ console.log(valueFor2019);
   consumptionCommunicationChart = new Chart(document.getElementById('consumptionCommunication-chart').getContext('2d'), {
     type: 'bar',
 		data: {
-      labels: data.labels,
-      datasets: data.datasets.filter(d => d.label === 'Communications')
+      labels: combinedData.labels,
+      datasets: combinedData.datasets.filter(d => d.label.includes('Communications'))
     },
 		options: barChartOptions,
 		plugins: [taxLabelPlugin]
@@ -532,8 +613,8 @@ console.log(valueFor2019);
   consumptionRecreationChart = new Chart(document.getElementById('consumptionRecreation-chart').getContext('2d'), {
     type: 'bar',
 		data: {
-      labels: data.labels,
-      datasets: data.datasets.filter(d => d.label === 'Recreation')
+      labels: combinedData.labels,
+      datasets: combinedData.datasets.filter(d => d.label.includes('Recreation'))
     },
 		options: barChartOptions,
 		plugins: [taxLabelPlugin]
@@ -542,8 +623,8 @@ console.log(valueFor2019);
   consumptionRestaurantsChart = new Chart(document.getElementById('consumptionRestaurants-chart').getContext('2d'), {
     type: 'bar',
 		data: {
-      labels: data.labels,
-      datasets: data.datasets.filter(d => d.label === 'Restaurants & Hotels')
+      labels: combinedData.labels,
+      datasets: combinedData.datasets.filter(d => d.label.includes('Restaurants & Hotels'))
     },
 		options: barChartOptions,
 		plugins: [taxLabelPlugin]
@@ -552,8 +633,8 @@ console.log(valueFor2019);
   consumptionHealthChart = new Chart(document.getElementById('consumptionHealth-chart').getContext('2d'), {
     type: 'bar',
 		data: {
-      labels: data.labels,
-      datasets: data.datasets.filter(d => d.label === 'Health')
+      labels: combinedData.labels,
+      datasets: combinedData.datasets.filter(d => d.label.includes('Health'))
     },
 		options: barChartOptions,
 		plugins: [taxLabelPlugin]
@@ -562,8 +643,8 @@ console.log(valueFor2019);
   consumptionEducationChart = new Chart(document.getElementById('consumptionEducation-chart').getContext('2d'), {
     type: 'bar',
 		data: {
-      labels: data.labels,
-      datasets: data.datasets.filter(d => d.label === 'Education')
+      labels: combinedData.labels,
+      datasets: combinedData.datasets.filter(d => d.label.includes('Education'))
     },
 		options: barChartOptions,
 		plugins: [taxLabelPlugin]
@@ -572,8 +653,8 @@ console.log(valueFor2019);
   consumptionMiscellaneousChart = new Chart(document.getElementById('consumptionMiscellaneous-chart').getContext('2d'), {
     type: 'bar',
 		data: {
-      labels: data.labels,
-      datasets: data.datasets.filter(d => d.label === 'Miscellaneous')
+      labels: combinedData.labels,
+      datasets: combinedData.datasets.filter(d => d.label.includes('Miscellaneous'))
     },
 		options: barChartOptions,
 		plugins: [taxLabelPlugin]
@@ -582,8 +663,8 @@ console.log(valueFor2019);
 	consumptionFlightsChart = new Chart(document.getElementById('consumptionFlights-chart').getContext('2d'), {
     type: 'bar',
 		data: {
-      labels: data.labels,
-      datasets: data.datasets.filter(d => d.label === 'Flights')
+      labels: combinedData.labels,
+      datasets: combinedData.datasets.filter(d => d.label.includes('Flights'))
     },
 		options: barChartOptions,
 		plugins: [taxLabelPlugin]
@@ -592,8 +673,8 @@ console.log(valueFor2019);
   consumptionVehiclePurchaseChart = new Chart(document.getElementById('consumptionVehiclePurchase-chart').getContext('2d'), {
     type: 'bar',
 		data: {
-      labels: data.labels,
-      datasets: data.datasets.filter(d => d.label === 'Vehicle Purchase')
+      labels: combinedData.labels,
+      datasets: combinedData.datasets.filter(d => d.label.includes('Vehicle Purchase'))
     },
 		options: barChartOptions,
 		plugins: [taxLabelPlugin]
@@ -602,8 +683,8 @@ console.log(valueFor2019);
 	consumptionVehicleOtherChart = new Chart(document.getElementById('consumptionVehicleOther-chart').getContext('2d'), {
     type: 'bar',
 		data: {
-      labels: data.labels,
-      datasets: data.datasets.filter(d => d.label === 'Vehicle Maintaince')
+      labels: combinedData.labels,
+      datasets: combinedData.datasets.filter(d => d.label.includes('Vehicle Maintaince'))
     },
 		options: barChartOptions,
 		plugins: [taxLabelPlugin]
@@ -612,8 +693,8 @@ console.log(valueFor2019);
   gasChart = new Chart(document.getElementById('gasEmissions-chart').getContext('2d'), {
     type: 'bar',
 		data: {
-      labels: data.labels,
-      datasets: data.datasets.filter(d => d.label === 'Gas')
+      labels: combinedData.labels,
+      datasets: combinedData.datasets.filter(d => d.label.includes('Gas'))
     },
 		options: barChartOptions,
 		plugins: [taxLabelPlugin]
@@ -622,8 +703,8 @@ console.log(valueFor2019);
   electricChart = new Chart(document.getElementById('electricityEmissions-chart').getContext('2d'), {
     type: 'bar',
 		data: {
-      labels: data.labels,
-      datasets: data.datasets.filter(d => d.label === 'Electricity')
+      labels: combinedData.labels,
+      datasets: combinedData.datasets.filter(d => d.label.includes('Electricity'))
     },
 		options: barChartOptions,
 		plugins: [taxLabelPlugin]
@@ -632,8 +713,8 @@ console.log(valueFor2019);
   otherHeatingChart = new Chart(document.getElementById('heatingOther-chart').getContext('2d'), {
     type: 'bar',
 		data: {
-      labels: data.labels,
-      datasets: data.datasets.filter(d => d.label === 'Other Heating')
+      labels: combinedData.labels,
+      datasets: combinedData.datasets.filter(d => d.label.includes('Other Heating'))
     },
 		options: barChartOptions,
 		plugins: [taxLabelPlugin]
@@ -642,8 +723,8 @@ console.log(valueFor2019);
   otherHousingChart = new Chart(document.getElementById('housingOther-chart').getContext('2d'), {
     type: 'bar',
 		data: {
-      labels: data.labels,
-      datasets: data.datasets.filter(d => d.label === 'Other Housing')
+      labels: combinedData.labels,
+      datasets: combinedData.datasets.filter(d => d.label.includes('Other Housing'))
     },
 		options: barChartOptions,
 		plugins: [taxLabelPlugin]
@@ -652,8 +733,8 @@ console.log(valueFor2019);
   carEmissionsChart = new Chart(document.getElementById('carEmissions-chart').getContext('2d'), {
     type: 'bar',
 		data: {
-      labels: data.labels,
-      datasets: data.datasets.filter(d => d.label === 'Cars')
+      labels: combinedData.labels,
+      datasets: combinedData.datasets.filter(d => d.label.includes('Cars'))
     },
 		options: barChartOptions,
 		plugins: [taxLabelPlugin]
@@ -662,8 +743,8 @@ console.log(valueFor2019);
   vanEmissionsChart = new Chart(document.getElementById('vanEmissions-chart').getContext('2d'), {
     type: 'bar',
 		data: {
-      labels: data.labels,
-      datasets: data.datasets.filter(d => d.label === 'Vans')
+      labels: combinedData.labels,
+      datasets: combinedData.datasets.filter(d => d.label.includes('Vans'))
     },
 		options: barChartOptions,
 		plugins: [taxLabelPlugin]
@@ -672,8 +753,8 @@ console.log(valueFor2019);
   bikeCompanyChart = new Chart(document.getElementById('bikeCompany-chart').getContext('2d'), {
     type: 'bar',
 		data: {
-      labels: data.labels,
-      datasets: data.datasets.filter(d => d.label === 'Motorbike & Company Vehicles')
+      labels: combinedData.labels,
+      datasets: combinedData.datasets.filter(d => d.label.includes('Bikes & Company Vehicles'))
     },
 		options: barChartOptions,
 		plugins: [taxLabelPlugin]
