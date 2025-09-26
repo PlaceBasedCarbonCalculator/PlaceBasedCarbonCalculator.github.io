@@ -127,12 +127,12 @@ const datasets_extra = {
 	    zones: {
 	      // Data fields
   			// #!# Should use a main server URL setting
-  			dataUrl: 'https://pbcc.blob.core.windows.net/pbcc-data/Access/%id.json',
+  			dataUrl: 'https://pbcc.blob.core.windows.net/pbcc-data/lsoa_overview/v1/%id.json',
   			propertiesField: 'LSOA21CD',
   			titleField: 'LSOA21CD',
   			
   			// Title
-  			titlePrefix: 'Neighbourhood Summary: LSOA ',
+  			titlePrefix: 'LSOA ',
   			
   			charts: [
   				[

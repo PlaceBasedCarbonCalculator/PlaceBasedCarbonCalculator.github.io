@@ -801,53 +801,7 @@ const capUi = (function () {
 			});
 		},
 		
-		/*
-		fetchJSON: function (dataUrl)
-		{
-		  // Get the data
-			fetch(dataUrl)
-				.then(function (response) {
-					return response.json();
-				})
-				.then(function (json) {
-					//const locationData = json[0]; //TODO this is what PBCC expects
-					const locationData = json;
-					console.log ('Retrieved data for layer '+  mapLayerId + ' location ' + locationId);
-					
-					//Hide Spinner
-					//document.getElementById('loader').style.display = 'none';
-					
-					// Set the title
-					//const title = chartDefinition.titlePrefix + featureProperties[chartDefinition.titleField];
-					//document.querySelector(`#${mapLayerId}-chartsmodal .modal-title`).innerHTML = title;
-					
-					// Create the charts
-					//manageCharts(chartDefinition, locationData);
-					return locationData;
-				})
-				.catch(function (error) {	// Any error, including within called code, not just retrieval failure
-					alert ('Failed to get data for this location, or to process it correctly. Please try refreshing the page.');
-					console.log (error);
-				});
-		},
-		*/
 		
-		/*
-		fetchJSON: function (dataUrl) {
-    return fetch(dataUrl)
-        .then(function (response) {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .catch(function (error) {
-            alert('Failed to get data for this location, or to process it correctly. Please try refreshing the page.');
-            console.log(error);
-        });
-    },
-    */
-    
     fetchJSON: function (dataUrl) {
     return fetch(dataUrl)
         .then(function (response) {
@@ -857,6 +811,41 @@ const capUi = (function () {
             return response.json();
         });
     },
+    
+    manageLSOAOverview : function(mapLayerId, locationId)
+    {
+		  
+		  capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/lsoa_overview/v1/' + locationId + '.json')
+        .then(function (lsoaData) {
+          // Set the modal title
+          const label = locationId.startsWith('S') ? 'Data Zone' : 'LSOA';
+					const title = locationId + ' a "' + lsoaData[0].lsoa_class_name + '" '+ label + ' in ' + lsoaData[0].WD25NM;
+					document.querySelector(`#${mapLayerId}-chartsmodal .modal-title`).innerHTML = title;
+          console.log(lsoaData);
+          
+          // Hide all warning boxes
+          const allWarnings = document.getElementsByClassName("warning");
+          for (let i = 0; i < allWarnings.length; i++) {
+            allWarnings[i].style.display = 'none';
+          }
+          
+          // Show only relevant warnings
+          const warnings = lsoaData[0].warnings;
+          warnings.forEach(warn => {
+            const el = document.getElementById("warning_" + warn);
+            if (el) el.style.display = 'block';
+          });
+          
+                    
+          
+          
+        })
+        .catch(function (error) {
+            alert('Failed to get overview data for this location, or to process it correctly. Please try refreshing the page.');
+            console.log(error);
+        });
+		  
+		},
 		
 		// Function to handle chart creation
 		// Pulling out of common file as too different between tools
@@ -879,13 +868,9 @@ const capUi = (function () {
 				const location_modal = capUi.newModal (mapLayerId + '-chartsmodal');
 				
 				// Initialise the HTML structure for the set of chart boxes, writing in the titles and descriptions, and setting the canvas ID
-				//initialiseChartBoxHtml(mapLayerId, chartDefinition.charts);
-				
 				// Open modal on clicking the supported map layer
 				_map.on ('click', mapLayerId, function (e) {
 				  
-				  
-					
 					// Ensure the source matches
 					let clickedFeatures = _map.queryRenderedFeatures(e.point);
 					clickedFeatures = clickedFeatures.filter(function (el) {
@@ -901,17 +886,13 @@ const capUi = (function () {
 					// Assemble the JSON data file URL
 					const featureProperties = e.features[0].properties;
 					const locationId = featureProperties[chartDefinition.propertiesField];
-					//const dataUrl = chartDefinition.dataUrl.replace('%id', locationId);
 					
 					// Set the title
 					// TODO this is run muliple times when muliple data sources, but still works
-					console.log(chartDefinition.titlePrefix);
-					const title = chartDefinition.titlePrefix + featureProperties[chartDefinition.titleField];
-					document.querySelector(`#${mapLayerId}-chartsmodal .modal-title`).innerHTML = title;
+					capUi.manageLSOAOverview(mapLayerId, locationId);
 					
 					// Display the modal
 					location_modal.show();
-					console.log(mapLayerId);
 					// Tool Specific Function in each ui.js
 					manageCharts(locationId, mapLayerId);
 					
@@ -922,22 +903,13 @@ const capUi = (function () {
 			// Create each set of charts
 			
 			Object.entries (_datasets.charts).forEach(([mapLayerId, chartDefinition]) => {
-			   //console.log(mapLayerId);
-			   //console.log(chartDefinition);
-			   //chartsModal (mapLayerId, chartDefinition);
-			   Object.entries (chartDefinition).forEach(([dataLayerId, dataDefinition]) => {
-  			   //console.log(dataLayerId);
-  			   //console.log(dataDefinition);
+			    Object.entries (chartDefinition).forEach(([dataLayerId, dataDefinition]) => {
   			   chartsModal (mapLayerId, dataDefinition);
   			 });
 			   
 			});
 			
 		},
-		
-		
-		
-		
 		
 		// Popup handler
 		// Options are: {preprocessingCallback, smallValuesThreshold, literalFields}

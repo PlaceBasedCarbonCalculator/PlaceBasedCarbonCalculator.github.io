@@ -3,9 +3,36 @@
   height: 53px;
 }
 
-.overviewtable td {
-  padding: 0px;
-}
+.overviewtable td,
 .overviewtable tr {
   padding: 0px;
+}
+.overviewtable th,
+.overviewtable td {
+  border: 1px solid #ccc; /* Light grey */
+  text-align: center;
+  padding: 0.1rem;
+}
+
+.responsive-tables {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  max-width: 100%;
+}
+
+.responsive-tables h4 {
+  margin-bottom: 0.5rem;
+}
+
+.responsive-tables table.overviewtable {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+@media (min-width: 800px) {
+  .responsive-tables {
+    grid-template-columns: 1fr 1fr;
+  }
 }

@@ -109,12 +109,9 @@
 			<span class="modal-close">&times;</span>
 			<div class="modal-body">
 				<h3>Place-Based Carbon Calculator v2</h3>
-				<p>ALPHA</p>
+				<p>Beta</p>
 				<p>Last updated: <span id="updatedate"></span>. You may need to <a href="https://www.minitool.com/news/f5-vs-ctrl-f5.html">clear your browser cache</a> to see the latest updates.</p>
-				<p>Date of OSM Data on which network results are based: 
-				<div id="osmupdatedate"></div>
-				</p>
-			</div>
+				</div>
 		</div>
 		
 		<!-- Cookies Warning  -->
@@ -273,14 +270,15 @@
           			<td><img src="/legacy/images/grades/undefined.jpg" width = 300 height = 300 id = "data_total_emissions_grade" alt = "Grade Image"></td>
           		</tr>
           		<tr>
-          		  <td align='right' id="data_total_emissions_percap">NA</td>
+          		  <td align='right'id="data_total_emissions_percap"> NA kgCO<sub>2</sub>e per person</td>
           		</tr>
         		</table>
         	</div>
         	
-        	<div>
+        	<div class="responsive-tables">
         	  
-        	  <h4>Grade Breakdown</h4>
+        	  <div>
+        	    <h4>Housing</h4>
         	  
         	  <table class="overviewtable">
         		  <tr>
@@ -308,15 +306,37 @@
         			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_other_housing_emissions_grade" alt = "Grade Image"></td>
         			<td align='right' id="data_other_housing_emissions">NA</td>
         		  </tr>
+        		</table>
+        	  </div>
+        	  
+        	  <div>
+        	    <h4>Transport</h4>
+        		
+        		<table class="overviewtable">
+        		  <tr>
+        			<th>Name</th>
+        			<th>Grade</th>
+        			<th>kgCO<sub>2</sub>e per person</th>
+        			</tr>
         		  <tr>
         			<td>Car Driving</td>
         			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_car_emissions_grade" alt = "Grade Image"></td>
         			<td align='right' id="data_car_emissions">NA</td>
         		  </tr>
         		  <tr>
+        			<td>Public Transport</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_public_transport_emissions_grade" alt = "Grade Image"></td>
+        			<td align='right' id="data_public_transport_emissions">NA</td>
+        		  </tr>
+        		  <tr>
         			<td>Van Driving</td>
         			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_van_emissions_grade" alt = "Grade Image"></td>
         			<td align='right' id="data_van_emissions">NA</td>
+        		  </tr>
+        		  <tr>
+        			<td>Motorbikes & Company Car Driving</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_bikes_company_emissions_grade" alt = "Grade Image"></td>
+        			<td align='right' id="data_bikes_company_emissions">NA</td>
         		  </tr>
         		  <tr>
         			<td>Flights</td>
@@ -328,6 +348,22 @@
         			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_vehicle_purchase_emissions_grade" alt = "Grade Image"></td>
         			<td align='right' id="data_vehicle_purchase_emissions">NA</td>
         		  </tr>
+        		  <tr>
+        			<td>Vehicle Maintaince</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_vehicle_maintaince_emissions_grade" alt = "Grade Image"></td>
+        			<td align='right' id="data_vehicle_maintaince_emissions">NA</td>
+        		  </tr>
+        		</table>
+        	  </div>
+        		
+        		<div><h4>Consumption</h4>
+        		
+        		<table class="overviewtable">
+        		  <tr>
+        			<th>Name</th>
+        			<th>Grade</th>
+        			<th>kgCO<sub>2</sub>e per person</th>
+        			</tr>
         		  <tr>
         			<td>Consumption of goods and services</td>
         			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_consumption_emissions_grade" alt = "Grade Image"></td>
@@ -383,22 +419,9 @@
         			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_miscellaneous_emissions_grade" alt = "Grade Image"></td>
         			<td align='right' id="data_miscellaneous_emissions">NA</td>
         		  </tr>
-        		  <tr>
-        			<td>Bikes & Company Cars</td>
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_bikes_company_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_bikes_company_emissions">NA</td>
-        		  </tr>
-        		  <tr>
-        			<td>Vehicle Maintaince</td>
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_vehicle_maintaince_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_vehicle_maintaince_emissions">NA</td>
-        		  </tr>
-        		  <tr>
-        			<td>Public Transport</td>
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_public_transport_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_public_transport_emissions">NA</td>
-        		  </tr>
-        		</table>
+        		</table></div>
+        		
+        		
         		
         	</div>
         	
