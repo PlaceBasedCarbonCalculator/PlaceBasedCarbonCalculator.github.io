@@ -11,6 +11,7 @@
 - Data is loaded from static files in `data/` or feature subfolders, or from remote APIs (not included in this repo).
 - UI logic is modular: look for `ui.js` and `settings.js` in each feature folder for entry points.
 - Images and icons are organized by type in `images/` and `assets/`.
+- Important libraries are MapLibre, Chart.js, included via CDN or in `js/lib/`.
 
 ## Developer Workflows
 - No build or test scripts are present; changes are made directly to source files.
