@@ -4,6 +4,7 @@ var accessChart;
 manageCharts =  function (chartDefinition, locationData){
   console.log("Managing Charts");
   makeChartAccess(locationData);
+  return Promise.resolve();
 }
 
 makeChartAccess = function(locationData){

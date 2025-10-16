@@ -887,14 +887,64 @@ const capUi = (function () {
 					const featureProperties = e.features[0].properties;
 					const locationId = featureProperties[chartDefinition.propertiesField];
 					
-					// Set the title
-					// TODO this is run muliple times when muliple data sources, but still works
+					// Set the title (may be async)
 					capUi.manageLSOAOverview(mapLayerId, locationId);
 					
-					// Display the modal
-					location_modal.show();
-					// Tool Specific Function in each ui.js
-					manageCharts(locationId, mapLayerId);
+					// Show global spinner while charts are built
+					const spinner = document.querySelector('.spinner');
+					if (spinner) { spinner.style.display = 'block'; }
+					
+					// Call tool-specific manageCharts. If it returns a Promise, wait on it.
+					try {
+						const result = manageCharts(locationId, mapLayerId);
+						if (result && typeof result.then === 'function') {
+							result.then(() => {
+								if (spinner) { spinner.style.display = 'none'; }
+								location_modal.show();
+							}).catch(() => {
+								// On error still hide spinner and show modal so user can see message
+								if (spinner) { spinner.style.display = 'none'; }
+								location_modal.show();
+							});
+						return;
+						}
+					} catch (err) {
+						console.error('manageCharts threw error:', err);
+					}
+					
+					// If manageCharts did not return a Promise, poll for Chart.js instances inside the modal canvases.
+					const maxWaitMs = 8000; // total wait time
+					const intervalMs = 200;
+					let waited = 0;
+					const canvases = Array.from(document.querySelectorAll('#' + mapLayerId + '-chartsmodal canvas'));
+					const checkCharts = function () {
+						// If no canvases found, treat as immediate completion
+						if (canvases.length === 0) {
+							if (spinner) { spinner.style.display = 'none'; }
+							location_modal.show();
+							return;
+						}
+						// If Chart.js is available, check for an associated chart instance for any canvas
+						let ready = false;
+						if (window.Chart && typeof window.Chart.getChart === 'function') {
+							for (const c of canvases) {
+								if (window.Chart.getChart(c)) { ready = true; break; }
+							}
+						} else {
+							// Fallback: check if any canvas has non-zero width/height after rendering (heuristic)
+							for (const c of canvases) {
+								if (c.width > 0 && c.height > 0) { ready = true; break; }
+							}
+						}
+						if (ready || waited >= maxWaitMs) {
+							if (spinner) { spinner.style.display = 'none'; }
+							location_modal.show();
+							return;
+						}
+						waited += intervalMs;
+						setTimeout(checkCharts, intervalMs);
+					};
+					setTimeout(checkCharts, intervalMs);
 					
 					
 				});

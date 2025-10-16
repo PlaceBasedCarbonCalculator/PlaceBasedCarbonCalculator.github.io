@@ -49,82 +49,57 @@ var dwellingstypeChart;
 var dwellingsbedroomsChart;
 var dwellingsageChart;
 
-manageCharts =  function (locationId){
-  console.log("Managing Charts");
-  
-  const jsonurls = [
-    'https://pbcc.blob.core.windows.net/pbcc-data/historical_emissions/v1/' + locationId + '.json',
-    'https://pbcc.blob.core.windows.net/pbcc-data/population/' + locationId + '.json',
-    'https://pbcc.blob.core.windows.net/pbcc-data/lsoa_overview/v1/' + locationId + '.json',
-    'https://pbcc.blob.core.windows.net/pbcc-data/la_emissions/v1/' + 'GB' + '.json'
-  ];
-  
-  
-  
-  Promise.all(jsonurls.map(capUi.fetchJSON))
-    .then(([historicalData, populationData,OverviewData,GBData]) => {
-        locationData = historicalData;
-        populationLocationData = populationData;
-        lsoaOverviewData = OverviewData[0];
-        gbHistoricalData = GBData;
-        
-        const jsonurls2 = [
-          'https://pbcc.blob.core.windows.net/pbcc-data/oac_emissions/v1/' + lsoaOverviewData.lsoa_class_code + '.json',
-          'https://pbcc.blob.core.windows.net/pbcc-data/la_emissions/v1/' + lsoaOverviewData.LAD25CD + '.json'
-        ];
-        
-        Promise.all(jsonurls2.map(capUi.fetchJSON))
-        .then(([laData, oacData]) => {
-            laHistoricalData = laData;
-            oacHistoricalData = oacData;
-    
-            makeChartHistorical();
-            makeChartPopulation();
-        })
+manageCharts = function (locationId) {
+	console.log('Managing Charts');
 
-    })
-    .catch(error => {
-        alert('Failed to load one or more datasets. Please try refreshing the page.');
-        console.error(error);
-    });
-  
- 
-    capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/voa_2010/' + locationId + '.json')
-        .then(function (lsoaData) {
-            voa2010LocationData = lsoaData;
-            makeChartVOA2010();
-        })
-        .catch(function (error) {
-            alert('Failed to get VOA 2010 data for this location, or to process it correctly. Please try refreshing the page.');
-            console.log(error);
-        });
-        
-    capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/voa_2020/' + locationId + '.json')
-        .then(function (lsoaData) {
-            voa2020LocationData = lsoaData;
-            makeChartVOA2020();
-        })
-        .catch(function (error) {
-            alert('Failed to get VOA 2020 data for this location, or to process it correctly. Please try refreshing the page.');
-            console.log(error);
-        });
-  
-  
-    capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/community_photo/' + locationId + '.json')
-        .then(function (lsoaData) {
-            communityPicLocationData = lsoaData;
-            makeCommunityPic();
-        })
-        .catch(function (error) {
-            alert('Failed to get Community Picture data for this location, or to process it correctly. Please try refreshing the page.');
-            console.log(error);
-        });
+	// Primary chained requests that feed multiple charts
+	const urlsPrimary = [
+		'https://pbcc.blob.core.windows.net/pbcc-data/historical_emissions/v1/' + locationId + '.json',
+		'https://pbcc.blob.core.windows.net/pbcc-data/population/' + locationId + '.json',
+		'https://pbcc.blob.core.windows.net/pbcc-data/lsoa_overview/v1/' + locationId + '.json',
+		'https://pbcc.blob.core.windows.net/pbcc-data/la_emissions/v1/GB.json'
+	];
 
-  //makeChartOverview(chartDefinition, locationData[0]);
- // makeChartPLEF(chartDefinition, locationData[0])
-}
+	const primary = Promise.all(urlsPrimary.map(capUi.fetchJSON))
+		.then(([historicalData, populationData, overviewArr, GBData]) => {
+			locationData = historicalData;
+			populationLocationData = populationData;
+			lsoaOverviewData = overviewArr[0];
+			gbHistoricalData = GBData;
 
+			const urlsSecondary = [
+				'https://pbcc.blob.core.windows.net/pbcc-data/oac_emissions/v1/' + lsoaOverviewData.lsoa_class_code + '.json',
+				'https://pbcc.blob.core.windows.net/pbcc-data/la_emissions/v1/' + lsoaOverviewData.LAD25CD + '.json'
+			];
 
+			return Promise.all(urlsSecondary.map(capUi.fetchJSON))
+				.then(([laData, oacData]) => {
+					laHistoricalData = laData;
+					oacHistoricalData = oacData;
+
+					makeChartHistorical();
+					makeChartPopulation();
+				});
+		})
+		.catch(error => {
+			console.error('Failed to load primary pbcc datasets:', error);
+		});
+
+	// Independent fetches
+	const pVOA2010 = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/voa_2010/' + locationId + '.json')
+		.then(data => { voa2010LocationData = data; makeChartVOA2010(); })
+		.catch(err => { console.error('VOA2010 failed:', err); });
+
+	const pVOA2020 = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/voa_2020/' + locationId + '.json')
+		.then(data => { voa2020LocationData = data; makeChartVOA2020(); })
+		.catch(err => { console.error('VOA2020 failed:', err); });
+
+	const pCommunity = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/community_photo/' + locationId + '.json')
+		.then(data => { communityPicLocationData = data; makeCommunityPic(); })
+		.catch(err => { console.error('Community photo failed:', err); });
+
+    return Promise.all([primary, pVOA2010, pVOA2020, pCommunity]);
+};
 
 makeCommunityPic = function(){
   
@@ -141,39 +116,6 @@ makeCommunityPic = function(){
   });
 }
 
-/*
-maketableOverview = function(){
-  //TODO: find other heating GRADE in data
-  console.log("Hi");
-  
-  document.getElementById("data_total_emissions_percap").innerHTML = locationData.tkp2019;
-  document.getElementById("data_elec_emissions_household").innerHTML = locationData.dekp2019;
-  document.getElementById("data_gas_emissions_household").innerHTML = locationData.dgkp2019;
-  document.getElementById("data_other_heating_emissions").innerHTML = locationData.hokp2019;
-  document.getElementById("data_car_emissions").innerHTML = locationData.cep2019;
-  document.getElementById("data_van_emissions").innerHTML = locationData.vep2019;
-  document.getElementById("data_flights_emissions").innerHTML = locationData.Cfkp2019;
-  document.getElementById("data_consumption_emissions").innerHTML = locationData.gsckp2019;
-  document.getElementById("data_total_emissions_grade").src = "/images/grades/" + locationData.tg2019 + ".webp";
-	document.getElementById("data_total_emissions_grade").alt = "Grade " + locationData.tg2019;
-	document.getElementById("data_elec_emissions_grade").src  = "/images/grades/" + locationData.deg2019 + ".webp";
-	document.getElementById("data_elec_emissions_grade").alt = "Grade " + locationData.deg2019;
-	document.getElementById("data_gas_emissions_grade").src   = "/images/grades/" + locationData.dgg2019 + ".webp";
-	document.getElementById("data_gas_emissions_grade").alt = "Grade " + locationData.dgg2019;
-	document.getElementById("data_other_heating_emissions_grade").src   = "/images/grades/" + locationData.other_heating_grade + ".webp";
-	document.getElementById("data_other_heating_emissions_grade").alt = "Grade " + locationData.data_other_heating_emissions_grade;
-	document.getElementById("data_car_emissions_grade").src   = "/images/grades/" + locationData.cg2019 + ".webp";
-	document.getElementById("data_car_emissions_grade").alt = "Grade " + locationData.cg2019;
-	document.getElementById("data_van_emissions_grade").src   = "/images/grades/" + locationData.vg2019 + ".webp";
-	document.getElementById("data_van_emissions_grade").alt = "Grade " + locationData.vg2019;
-	document.getElementById("data_flights_emissions_grade").src   = "/images/grades/" + locationData.fg2019 + ".webp";
-	document.getElementById("data_flights_emissions_grade").alt = "Grade " + locationData.fg2019;
-	document.getElementById("data_consumption_emissions_grade").src   = "/images/grades/" + locationData.gscg2019 + ".webp";
-	document.getElementById("data_consumption_emissions_grade").alt = "Grade " + locationData.gscg2019;
-	
-	
-}
-*/
 
 makeChartOverview = function(){
   
