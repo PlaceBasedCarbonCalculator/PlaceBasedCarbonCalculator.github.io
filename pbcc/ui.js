@@ -450,29 +450,41 @@ makeChartHistorical = function(){
     gradeImg.alt = `Grade ${grade}`;
   });
 
-  // Add a horizontal black threshold line at y = 2849.
-	// Use a line dataset (no points) and mark it with hideInLegend so it doesn't appear in the legend.
-	data.datasets.push({
-			type: 'line',
-			label: '2032 Target',
-			data: new Array(data.labels.length).fill(2849),
-			borderColor: 'black',
-			borderWidth: 3,
-			pointRadius: 0,
-			fill: false,
-			order: 1000,
-			stack: undefined
-	});
+		// We draw the horizontal threshold line via a plugin so it always appears on top
+		// and does not create a legend entry. (No dataset is pushed here.)
+		console.log(data.datasets);
 
-	console.log(data.datasets);
+		// Define the threshold plugin here so we can attach it to the historical chart as well.
+		const thresholdLinePlugin = {
+			id: 'thresholdLinePlugin',
+			afterDatasetsDraw(chart, args, options) {
+				const pluginOpts = (chart.options && chart.options.plugins && chart.options.plugins.thresholdLinePlugin) || options || {};
+				const value = pluginOpts.value;
+				if (typeof value !== 'number') return;
+				const ctx = chart.ctx;
+				const yScale = chart.scales['y'];
+				if (!yScale) return;
+				const y = yScale.getPixelForValue(value);
+				ctx.save();
+				ctx.strokeStyle = pluginOpts.color || 'black';
+				ctx.lineWidth = pluginOpts.width || 2;
+				if (Array.isArray(pluginOpts.dash) && pluginOpts.dash.length) ctx.setLineDash(pluginOpts.dash);
+				ctx.beginPath();
+				ctx.moveTo(chart.chartArea.left, y);
+				ctx.lineTo(chart.chartArea.right, y);
+				ctx.stroke();
+				ctx.restore();
+			}
+		};
 
 	historicalChart = new Chart(document.getElementById('historical-chart').getContext('2d'), {
     type: 'bar',
-		data: {
-		  labels: data.labels.filter(d => d.label != 'Goods & Services'),
-		  datasets: data.datasets.filter(d => d.label != 'Goods & Services')
-		},
-		options: {
+    data: {
+ 		  labels: data.labels.filter(d => d.label != 'Goods & Services'),
+ 		  datasets: data.datasets.filter(d => d.label != 'Goods & Services')
+ 		},
+ 		plugins: [thresholdLinePlugin],
+ 		options: {
 			scales: {
 				y: {
 					stacked: true,
@@ -489,17 +501,24 @@ makeChartHistorical = function(){
 				},
 			},
 			plugins: {
-						legend: {
-								position: 'right',
-								reverse: true,
-						labels: {
-							font: { size: 11 },
-							// Reduce spacing between legend items and tighten rows
-							padding: 4,
-							boxWidth: 10
-						}
-						}
-      },
+				// plugin options for thresholdLinePlugin (draws a single line on top)
+				thresholdLinePlugin: {
+					value: 2849,
+					color: 'black',
+					width: 3,
+					dash: []
+				},
+				legend: {
+					position: 'right',
+					reverse: true,
+				labels: {
+						font: { size: 11 },
+						// Reduce spacing between legend items and tighten rows
+						padding: 4,
+						boxWidth: 10
+					}
+				}
+	      },
 			responsive: true,
 			maintainAspectRatio: false
 		}
@@ -519,28 +538,14 @@ makeChartHistorical = function(){
 
 		data_overview.datasets = data_overview.datasets.filter(d => !d.label.includes('Goods & Services'));
 
-		data_overview.labels = ['This Area','Local Authority','Similar Areas','Great Britain'];
-  
-  
-	// Add a horizontal black threshold line at y = 2849.
-	// Use a line dataset (no points) and mark it with hideInLegend so it doesn't appear in the legend.
-	data_overview.datasets.push({
-			type: 'line',
-			label: '2032 Target',
-			data: new Array(data_overview.labels.length).fill(2849),
-			borderColor: 'black',
-			borderWidth: 3,
-			pointRadius: 0,
-			fill: false,
-			order: 1000,
-			stack: undefined
-	});
+        data_overview.labels = ['This Area','Local Authority','Similar Areas','Great Britain'];
 
 
 
 overviewChart = new Chart(document.getElementById('overview-chart').getContext('2d'), {
     type: 'bar',
 		data: data_overview,
+		plugins: [thresholdLinePlugin],
 		options: {
 			scales: {
 				y: {
@@ -558,17 +563,24 @@ overviewChart = new Chart(document.getElementById('overview-chart').getContext('
 				},
 			},
 			plugins: {
-						legend: {
-								position: 'right',
-								reverse: true,
-						labels: {
-							font: { size: 11 },
-							// Reduce spacing between legend items and tighten rows
-							padding: 4,
-							boxWidth: 10
-						}
-						}
-      },
+				// plugin options for thresholdLinePlugin
+				thresholdLinePlugin: {
+					value: 2849,
+					color: 'black',
+					width: 3,
+					dash: []
+				},
+				legend: {
+					position: 'right',
+					reverse: true,
+					labels: {
+						font: { size: 11 },
+						// Reduce spacing between legend items and tighten rows
+						padding: 4,
+						boxWidth: 10
+					}
+				}
+			},
 			responsive: true,
 			maintainAspectRatio: false
 		}
