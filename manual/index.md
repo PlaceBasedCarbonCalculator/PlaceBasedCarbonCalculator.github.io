@@ -749,13 +749,13 @@ In short, to estimate your family’s spending habits, we select from the tens o
 <!-- #pbcc-community-photo -->
 #### Community Photo
 
-The community photo is intended to give an at-a-glance overview of the demographics of each neighbourhood. Each neighbourhood's photo is made up of 48 household photos distributed in proportion to their occurrence in the 2021 census. 
+The community photo is intended to give an at-a-glance overview of the demographics of each neighbourhood. Each neighbourhood's photo is made up of 48 household photos distributed in proportion to their occurrence in the 2021/22 census. 
 
-The appropriate household photos are automatically selected from a set of about 200 household archives based on three variables.
+The appropriate household photos are automatically selected from a set of about 200 household architypes based on three variables.
 
 [Household composition](https://www.ons.gov.uk/census/census2021dictionary/variablesbytopic/demographyvariablescensus2021/householdcomposition/classifications) 
 
-Household composition considers the number and age of people in a household and how people are related to each other.
+Household composition considers the number and age of people in a household and how people are related to each other. The are 11 categories of household composition.
 
 * ![family_photo](/images/ui/family_photos/higher_OnePersonOver66_White.webp) **OnePersonOver66**: One-person household: Aged 66 years and over 
 * ![family_photo](/images/ui/family_photos/higher_OnePersonOther_White.webp) **OnePersonOther**: One-person household: Aged 65 years or under 
@@ -773,7 +773,7 @@ A dependent child is a person aged 0 to 15 years in a household, or a person age
 
 [National Statistics Socio-Economic Classification (NS-SEC) of the household reference person](https://www.ons.gov.uk/methodology/classificationsandstandards/otherclassifications/thenationalstatisticssocioeconomicclassificationnssecrebasedonsoc2010)
 
-NS-SEC classifies people based on their jobs.
+NS-SEC classifies people based on their jobs, there are six categories.
 
 * ![family_photo](/images/ui/family_photos/higher_CoupleChildren_White.webp) **Higher**: Higher managerial, administrative, and professional occupations
 * ![family_photo](/images/ui/family_photos/intermediate_CoupleChildren_White.webp) **Intermediate**: Intermediate occupations 
@@ -782,15 +782,15 @@ NS-SEC classifies people based on their jobs.
 * ![family_photo](/images/ui/family_photos/unemployed_CoupleChildren_White.webp) **Unemployed**: Never worked and long-term unemployed
 * ![family_photo](/images/ui/family_photos/DNA_OnePersonOther_White.webp) **Does Not Apply**: A small number of households that cannot be classified.
 
-Note that the NS-SEC classification applied to the household reference person. This is usually the person who pays the rent/mortgage. In the case of joint contributions, the higher earner is chosen. This means that only the NS-SEC of the highest earner is depicted in the family photo. For example, in a couple where one person was a banker and the other a gardener, the household would be represented by the “Higher” category and show two people in higher roles.
+Note that the NS-SEC classification apply to the household reference person. This is usually the person who pays the rent/mortgage. In the case of joint contributions, the higher earner is chosen. This means that only the NS-SEC of the highest earner is depicted in the family photo. For example, in a couple where one person was a banker and the other a cleaner, the household would be represented by the “Higher” category and show two people in higher roles.
 
 Retired people's NS-SEC classification is based on their previous job. 
 
 [Ethnicity](https://www.ons.gov.uk/peoplepopulationandcommunity/culturalidentity/ethnicity/bulletins/ethnicgroupenglandandwales/census2021)
 
+The family photos include three ethnic categories. 
 
-
-* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_White.webp) **White**: White (74.4% of population)
+* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_White.webp) **White**: White, (English, Welsh, Scottish, Northern Irish or British),  Irish, Gypsy or Irish Traveller, Roma, Other White (74.4% of population)
 * ![family_photo](/images/ui/family_photos/higher_CoupleChildren_Black.webp) **Black**: Black, Black British, Black Welsh, Caribbean or African (4.0% of population)
 * ![family_photo](/images/ui/family_photos/higher_CoupleChildren_Other.webp) **Other**: Asian, Asian British, Asian Welsh, Mixed, Multiple, or Other ethnic group (14.3% of population)
 

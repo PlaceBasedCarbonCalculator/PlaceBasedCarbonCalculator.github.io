@@ -98,24 +98,6 @@ const datasets_extra = {
 	
 	circleColours: {
 		
-				// #!# These are presumably restatements of dzLegendColours
-		landowners: {
-			'Country': [
-				'UK', 	        '#b15928',
-				'JERSEY', 	    '#a6cee3',
-				'GUERNSEY', 	  '#1f78b4',
-				'BRITISH VIRGIN ISLANDS', 	'#fb9a99',
-				'ISLE OF MAN',	'#b2df8a',
-				'LUXEMBOURG',	'#fdbf6f',
-				'GIBRALTAR',	  '#33a02c',
-				'NETHERLANDS',	'#ff7f00',
-				'IRELAND',	    '#cab2d6',
-				'CAYMAN ISLANDS',	'#e31a1c',
-				'PANAMA',		  '#ffff99',
-				'CYPRUS',		  '#6a3d9a',
-				'#000000',
-			]
-		},
 	},
 	
 	
@@ -252,16 +234,13 @@ function zonesStyling (layerId, map, settings, datasets, createLegend /* callbac
 	const daysymetricMode = document.querySelector ('input.updatelayer[data-layer="zones"][name="daysymetricmode"]').checked;
 	
 	// Set paint properties
-	//map.setPaintProperty (layerId, 'fill-color', ['step', ['get', field], getStyleColumn (field, datasets)]);
 	map.setPaintProperty (layerId, 'fill-color', ['match', ['get', field], ...getStyleColumn (field, datasets)]);
 	map.setPaintProperty (layerId, 'fill-opacity', (daysymetricMode ? 0.1 : 0.8)); // Very faded-out in daysymetric mode, as the buildings are coloured
 	map.setPaintProperty (layerId, 'fill-outline-color', 'rgba(0, 0, 0, 0.2)'); 
 	
 	// Set buildings layer colour/visibility
 	const buildingColour = getBuildingsColour(settings);
-	//console.log((buildingColour || '#9c9898'));
 	map.setPaintProperty ('buildings', 'fill-extrusion-color', (buildingColour || '#9c9898'));
-	//map.setPaintProperty ('buildings', 'fill-extrusion-color', '#9c9898');
 	map.setLayoutProperty ('buildings', 'visibility', (buildingColour ? 'visible' : 'none'));
 }
 

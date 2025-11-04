@@ -73,9 +73,6 @@ const capUi = (function () {
 			// Create the map UI
 			_map = capUi.createMap ();
 			
-			// Manage layers
-			capUi.manageLayers ();
-			
 			// Create popups
 			capUi.createPopups ();
 			
@@ -94,7 +91,10 @@ const capUi = (function () {
 			}
 			
 			// Manage analytics cookie setting
-	  	capUi.manageAnalyticsCookie ();
+	  		capUi.manageAnalyticsCookie ();
+
+			// Manage layers
+			capUi.manageLayers ();
 		},
 		
 		// Welcome screen
@@ -677,19 +677,24 @@ const capUi = (function () {
 					});
 				}
 				document.dispatchEvent (new Event ('@map/initiallayersset', {'bubbles': true}));
-
-				// Implement initial visibility state for all layers
-				Object.keys(_datasets.layers).forEach(layerId => {
-					capUi.toggleLayer(layerId);
-				});
-				
+	
 				// Handle layer change controls, each marked with .showlayer or .updatelayer
 				document.querySelectorAll ('.showlayer, .updatelayer').forEach ((input) => {
 					input.addEventListener ('change', function () {
 						const layerId = input.dataset.layer;
+						//console.log ('Layer change for ' + layerId);
 						capUi.toggleLayer(layerId);
 					});
 				});
+
+				// Toggle each layer to ensure visibility is set as per the checkbox state
+				Object.keys(_datasets.layers).forEach(layerId => {
+					//console.log('Initial toggle of layer ' + layerId);
+					capUi.toggleLayer(layerId);
+				});
+
+								
+
 			});
 		},
 		
@@ -718,10 +723,10 @@ const capUi = (function () {
 		
 		toggleLayer: function (layerId)
 		{
-			//console.log ('Toggling layer ' + layerId);
-			
+				
 			// Check for a dynamic styling callback and run it if present
 			if (_datasets.layerStyling[layerId]) {
+				//console.log('Running dynamic styling for ' + layerId);
 				_datasets.layerStyling[layerId] (layerId, _map, _settings, _datasets, capUi.createLegend);
 			} else {
 				capUi.createLegend (datasets.legends, layerId, layerId + 'legend');

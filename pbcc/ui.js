@@ -94,7 +94,7 @@ manageCharts = function (locationId) {
 		.then(data => { voa2020LocationData = data; makeChartVOA2020(); })
 		.catch(err => { console.error('VOA2020 failed:', err); });
 
-	const pCommunity = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/community_photo/' + locationId + '.json')
+	const pCommunity = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/community_photo/v1/' + locationId + '.json')
 		.then(data => { communityPicLocationData = data; makeCommunityPic(); })
 		.catch(err => { console.error('Community photo failed:', err); });
 
@@ -103,8 +103,8 @@ manageCharts = function (locationId) {
 
 makeCommunityPic = function(){
   
-  const names = communityPicLocationData["i"];
-  const numbers = communityPicLocationData["p"];
+  const names = communityPicLocationData["id"];
+  const numbers = communityPicLocationData["pic"];
   const repeatedNames = numbers.flatMap((num, index) => Array(num).fill(names[index]));
   
   repeatedNames.forEach((name, index) => {
@@ -342,6 +342,7 @@ makeChartHistorical = function(){
 			backgroundColor: comp[2],
 			borderColor: comp[3],
 			borderWidth: 1,
+			order: 0,
 			stack: 'Stack 0'
 		});
 	});
@@ -449,7 +450,22 @@ makeChartHistorical = function(){
     gradeImg.alt = `Grade ${grade}`;
   });
 
-  
+  // Add a horizontal black threshold line at y = 2849.
+	// Use a line dataset (no points) and mark it with hideInLegend so it doesn't appear in the legend.
+	data.datasets.push({
+			type: 'line',
+			label: '2032 Target',
+			data: new Array(data.labels.length).fill(2849),
+			borderColor: 'black',
+			borderWidth: 3,
+			pointRadius: 0,
+			fill: false,
+			order: 1000,
+			stack: undefined
+	});
+
+	console.log(data.datasets);
+
 	historicalChart = new Chart(document.getElementById('historical-chart').getContext('2d'), {
     type: 'bar',
 		data: {
@@ -473,65 +489,56 @@ makeChartHistorical = function(){
 				},
 			},
 			plugins: {
-          legend: {
-              position: 'right',
-              reverse: true,
-              labels: {
-                font: {
-                    size: 8
-                }
-              }
-          }
+						legend: {
+								position: 'right',
+								reverse: true,
+						labels: {
+							font: { size: 11 },
+							// Reduce spacing between legend items and tighten rows
+							padding: 4,
+							boxWidth: 10
+						}
+						}
       },
 			responsive: true,
 			maintainAspectRatio: false
 		}
-  });
-  
-  /*
-  const overviewData1 = {
-    labels: locationData['year'],
-    datasets: [
-      ...data.datasets,
-      ...data_la.datasets,
-      ...data_oac.datasets,
-      ...data_gb.datasets
-    ]
-  };
-  
-  const overviewData = {
-  labels: ['This Area'],
-  datasets: overviewData1.datasets
-    .filter(ds => !ds.label.includes('Goods & Services'))
-    .map(ds => ({
-      ...ds,
-      data: [ds.data[yearIndex]],
-      gradelabel: Array.isArray(ds.gradelabel) ? ds.gradelabel[yearIndex] : ds.gradelabel
-    }))
-  };
-  */
-  
-  const data_overview = {datasets: []};
-
-  component.forEach(comp => {
-		data_overview.datasets.push({
-			label: comp[0],
-			data: [locationData[comp[1]][yearIndex], laHistoricalData[comp[1]][yearIndex],  oacHistoricalData[comp[1]][yearIndex], gbHistoricalData[comp[1]][yearIndex]],
-			//data:locationData[comp[1]],
-			backgroundColor: comp[2],
-			borderColor: comp[3],
-			borderWidth: 1,
-			stack: 'Stack 0'
 		});
+		const data_overview = {datasets: []};
+
+		component.forEach(comp => {
+			data_overview.datasets.push({
+				label: comp[0],
+				data: [locationData[comp[1]][yearIndex], laHistoricalData[comp[1]][yearIndex], oacHistoricalData[comp[1]][yearIndex], gbHistoricalData[comp[1]][yearIndex]],
+				backgroundColor: comp[2],
+				borderColor: comp[3],
+				borderWidth: 1,
+				stack: 'Stack 0'
+			});
+		});
+
+		data_overview.datasets = data_overview.datasets.filter(d => !d.label.includes('Goods & Services'));
+
+		data_overview.labels = ['This Area','Local Authority','Similar Areas','Great Britain'];
+  
+  
+	// Add a horizontal black threshold line at y = 2849.
+	// Use a line dataset (no points) and mark it with hideInLegend so it doesn't appear in the legend.
+	data_overview.datasets.push({
+			type: 'line',
+			label: '2032 Target',
+			data: new Array(data_overview.labels.length).fill(2849),
+			borderColor: 'black',
+			borderWidth: 3,
+			pointRadius: 0,
+			fill: false,
+			order: 1000,
+			stack: undefined
 	});
-	
-	data_overview.datasets = data_overview.datasets.filter(d => !d.label.includes('Goods & Services'));
-	
-	data_overview.labels = ['This Area','Local Authority','Similar Areas','Great Britain'];
-  
-  console.log(data_overview);
-  
-  overviewChart = new Chart(document.getElementById('overview-chart').getContext('2d'), {
+
+
+
+overviewChart = new Chart(document.getElementById('overview-chart').getContext('2d'), {
     type: 'bar',
 		data: data_overview,
 		options: {
@@ -551,15 +558,16 @@ makeChartHistorical = function(){
 				},
 			},
 			plugins: {
-          legend: {
-              position: 'right',
-              reverse: true,
-              labels: {
-                font: {
-                    size: 8
-                }
-              }
-          }
+						legend: {
+								position: 'right',
+								reverse: true,
+						labels: {
+							font: { size: 11 },
+							// Reduce spacing between legend items and tighten rows
+							padding: 4,
+							boxWidth: 10
+						}
+						}
       },
 			responsive: true,
 			maintainAspectRatio: false

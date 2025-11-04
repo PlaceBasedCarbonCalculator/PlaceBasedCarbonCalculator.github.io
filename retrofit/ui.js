@@ -745,4 +745,3 @@ makePieChart = function(chartVar, name, label, data, colours, labels){
 	
 	return chartVar;
 }
-
