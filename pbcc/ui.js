@@ -177,7 +177,7 @@ makeChartOverview = function(){
 								stacked: true,
 								title: {
 									display: true,
-									text: 'kgCO2e per person'
+									text: 'kgCO₂e per person'
 								},
 								ticks: {
 									beginAtZero: true,
@@ -476,10 +476,10 @@ makeChartHistorical = function(){
 			scales: {
 				y: {
 					stacked: true,
-					title: {
-						display: true,
-						text: 'kgCO2e per person'
-					},
+						title: {
+									display: true,
+									text: 'kgCO₂e per person'
+								},
 					ticks: {
 						beginAtZero: true,
 					}
@@ -545,10 +545,10 @@ overviewChart = new Chart(document.getElementById('overview-chart').getContext('
 			scales: {
 				y: {
 					stacked: true,
-					title: {
-						display: true,
-						text: 'kgCO2e per person'
-					},
+						title: {
+									display: true,
+									text: 'kgCO₂e per person'
+								},
 					ticks: {
 						beginAtZero: true,
 					}
@@ -581,7 +581,7 @@ overviewChart = new Chart(document.getElementById('overview-chart').getContext('
 								stacked: true,
 								title: {
 									display: true,
-									text: 'kgCO2e per person'
+									text: 'kgCO₂e per person'
 								},
 								ticks: {
 									beginAtZero: true,
