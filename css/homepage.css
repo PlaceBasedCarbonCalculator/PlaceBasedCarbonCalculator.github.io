@@ -81,21 +81,6 @@ a.smaller {
   padding-bottom: 40px;
 }
 
-.opentool {
-  padding: 10px;
-  background-color: green;
-  line-height: 2.3;
-}
-
-a.opentool {
-  color: #ffffff
-}
-a.opentool:hover{
-  color: #ffffff
-}
-a.opentool:visited{
-  color: #ffffff
-}
 
 .tool_thumbnail {
   float: right;

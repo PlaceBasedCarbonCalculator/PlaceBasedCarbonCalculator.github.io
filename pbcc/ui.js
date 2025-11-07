@@ -86,6 +86,7 @@ manageCharts = function (locationId) {
 		});
 
 	// Independent fetches
+	/* Will be moved to retrofit tool
 	const pVOA2010 = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/voa_2010/' + locationId + '.json')
 		.then(data => { voa2010LocationData = data; makeChartVOA2010(); })
 		.catch(err => { console.error('VOA2010 failed:', err); });
@@ -93,12 +94,12 @@ manageCharts = function (locationId) {
 	const pVOA2020 = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/voa_2020/' + locationId + '.json')
 		.then(data => { voa2020LocationData = data; makeChartVOA2020(); })
 		.catch(err => { console.error('VOA2020 failed:', err); });
-
+	*/
 	const pCommunity = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/community_photo/v1/' + locationId + '.json')
 		.then(data => { communityPicLocationData = data; makeCommunityPic(); })
 		.catch(err => { console.error('Community photo failed:', err); });
 
-    return Promise.all([primary, pVOA2010, pVOA2020, pCommunity]);
+    return Promise.all([primary,  pCommunity]); //pVOA2010, pVOA2020,
 };
 
 makeCommunityPic = function(){

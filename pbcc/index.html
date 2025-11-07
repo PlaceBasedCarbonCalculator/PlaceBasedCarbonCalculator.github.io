@@ -157,7 +157,7 @@
 			<div class="panel">
 				<p><label><input type="checkbox" class="showlayer" data-layer="zones" value="false" checked="checked">Show layer</label></p>
 				<p>
-					<select name="field" class="updatelayer" data-layer="zones" aria-label="Neighbouhood  layer">
+					<select name="field" class="updatelayer" data-layer="zones" aria-label="Neighbourhood layer">
 						<option value="total_grade" selected>Total Emissions</option>
 						<option value="dom_gas_grade" >Gas</option>
 						<option value="dom_elec_grade">Electricity</option>
@@ -284,10 +284,8 @@
         	</div>
 
 			<div>
-          <p>This report card is customised for each Lower Super Output Area (LSOA) on the map. The title at the top gives the       <abbr title="Lower Super Output Area">LSOA</abbr>'s unique ID, the Office for National Statistics area classification, and the Ward name. Wards are usually            larger than <abbr title="Lower Super Output Area">LSOA</abbr>s, but unlike <abbr title="Lower Super Output Area">LSOA</abbr>s have recognisable local names.
-          This tab gives an overview of the <abbr title="Lower Super Output Area">LSOA</abbr>s total carbon footprint, while other tabs give more detail and additional         context about parts of the carbon footprint.
-          </p>
-          <p>The bar chart shows the total carbon footprint per person in units of kilogrammes of carbon dioxide equivalent.        The first column shows the footprint of the selected <abbr title="Lower Super Output Area">LSOA</abbr>. The second column shows the average footprint of <abbr title="Lower Super Output Area">LSOA</abbr>s in       the same local authority. The third column shows the average footprint of all <abbr title="Lower Super Output Area">LSOA</abbr>s in England. The fourth column         shows the average footprint of <abbr title="Lower Super Output Area">LSOA</abbr>s with the same area classification. The Office for National Statistics (ONS)          produced the area classifications, which group areas into one of 24 categories based on social, economic, geographic,       and demographic factors.  Thus, this column represents the average of similar areas with similar people.
+		  <p>This report card is customised for each Lower Super Output Area (LSOA) on the map. The title at the top gives the <abbr title="Lower Super Output Area">LSOA</abbr>'s unique ID, the Office for National Statistics area classification, and the ward name. Wards are usually larger than <abbr title="Lower Super Output Area">LSOA</abbr>s, but unlike LSOAs they have recognisable local names. This tab gives an overview of the LSOA's total carbon footprint, while other tabs provide more detail and additional context about different parts of the carbon footprint.</p>
+		  <p>The bar chart shows the total carbon footprint per person in units of kilograms of carbon dioxide equivalent. The first column shows the footprint of the selected <abbr title="Lower Super Output Area">LSOA</abbr>. The second column shows the average footprint of LSOAs in the same local authority. The third column shows the average footprint of all LSOAs in England. The fourth column shows the average footprint of LSOAs with the same area classification. The Office for National Statistics (ONS) produced the area classifications, which group areas into one of 24 categories based on social, economic, geographic, and demographic factors. Thus, this column represents the average of similar areas with similar populations.</p>
           The horizontal black line represents the UK's target footprint per person set out in the Committee on Climate             Change's <a href="https://www.theccc.org.uk/publication/sixth-carbon-budget/" target="_blank" rel="noopener">6th Carbon Budget</a>, covering 2032 to 2037. It is intended to provide an indication of how far we must go in the next ten years if we are to have any chance of reaching net-zero by 2050.
           </p>
 		  <h3>Overview Tables</h3>
@@ -304,8 +302,8 @@
         			<th>Grade</th>
         			<th>kgCO<sub>2</sub>e per person</th>
         			</tr>
-        		  <tr>
-        			<td>Electricity</td>
+	        	  <tr>
+	        		<td>Electricity</td>
         			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_elec_emissions_grade" alt = "Grade Image"></td>
         			<td align='right' id="data_elec_emissions_household">NA</td>
         		  </tr>
@@ -366,11 +364,11 @@
         			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_vehicle_purchase_emissions_grade" alt = "Grade Image"></td>
         			<td align='right' id="data_vehicle_purchase_emissions">NA</td>
         		  </tr>
-        		  <tr>
-        			<td>Vehicle Maintaince</td>
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_vehicle_maintaince_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_vehicle_maintaince_emissions">NA</td>
-        		  </tr>
+			    <tr>
+				    <td>Vehicle maintenance</td>
+				    <td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_vehicle_maintaince_emissions_grade" alt = "Grade Image"></td>
+				    <td align='right' id="data_vehicle_maintaince_emissions">NA</td>
+			    </tr>
         		</table>
         	  </div>
         		
@@ -387,8 +385,8 @@
         			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_consumption_emissions_grade" alt = "Grade Image"></td>
         			<td align='right' id="data_consumption_emissions">NA</td>
         		  </tr>
-        		  <tr>
-        			<td>Funishings</td>
+	        	  <tr>
+	        		<td>Furnishings</td>
         			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_furnishings_emissions_grade" alt = "Grade Image"></td>
         			<td align='right' id="data_furnishings_emissions">NA</td>
         		  </tr>
@@ -447,7 +445,7 @@
           <div>
           <h3>Understanding the grades</h3>
           <p><img src="/images/ui/grades.webp" style="width:100%; max-width:700px" alt="How grades are calculated" loading="lazy"></p>
-          <p>Many values have been given a grade from A+ to F- to help you understand how this <abbr title="Lower Super Output Area">LSOA</abbr> compares to others. The         grades are relative to the average <abbr title="Lower Super Output Area">LSOA</abbr>, so areas with an A+ to C- grade are better than average, while areas with a       D+ to F- grade are worse than average. Most areas are close to the average, so theses grade bands are wide,               representing 7% of <abbr title="Lower Super Output Area">LSOA</abbr>s. Towards the extremes, the grade bands narrow, so only the best 1% of <abbr title="Lower Super Output Area">LSOA</abbr>s get an A+ grade       . In some cases, it is not possible to calculate a grade due to missing data, so a NA value will be shown.</p>
+		  <p>Many values have been given a grade from A+ to F- to help you understand how this <abbr title="Lower Super Output Area">LSOA</abbr> compares to others. The grades are relative to the average LSOA, so areas with an A+ to C- grade are better than average, while areas with a D+ to F- grade are worse than average. Most areas are close to the average, so these grade bands are wide, representing around 7% of LSOAs. Towards the extremes, the grade bands narrow, so only the best 1% of LSOAs receive an A+ grade. In some cases, it is not possible to calculate a grade due to missing data, so an NA value will be shown.</p>
 			    
 			    
 			  </div>
@@ -460,8 +458,7 @@
 			    
 			    	<div class="chart-wrapper" id="overview-chartrow">
   					  <div class="chart-text">
-  							<h4 class="chart-title">Historical Emissions</h4>
-  							<p class="chart-description">Estimated per person emissions 2010 to 2020</p>
+			   				<p class="chart-description">This chart shows the average per-person carbon footprint in this area for each year since 2010. Total emissions are broken down into categories; more information on individual categories is available in the other tabs. The black horizontal line represents the UK's target footprint per person set out in the Committee on Climate Change's <a href="https://www.theccc.org.uk/publication/sixth-carbon-budget/" target="_blank" rel="noopener">6th Carbon Budget</a>, covering 2032 to 2037. It is intended to provide an indication of how far we must go in the next ten years if we are to have any chance of reaching net-zero by 2050.</p>
   						</div>
   						<div class="chart-container">
   							<canvas id="historical-chart"></canvas>
@@ -473,11 +470,13 @@
 			  <div id="transport" class="tabcontent">
 			    
 			    <h3>Transport</h3>
+
+				<p>Find out more about this topic in the <a href="/transport/#/zones/#8/51.482/-0.151" class="opentool">Transport and Accessibility Explorer</a></p>
 			    
 			    <div class="chart-wrapper" id="carEmissions-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Car Emissions</h4>
-					  <p class="chart-description"></p>
+											<p class="chart-description">Carbon emissions from cars can be reduced in two main ways. First, by reducing emissions per kilometre driven through improved fuel efficiency or switching to electric vehicles. Second, by driving less. The Committee on Climate Change has said that there is no way to meet our climate targets without an overall reduction in the amount we drive. While electric cars reduce tailpipe emissions, substantial emissions occur during manufacturing, and cars still contribute to air pollution (from particulates from tyres and brakes), traffic congestion, and road injuries. It is estimated that at least 10,000 people a year are affected by air pollution in the UK. Towns and cities can become less car dependent, but this requires investment in high-quality public transport and safe walking and cycling infrastructure so that people have attractive alternatives. Cars also harm other travellers: for example, they cause traffic, slowing down buses and making pedestrians and cyclists feel unsafe, which, in turn, can push people from low-carbon modes to driving, worsening the situation. Car and van emissions are based on data from MOT tests. See the manual for more details.</p>
 					</div>
 					<div class="chart-container">
 						<canvas id="carEmissions-chart"></canvas>
@@ -487,7 +486,10 @@
 			    <div class="chart-wrapper" id="vanEmissions-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Van Emissions</h4>
-					  <p class="chart-description"></p>
+					  <p class="chart-description">Van use is a bit more complicated than car use as they are more likely to be used for work 
+						rather than personal transport. Some LSOAs have exceptionally high numbers of vans. 
+						This is because the data we have is based on the registered keeper's address. 
+						So, a company that reports all its vans to be at a single address will bias the results for the LSOA as a whole.</p>
 					</div>
 					<div class="chart-container">
 						<canvas id="vanEmissions-chart"></canvas>
@@ -497,7 +499,7 @@
 					<div class="chart-wrapper" id="bikeCompany-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Motorbikes, Company Vehicles, and other types</h4>
-					  <p class="chart-description"></p>
+											<p class="chart-description">This chart covers other personal vehicles such as motorbikes and company cars. In a few places there are extremely large numbers of company cars; this is usually due to a leasing company that officially registers all its vehicles to a single address. In those cases we suppress the company car emissions from the total carbon footprint.</p>
 					</div>
 					<div class="chart-container">
 						<canvas id="bikeCompany-chart"></canvas>
@@ -508,7 +510,7 @@
 					<div class="chart-wrapper" id="consumptionFlights-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Flights Emissions</h4>
-					  <p class="chart-description"></p>
+											<p class="chart-description">Flying is one of the highest carbon-emitting activities people undertake. Reducing flight emissions is therefore an important part of meeting climate targets. There are two main ways to reduce flight emissions: fly less by taking fewer trips to closer locations, and avoid flying entirely by using other means such as trains or boats. On average in Britain a person takes a return flight approximately once every two years, but this varies greatly between individuals. We estimate flight emissions for each LSOA based on our synthetic population and distribute emissions accordingly.</p>
 					</div>
 					<div class="chart-container">
 						<canvas id="consumptionFlights-chart"></canvas>
@@ -519,7 +521,7 @@
 			    <div class="chart-wrapper" id="consumptionVehiclePurchase-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Vehicle Purchase</h4>
-					  <p class="chart-description"></p>
+											<p class="chart-description">Manufacturing a car is a high-carbon activity. While most households do not purchase a car every year, across a neighbourhood there are usually sufficient purchases each year to contribute a small amount to the overall carbon footprint.</p>
 					</div>
 					<div class="chart-container">
 						<canvas id="consumptionVehiclePurchase-chart"></canvas>
@@ -528,8 +530,8 @@
 					
 					<div class="chart-wrapper" id="consumptionVehicleOther-chartrow" style="display: block;">
 					<div class="chart-text"> 
-					  <h4 class="chart-title">Vehicle Maintaince & Other</h4>
-					  <p class="chart-description"></p>
+					  <h4 class="chart-title">Vehicle maintenance & other</h4>
+					  <p class="chart-description">This category covers indirect emissions from vehicles that don't come from travel, such as repair and maintenance.</p>
 					</div>
 					<div class="chart-container">
 						<canvas id="consumptionVehicleOther-chart"></canvas>
@@ -549,8 +551,8 @@
 			    
 			    <div class="chart-wrapper" id="consumptionTotal-chartrow" style="display: block;">
 					<div class="chart-text"> 
-					  <h4 class="chart-title">Consumption of Goods and Services</h4>
-					  <p class="chart-description">Many household carbon emissions stem not from direct activities like buring gas for heating or cooking, but from embodied emissions—the carbon released during the production, transport, and delivery of goods and services we consume. These emissions, often generated abroad, are attributed to the end user in consumption-based carbon footprint models like the PBCC. Because detailed local data on purchasing habits and product origins is scarce, our estimates rely on modelling: synthetic households are created using demographic data and matched with real spending profiles from the Living Costs and Food Survey. While individual matches may be imperfect, aggregating across many households yields a reliable approximation of neighbourhood-level consumption emissions. For more information see the <a href="/manual/#placebasedcarboncalculator">manual</a></p>
+					  <h4 class="chart-title">Total Consumption of Goods and Services</h4>
+					  <p class="chart-description">Many household carbon emissions stem not from direct activities like burning gas for heating or cooking, but from embodied emissions—the carbon released during the production, transport, and delivery of goods and services we consume. These emissions, often generated abroad, are attributed to the end user in consumption-based carbon footprint models like the PBCC. Because detailed local data on purchasing habits and product origins is scarce, our estimates rely on modelling: synthetic households are created using demographic data and matched with real spending profiles from the Living Costs and Food Survey. While individual matches may be imperfect, aggregating across many households yields a reasonable approximation of neighbourhood-level consumption emissions. For more information see the <a href="/manual/#placebasedcarboncalculator">manual</a>.</p>
 					</div>
 					<div class="chart-container">
 						<canvas id="consumptionTotal-chart"></canvas>
@@ -647,7 +649,7 @@
 					<div class="chart-wrapper" id="consumptionEducation-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Education services</h4>
-					  <p class="chart-description">Includes tuition fees, school supplies, books, and digital learning tools. Emissions are generally modest but come from building energy use, printed materials, and IT infrastructure. For households with children or students, this category reflects both direct spending and the broader carbon intensity of educational institutions. Online learning platforms tend to have lower footprints than traditional classroom settings, though device use and server energy still matter.</p>
+											<p class="chart-description">Includes tuition fees, school supplies, books, and digital learning tools. Emissions are generally modest but come from building energy use, printed materials, and IT infrastructure. For households with children or students, this category reflects both direct spending and the broader carbon intensity of educational institutions. However, it can be difficult to measure as most households do not pay for state education directly. Therefore we rely on household demographics (presence of children) and education-related spending as a proxy. Online learning platforms tend to have lower footprints than traditional classroom settings, though device use and server energy use still matter.</p>
 					</div>
 					<div class="chart-container">
 						<canvas id="consumptionEducation-chart"></canvas>
@@ -657,7 +659,7 @@
 					<div class="chart-wrapper" id="consumptionMiscellaneous-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Miscellaneous</h4>
-					  <p class="chart-description"></p>
+					  <p class="chart-description">This includes anything that does not fit into the other categories.</p>
 					</div>
 					<div class="chart-container">
 						<canvas id="consumptionMiscellaneous-chart"></canvas>
@@ -670,12 +672,19 @@
 			    
 			    <h3>Housing</h3>
 			    
-			    <h3>Housing: Emissions</h3>
+			    <p>Find out more about this topic in the <a href="/retrofit" class="opentool">Retrofit Explorer</a></p>
 			    
 			    <div class="chart-wrapper" id="gasEmissions-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Gas</h4>
-					  <p class="chart-description"></p>
+					  <p class="chart-description">Most homes in Britain use natural gas for central heating and hot water. 
+						Natural gas is a fossil fuel and releases carbon dioxide when burnt. To meet the climate targets, we need to remove all 
+						gas boilers from homes and replace them with low carbon heating solutions. We also need to reduce the amount of heating 
+						homes need by insulating and draft proofing homes. Insulating and draft proofing can be very cost-effective. 
+						It lowers energy bills and creates local jobs for installers. Many homes now have basic insulation such as 
+						cavity wall and loft insulation. However, uptake of more complex insulation such as solid wall insulation and underfloor 
+						insulation is much lower. Improvements in insulation and gas boilers' efficiency have resulted in a decline in gas consumption 
+						in most areas of Britain.</p>
 					</div>
 					<div class="chart-container">
 						<canvas id="gasEmissions-chart"></canvas>
@@ -684,8 +693,16 @@
 					
 					<div class="chart-wrapper" id="electricityEmissions-chartrow" style="display: block;">
 					<div class="chart-text"> 
-					  <h4 class="chart-title">Electricty</h4>
-					  <p class="chart-description"></p>
+					  <h4 class="chart-title">Electricity</h4>
+					  <p class="chart-description">Unlike gas, electricity can be a zero-carbon energy source, depending on how it is generated. 
+						In the past, the UK got most of its electricity from burning coal (a very high carbon fuel). 
+						However, we now get our electricity from a mix of gas, nuclear, and renewables such as wind and solar. 
+						This has meant that the amount of carbon dioxide emitted per unit of electricity has fallen a lot in recent years. 
+						Electricity demand has also decreased due to EU legislation requiring appliances to be more energy-efficient and replacing 
+						incandescent light bulbs with more efficient CFL and LED light bulbs. In the future, we expect electricity demand to 
+						increase as people replace gas heating with electric heat pumps and switch to electric cars. 
+						This will require the construction of new power stations, such as offshore wind farms, and more homes to generate their 
+						electricity using rooftop solar panels. </p>
 					</div>
 					<div class="chart-container">
 						<canvas id="electricityEmissions-chart"></canvas>
@@ -695,7 +712,7 @@
 					<div class="chart-wrapper" id="heatingOther-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Other Heating</h4>
-					  <p class="chart-description"></p>
+											<p class="chart-description">A small proportion of homes in Britain use other forms of heating such as bottled gas, oil, wood and coal. These fuels tend to be more carbon intensive than natural gas and are often used in rural areas not connected to the gas grid. We have limited data on the use of these fuels at a local level, so estimates of emissions from these sources are uncertain.</p>
 					</div>
 					<div class="chart-container">
 						<canvas id="heatingOther-chart"></canvas>
@@ -705,58 +722,14 @@
 					<div class="chart-wrapper" id="housingOther-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Housing Other</h4>
-					  <p class="chart-description"></p>
+											<p class="chart-description">This category includes items such as maintenance and upgrades to houses. For most households these purchases are infrequent but sometimes large, so when averaged over a neighbourhood they contribute a moderate amount to the overall carbon footprint.</p>
 					</div>
 					<div class="chart-container">
 						<canvas id="housingOther-chart"></canvas>
 					</div>
 					</div>
 			    
-			    
-			    <h3>Housing: Historical Trends</h3>
-			    
-			    <div class="chart-wrapper" id="dwellingsct-chartrow" style="display: block;">
-					<div class="chart-text"> 
-					  <h4 class="chart-title">Number of dwellings by council tax band</h4>
-					  <p class="chart-description">This chart shows the number of dwellings in each council tax band from 2010 to the present according to the <a href="https://www.gov.uk/government/statistics/council-tax-stock-of-properties-2024">Valuation Office Agency</a>. The VOA round this data to the nearest 10 dwellings, so minor inconsistencies may exist. Note that the I band is only used in Wales.</p>
-					</div>
-					<div class="chart-container">
-						<canvas id="dwellingsct-chart"></canvas>
-					</div>
-					</div>
-					
-					<div class="chart-wrapper" id="dwellingstype-chartrow" style="display: block;">
-					<div class="chart-text"> 
-					  <h4 class="chart-title">Number of dwellings by building type</h4>
-					  <p class="chart-description">This chart shows the number of dwellings by building type from 2020 to the present according to the <a href="https://www.gov.uk/government/statistics/council-tax-stock-of-properties-2024">Valuation Office Agency</a>. The VOA round this data to the nearest 10 dwellings, so minor inconsistencies may exist.</p>
-					</div>
-					<div class="chart-container">
-						<canvas id="dwellingstype-chart"></canvas>
-					</div>
-					</div>
-					
-					<div class="chart-wrapper" id="dwellingsbedrooms-chartrow" style="display: block;">
-					<div class="chart-text"> 
-					  <h4 class="chart-title">Number of dwellings by bedrooms</h4>
-					  <p class="chart-description">This chart shows the number of dwellings by the number of bedrooms from 2020 to the present according to the <a href="https://www.gov.uk/government/statistics/council-tax-stock-of-properties-2024">Valuation Office Agency</a>. The VOA round this data to the nearest 10 dwellings, so minor inconsistencies may exist.</p>
-					</div>
-					<div class="chart-container">
-						<canvas id="dwellingsbedrooms-chart"></canvas>
-					</div>
-					</div>
-					
-					<div class="chart-wrapper" id="dwellingsage-chartrow" style="display: block;">
-					<div class="chart-text"> 
-					  <h4 class="chart-title">Number of dwellings by building age</h4>
-					  <p class="chart-description">This chart shows the number of dwellings by building age from 2020 to the present according to the <a href="https://www.gov.uk/government/statistics/council-tax-stock-of-properties-2024">Valuation Office Agency</a>. The VOA round this data to the nearest 10 dwellings, so minor inconsistencies may exist.</p>
-					</div>
-					<div class="chart-container">
-						<canvas id="dwellingsage-chart"></canvas>
-					</div>
-					</div>
-			    
 			  </div>
-			  
 			  <div id="demographics" class="tabcontent">
 			    
 			    <h3>Demographics</h3>
@@ -813,19 +786,19 @@
 			      
 			    </div>
 			    
-			    <p>The community photo gives an at-a-glance overview of the deomgraphics of each neighbouhood based on the 2021/22 Census. Each image represents households based on household compostion, socio-economic classification (NS-SEC), and ethnicity. For more details see the <a href="/manual/#communityphoto">manual</a>.</p>
+				<p>The community photo gives an at-a-glance overview of the demographics of each neighbourhood based on the 2021/22 Census. Each image represents households based on household composition, socio-economic classification (NS-SEC), and ethnicity. For more details see the <a href="/manual/#communityphoto">manual</a>.</p>
 			    
 			    
 			    <div class="chart-wrapper" id="population-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Population estimates and number of dwellings</h4>
-					  <p class="chart-description">This chart shows estimates of the population, number of dwellings, and number of households for each year since 2010. The number of people living within an area is fundamental variable for many of the calculations within the PBCC.  Unfortunately, we only know this with certainty in 2011 and 2021/22 when the Census were performed. Between those dates we use the ONS mid-year population estimates. The stacked bar chart shows the distribution of residents ages.</p>
+					  <p class="chart-description">This chart shows estimates of the population, number of dwellings, and number of households for each year since 2010. The number of people living within an area is a fundamental variable for many of the calculations within the PBCC. Unfortunately, we only know this with certainty in 2011 and 2021/22 when the censuses were conducted. Between those dates we use the ONS mid-year population estimates. The stacked bar chart shows the distribution of residents' ages.</p>
 					  
-					  <p>Council Tax data provides a reasonably accurate record of the number of dwellings (red line) and can be used to track house building and demolition. Unfortunately, the ONS do not estimate the number of households each year and so we have estimated this number based on the know numbers for the 2011 and 2021/22 censuses and changes in the number of adults and dwellings in each year.</p>
+					  <p>Council Tax data provides a reasonably accurate record of the number of dwellings (red line) and can be used to track house building and demolition. Unfortunately, the ONS does not estimate the number of households each year, so we have estimated this number based on the known figures for the 2011 and 2021/22 censuses and changes in the number of adults and dwellings each year.</p>
 					  
 <p>Getting the number of households estimated accurately is important as many parts of the carbon footprint calculations are done on a per-household basis and only converted to a per-person basis at the final stage.</p>
 
-<p>This chart also contains adjustments for changes in the boundaries of LSOAs which occurred with each Census. Providing historical estimates of population within the 2021 boundaries.</p>
+<p>This chart also contains adjustments for changes in the boundaries of LSOAs which occurred with each census, providing historical estimates of population within the 2021 boundaries.</p>
 					</div>
 					<div class="chart-container">
 						<canvas id="population-chart"></canvas>
@@ -837,61 +810,10 @@
 			    
 			  </div>
 			  
-			  <div id="future" class="tabcontent">
-			    
-			    <h3>Future Scenarios</h3>
-			    
-			    <p>Coming Soon</p>
-			    
-			    <!--
-			    <div class="chart-wrapper" id="plefIgnore-chartrow">
-						<div class="chart-text">
-							<h4 class="chart-title">PLEF Ignore</h4>
-							<p class="chart-description">Forcast per person emissions under the PLEF Ignore scenario. Left column is a grandfathered downscaling, right column is an equity downscaling</p>
-						</div>
-						<div class="chart-container">
-							<canvas id="plefIgnore-chart"></canvas>
-						</div>
-					</div>
-					
-					<div class="chart-wrapper" id="plefSteer-chartrow">
-						<div class="chart-text">
-							<h4 class="chart-title">PLEF Steer</h4>
-							<p class="chart-description">Forcast per person emissions under the PLEF Steer scenario. Left column is a grandfathered downscaling, right column is an equity downscaling</p>
-						</div>
-						<div class="chart-container">
-							<canvas id="plefSteer-chart"></canvas>
-						</div>
-					</div>
-					
-					<div class="chart-wrapper" id="plefShift-chartrow">
-						<div class="chart-text">
-							<h4 class="chart-title">PLEF Shift</h4>
-							<p class="chart-description">Forcast per person emissions under the PLEF Shift scenario. Left column is a grandfathered downscaling, right column is an equity downscaling</p>
-						</div>
-						<div class="chart-container">
-							<canvas id="plefShift-chart"></canvas>
-						</div>
-					</div>
-					
-					<div class="chart-wrapper" id="plefTransform-chartrow">
-						<div class="chart-text">
-							<h4 class="chart-title">PLEF Transform</h4>
-							<p class="chart-description">Forcast per person emissions under the PLEF Transform scenario. Left column is a grandfathered downscaling, right column is an equity downscaling</p>
-						</div>
-						<div class="chart-container">
-							<canvas id="plefTransform-chart"></canvas>
-						</div>
-					</div>
-			  </div>
-	
-				-->
-					
-					
-					
-					
-
-				</div>
+			    <div id="future" class="tabcontent">
+					<h3>Future Scenarios: Coming Soon</h3>
+					<p>As part of the <a target="_blank" aria-label="EDRC Futures theme" href="https://www.edrc.ac.uk/research/futures/">Energy Demand Research Centre Futures theme</a> we are working on downscaling the <a target="_blank" aria-label="PLEF homepage" href="https://low-energy.creds.ac.uk/">Positive Low Energy Futures Scenarios</a> to provide each neighbourhood with a local decarbonisation pathway. This work is ongoing and will be added to the tool in the future.</p>
+			    </div>
 		</div>
 	  </div>
 		
