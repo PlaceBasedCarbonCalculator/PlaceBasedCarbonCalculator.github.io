@@ -200,7 +200,8 @@ const capUi = (function () {
 			const hashComponents = hash.split ('#');
 			// End if not the intended format of /layers/#map , thus retaining the default state of the _hashComponents property
 			if (hashComponents.length != 2) {return;}
-			// Register the change in the state
+			// Register the change in the state.  The map component may include optional tilt and basemap
+			// Expected map format: zoom/lat/lng[/tilt[/basemap]]
 			_hashComponents.layers = hashComponents[0];
 			_hashComponents.map = hashComponents[1];
 			
@@ -214,7 +215,7 @@ const capUi = (function () {
 			_hashComponents[component] = value;
 			
 			//console.log (_hashComponents);
-			// Construct the new hash state
+			// Construct the new hash state Note: _hashComponents.map is expected to include a leading '#' (see manageMapHash.mapHash)
 			const hashState = '#' + _hashComponents.layers + _hashComponents.map;
 
 			// Update the hash state in the browser history
@@ -234,13 +235,21 @@ const capUi = (function () {
 			
 			// Determine initial centre/zoom location, based on the hash if present, else the settings location
 			const initialPosition = (capUi.parseMapHash () || _settings.initialPosition);
+			// If the hash contained a basemap choice, ensure the radio is selected so getBasemapStyle() matches
+			let initialBasemap = capUi.getBasemapStyle();
+			if (initialPosition && initialPosition.basemap) {
+				initialBasemap = initialPosition.basemap;
+				const basemapInput = document.getElementById(initialBasemap + '-basemap');
+				if (basemapInput) { basemapInput.checked = true; }
+			}
 			
-			// Main map setup
+			// Main map setup - include pitch if provided in the parsed hash
 			const map = new maplibregl.Map({
 				container: 'map',
-				style: '/tiles/style_' + capUi.getBasemapStyle() + '.json',
+				style: '/tiles/style_' + initialBasemap + '.json',
 				center: initialPosition.center,
 				zoom: initialPosition.zoom,
+				pitch: (initialPosition && initialPosition.pitch ? initialPosition.pitch : 0),
 				maxZoom: _settings.maxZoom,
 				minZoom: _settings.minZoom,
 				maxPitch: 85,
@@ -252,7 +261,7 @@ const capUi = (function () {
 			// Manage Sky
 			map.on('load', function () {
 				map.setSky({
-            "sky-color": "#ff1e00",
+            "sky-color": "#00a2ff",
             "sky-horizon-blend": 0.2,
             "horizon-color": "#e3fbfc",
             "horizon-fog-blend": 0.5,
@@ -379,6 +388,16 @@ const capUi = (function () {
 				
 				// Fire map ready event when ready
 				map.once('idle', function () {
+				  // Update the URL to include current pitch and basemap
+					const center = map.getCenter();
+					const zoom = Math.round(map.getZoom() * 100) / 100;
+					const precision = Math.ceil((zoom * Math.LN2 + Math.log(512 / 360 / 0.5)) / Math.LN10);
+					const m = Math.pow(10, precision);
+					const lng = Math.round(center.lng * m) / m;
+					const lat = Math.round(center.lat * m) / m;
+					const tilt = Math.round(map.getPitch() * 10) / 10;
+					const mapHash = `#${zoom}/${lat}/${lng}/${tilt}/${styleName}`;
+					capUi.registerUrlStateChange('map', mapHash);
 					document.dispatchEvent(new Event('@map/ready', {
 						'bubbles': true
 					}));
@@ -437,14 +456,28 @@ const capUi = (function () {
 		{
 			// Extract the hash and split by /
 			const mapHash = _hashComponents.map.replace (new RegExp ('^#'), '');	// Do not read window.location.hash directly, as that will contain layer state
+			if (!mapHash) { return false; }
 			const parts = mapHash.split ('/');
 
-			// If three parts, parse out
-			if (parts.length == 3) {
-				return {
-					center: [parts[2], parts[1]],
-					zoom: parts[0]
+			// Need at least zoom, lat, lng
+			if (parts.length >= 3) {
+				const zoom = Number(parts[0]);
+				const lat = Number(parts[1]);
+				const lng = Number(parts[2]);
+				const result = {
+					center: [lng, lat],
+					zoom: (Number.isFinite(zoom) ? zoom : undefined)
 				};
+				// Optional tilt/pitch
+				if (parts.length >= 4) {
+					const pitch = Number(parts[3]);
+					if (Number.isFinite(pitch)) { result.pitch = pitch; }
+				}
+				// Optional basemap style id
+				if (parts.length >= 5) {
+					result.basemap = parts[4];
+				}
+				return result;
 			}
 
 			// Else return false
