@@ -47,7 +47,7 @@ manageCharts =  function (locationId, mapLayerId){
     const p = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/Postcode/' + locationId + '.json')
         .then(function (postcodeData) {
             postcodeLocationData = postcodeData;
-            makeChartPostcode();
+            makeChartPostcode(locationId);
         })
         .catch(function (error) {
             alert('Failed to get access data for this location, or to process it correctly. Please try refreshing the page.');
@@ -62,7 +62,7 @@ manageCharts =  function (locationId, mapLayerId){
 }
 
 
-makeChartPostcode = function(){
+makeChartPostcode = function(locationId){
   
   console.log("Make postcode charts");
   // Access Chart
@@ -79,6 +79,10 @@ makeChartPostcode = function(){
   if(metersChart){
 		metersChart.destroy();
 	}
+
+  // Set modal title
+  const title = locationId + ' postcode summary';
+	document.querySelector('#postcodes-chartsmodal .modal-title').innerHTML = title;
   
   // Get Control Settings
   const setting_emissions = document.getElementById("select_emissions").value;

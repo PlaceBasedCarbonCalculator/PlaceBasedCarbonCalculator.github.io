@@ -817,16 +817,19 @@ const capUi = (function () {
         });
     },
     
-    manageLSOAOverview : function(mapLayerId, locationId)
-    {
-		  
-		  capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/lsoa_overview/v1/' + locationId + '.json')
-        .then(function (lsoaData) {
-          // Set the modal title
-          const label = locationId.startsWith('S') ? 'Data Zone' : 'LSOA';
+		manageLSOAOverview : function(mapLayerId, locationId)
+		{
+      
+			capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/lsoa_overview/v1/' + locationId + '.json')
+				.then(function (lsoaData) {
+					// Make the fetched data globally available for other scripts
+					window.lsoaHeadlineData = lsoaData;
+
+					// Set the modal title
+					const label = locationId.startsWith('S') ? 'Data Zone' : 'LSOA';
 					const title = locationId + ' a "' + lsoaData[0].lsoa_class_name + '" '+ label + ' in ' + lsoaData[0].WD25NM;
 					document.querySelector(`#${mapLayerId}-chartsmodal .modal-title`).innerHTML = title;
-          console.log(lsoaData);
+					//console.log(lsoaData);
           
           // Hide all warning boxes
           const allWarnings = document.getElementsByClassName("warning");
@@ -893,8 +896,10 @@ const capUi = (function () {
 					const locationId = featureProperties[chartDefinition.propertiesField];
 					
 					// Set the title (may be async)
-					capUi.manageLSOAOverview(mapLayerId, locationId);
-					
+					if(mapLayerId === 'zones') {
+						capUi.manageLSOAOverview(mapLayerId, locationId);
+					}
+										
 					// Show global spinner while charts are built
 					const spinner = document.querySelector('.spinner');
 					if (spinner) { spinner.style.display = 'block'; }
