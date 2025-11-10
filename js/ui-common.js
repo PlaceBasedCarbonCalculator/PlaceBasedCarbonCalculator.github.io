@@ -243,13 +243,14 @@ const capUi = (function () {
 				if (basemapInput) { basemapInput.checked = true; }
 			}
 			
-			// Main map setup - include pitch if provided in the parsed hash
+			// Main map setup - include bearing and pitch if provided in the parsed hash
 			const map = new maplibregl.Map({
 				container: 'map',
 				style: '/tiles/style_' + initialBasemap + '.json',
 				center: initialPosition.center,
 				zoom: initialPosition.zoom,
 				pitch: (initialPosition && initialPosition.pitch ? initialPosition.pitch : 0),
+				bearing: (initialPosition && initialPosition.bearing ? initialPosition.bearing : 0),
 				maxZoom: _settings.maxZoom,
 				minZoom: _settings.minZoom,
 				maxPitch: 85,
@@ -388,15 +389,16 @@ const capUi = (function () {
 				
 				// Fire map ready event when ready
 				map.once('idle', function () {
-				  // Update the URL to include current pitch and basemap
+					// Update the URL to include current bearing, pitch and basemap
 					const center = map.getCenter();
 					const zoom = Math.round(map.getZoom() * 100) / 100;
 					const precision = Math.ceil((zoom * Math.LN2 + Math.log(512 / 360 / 0.5)) / Math.LN10);
 					const m = Math.pow(10, precision);
 					const lng = Math.round(center.lng * m) / m;
 					const lat = Math.round(center.lat * m) / m;
+					const bearing = Math.round(map.getBearing() * 10) / 10;
 					const tilt = Math.round(map.getPitch() * 10) / 10;
-					const mapHash = `#${zoom}/${lat}/${lng}/${tilt}/${styleName}`;
+					const mapHash = `#${zoom}/${lat}/${lng}/${bearing}/${tilt}/${styleName}`;
 					capUi.registerUrlStateChange('map', mapHash);
 					document.dispatchEvent(new Event('@map/ready', {
 						'bubbles': true
@@ -408,8 +410,9 @@ const capUi = (function () {
 			return map;
 		},
 		
-		// Function to manage the map hash manually; this is a minimal implementation covering only what we need
-		// Covers zoon,lat,lon; no support for bearing or pitch
+		// Function to manage the map hash manually; this covers zoom,lat,lng,bearing,pitch and basemap
+		// Hash format produced: #zoom/lat/lng/bearing/pitch/basemap
+		// Backwards-compatible parsing of legacy hashes (which may omit bearing)
 		// Based on the native implementation at: https://github.com/maplibre/maplibre-gl-js/blob/main/src/ui/hash.ts#L11
 
 		manageMapHash: function (map)
@@ -425,9 +428,10 @@ const capUi = (function () {
 				const m = Math.pow (10, precision);
 				const lng = Math.round (center.lng * m) / m;
 				const lat = Math.round (center.lat * m) / m;
+				const bearing = Math.round(map.getBearing() * 10) / 10;
 				const tilt = Math.round(map.getPitch() * 10) / 10;
 				const basemap = capUi.getBasemapStyle();
-				const mapHash = `#${zoom}/${lat}/${lng}/${tilt}/${basemap}`;
+				const mapHash = `#${zoom}/${lat}/${lng}/${bearing}/${tilt}/${basemap}`;
 				// Update the hash state
 				capUi.registerUrlStateChange ('map', mapHash);
 			}
@@ -470,14 +474,39 @@ const capUi = (function () {
 					center: [lng, lat],
 					zoom: (Number.isFinite(zoom) ? zoom : undefined)
 				};
-				// Optional tilt/pitch
-				if (parts.length >= 4) {
+				// Optional bearing/pitch and basemap
+				// Supported formats (backwards compatible):
+				//  - legacy: zoom/lat/lng/tilt
+				//  - legacy with basemap: zoom/lat/lng/tilt/basemap
+				//  - new: zoom/lat/lng/bearing/tilt/basemap
+				if (parts.length === 4) {
+					// legacy: only tilt provided
 					const pitch = Number(parts[3]);
 					if (Number.isFinite(pitch)) { result.pitch = pitch; }
-				}
-				// Optional basemap style id
-				if (parts.length >= 5) {
-					result.basemap = parts[4];
+				} else if (parts.length === 5) {
+					// ambiguous: either (tilt, basemap) or (bearing, tilt)
+					const maybeA = parts[3];
+					const maybeB = parts[4];
+					const numB = Number(maybeB);
+					if (Number.isFinite(numB)) {
+						// treat as bearing/tilt
+						const bearing = Number(maybeA);
+						const pitch = Number(maybeB);
+						if (Number.isFinite(bearing)) { result.bearing = bearing; }
+						if (Number.isFinite(pitch)) { result.pitch = pitch; }
+					} else {
+						// treat as legacy tilt + basemap
+						const pitch = Number(maybeA);
+						if (Number.isFinite(pitch)) { result.pitch = pitch; }
+						result.basemap = maybeB;
+					}
+				} else if (parts.length >= 6) {
+					// new full format: bearing, tilt, basemap
+					const bearing = Number(parts[3]);
+					const pitch = Number(parts[4]);
+					if (Number.isFinite(bearing)) { result.bearing = bearing; }
+					if (Number.isFinite(pitch)) { result.pitch = pitch; }
+					result.basemap = parts[5];
 				}
 				return result;
 			}
