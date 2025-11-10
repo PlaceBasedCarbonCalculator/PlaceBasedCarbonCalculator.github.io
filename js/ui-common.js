@@ -425,7 +425,9 @@ const capUi = (function () {
 				const m = Math.pow (10, precision);
 				const lng = Math.round (center.lng * m) / m;
 				const lat = Math.round (center.lat * m) / m;
-				const mapHash = `#${zoom}/${lat}/${lng}`;
+				const tilt = Math.round(map.getPitch() * 10) / 10;
+				const basemap = capUi.getBasemapStyle();
+				const mapHash = `#${zoom}/${lat}/${lng}/${tilt}/${basemap}`;
 				// Update the hash state
 				capUi.registerUrlStateChange ('map', mapHash);
 			}
