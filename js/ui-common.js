@@ -466,48 +466,33 @@ const capUi = (function () {
 			const parts = mapHash.split ('/');
 
 			// Need at least zoom, lat, lng
-			if (parts.length >= 3) {
+			// Supported modes:
+			//  - short: zoom/lat/lng
+			//  - full:  zoom/lat/lng/bearing/tilt/basemap
+			if (parts.length === 3) {
 				const zoom = Number(parts[0]);
 				const lat = Number(parts[1]);
 				const lng = Number(parts[2]);
+				return {
+					center: [lng, lat],
+					zoom: (Number.isFinite(zoom) ? zoom : undefined)
+				};
+			}
+			// Full format
+			if (parts.length >= 6) {
+				const zoom = Number(parts[0]);
+				const lat = Number(parts[1]);
+				const lng = Number(parts[2]);
+				const bearing = Number(parts[3]);
+				const pitch = Number(parts[4]);
+				const basemap = parts[5];
 				const result = {
 					center: [lng, lat],
 					zoom: (Number.isFinite(zoom) ? zoom : undefined)
 				};
-				// Optional bearing/pitch and basemap
-				// Supported formats (backwards compatible):
-				//  - legacy: zoom/lat/lng/tilt
-				//  - legacy with basemap: zoom/lat/lng/tilt/basemap
-				//  - new: zoom/lat/lng/bearing/tilt/basemap
-				if (parts.length === 4) {
-					// legacy: only tilt provided
-					const pitch = Number(parts[3]);
-					if (Number.isFinite(pitch)) { result.pitch = pitch; }
-				} else if (parts.length === 5) {
-					// ambiguous: either (tilt, basemap) or (bearing, tilt)
-					const maybeA = parts[3];
-					const maybeB = parts[4];
-					const numB = Number(maybeB);
-					if (Number.isFinite(numB)) {
-						// treat as bearing/tilt
-						const bearing = Number(maybeA);
-						const pitch = Number(maybeB);
-						if (Number.isFinite(bearing)) { result.bearing = bearing; }
-						if (Number.isFinite(pitch)) { result.pitch = pitch; }
-					} else {
-						// treat as legacy tilt + basemap
-						const pitch = Number(maybeA);
-						if (Number.isFinite(pitch)) { result.pitch = pitch; }
-						result.basemap = maybeB;
-					}
-				} else if (parts.length >= 6) {
-					// new full format: bearing, tilt, basemap
-					const bearing = Number(parts[3]);
-					const pitch = Number(parts[4]);
-					if (Number.isFinite(bearing)) { result.bearing = bearing; }
-					if (Number.isFinite(pitch)) { result.pitch = pitch; }
-					result.basemap = parts[5];
-				}
+				if (Number.isFinite(bearing)) { result.bearing = bearing; }
+				if (Number.isFinite(pitch)) { result.pitch = pitch; }
+				if (basemap) { result.basemap = basemap; }
 				return result;
 			}
 
