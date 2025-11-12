@@ -67,6 +67,29 @@
 		<script>
 			document.addEventListener ('DOMContentLoaded', function () {
 			  capUi.initialise (settings, datasets);
+			  
+			  // Some pages create the map asynchronously inside capUi.initialise.
+			  // The original code assumed a global `map` existed immediately which
+			  // caused "map is not defined" console errors. Poll for the map and
+			  // attach the idle handler once it's available. If the map never
+			  // appears within the timeout, attempt a best-effort toggle.
+			  (function waitForMap(attemptsLeft) {
+				if (window.map && typeof window.map.once === 'function') {
+					window.map.once('idle', function () {
+						if (capUi && typeof capUi.toggleLayer === 'function') {
+							capUi.toggleLayer('zones'); // Hacky fix for mysterious initial layer display issue
+						}
+					});
+				} else if (attemptsLeft > 0) {
+					setTimeout(function () { waitForMap(attemptsLeft - 1); }, 200);
+				} else {
+					// Final fallback: call toggleLayer directly if possible. Some
+					// implementations of capUi may handle the refresh without map.
+					if (capUi && typeof capUi.toggleLayer === 'function') {
+						capUi.toggleLayer('zones');
+					}
+				}
+			  })(25); // ~5 seconds total (25 * 200ms)
 			});
 		</script>
 		

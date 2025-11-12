@@ -61,7 +61,6 @@ manageCharts =  function (locationId, mapLayerId){
   }
 }
 
-
 makeChartPostcode = function(locationId){
   
   console.log("Make postcode charts");
@@ -337,8 +336,6 @@ makeChartPostcode = function(locationId){
   });
   
 }
-
-
 
 makeChartLSOA = function(){
   
@@ -720,9 +717,6 @@ makeChartLSOA = function(){
   
   
 }
-
-
-
 
 makePieChart = function(chartVar, name, label, data, colours, labels){
   if (chartVar) {
