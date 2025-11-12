@@ -51,6 +51,7 @@ const capUi = (function () {
 		// Main function
 		initialise: function (settings, datasets)
 		{
+			console.log("Initialise UI function");
 			// Populate the settings and datasets class properties
 			_settings = settings;
 			_datasets = datasets;
@@ -95,6 +96,9 @@ const capUi = (function () {
 
 			// Manage layers
 			capUi.manageLayers ();
+			
+			// Adjust opentool links to use current map state
+			capUi.adjustOpenToolLinks ();
 		},
 		
 		// Welcome screen
@@ -194,6 +198,7 @@ const capUi = (function () {
 
 		parseUrl: function ()
 		{
+			console.log ("Parsing URL");
 			// Get the hash, e.g. "/layer1,layer2/#8/55.953/-3.138" would be extracted from https://example.com/#/layer1,layer2/#8/55.953/-3.138
 			const hash = window.location.hash.replace (/^#/, '');
 			// Split path component from map compoment
@@ -205,7 +210,7 @@ const capUi = (function () {
 			_hashComponents.layers = hashComponents[0];
 			_hashComponents.map = hashComponents[1];
 			
-			//console.log (_hashComponents);
+			
 		},
 
 		// Function to register a state change, adjusting the URL
@@ -227,6 +232,8 @@ const capUi = (function () {
 		// Function to set up the map UI and controls
 		createMap: function ()
 		{
+			console.log("Create map function");
+			
 			// Create the layer switcher
 			capUi.layerSwitcherHtml ();
 			
@@ -262,13 +269,13 @@ const capUi = (function () {
 			// Manage Sky
 			map.on('load', function () {
 				map.setSky({
-            "sky-color": "#00a2ff",
-            "sky-horizon-blend": 0.2,
-            "horizon-color": "#e3fbfc",
-            "horizon-fog-blend": 0.5,
-            "fog-color": "#e3fbfc",
-            "fog-ground-blend": 0.99
-        });
+					"sky-color": "#00a2ff",
+					"sky-horizon-blend": 0.2,
+					"horizon-color": "#e3fbfc",
+					"horizon-fog-blend": 0.5,
+					"fog-color": "#e3fbfc",
+					"fog-ground-blend": 0.99
+				});
 			});
 			
 			
@@ -308,16 +315,7 @@ const capUi = (function () {
 				//encoding : "custom"
 				
 			}), 'top-left');
-			
-			// Add buildings; note that the style/colouring may be subsequently altered by data layers
-			
-			capUi.addBuildings(map);
-			document.getElementById('basemapform').addEventListener('change', function (e) {
-			  console.log("basemapform changed, add buildings");
-				capUi.addBuildings(map);
-			});
-			
-			
+				
 			// Add placenames support
 			map.once('idle', function () {
 				capUi.placenames(map);
@@ -368,6 +366,15 @@ const capUi = (function () {
 				maxWidth: 80,
 				unit: 'metric'
 			}), 'bottom-left');
+
+			// Add buildings; note that the style/colouring may be subsequently altered by data layers
+			console.log("Adding buildings on initial load");
+			capUi.addBuildings(map);
+						
+			document.getElementById('basemapform').addEventListener('change', function (e) {
+			  console.log("basemapform changed, add buildings");
+				capUi.addBuildings(map);
+			});
 			
 			// Fire map ready when ready, which layer-enabling can be picked up
 			map.once('idle', function () {
@@ -417,6 +424,8 @@ const capUi = (function () {
 
 		manageMapHash: function (map)
 		{
+			
+			console.log("Manage map hash function");
 			// Function to determine the map hash
 			function mapHash (map)
 			{
@@ -560,10 +569,12 @@ const capUi = (function () {
 		
 		addBuildings: function (map)
 		{
+			
+			console.log("Buildings fucnction");
 			// When ready
 			map.once ('idle', function () {
 				
-				console.log("Buildings fucnction");
+				console.log("Buildings fucnction map idle");
 				// Add the source
 				if (!map.getSource ('buildings')) {
 					map.addSource ('buildings', {
@@ -1333,6 +1344,68 @@ const capUi = (function () {
 				}
 			}
 			return "";
+		},
+		
+		
+		// Function to adjust opentool links to use current map state
+		// When a user clicks a link with class 'opentool' that contains map coordinates,
+		// this function dynamically updates the coordinates to match the current map view
+		// (zoom, lat, lng, bearing, pitch) while preserving layer state and other URL parts
+		adjustOpenToolLinks: function ()
+		{
+			// Listen for clicks on opentool links
+			document.addEventListener('click', function (e) {
+				const link = e.target.closest('a.opentool');
+				if (!link) { return; }
+				
+				// Get the href
+				let href = link.getAttribute('href');
+				if (!href || !href.includes('#')) { return; }
+				
+				// Parse the current page's map hash to extract map orientation
+				const mapHash = _hashComponents.map.replace(/^#/, '');
+				if (!mapHash) { return; } // No map state to copy
+				
+				const mapParts = mapHash.split('/');
+				
+				// We need at least zoom/lat/lng; full format is zoom/lat/lng/bearing/pitch/basemap
+				if (mapParts.length < 3) { return; }
+				
+				const currentZoom = mapParts[0];
+				const currentLat = mapParts[1];
+				const currentLng = mapParts[2];
+				const currentBearing = mapParts[3] || '0';
+				const currentPitch = mapParts[4] || '0';
+				const currentBasemap = mapParts[5] || '';
+				
+				// Split the link href by # to separate path from hash
+				const hashIndex = href.indexOf('#');
+				const basePath = href.substring(0, hashIndex);
+				const hashPart = href.substring(hashIndex + 1); // Everything after #
+				
+				// Split hash by # to separate layers from map components
+				const hashComponents = hashPart.split('#');
+				
+				// Reconstruct the URL with updated map coordinates
+				// Format: path/#layers/#zoom/lat/lng/bearing/pitch/basemap
+				let newHash = basePath + '#';
+				
+				// Add layers component if it exists
+				if (hashComponents.length >= 1) {
+					newHash += hashComponents[0]; // layers part
+				}
+				
+				// Add the updated map component with current map state
+				newHash += '#' + currentZoom + '/' + currentLat + '/' + currentLng + '/' + currentBearing + '/' + currentPitch;
+				
+				// Add basemap if one exists
+				if (currentBasemap) {
+					newHash += '/' + currentBasemap;
+				}
+				
+				// Update the link's href
+				link.setAttribute('href', newHash);
+			}, true); // Use capture phase to intercept before navigation
 		}
 	};
 	

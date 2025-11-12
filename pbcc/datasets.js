@@ -18,23 +18,7 @@ const datasets_extra = {
 				'fill-opacity': 0.8,
 				'fill-outline-color': '#000000'
 			}
-		}/*,
-		
-		buildings: {
-			'id': 'buildings',
-			'type': 'fill',
-			'source': {
-			'type': 'vector',
-				'url': 'pmtiles://../tiles/buildings.pmtiles',
-				},
-			'source-layer': 'buildings',
-			'paint': {
-				'fill-color': '#9c9898',
-				'fill-opacity': 0.8,
-				'fill-outline-color': '#000000'
-			}
-		}
-		*/
+		},
 	},
 	
 	// Layer styling callbacks functions, each defined below

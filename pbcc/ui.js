@@ -1567,8 +1567,7 @@ modalTab = function (evt, tabName) {
   evt.currentTarget.className += " active";
 }
 
-document.getElementById("defaultOpen").click();
-
+// Function to switch Pen Portrait description
 function switchPenPortSub(SOAC11NM) {
   
   var pp = "No Desc";
