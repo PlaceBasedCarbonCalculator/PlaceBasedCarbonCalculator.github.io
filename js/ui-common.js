@@ -144,6 +144,21 @@ const capUi = (function () {
 				}
 			});
 		},	
+
+		// Expand accordion panels that contain any checked layer checkboxes
+		expandAccordionsForCheckedLayers: function ()
+		{
+			// For each accordion button, open it if its following panel contains a checked .showlayer input
+			document.querySelectorAll('button.accordion').forEach(function (button) {
+				const panel = button.nextElementSibling;
+				if (!panel) { return; }
+				// If any checked layer checkbox exists inside this panel, open the accordion
+				if (panel.querySelector('input.showlayer:checked')) {
+					button.classList.add('active');
+					panel.style.display = 'block';
+				}
+			});
+		},
 		
 		
 		// Function to manage the layer controls box UI
@@ -737,6 +752,10 @@ const capUi = (function () {
 					});
 				}
 				document.dispatchEvent (new Event ('@map/initiallayersset', {'bubbles': true}));
+
+				// Expand accordion panels that contain any checked layer inputs so users
+				// can immediately see which layers were loaded from the URL
+				capUi.expandAccordionsForCheckedLayers();
 	
 				// Handle layer change controls, each marked with .showlayer or .updatelayer
 				document.querySelectorAll ('.showlayer, .updatelayer').forEach ((input) => {
