@@ -79,7 +79,7 @@ manageCharts = function (locationId) {
 
 					makeChartHistorical();
 					makeChartPopulation();
-					console.log(lsoaHeadlineData);
+					//console.log(lsoaHeadlineData);
 					switchPenPortSub(lsoaHeadlineData[0].lsoa_class_name);
 					switchPenPortSup(lsoaHeadlineData[0].lsoa_class_name);
 				});
@@ -456,7 +456,7 @@ makeChartHistorical = function(){
 
 		// We draw the horizontal threshold line via a plugin so it always appears on top
 		// and does not create a legend entry. (No dataset is pushed here.)
-		console.log(data.datasets);
+		//console.log(data.datasets);
 
 		// Define the threshold plugin here so we can attach it to the historical chart as well.
 		const thresholdLinePlugin = {
@@ -1195,7 +1195,7 @@ makeChartPopulation = function(){
   data.datasets[19].stack  = undefined;
 
   
-  console.log(data);
+  //console.log(data);
   
   data.labels = ['2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022'];
   
@@ -1566,6 +1566,8 @@ modalTab = function (evt, tabName) {
   document.getElementById(tabName).style.display = "block";
   evt.currentTarget.className += " active";
 }
+// Click on modal tab open by default
+document.getElementById("defaultOpen").click();
 
 // Function to switch Pen Portrait description
 function switchPenPortSub(SOAC11NM) {
@@ -1835,3 +1837,6 @@ var pp8 = `<p>The population of this supergroup typically live largely in areas 
   
   document.getElementById("penportsup").innerHTML = pp;
 }
+
+
+
