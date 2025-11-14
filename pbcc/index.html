@@ -73,8 +73,8 @@
 		</script>
 		
 		<!-- Font Awesome -->
-		<link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet" defer>
-		<link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet" defer>
+		<link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet">
+		<link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet">
 		
 		<!-- Markdown conversion -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js" defer></script>
@@ -96,7 +96,7 @@
     
 		<!-- Menu -->
 		<nav>
-			<a href="/"><img src="/images/ui/logo.webp" alt="Carbon & Place Logo" class="logo" /></a>
+			<a href="/"><img src="/images/ui/logo.webp" alt="Carbon & Place Logo" class="logo"></a>
 			<a href="/pbcc/">Place-Based Carbon Calculator</a>
 			<a href="/about/">About</a>
 			<a href="/data/">Data</a>
@@ -142,7 +142,7 @@
 
 		<!-- Loading Spinner -->
 		<div class="spinner">
-			<img src="/images/ui/spinner.svg" alt="Loading..." />
+			<img src="/images/ui/spinner.svg" alt="Loading...">
 		</div>
 		
 		<!-- Basemap control box -->
@@ -151,8 +151,8 @@
 			<form id="basemapform">
 				<!-- Values will be populated -->
 			</form>
-			<p><label class="switch"><input type="checkbox" id="placenamescheckbox" checked="checked" /><span class="slider round"></span></label> Place names</p>
-			<p title="Makes the map look smoother and clearer (not suitable for lower-powered devices)"><label class="switch"><input type="checkbox" id="antialiascheckbox" /><span class="slider round"></span></label> Anti-alias</p>
+			<p><label class="switch"><input type="checkbox" id="placenamescheckbox" checked="checked"><span class="slider round"></span></label> Place names</p>
+			<p title="Makes the map look smoother and clearer (not suitable for lower-powered devices)"><label class="switch"><input type="checkbox" id="antialiascheckbox"><span class="slider round"></span></label> Anti-alias</p>
 		</div>
 		
 		<!-- Show Layer Selection Panel  Button-->
@@ -290,7 +290,7 @@
           			<td><img src="/legacy/images/grades/undefined.jpg" width = 300 height = 300 id = "data_total_emissions_grade" alt = "Grade Image"></td>
           		</tr>
           		<tr>
-          		  <td align='right'id="data_total_emissions_percap"> NA kgCO<sub>2</sub>e per person</td>
+          		  <td style="text-align: right;" id="data_total_emissions_percap"> NA kgCO<sub>2</sub>e per person</td>
           		</tr>
         		</table>
         	</div>
@@ -298,7 +298,7 @@
 			<div>
 		  <p>This report card is customised for each Lower Super Output Area (LSOA) on the map. The title at the top gives the <abbr title="Lower Super Output Area">LSOA</abbr>'s unique ID, the Office for National Statistics area classification, and the ward name. Wards are usually larger than <abbr title="Lower Super Output Area">LSOA</abbr>s, but unlike LSOAs they have recognisable local names. This tab gives an overview of the LSOA's total carbon footprint, while other tabs provide more detail and additional context about different parts of the carbon footprint.</p>
 		  <p>The bar chart shows the total carbon footprint per person in units of kilograms of carbon dioxide equivalent. The first column shows the footprint of the selected <abbr title="Lower Super Output Area">LSOA</abbr>. The second column shows the average footprint of LSOAs in the same local authority. The third column shows the average footprint of all LSOAs in England. The fourth column shows the average footprint of LSOAs with the same area classification. The Office for National Statistics (ONS) produced the area classifications, which group areas into one of 24 categories based on social, economic, geographic, and demographic factors. Thus, this column represents the average of similar areas with similar populations.</p>
-          The horizontal black line represents the UK's target footprint per person set out in the Committee on Climate             Change's <a href="https://www.theccc.org.uk/publication/sixth-carbon-budget/" target="_blank" rel="noopener">6th Carbon Budget</a>, covering 2032 to 2037. It is intended to provide an indication of how far we must go in the next ten years if we are to have any chance of reaching net-zero by 2050.
+          <p>The horizontal black line represents the UK's target footprint per person set out in the Committee on Climate             Change's <a href="https://www.theccc.org.uk/publication/sixth-carbon-budget/" target="_blank" rel="noopener">6th Carbon Budget</a>, covering 2032 to 2037. It is intended to provide an indication of how far we must go in the next ten years if we are to have any chance of reaching net-zero by 2050.
           </p>
 		  <h3>Overview Tables</h3>
 		  </div>
@@ -317,22 +317,22 @@
 	        	  <tr>
 	        		<td>Electricity</td>
         			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_elec_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_elec_emissions_household">NA</td>
+        			<td style="text-align: right;" id="data_elec_emissions_household">NA</td>
         		  </tr>
         		  <tr>
         			<td>Gas</td>
         			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_gas_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_gas_emissions_household">NA</td>
+        			<td style="text-align: right;" id="data_gas_emissions_household">NA</td>
         		  </tr>
         		  <tr>
         			<td>Other Heating</td>
         			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_other_heating_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_other_heating_emissions">NA</td>
+        			<td style="text-align: right;" id="data_other_heating_emissions">NA</td>
         		  </tr>
         		  <tr>
         			<td>Other Housing</td>
         			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_other_housing_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_other_housing_emissions">NA</td>
+        			<td style="text-align: right;" id="data_other_housing_emissions">NA</td>
         		  </tr>
         		</table>
         	  </div>
@@ -346,40 +346,40 @@
         			<th>Grade</th>
         			<th>kgCO<sub>2</sub>e per person</th>
         			</tr>
-        		  <tr>
-        			<td>Car Driving</td>
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_car_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_car_emissions">NA</td>
-        		  </tr>
-        		  <tr>
-        			<td>Public Transport</td>
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_public_transport_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_public_transport_emissions">NA</td>
-        		  </tr>
+				  <tr>
+					<td>Car Driving</td>
+					<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_car_emissions_grade" alt = "Grade Image"></td>
+					<td style="text-align: right;" id="data_car_emissions">NA</td>
+				  </tr>
+				  <tr>
+					<td>Public Transport</td>
+					<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_public_transport_emissions_grade" alt = "Grade Image"></td>
+					<td style="text-align: right;" id="data_public_transport_emissions">NA</td>
+				  </tr>
         		  <tr>
         			<td>Van Driving</td>
         			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_van_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_van_emissions">NA</td>
+        			<td style="text-align: right;" id="data_van_emissions">NA</td>
         		  </tr>
         		  <tr>
         			<td>Motorbikes & Company Car Driving</td>
         			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_bikes_company_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_bikes_company_emissions">NA</td>
+        			<td style="text-align: right;" id="data_bikes_company_emissions">NA</td>
         		  </tr>
         		  <tr>
         			<td>Flights</td>
         			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_flights_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_flights_emissions">NA</td>
+        			<td style="text-align: right;" id="data_flights_emissions">NA</td>
         		  </tr>
         		  <tr>
         			<td>Vehicle Purchase</td>
         			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_vehicle_purchase_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_vehicle_purchase_emissions">NA</td>
+        			<td style="text-align: right;" id="data_vehicle_purchase_emissions">NA</td>
         		  </tr>
 			    <tr>
 				    <td>Vehicle maintenance</td>
 				    <td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_vehicle_maintaince_emissions_grade" alt = "Grade Image"></td>
-				    <td align='right' id="data_vehicle_maintaince_emissions">NA</td>
+				    <td style="text-align: right;" id="data_vehicle_maintaince_emissions">NA</td>
 			    </tr>
         		</table>
         	  </div>
@@ -392,61 +392,61 @@
         			<th>Grade</th>
         			<th>kgCO<sub>2</sub>e per person</th>
         			</tr>
-        		  <tr>
-        			<td>Consumption of goods and services</td>
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_consumption_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_consumption_emissions">NA</td>
-        		  </tr>
-	        	  <tr>
-	        		<td>Furnishings</td>
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_furnishings_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_furnishings_emissions">NA</td>
-        		  </tr>
-        		  <tr>
-        			<td>Food and Drink</td>
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_food_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_food_emissions">NA</td>
-        		  </tr>
-        		  <tr>
-        			<td>Alcohol & Tobacco</td>
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_alcohol_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_alcohol_emissions">NA</td>
-        		  </tr>
-        		  <tr>
-        			<td>Clothing</td>
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_clothing_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_clothing_emissions">NA</td>
-        		  </tr>
-        		  <tr>
-        			<td>Communications</td>
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_communications_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_communications_emissions">NA</td>
-        		  </tr>
-        		  <tr>
-        			<td>Recreation</td>
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_recreation_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_recreation_emissions">NA</td>
-        		  </tr>
-        		  <tr>
-        			<td>Restaurants & Hotels</td>
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_restaurants_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_restaurants_emissions">NA</td>
-        		  </tr>
-        		  <tr>
-        			<td>Health</td>
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_health_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_health_emissions">NA</td>
-        		  </tr>
-        		  <tr>
-        			<td>Education</td>
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_education_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_education_emissions">NA</td>
-        		  </tr>
-        		  <tr>
-        			<td>Miscellaneous</td>
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_miscellaneous_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_miscellaneous_emissions">NA</td>
-        		  </tr>
+				  <tr>
+					<td>Consumption of goods and services</td>
+					<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_consumption_emissions_grade" alt = "Grade Image"></td>
+					<td style="text-align: right;" id="data_consumption_emissions">NA</td>
+				  </tr>
+					  <tr>
+						<td>Furnishings</td>
+						<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_furnishings_emissions_grade" alt = "Grade Image"></td>
+						<td style="text-align: right;" id="data_furnishings_emissions">NA</td>
+					  </tr>
+					  <tr>
+						<td>Food and Drink</td>
+						<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_food_emissions_grade" alt = "Grade Image"></td>
+						<td style="text-align: right;" id="data_food_emissions">NA</td>
+					  </tr>
+					  <tr>
+						<td>Alcohol & Tobacco</td>
+						<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_alcohol_emissions_grade" alt = "Grade Image"></td>
+						<td style="text-align: right;" id="data_alcohol_emissions">NA</td>
+					  </tr>
+					  <tr>
+						<td>Clothing</td>
+						<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_clothing_emissions_grade" alt = "Grade Image"></td>
+						<td style="text-align: right;" id="data_clothing_emissions">NA</td>
+					  </tr>
+					  <tr>
+						<td>Communications</td>
+						<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_communications_emissions_grade" alt = "Grade Image"></td>
+						<td style="text-align: right;" id="data_communications_emissions">NA</td>
+					  </tr>
+					  <tr>
+						<td>Recreation</td>
+						<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_recreation_emissions_grade" alt = "Grade Image"></td>
+						<td style="text-align: right;" id="data_recreation_emissions">NA</td>
+					  </tr>
+					  <tr>
+						<td>Restaurants & Hotels</td>
+						<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_restaurants_emissions_grade" alt = "Grade Image"></td>
+						<td style="text-align: right;" id="data_restaurants_emissions">NA</td>
+					  </tr>
+					  <tr>
+						<td>Health</td>
+						<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_health_emissions_grade" alt = "Grade Image"></td>
+						<td style="text-align: right;" id="data_health_emissions">NA</td>
+					  </tr>
+					  <tr>
+						<td>Education</td>
+						<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_education_emissions_grade" alt = "Grade Image"></td>
+						<td style="text-align: right;" id="data_education_emissions">NA</td>
+					  </tr>
+					  <tr>
+						<td>Miscellaneous</td>
+						<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_miscellaneous_emissions_grade" alt = "Grade Image"></td>
+						<td style="text-align: right;" id="data_miscellaneous_emissions">NA</td>
+					  </tr>
         		</table></div>
         		
         		
@@ -746,57 +746,57 @@
 			    
 			    <h3>Demographics</h3>
 			    <h4>Community Photo</h4>
-			    <div class="community_photos">
-			      <img class="family_photo" id="ff0" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff1" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff2" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff3" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff4" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff5" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff6" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff7" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff8" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff9" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff10" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff11" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff12" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff13" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff14" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff15" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff16" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff17" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff18" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff19" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff20" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff21" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff22" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff23" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff24" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff25" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff26" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff27" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff28" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff29" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff30" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff31" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff32" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff33" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff34" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff35" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff36" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff37" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff38" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff39" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff40" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff41" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff42" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff43" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff44" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff45" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff46" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff47" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      
-			    </div>
+				<div class="community_photos">
+				  <img class="family_photo" id="ff0" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff1" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff2" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff3" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff4" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff5" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff6" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff7" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff8" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff9" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff10" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff11" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff12" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff13" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff14" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff15" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff16" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff17" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff18" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff19" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff20" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff21" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff22" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff23" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff24" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff25" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff26" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff27" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff28" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff29" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff30" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff31" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff32" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff33" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff34" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff35" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff36" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff37" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff38" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff39" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff40" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff41" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff42" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff43" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff44" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff45" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff46" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff47" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  
+				</div>
 			    
 				<p>The community photo gives an at-a-glance overview of the demographics of each neighbourhood based on the 2021/22 Census. Each image represents households based on household composition, socio-economic classification (NS-SEC), and ethnicity. For more details see the <a href="/manual/#communityphoto">manual</a>.</p>
 			    
