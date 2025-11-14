@@ -203,11 +203,11 @@ a.smaller {
 }
 
 a.opentool {
-  color: #ffffff
+  color: #ffffff;
 }
 a.opentool:hover{
-  color: #ffffff
+  color: #ffffff;
 }
 a.opentool:visited{
-  color: #ffffff
+  color: #ffffff;
 }

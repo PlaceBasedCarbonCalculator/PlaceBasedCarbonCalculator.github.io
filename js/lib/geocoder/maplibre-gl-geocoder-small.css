@@ -1,8 +1,8 @@
 /* Basics */
 .maplibregl-ctrl-geocoder,
 .maplibregl-ctrl-geocoder *,
-.maplibregl-ctrl-geocoder *:after,
-.maplibregl-ctrl-geocoder *:before {
+.maplibregl-ctrl-geocoder *::after,
+.maplibregl-ctrl-geocoder *::before {
   box-sizing: border-box;
 }
 
