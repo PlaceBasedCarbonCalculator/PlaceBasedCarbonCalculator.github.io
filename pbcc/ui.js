@@ -615,37 +615,128 @@ overviewChart = new Chart(document.getElementById('overview-chart').getContext('
 	const taxLabelPlugin = {
   id: 'taxLabelPlugin',
   afterDatasetsDraw(chart, args, options) {
-      const { ctx } = chart;
-      chart.data.datasets.forEach((dataset, datasetIndex) => {
-        const meta = chart.getDatasetMeta(datasetIndex);
-        meta.data.forEach((bar, index) => {
-          const value = dataset.gradelabel[index];
-          ctx.save();
-          ctx.fillStyle = 'black';
-          ctx.font = '12px sans-serif';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'bottom';
-          ctx.fillText(`${value}`, bar.x, bar.y - 5);
-          ctx.restore();
-        });
-      });
+			const { ctx } = chart;
+			chart.data.datasets.forEach((dataset, datasetIndex) => {
+				const meta = chart.getDatasetMeta(datasetIndex);
+				if (!meta || !Array.isArray(meta.data)) return;
+				meta.data.forEach((bar, index) => {
+					// only draw labels if gradelabel exists for this dataset
+					const hasGradeArray = dataset && Array.isArray(dataset.gradelabel);
+					const value = hasGradeArray ? dataset.gradelabel[index] : undefined;
+					if (value === undefined || value === null || value === '') return;
+					ctx.save();
+					ctx.fillStyle = 'black';
+					ctx.font = '12px sans-serif';
+					ctx.textAlign = 'center';
+					ctx.textBaseline = 'bottom';
+					// Coordinates exist for bars and points as x/y; fallback to center if not present
+					const x = (bar && typeof bar.x === 'number') ? bar.x : ((bar && bar.left && bar.right) ? (bar.left + bar.right) / 2 : 0);
+					const y = (bar && typeof bar.y === 'number') ? bar.y : ((bar && bar.top && bar.bottom) ? (bar.top + bar.bottom) / 2 : 0);
+					ctx.fillText(`${value}`, x, y - 5);
+					ctx.restore();
+				});
+			});
     }
   };
   
   function makeStandardConsumptionChart(id,filter){
-    const chart = new Chart(document.getElementById(id).getContext('2d'), {
-      type: 'line',
-  		data: {
-        labels: combinedData.labels,
-        datasets: combinedData.datasets
-        .filter(d => d.label.includes(filter))
-        .map(d => ({ ...d, label: d.standardLabel }))
-      },
-  		options: barChartOptions,
-  		plugins: [taxLabelPlugin]
-    });
-    return chart;
-  }
+		// Create options for line charts based on the shared barChartOptions
+		const lineOptions = {
+			...barChartOptions,
+			scales: {
+				y: {
+					// ensure y-axis always starts at zero
+					min: 0,
+					ticks: {
+						beginAtZero: true
+					}
+				},
+				x: {
+					// lines shouldn't be stacked
+					stacked: false
+				}
+			}
+		};
+
+		// fixed colour for the "This area" line across all charts
+		const THIS_AREA_COLOUR = 'rgb(31,120,180)';
+
+		const datasets = combinedData.datasets
+			.filter(d => d.label.includes(filter))
+			.map(d => {
+				// use a consistent colour for 'This area', otherwise use the dataset's background colour
+				const baseColour = (d.standardLabel === 'This area') ? THIS_AREA_COLOUR : (d.backgroundColor || d.borderColor || 'rgb(0,0,0)');
+
+				return {
+					label: d.standardLabel,
+					data: d.data,
+					// preserve gradelabel so the label plugin can draw annotations
+					gradelabel: d.gradelabel,
+					// colour the line itself
+					borderColor: baseColour,
+					// use same colour for points
+					backgroundColor: baseColour,
+					pointBackgroundColor: baseColour,
+					pointBorderColor: baseColour,
+					fill: false,
+					tension: 0.2,
+					borderWidth: 2
+				};
+			});
+
+		// compute max value across all datasets so we can ensure the y-axis max is at least 500
+		let dataMax = -Infinity;
+		datasets.forEach(ds => {
+			if (!Array.isArray(ds.data)) return;
+			ds.data.forEach(v => {
+				const n = Number(v);
+				if (!Number.isNaN(n) && n > dataMax) dataMax = n;
+			});
+		});
+		if (dataMax === -Infinity) dataMax = 0;
+
+		// Choose a "nice" rounded max above the data max so axis ticks land on round numbers.
+		// Use approximately 8 intervals (so small charts get steps like 200, larger ones 1000, etc.).
+		const desiredIntervals = 8;
+		let niceMax = dataMax;
+
+		if (dataMax <= 0) {
+			niceMax = 500;
+		} else {
+			// compute a raw step and round it up to a "nice" step (1, 2, 2.5, 5, 10 * 10^exp)
+			const rawStep = dataMax / desiredIntervals;
+			const exp = Math.floor(Math.log10(Math.max(rawStep, 1e-12)));
+			const pow = Math.pow(10, exp);
+			const frac = rawStep / pow;
+
+			let niceFrac;
+			if (frac <= 1) niceFrac = 1;
+			else if (frac <= 2) niceFrac = 2;
+			else if (frac <= 2.5) niceFrac = 2.5;
+			else if (frac <= 5) niceFrac = 5;
+			else niceFrac = 10;
+
+			const niceStep = niceFrac * pow;
+			niceMax = niceStep * Math.ceil(dataMax / niceStep);
+			// ensure we never go below 500
+			if (niceMax < 500) niceMax = 500;
+		}
+
+		// apply the computed nice max to the line chart options
+		lineOptions.scales.y.max = niceMax;
+
+		const chart = new Chart(document.getElementById(id).getContext('2d'), {
+			type: 'line',
+			data: {
+				labels: combinedData.labels,
+				datasets: datasets
+			},
+			options: lineOptions,
+			plugins: [taxLabelPlugin]
+		});
+
+		return chart;
+	}
   
   consumptionTotalChart = makeStandardConsumptionChart('consumptionTotal-chart','Goods & Services')
   consumptionFoodChart = makeStandardConsumptionChart('consumptionFood-chart','Food & Drink')
