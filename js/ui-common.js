@@ -585,11 +585,11 @@ const capUi = (function () {
 		addBuildings: function (map)
 		{
 			
-			console.log("Buildings fucnction");
+			console.log("Buildings function");
 			// When ready
 			map.once ('idle', function () {
 				
-				console.log("Buildings fucnction map idle");
+				console.log("Buildings function map idle");
 				// Add the source
 				if (!map.getSource ('buildings')) {
 					map.addSource ('buildings', {

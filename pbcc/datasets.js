@@ -10,7 +10,7 @@ const datasets_extra = {
 			'type': 'fill',
 			'source': {
 			'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/zones_pbcc.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/zones_pbcc_20251115.pmtiles',
 				},
 			'source-layer': 'zones',
 			'paint': {

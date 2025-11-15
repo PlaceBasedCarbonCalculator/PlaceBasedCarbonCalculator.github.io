@@ -54,10 +54,10 @@ manageCharts = function (locationId) {
 
 	// Primary chained requests that feed multiple charts
 	const urlsPrimary = [
-		'https://pbcc.blob.core.windows.net/pbcc-data/historical_emissions/v1/' + locationId + '.json',
+		'https://pbcc.blob.core.windows.net/pbcc-data/historical_emissions/v2/' + locationId + '.json',
 		'https://pbcc.blob.core.windows.net/pbcc-data/population/' + locationId + '.json',
 		'https://pbcc.blob.core.windows.net/pbcc-data/lsoa_overview/v1/' + locationId + '.json',
-		'https://pbcc.blob.core.windows.net/pbcc-data/la_emissions/v1/GB.json'
+		'https://pbcc.blob.core.windows.net/pbcc-data/la_emissions/v2/GB.json'
 	];
 
 	const primary = Promise.all(urlsPrimary.map(capUi.fetchJSON))
@@ -68,8 +68,8 @@ manageCharts = function (locationId) {
 			gbHistoricalData = GBData;
 
 			const urlsSecondary = [
-				'https://pbcc.blob.core.windows.net/pbcc-data/oac_emissions/v1/' + lsoaOverviewData.lsoa_class_code + '.json',
-				'https://pbcc.blob.core.windows.net/pbcc-data/la_emissions/v1/' + lsoaOverviewData.LAD25CD + '.json'
+				'https://pbcc.blob.core.windows.net/pbcc-data/oac_emissions/v2/' + lsoaOverviewData.lsoa_class_code + '.json',
+				'https://pbcc.blob.core.windows.net/pbcc-data/la_emissions/v2/' + lsoaOverviewData.LAD25CD + '.json'
 			];
 
 			return Promise.all(urlsSecondary.map(capUi.fetchJSON))
@@ -634,7 +634,7 @@ overviewChart = new Chart(document.getElementById('overview-chart').getContext('
   
   function makeStandardConsumptionChart(id,filter){
     const chart = new Chart(document.getElementById(id).getContext('2d'), {
-      type: 'bar',
+      type: 'line',
   		data: {
         labels: combinedData.labels,
         datasets: combinedData.datasets
