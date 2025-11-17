@@ -845,7 +845,7 @@ const capUi = (function () {
 					}
 				});
 				mode = (totalChars > 39 ? 'vertical' : 'horizontal');
-				console.log('Legend mode: ' + mode + 'nchars: ' + totalChars);
+				//console.log('Legend mode: ' + mode + 'nchars: ' + totalChars);
 							
 				
 				// Ensure the element receives the correct class so CSS rules apply.
