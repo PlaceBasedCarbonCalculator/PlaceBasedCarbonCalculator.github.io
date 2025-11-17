@@ -882,9 +882,7 @@ function zonesStyling (layerId, map, settings, datasets, createLegend /* callbac
 {
 	
 	console.log("zoneStyling " + layerId);
-	console.log(map);
-
-
+	
 	// Update the legend (even if map layer is off)
 	const field = document.querySelector ('select.updatelayer[data-layer="zones"][name="field"]').value
 	createLegend (datasets.legends.zones, field, 'zoneslegend'); // Fixed Legeng for Grades

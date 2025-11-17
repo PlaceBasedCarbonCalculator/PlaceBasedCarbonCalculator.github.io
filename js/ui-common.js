@@ -825,11 +825,7 @@ const capUi = (function () {
 		{
       		// Do nothing if no selector for where the legend will be added
 			if (!document.getElementById(selector)) {return;}
-			
-			console.log(legendColours);
-			console.log(selected);
-			console.log(selector);
-			
+								
 				// Detect Horizontal, Vertical or Contextual modes
 				// Create the legend HTML
 				// #!# Should be a list, not nested divs
