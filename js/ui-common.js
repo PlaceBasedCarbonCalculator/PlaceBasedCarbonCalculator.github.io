@@ -1230,12 +1230,20 @@ const capUi = (function () {
 		// Function to add tooltips
 		tooltips: function ()
 		{
-			tippy('[title]', {
-				content (reference) {
-					const title = reference.getAttribute('title');
-					reference.removeAttribute('title');
-					return title;
-				},
+			// Run once the map is ready; seems that the geolocation button loads too late
+			_map.once ('idle', function () {
+
+				// Apply tooltips to the map control buttons and to help buttons, as these have no visible labelling; title is used else ARIA label
+				tippy('.maplibregl-control-container [title], .maplibregl-control-container [aria-label], .helpbutton', {
+					content (element) {
+						const title = element.getAttribute ('title');
+						if (title) {
+							element.removeAttribute ('title');	// Avoid native browser tooltips also showing
+						}
+						const ariaLabel = element.getAttribute ('aria-label');
+						return title || ariaLabel;
+					},
+				});
 			});
 		},
 		
