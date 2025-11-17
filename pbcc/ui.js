@@ -82,6 +82,7 @@ manageCharts = function (locationId) {
 					//console.log(lsoaHeadlineData);
 					switchPenPortSub(lsoaHeadlineData[0].lsoa_class_name);
 					switchPenPortSup(lsoaHeadlineData[0].lsoa_class_name);
+					lsoaCharacteristicsTable(lsoaOverviewData);
 				});
 		})
 		.catch(error => {
@@ -764,24 +765,24 @@ overviewChart = new Chart(document.getElementById('overview-chart').getContext('
 
 makeChartVOA2010 = function(){
   
-  // overview Chart
-  // Destroy old chart
+  	// overview Chart
+  	// Destroy old chart
 	if(dwellingsctChart){
 		dwellingsctChart.destroy();
 	}
   
-  //console.log(voa2010LocationData);
+  	//console.log(voa2010LocationData);
  
 	const years = voa2010LocationData['year'];	  
 	const bA = voa2010LocationData['banda'];
-  const bB = voa2010LocationData['bandb'];
-  const bC = voa2010LocationData['bandc'];
-  const bD = voa2010LocationData['bandd'];
-  const bE = voa2010LocationData['bande'];
-  const bF = voa2010LocationData['bandf'];
-  const bG = voa2010LocationData['bandg'];
-  const bH = voa2010LocationData['bandh'];
-  const bI = voa2010LocationData['bandi'];
+  	const bB = voa2010LocationData['bandb'];
+  	const bC = voa2010LocationData['bandc'];
+  	const bD = voa2010LocationData['bandd'];
+  	const bE = voa2010LocationData['bande'];
+  	const bF = voa2010LocationData['bandf'];
+  	const bG = voa2010LocationData['bandg'];
+  	const bH = voa2010LocationData['bandh'];
+  	const bI = voa2010LocationData['bandi'];
   
   
   var dwellingsctctx = document.getElementById('dwellingsct-chart').getContext('2d');
@@ -1329,6 +1330,7 @@ makeChartPopulation = function(){
   
 }
 
+/*
 makeChartPLEF = function(){
   
   // overview Chart
@@ -1631,10 +1633,11 @@ makeChartPLEF = function(){
     
   ]
 };
-  
+ 
   
 }
 
+*/
 
 // Function for modal tabs
 modalTab = function (evt, tabName) {
@@ -1929,5 +1932,14 @@ var pp8 = `<p>The population of this supergroup typically live largely in areas 
   document.getElementById("penportsup").innerHTML = pp;
 }
 
-
+function lsoaCharacteristicsTable(lsoadata) {
+  	document.getElementById("data_SOAC11NM").innerHTML = lsoadata.lsoa_class_name;
+  	document.getElementById("data_LAD25CD").innerHTML = lsoadata.LAD25CD;
+  	document.getElementById("data_LAD25NM").innerHTML = lsoadata.LAD25NM;
+	document.getElementById("data_WD25NM").innerHTML = lsoadata.WD25NM;
+	document.getElementById("data_PAR23NM").innerHTML = lsoadata.PAR23NM;
+	document.getElementById("data_PCON24NM").innerHTML = lsoadata.PCON24NM;
+	document.getElementById("data_supergroup_name").innerHTML = 'Supergroup Description: "' + lsoadata.supergroup_name + '"';
+	document.getElementById("data_lsoa_class_name").innerHTML = 'Subgroup Description: "' + lsoadata.lsoa_class_name + '"';
+}
 
