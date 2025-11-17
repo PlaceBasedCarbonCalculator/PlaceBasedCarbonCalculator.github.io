@@ -171,16 +171,18 @@
 				<p>
 					<select name="field" class="updatelayer" data-layer="zones" aria-label="Neighbourhood layer">
 						<option value="total_grade" selected>Total Emissions</option>
+						<option value="reduction_grade" >Decarbonisation progress</option>
 						<option value="dom_gas_grade" >Gas</option>
 						<option value="dom_elec_grade">Electricity</option>
 						<option value="car_grade" >Car</option>
 						<option value="van_grade">Van</option>
 						<option value="goods_services_combined_grade">Goods & Services</option>
 						<option value="flights_grade">Flights</option>
+						<option value="lsoa_class_code">Area Classification</option>
 					</select>
 					<button aria-label="Help purpose" class="helpbutton" data-help="pbcc-zones"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
 				</p>
-				<div id="zoneslegend" class="legendHorizontal">
+				<div id="zoneslegend" class="legendContextual">
 					<div class="l_rHorizontal">
 						<div class="lb"><span style="background-color: #ffffff"></span>&nbsp;</div>
 					</div>
@@ -195,28 +197,28 @@
 			<div class="panel">
 				<p><label><input type="checkbox" data-layer="wards" class="showlayer" value="false">Wards</label>
 				<button aria-label="Help" class="helpbutton" data-help="boundaries-wards"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
-				<div class="legendHorizontal">
+				<div class="legendContextual legendHorizontal">
 					<div class="l_rHorizontal">
 						<div class="lbHorizontal"><span style="background-color: #206b07"></span></div>
 					</div>
 				</div>
 				<p><label><input type="checkbox" data-layer="la" class="showlayer" value="false">Local Authorities</label>
 				<button aria-label="Help" class="helpbutton" data-help="boundaries-la"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
-				<div class="legendHorizontal">
+				<div class="legendContextual legendHorizontal">
 					<div class="l_rHorizontal">
 						<div class="lbHorizontal"><span style="background-color: #6b0707"></span></div>
 					</div>
 				</div>
 				<p><label><input type="checkbox" data-layer="parish" class="showlayer" value="false">Parish</label>
 				<button aria-label="Help" class="helpbutton" data-help="boundaries-parish"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
-				<div class="legendHorizontal">
+				<div class="legendContextual legendHorizontal">
 					<div class="l_rHorizontal">
 						<div class="lbHorizontal"><span style="background-color: #6b0763"></span></div>
 					</div>
 				</div>
 				<p><label><input type="checkbox" data-layer="westminster" class="showlayer" value="false">Westminster Constituency</label>
 				<button aria-label="Help" class="helpbutton" data-help="boundaries-westminster"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
-				<div class="legendHorizontal">
+				<div class="legendContextual legendHorizontal">
 					<div class="l_rHorizontal">
 						<div class="lbHorizontal"><span style="background-color: #07366b"></span></div>
 					</div>
@@ -819,13 +821,46 @@
 					
 				</div>
 
+				<div class="chart-wrapper">
+					<h4>LSOA Characteristics</h4>
+					<table>
+						<tr>
+							<th>Name</th>
+							<th>Value</th>
+						</tr>
+						<tr>
+							<td>Local Authority Code</td>
+							<td id="data_LAD25CD">NA</td>
+						</tr>
+						<tr>
+							<td>Local Authority Name</td>
+							<td id="data_LAD25NM">NA</td>
+						</tr>
+						<tr>
+							<td>Ward Name</td>
+							<td id="data_WD25NM">NA</td>
+						</tr>
+						<tr>
+							<td>Parish Name</td>
+							<td id="data_PAR23NM">NA</td>
+						</tr>
+						<tr>
+							<td>Parlimentary Constituency</td>
+							<td id="data_PCON24NM">NA</td>
+						</tr>
+						<tr>
+							<td>LSOA Classification (2011)</td>
+							<td id="data_SOAC11NM">NA</td>
+						</tr>
+					</table>
+				</div>
 
 				<div class="chart-wrapper">
 					<h4>ONS pen portrait</h4>
 					<p>The Office for National Statistics Area Classifications 2011 group <abbr title="Lower Super Output Area">LSOAs</abbr> based on sociodemographic characteristics. Each <abbr title="Lower Super Output Area">LSOA</abbr> is grouped into a supergroup and some supergroups are further split into subgroups.</p>
-					<p><b>Supergroup Description</b></p>
+					<p><b id="data_supergroup_name">Supergroup Description</b></p>
 					<div id="penportsup"></div>
-					<p><b>Subgroup Description</b></p>
+					<p><b id="data_lsoa_class_name">Subgroup Description</b></p>
 					<div id="penportsub"></div>
 				</div>
 			    

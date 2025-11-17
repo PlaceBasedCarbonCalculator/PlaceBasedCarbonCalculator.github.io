@@ -823,33 +823,58 @@ const capUi = (function () {
 		
 		createLegend: function (legendColours, selected, selector)
 		{
-      // Do nothing if no selector for where the legend will be added
+      		// Do nothing if no selector for where the legend will be added
 			if (!document.getElementById(selector)) {return;}
 			
-			//console.log(legendColours);
-			//console.log(selected);
-			//console.log(selector);
+			console.log(legendColours);
+			console.log(selected);
+			console.log(selector);
 			
-			// Detect Horizontal or Vertical modes
-			// Create the legend HTML
-			// #!# Should be a list, not nested divs
-			let legendHtml;
-			if(document.getElementById(selector).className == "legendHorizontal") {
-			  legendHtml = '<div class="l_rHorizontal">';
-  			  selected = (legendColours.hasOwnProperty(selected) ? selected : '_');
-  			  //console.log(legendColours[selected]);
-  			  legendColours[selected].forEach(legendColour => {
-  				legendHtml += `<div class="lbHorizontal"><span style="background-color: ${legendColour[1]}"></span>${legendColour[0]}</div>`;
-  			})
-  			legendHtml += '</div>';
-			} else {
-			  legendHtml = '<div class="l_rVertical">';
-  			  selected = (legendColours.hasOwnProperty(selected) ? selected : '_');
-  			  legendColours[selected].forEach(legendColour => {
-  				legendHtml += `<div class="lbVertial"><span style="background-color: ${legendColour[1]}"></span>${legendColour[0]}</div>`;
-  			})
-			  legendHtml += '</div>';
-			}
+				// Detect Horizontal, Vertical or Contextual modes
+				// Create the legend HTML
+				// #!# Should be a list, not nested divs
+				let legendHtml;
+				const el = document.getElementById(selector);
+				const cls = el ? el.className : '';
+				// Normalize selected key to a valid property
+				selected = (legendColours.hasOwnProperty(selected) ? selected : '_');
+				// Determine layout mode
+				let mode = 'vertical';
+				// Sum characters in the first element (label) of each legend entry
+				const items = legendColours[selected] || [];
+				let totalChars = 0;
+				items.forEach(it => {
+					if (it && typeof it[0] !== 'undefined') {
+						totalChars += String(it[0]).length;
+					}
+				});
+				mode = (totalChars > 39 ? 'vertical' : 'horizontal');
+				console.log('Legend mode: ' + mode + 'nchars: ' + totalChars);
+							
+				
+				// Ensure the element receives the correct class so CSS rules apply.
+				// If the element was originally 'legendContextual' keep that class and add the
+				// chosen orientation class. If it was explicitly horizontal/vertical, keep that.
+				if (mode === 'horizontal') {
+					el.className ='legendContextual legendHorizontal';
+				} else {
+					el.className = 'legendContextual legendVertical';
+				}
+				
+				
+				if (mode === 'horizontal') {
+					legendHtml = '<div class="l_rHorizontal">';
+					(legendColours[selected] || []).forEach(legendColour => {
+						legendHtml += `<div class="lbHorizontal"><span style="background-color: ${legendColour[1]}"></span>${legendColour[0]}</div>`;
+					});
+					legendHtml += '</div>';
+				} else {
+					legendHtml = '<div class="l_rVertical">';
+					(legendColours[selected] || []).forEach(legendColour => {
+						legendHtml += `<div class="lbVertical"><span style="background-color: ${legendColour[1]}"></span>${legendColour[0]}</div>`;
+					});
+					legendHtml += '</div>';
+				}
       
 			// Set the legend
 			document.getElementById(selector).innerHTML = legendHtml;
