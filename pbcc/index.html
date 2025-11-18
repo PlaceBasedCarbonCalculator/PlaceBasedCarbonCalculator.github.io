@@ -115,11 +115,11 @@
 				
 				<div class="feedbackbox">
 					<div class="feedback-text">
-						<h4>How can we improve this tool?</h4>
+						<h2>How can we improve this tool?</h2>
 						<p>We would love to hear how you are using Carbon & Place and how we can make our tools more useful.</p>
 						<p><a href="/about/feedback" class="opentool">Submit Feedback</a></p>
 					</div>
-					<img src="/images/ui/feedback.png" alt="Feedback" loading="lazy" class="feedback-image">
+					<img src="/images/ui/feedback.webp" alt="Feedback" loading="lazy" class="feedback-image">
 				</div>
 				
 				<p>Last updated: <span id="updatedate"></span>. You may need to <a href="https://www.minitool.com/news/f5-vs-ctrl-f5.html">clear your browser cache</a> to see the latest updates.</p>
@@ -140,10 +140,10 @@
 			<div id="map"></div>
 		</div>
 
-		<!-- Loading Spinner -->
-		<div class="spinner">
-			<img src="/images/ui/spinner.svg" alt="Loading...">
-		</div>
+			<!-- Loading Spinner -->
+			<div class="spinner">
+				<img src="/images/ui/spinner.svg" alt="Loading..." loading="lazy">
+			</div>
 		
 		<!-- Basemap control box -->
 		<div id="basemapcontrol" style="display: none;">
@@ -180,7 +180,7 @@
 						<option value="flights_grade">Flights</option>
 						<option value="lsoa_class_code">Area Classification</option>
 					</select>
-					<button aria-label="Help purpose" class="helpbutton" data-help="pbcc-zones"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+					<button aria-label="Help Neighbourhoods" class="helpbutton" data-help="pbcc-zones"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
 				</p>
 				<div id="zoneslegend" class="legendContextual">
 					<div class="l_rHorizontal">
@@ -188,7 +188,8 @@
 					</div>
 				</div>
 				
-				<p><label class="switch"><input type="checkbox" name="daysymetricmode" class="updatelayer" data-layer="zones" checked><span class="slider round"></span></label> Dasymetric</p>
+				<p><label class="switch"><input type="checkbox" name="daysymetricmode" class="updatelayer" data-layer="zones" checked><span class="slider round"></span></label> Dasymetric
+				<button aria-label="Help daysymetric mode" class="helpbutton" data-help="dasymetric"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 				
 			
 			</div>
