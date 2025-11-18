@@ -544,90 +544,58 @@ Interpreting grades and colours
 
 #### Overview
 
-The report card summarises what we know about a neighbourhood's carbon footprint and related context. It brings together multiple data sources and modelled estimates into a compact, interactive view so you can quickly see where emissions come from, how they have changed, and which local characteristics help explain them.
+The report card summarises what we know about a neighbourhood's carbon footprint and related context. The Overview is based on 2019 data to exclude the effect of COVID-19.
 
 Key elements you will see in the Overview:
 
 - **Headline grade and score**: A per-person grade (A+ to F-) and numeric value that places the neighbourhood relative to the national distribution.
-- **Sector breakdown**: A small chart showing the share of emissions from Housing, Transport, Consumption, and Flights.
-- **Contextual indicators**: Population, area classification (ONS), and a short summary of important drivers such as car ownership, average dwelling age, and income proxies.
+- **Sector breakdown**: A chart showing the share of emissions from Housing, Transport, and Consumption comparing each area to the average footprint for the Local Authority, Great Britain, and simialr areas.
+- **Detailed Grades**: Detailed grades for each part of the carbon footprint.
 
-Use the Overview to get a quick sense of whether a neighbourhood is above or below the national average, and what the main drivers appear to be. Click any portion of the sector chart or the tabs at the top to open the more detailed panels (Historical, Housing, Transport, Consumption, Demographics, Future Scenarios).
+Use the Overview to get a quick sense of whether a neighbourhood is above or below the national average, and what the main drivers appear to be.
 
-Note on interpretation: Grades are comparative, not absolute. Two places with the same grade may have very different absolute emission levels if the national distribution changes. Where data are missing or suppressed for privacy, you will see `NA` and explanatory notes.
+Note on interpretation: Grades are comparative, not absolute. Where data are missing or suppressed for privacy, you will see `NA` and explanatory notes.
 
-**Sources:**
 
-- Project overview and methodology: `README.md` (site documentation)
-- ONS area classifications and population statistics: https://www.ons.gov.uk/
 #### Historical Emissions
 
-This panel shows how the neighbourhood's footprint has changed over time and how that change compares to regional and national trends. The main visual is a time-series chart (usually annual) of per‑person emissions with shaded bands showing sector contributions.
-
-What to look for:
-
-- **Trend shape**: Steady declines may indicate effective decarbonisation of heat, electricity, or transport; plateaus or increases highlight potential problem areas.
-- **Sector timing**: Different sectors decarbonise at different rates. For example, electricity emissions fall quickly as the grid decarbonises, while housing (heating) declines more slowly unless retrofit rates are high.
-- **Comparators**: Use the regional and national comparator lines to see whether local change follows or diverges from broader trends.
+This panel shows how the neighbourhood's footprint has changed over time and how that change compares to regional and national trends. The main visual is a time-series chart of per‑person emissions with shaded bands showing sector contributions.
 
 Method and caveats:
 
-- Historical estimates combine measured consumption where available (e.g. energy statistics) with modelled allocations (e.g. consumption and transport models). Year-to-year changes may reflect actual policy or service shifts, but can also be affected by data revisions or coverage changes. We annotate known data gaps and periods with unusual events (for example, COVID-19 disruption) so you can judge the signal strength.
+- Historical estimates combine measured consumption where available (e.g. energy statistics) with modelled allocations (e.g. consumption and transport models). Year-to-year changes may reflect actual policy or service shifts, but can also be affected by data revisions or coverage changes.
 
-**Sources:**
 
-- National and regional emissions statistics: https://www.gov.uk/government/collections/uk-local-authority-and-regional-carbon-dioxide-emissions-national-statistics
-- National greenhouse gas statistics and inventories: https://www.gov.uk/government/collections/uk-greenhouse-gas-emissions-statistics
-- Notes on transport timetable datasets used for trend annotation: NPTDR (National Public Transport Data Repository), Bus Archive, Traveline archives (see Transport panel sources)
 #### Housing Emissions
 
 This panel explains emissions from domestic energy use: the heating and electricity associated with homes in the neighbourhood. It presents totals and per-person metrics plus a breakdown by fuel type, dwelling type and building efficiency where data allow.
 
 Main components shown:
 
-- **Total housing emissions (kgCO2e per person)** and **per-household** equivalents.
-- **Fuel split**: Gas vs electricity (and other heating fuels where present). Electricity emissions reflect grid intensity in each year.
-- **Building attributes**: Average EPC band, typical dwelling age, floor area and common heating systems; these are used to explain variation between places.
+- **Gas** -  Gas consumption is based on meter readings from domestic properties and converted to emissions.
+- **Electricity** - Electricity consumption is based on meter readings from domestic properties and converted to emissions.
+- **Other Heating** - Heating from other fuel (coal, wood, bottled gas) is modeled based on Census data
+- **Housing Other** - Other housing emissions are modled based on the sythetic population consumption data.
 
-How the numbers are derived:
-
-- We combine postcode-level consumption (where available), EPC-derived energy models, and building stock characteristics to produce neighbourhood-level estimates. Domestic gas and electricity datasets, EPC registers, and modelled heat loss estimates are used together to estimate both current emissions and potential savings from retrofit.
-
-Interpretation and limitations:
-
-- EPC coverage is incomplete and biased (not all homes have an EPC). Where EPC coverage is low we flag the neighbourhood and caution against over-interpreting fine-grained results.
-- Emissions attributed here are operational (energy used in the home). They do not include embodied emissions from building materials — those are considered elsewhere where modelled.
-
-**Sources:**
-
-- England & Wales EPC register: https://epc.opendatacommunities.org/
-- Scottish EPC register: https://www.scottishepcregister.org.uk/
-- Postcode-level gas & electricity consumption (DESNZ): https://www.gov.uk/government/publications/postcode-level-domestic-gas-and-electricity-consumption-about-the-data
-- EPC methodology and building stock modelling references: project documentation and EPC registers
 #### Transport Emissions
 
 The Transport panel covers emissions from local travel attributable to residents: cars, vans, buses, trains, motorcycles and an allocation of longer-distance travel (including flights). The visualisation typically includes a modal split, tailpipe vs lifecycle components, and per-person totals.
 
 What you will see:
 
-- **Per-person transport emissions** and **per-household** equivalents.
-- **Modal breakdown**: Cars & vans, public transport, active modes (walking/cycling as activity proxies), and an allocated share of flights and freight-related passenger consumption where relevant.
-- **Drivers**: Local car ownership, typical commute distances, and public transport frequency indicators help explain differences between places.
+- **Car Emissions** - 
+- **Van Emissions** -
+- **Motorbikes, Company Vehicles, and other types** - 
+- **Flights Emissions** -
+- **Vehicle Purchase** -
+- **Vehicle maintenance & other** - 
 
 Method notes and caveats:
 
-- Car and van emissions are estimated from local vehicle ownership, census travel-to-work patterns, and modelled average trip distances. Public transport emissions use timetable-based frequency data combined with access buffers around neighbourhood centroids (see Transport Explorer documentation).
-- Long-distance trips and flights are allocated using the synthetic population model; this gives reasonable neighbourhood-level estimates but cannot capture idiosyncratic travellers. Seasonal effects and one-off changes (e.g., lockdowns) are annotated in the historical panel.
+- Car and van emissions are estimated from local vehicle ownership, and modelled average trip distances which are dererived from MOT test data.  use timetable-based frequency data combined with access buffers around neighbourhood centroids (see Transport Explorer documentation).
+- Public transport emissions, flights, an vehicle purchase and maintenance are allocated using the synthetic population model; this gives reasonable neighbourhood-level estimates but cannot capture idiosyncratic travellers.
 
-Use this panel to identify opportunities (e.g., where modal shift or car replacement could deliver large savings) but treat localised absolute values as modelled estimates rather than exact measured totals.
 
-**Sources:**
-
-- National Public Transport Data Repository (NPTDR): https://www.data.gov.uk/dataset/d1f9e79f-d9db-44d0-b7b1-41c216fe5df6/national-public-transport-data-repository-nptdr
-- Bus Archive: https://www.busarchive.org.uk/
-- Traveline National Dataset: https://itsleeds.github.io/UK2GTFS/ (UK2GTFS conversion docs) and Traveline dataset archives: https://www.data.gov.uk/dataset/0447f8d9-8f1b-4a68-bbc8-246981d02256/traveline-national-dataset
-- Rail timetable / ATOC archives: https://data.atoc.org/
-- Methods for allocating long-distance travel (synthetic population / LCFS): Living Costs and Food Survey (LCFS): https://www.gov.uk/government/collections/living-costs-and-food-survey
 <!-- #pbcc-consumption -->
 #### Consumption Emissions
 While some household carbon emissions are produced in the home (e.g. when we burn gas for heating or cooking) much of the household carbon footprint comes from embodied emissions, the emissions that came from making the goods and services we use, for example, when we buy a product there are emissions associated with mining the resources, processing, manufacturing and transporting the product to us. Much of these emissions may have been produced abroad, but in a consumption-based carbon footprint (like the PBCC), we attribute responsibility for those emissions to the end user of the product.
@@ -643,27 +611,18 @@ In short, to estimate your family’s spending habits, we select from the tens o
 
 #### Demographics
 
-The Demographics panel provides the population and household context that helps explain why neighbourhoods differ in their footprints. It includes the community photo, age structure, household composition, socio-economic classification, and a small set of indicators such as average household size, car ownership rate, and income proxies.
+The Demographics panel provides the population and household context that helps explain why neighbourhoods differ in their footprints.
 
 Key items:
 
-- **Community photo**: A compact, pictorial summary of common household types in the neighbourhood (see the Community Photo section earlier in this manual). This gives a quick visual cue to the household mix.
-- **Age & household composition**: Charts showing the proportion of children, working‑age adults and older adults, and common household types (e.g., lone pensioners, couples with children).
-- **NS‑SEC and economic proxies**: The neighbourhood's dominant socio‑economic class and simple income proxies used to explain consumption patterns and vehicle ownership.
+- **Community photo**: A pictorial summary of common household types in the neighbourhood (more details below).
+- **Age chart**: Charts showing the total population broken down by age and the number of households and dwellings over time.
+- **LSOA Characteritics**: Headline information such as which Local Authority the LSOA is in.
+- **ONS pen portrait**: The neighbourhood's description based on the Output Area Classifications produced by the ONS.
 
 Why this matters:
 
-- Demographics strongly influence emissions — larger households and higher incomes typically consume more, while dense, younger, urban neighbourhoods often show lower transport emissions per person. Use the Demographics panel to interpret whether high emissions are driven by population structure, housing stock, or behaviour.
-
-Limitations and responsible use:
-
-- All demographic summaries are aggregated and designed to avoid disclosure. They are best used for contextual interpretation and policy direction rather than identifying or judging individuals. See the community photo limitations described earlier for further detail.
-
-**Sources:**
-
-- Census 2021 household composition and classifications: https://www.ons.gov.uk/census/census2021
-- Ethnicity statistics (Census 2021): https://www.ons.gov.uk/peoplepopulationandcommunity/culturalidentity/ethnicity
-- National Statistics Socio‑Economic Classification (NS‑SEC): https://www.ons.gov.uk/methodology/classificationsandstandards/otherclassifications/thenationalstatisticssocioeconomicclassificationnssecrebasedonsoc2010
+Demographics strongly influence emissions — larger households and higher incomes typically consume more, while dense, younger, urban neighbourhoods often show lower emissions per person. The Demographics panel shows our best understanding of what types of people live in each area and how that has changed over time.
 
 
 <!-- #pbcc-community-photo -->
@@ -726,6 +685,66 @@ There are a few limitations to the family photo method that should be understood
 
 <!-- /#pbcc-community-photo -->
 
+### Methods
+
+#### Synthetic Populations: A Way to Know the Unknown
+Here is a deceptively simple question:
+How many bananas do people on your street eat each year?
+It’s the kind of question you might get at a university interview if we were trying to test your reasoning skills. In that case, you might make an assumption like:
+
+> Every household buys a bunch of bananas each week. There are 100 households on my street. Therefore, I estimate 5,200 bunches of bananas per year.
+
+But what if we wanted to make a more accurate assessment? Then we would need some real data about how many bananas people actually buy.
+
+Fortunately, we have detailed survey data on what people spend their money on in the UK. Every year, the Office for National Statistics (ONS) runs the [Living Costs and Food Survey](https://www.ons.gov.uk/peoplepopulationandcommunity/personalandhouseholdfinances/incomeandwealth/methodologies/livingcostsandfoodsurvey), where around 6,000 households provide a detailed spending diary over two weeks and fill in a survey about monthly bills and larger, less frequent purchases like holidays or buying a car.
+
+The ONS then categorises all of this spending into many different groups using an International system called [Classification of Individual Consumption by Purpose (COICOP)](https://unstats.un.org/unsd/classifications/unsdclassifications/COICOP_2018_-_pre-edited_white_cover_version_-_2018-12-26.pdf). From this data, we could get a much better estimate of how many bananas the average British household purchases each year.
+However, while this gives us a good sense of the average, how do we know if your street is the same as the average British street? Almost certainly, it isn’t. So what we’d like to do is adjust our estimate to reflect how your street differs from every other street in Britain.
+
+##### Another Example: Nappies
+Instead of bananas, let’s ask:
+How many nappies are purchased each year by people living on your street?
+This question highlights a useful metric: the number of nappies purchased is surely related to the number of small children. Households with small children probably buy quite a lot of nappies; households without small children probably buy none at all.
+
+This gives us a hint at how we can adjust the average survey data to match the characteristics of your street. Because we know something about the demographics of the people who fill out the Living Costs and Food Survey, and we know a lot about the demographics of any particular area from the census, it should be possible to select a sub-sample of the survey that more accurately reflects the demographics of your location. We might expect that as this sample is socioeconomically representative of the area, it may also represent the spending patterns of the area.
+
+##### Privacy: The Challenge with Census Data
+The Census, while incredibly detailed, presents a challenge: almost all publicly available information comes in the form of aggregated tables. Typically, for any given location, you know the number of households in various categories.
+For example:
+
+A table about household size might have values of 1, 2, 3, 4 or more people.
+
+Another table might tell us household composition, such as:
+
+* Elderly person living alone
+* Couple without children
+* Lone parent with children
+* Parents with children, etc.
+
+There is obviously some connection between these tables. For instance: An elderly person living alone is clearly a one-person household. A couple without children is clearly a two-person household. But what about a lone parent with children? That can’t be a one-person household, but it could be two, three, or four or more.
+
+To match households in the Living Costs and Food Survey, we really want the Census data in a different format: a list of households with a unique set of characteristics. Then we could look for households with the same combination of characteristics in the survey.
+
+Unfortunately, the ONS don’t publish the Census data in this format as it would identify individuals and break the privacy protections built into the Census. 
+
+##### Enter Synthetic Populations
+The challenge is converting Census tables from the format provided by the ONS into the format we want. This is where synthetic populations can help.
+
+Synthetic populations are a technique for creating individual households from aggregated data. In the Carbon & Place tool, we create our synthetic population based on five demographic characteristics:
+
+* Household size
+* Household composition
+* Tenure
+* Accommodation type
+* Number of cars
+* Output Area Classification (a place-based descriptor of areas)
+
+Fortunately, the Census does include some multivariate outputs. For example, understanding household size and household composition is made easier because we can get a table that breaks down by both variables.
+
+Unfortunately, the Census doesn’t include unlimited multivariate tables—because that would make it possible to identify individual households, which is prohibited for privacy reasons. In fact, to protect privacy, the ONS slightly manipulates Census results by shuffling households around and slightly increasing or decreasing counts.
+
+We are able to use statistical techniques to construct a population of households that is consistent with the aggregate data. This is known as a synthetic population. Synthetic populations are never perfect, but they are usually fairly close to the original population. Once we have created a population of individual households for each area, it becomes possible to pair them with corresponding households from the Living Costs and Food Survey. It is this sub-sample of the survey that we use to understand the spending behaviour of households in each neighbourhood of Great Britain.
+
 ## Land Use and Planning Explorer
 
 ### Map Layers
@@ -755,7 +774,7 @@ Railway noise can negatively impact human health and wellbeing, including sleep 
 <!-- /#landuse-railnoise -->
 
 <!-- #landuse-roadnoise -->
-####Road noise
+#### Road noise
 Road noise is a type of environmental noise pollution generated by traffic on roads, highways, and other transportation infrastructure. It can be a significant issue for people living or working near busy roads, particularly if the road operates at night.
 
 Road noise is typically caused by several factors, including vehicle movement along the road, vehicle vibrations, and engine and exhaust noise. The noise can vary depending on the type of vehicle, its speed, and the proximity of the road to buildings and other structures.
