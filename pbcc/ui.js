@@ -23,6 +23,7 @@ var electricChart;
 var carEmissionsChart;
 var vanEmissionsChart;
 var bikeCompanyChart;
+var publicTransportChart;
 
 var otherHeatingChart;
 var otherHousingChart;
@@ -203,33 +204,34 @@ makeChartOverview = function(){
 
 makeChartHistorical = function(){
   
-  // Destroy old charts
+  	// Destroy old charts
 	if(overviewChart){overviewChart.destroy()}
 	if(historicalChart){historicalChart.destroy()}
-  if(consumptionFoodChart){consumptionFoodChart.destroy()}
-  if(consumptionAlcoholChart){consumptionAlcoholChart.destroy()}
-  if(consumptionFurnishingsChart){consumptionFurnishingsChart.destroy()}
-  if(consumptionClothingChart){consumptionClothingChart.destroy()}
-  if(consumptionCommunicationChart){consumptionCommunicationChart.destroy()}
-  if(consumptionRecreationChart){consumptionRecreationChart.destroy()}
-  if(consumptionRestaurantsChart){consumptionRestaurantsChart.destroy()}
-  if(consumptionHealthChart){consumptionHealthChart.destroy()}
-  if(consumptionEducationChart){consumptionEducationChart.destroy()}
-  if(consumptionMiscellaneousChart){consumptionMiscellaneousChart.destroy()}
-  if(consumptionTotalChart){consumptionTotalChart.destroy()}
-  if(consumptionFlightsChart){consumptionFlightsChart.destroy()}
-  if(consumptionVehiclePurchaseChart){consumptionVehiclePurchaseChart.destroy()}
-  if(consumptionVehicleOtherChart){consumptionVehicleOtherChart.destroy()}
-  if(gasChart){gasChart.destroy()}
-  if(electricChart){electricChart.destroy()}
-  if(otherHeatingChart){otherHeatingChart.destroy()}
-  if(otherHousingChart){otherHousingChart.destroy()}
-  if(carEmissionsChart){carEmissionsChart.destroy()}
-  if(vanEmissionsChart){vanEmissionsChart.destroy()}
-  if(bikeCompanyChart){bikeCompanyChart.destroy()}
+	if(consumptionFoodChart){consumptionFoodChart.destroy()}
+	if(consumptionAlcoholChart){consumptionAlcoholChart.destroy()}
+	if(consumptionFurnishingsChart){consumptionFurnishingsChart.destroy()}
+	if(consumptionClothingChart){consumptionClothingChart.destroy()}
+	if(consumptionCommunicationChart){consumptionCommunicationChart.destroy()}
+	if(consumptionRecreationChart){consumptionRecreationChart.destroy()}
+	if(consumptionRestaurantsChart){consumptionRestaurantsChart.destroy()}
+	if(consumptionHealthChart){consumptionHealthChart.destroy()}
+	if(consumptionEducationChart){consumptionEducationChart.destroy()}
+	if(consumptionMiscellaneousChart){consumptionMiscellaneousChart.destroy()}
+	if(consumptionTotalChart){consumptionTotalChart.destroy()}
+	if(consumptionFlightsChart){consumptionFlightsChart.destroy()}
+	if(consumptionVehiclePurchaseChart){consumptionVehiclePurchaseChart.destroy()}
+	if(consumptionVehicleOtherChart){consumptionVehicleOtherChart.destroy()}
+	if(gasChart){gasChart.destroy()}
+	if(electricChart){electricChart.destroy()}
+	if(otherHeatingChart){otherHeatingChart.destroy()}
+	if(otherHousingChart){otherHousingChart.destroy()}
+	if(carEmissionsChart){carEmissionsChart.destroy()}
+	if(vanEmissionsChart){vanEmissionsChart.destroy()}
+	if(bikeCompanyChart){bikeCompanyChart.destroy()}
+	if(publicTransportChart){publicTransportChart.destroy()}
   
   
-  // Create an object to store data for each category
+  	// Create an object to store data for each category
 	var component = [
 		    // Label, field (e.g. Gas => dgkp), background colour, border colour, gradelable, tableValue, tableGrade
 				['Gas'                  , 'dom_gas_kgco2e_percap', 'rgb(184, 216, 233)', 'rgb(0,0,0)', 'dom_gas_grade' ,'data_gas_emissions_household','data_gas_emissions_grade'],
@@ -250,7 +252,7 @@ makeChartHistorical = function(){
 				['Cars'                 , 'car_kgco2e_percap' , 'rgb(127,0,0)'      , 'rgb(0,0,0)', 'car_grade'  ,'data_car_emissions','data_car_emissions_grade'],
 				['Vans'                 , 'van_kgco2e_percap' , 'rgb(179,0,0)'      , 'rgb(0,0,0)', 'van_grade'  ,'data_van_emissions','data_van_emissions_grade'],
 				['Bikes & Company Vehicles' , 'company_bike_kgco2e_percap', 'rgb(215,48,31)'    , 'rgb(0,0,0)', 'company_bike_grade' ,'data_bikes_company_emissions','data_bikes_company_emissions_grade'],
-				['Vehicle Maintaince'   , 'transport_optranequip_other_kgco2e_percap','rgb(253,187,132)'  , 'rgb(0,0,0)', 'transport_optranequip_other_grade','data_vehicle_maintaince_emissions','data_vehicle_maintaince_emissions_grade'],
+				['Vehicle Maintenance'   , 'transport_optranequip_other_kgco2e_percap','rgb(253,187,132)'  , 'rgb(0,0,0)', 'transport_optranequip_other_grade','data_vehicle_maintaince_emissions','data_vehicle_maintaince_emissions_grade'],
 				['Public Transport'     , 'transport_pt_kgco2e_percap', 'rgb(254,232,200)'  , 'rgb(0,0,0)', 'transport_pt_grade' ,'data_public_transport_emissions','data_public_transport_emissions_grade'],
 				['Flights'              , 'flights_kgco2e_percap', 'rgb(254,178,76)'   , 'rgb(0,0,0)', 'flights_grade'  ,'data_flights_emissions','data_flights_emissions_grade'],
 				['Goods & Services'     , 'goods_services_combined_kgco2e_percap', 'rgb(254,178,76)'  , 'rgb(0,0,0)', 'goods_services_combined_grade','data_consumption_emissions','data_consumption_emissions_grade']
@@ -276,7 +278,7 @@ makeChartHistorical = function(){
 		['Cars LA'                 , 'car_kgco2e_percap' , 'rgb(157,130,255)'      , 'rgb(0,0,0)'],
 		['Vans LA'                 , 'van_kgco2e_percap' , 'rgb(157,130,255)'      , 'rgb(0,0,0)'],
 		['Bikes & Company Vehicles LA' , 'company_bike_kgco2e_percap', 'rgb(157,130,255)'    , 'rgb(0,0,0)'],
-		['Vehicle Maintaince LA'   , 'transport_optranequip_other_kgco2e_percap','rgb(157,130,255)', 'rgb(0,0,0)'  ],
+		['Vehicle Maintenance LA'   , 'transport_optranequip_other_kgco2e_percap','rgb(157,130,255)', 'rgb(0,0,0)'  ],
 		['Public Transport LA'     , 'transport_pt_kgco2e_percap', 'rgb(157,130,255)'  , 'rgb(0,0,0)'],
 		['Flights LA'              , 'flights_kgco2e_percap', 'rgb(157,130,255)'   , 'rgb(0,0,0)'],
 		['Goods & Services LA'     , 'goods_services_combined_kgco2e_percap', 'rgb(157,130,255)', 'rgb(0,0,0)']
@@ -302,7 +304,7 @@ makeChartHistorical = function(){
 		['Cars Similar Areas'                 , 'car_kgco2e_percap' , 'rgb(255, 130, 157)'      , 'rgb(0,0,0)'],
 		['Vans Similar Areas'                 , 'van_kgco2e_percap' , 'rgb(255, 130, 157)'      , 'rgb(0,0,0)'],
 		['Bikes & Company Vehicles Similar Areas' , 'company_bike_kgco2e_percap', 'rgb(255, 130, 157)'    , 'rgb(0,0,0)'],
-		['Vehicle Maintaince Similar Areas'   , 'transport_optranequip_other_kgco2e_percap','rgb(255, 130, 157)', 'rgb(0,0,0)'  ],
+		['Vehicle Maintenance Similar Areas'   , 'transport_optranequip_other_kgco2e_percap','rgb(255, 130, 157)', 'rgb(0,0,0)'  ],
 		['Public Transport Similar Areas'     , 'transport_pt_kgco2e_percap', 'rgb(255, 130, 157)'  , 'rgb(0,0,0)'],
 		['Flights Similar Areas'              , 'flights_kgco2e_percap', 'rgb(255, 130, 157)'   , 'rgb(0,0,0)'],
 		['Goods & Services Similar Areas'     , 'goods_services_combined_kgco2e_percap', 'rgb(255, 130, 157)', 'rgb(0,0,0)']
@@ -739,27 +741,28 @@ overviewChart = new Chart(document.getElementById('overview-chart').getContext('
 		return chart;
 	}
   
-  consumptionTotalChart = makeStandardConsumptionChart('consumptionTotal-chart','Goods & Services')
-  consumptionFoodChart = makeStandardConsumptionChart('consumptionFood-chart','Food & Drink')
-  consumptionAlcoholChart = makeStandardConsumptionChart('consumptionAlcohol-chart','Alcohol & Tobacco')
-  consumptionFurnishingsChart = makeStandardConsumptionChart('consumptionFurnishings-chart','Furnishings')
-  consumptionClothingChart = makeStandardConsumptionChart('consumptionClothing-chart','Clothing')
-  consumptionCommunicationChart = makeStandardConsumptionChart('consumptionCommunication-chart','Communications')
-  consumptionRecreationChart = makeStandardConsumptionChart('consumptionRecreation-chart','Recreation')
-  consumptionRestaurantsChart = makeStandardConsumptionChart('consumptionRestaurants-chart','Restaurants & Hotels')
-  consumptionHealthChart = makeStandardConsumptionChart('consumptionHealth-chart','Health')
-  consumptionEducationChart = makeStandardConsumptionChart('consumptionEducation-chart','Education')
-  consumptionMiscellaneousChart = makeStandardConsumptionChart('consumptionMiscellaneous-chart','Miscellaneous')
-  consumptionFlightsChart = makeStandardConsumptionChart('consumptionFlights-chart','Flights')
-  consumptionVehiclePurchaseChart = makeStandardConsumptionChart('consumptionVehiclePurchase-chart','Vehicle Purchase')
-  consumptionVehicleOtherChart = makeStandardConsumptionChart('consumptionVehicleOther-chart','Vehicle Maintaince')
-  gasChart = makeStandardConsumptionChart('gasEmissions-chart','Gas')
-  electricChart = makeStandardConsumptionChart('electricityEmissions-chart','Electricity')
-  otherHeatingChart = makeStandardConsumptionChart('heatingOther-chart','Other Heating')
-  otherHousingChart = makeStandardConsumptionChart('housingOther-chart','Other Housing')
-  carEmissionsChart = makeStandardConsumptionChart('carEmissions-chart','Cars')
-  vanEmissionsChart = makeStandardConsumptionChart('vanEmissions-chart','Vans')
-  bikeCompanyChart = makeStandardConsumptionChart('bikeCompany-chart','Bikes & Company Vehicles')
+  consumptionTotalChart = makeStandardConsumptionChart('consumptionTotal-chart','Goods & Services');
+  consumptionFoodChart = makeStandardConsumptionChart('consumptionFood-chart','Food & Drink');
+  consumptionAlcoholChart = makeStandardConsumptionChart('consumptionAlcohol-chart','Alcohol & Tobacco');
+  consumptionFurnishingsChart = makeStandardConsumptionChart('consumptionFurnishings-chart','Furnishings');
+  consumptionClothingChart = makeStandardConsumptionChart('consumptionClothing-chart','Clothing');
+  consumptionCommunicationChart = makeStandardConsumptionChart('consumptionCommunication-chart','Communications');
+  consumptionRecreationChart = makeStandardConsumptionChart('consumptionRecreation-chart','Recreation');
+  consumptionRestaurantsChart = makeStandardConsumptionChart('consumptionRestaurants-chart','Restaurants & Hotels');
+  consumptionHealthChart = makeStandardConsumptionChart('consumptionHealth-chart','Health');
+  consumptionEducationChart = makeStandardConsumptionChart('consumptionEducation-chart','Education');
+  consumptionMiscellaneousChart = makeStandardConsumptionChart('consumptionMiscellaneous-chart','Miscellaneous');
+  consumptionFlightsChart = makeStandardConsumptionChart('consumptionFlights-chart','Flights');
+  consumptionVehiclePurchaseChart = makeStandardConsumptionChart('consumptionVehiclePurchase-chart','Vehicle Purchase');
+  consumptionVehicleOtherChart = makeStandardConsumptionChart('consumptionVehicleOther-chart','Vehicle Maintaince');
+  gasChart = makeStandardConsumptionChart('gasEmissions-chart','Gas');
+  electricChart = makeStandardConsumptionChart('electricityEmissions-chart','Electricity');
+  otherHeatingChart = makeStandardConsumptionChart('heatingOther-chart','Other Heating');
+  otherHousingChart = makeStandardConsumptionChart('housingOther-chart','Other Housing');
+  carEmissionsChart = makeStandardConsumptionChart('carEmissions-chart','Cars');
+  vanEmissionsChart = makeStandardConsumptionChart('vanEmissions-chart','Vans');
+  bikeCompanyChart = makeStandardConsumptionChart('bikeCompany-chart','Bikes & Company Vehicles');
+  publicTransportChart = makeStandardConsumptionChart('publicTransport-chart','Public Transport');
 
 }
 
