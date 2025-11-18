@@ -617,7 +617,7 @@ Key items:
 
 - **Community photo**: A pictorial summary of common household types in the neighbourhood (more details below).
 - **Age chart**: Charts showing the total population broken down by age and the number of households and dwellings over time.
-- **LSOA Characteritics**: Headline information such as which Local Authority the LSOA is in.
+- **LSOA Characteristics**: Headline information such as which Local Authority the LSOA is in.
 - **ONS pen portrait**: The neighbourhood's description based on the Output Area Classifications produced by the ONS.
 
 Why this matters:
