@@ -32,7 +32,7 @@ var lsoaLocationData = {};
 
 manageCharts =  function (locationId, mapLayerId){
   if(mapLayerId == 'zones'){
-    const p = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/epc_dom/' + locationId + '.json')
+    const p = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/epc_dom/v2/' + locationId + '.json')
         .then(function (lsoaData) {
             lsoaLocationData = lsoaData[0];
             makeChartLSOA();
@@ -344,14 +344,14 @@ makeChartLSOA = function(){
   // EPC chart
   
   epcratingData = [
-  lsoaLocationData.eA,
-  lsoaLocationData.eB,
-  lsoaLocationData.eC,
-  lsoaLocationData.eD,
-  lsoaLocationData.eE,
-  lsoaLocationData.eF,
-  lsoaLocationData.eG,
-  lsoaLocationData.eo,
+  lsoaLocationData.epc_A,
+  lsoaLocationData.epc_B,
+  lsoaLocationData.epc_C,
+  lsoaLocationData.epc_D,
+  lsoaLocationData.epc_E,
+  lsoaLocationData.epc_F,
+  lsoaLocationData.epc_G,
+  lsoaLocationData.epc_o,
   ];
  
 	epcratingChart = makePieChart(epcratingChart,'epcrating-chart','EPC rating',
@@ -362,18 +362,18 @@ makeChartLSOA = function(){
   // Building type
   
   buildingtypeData = [
-  lsoaLocationData.thd,
-  lsoaLocationData.ths,
-  lsoaLocationData.thm,
-  lsoaLocationData.the,
-  lsoaLocationData.tf,
-  lsoaLocationData.tbd,
-  lsoaLocationData.tbs,
-  lsoaLocationData.tbm,
-  lsoaLocationData.tbe,
-  lsoaLocationData.tm,
-  lsoaLocationData.tp,
-  lsoaLocationData.Bto,
+  lsoaLocationData.type_house_detached,
+  lsoaLocationData.type_house_semi,
+  lsoaLocationData.type_house_midterrace,
+  lsoaLocationData.type_house_endterrace,
+  lsoaLocationData.type_flat,
+  lsoaLocationData.type_bungalow_detached,
+  lsoaLocationData.type_bungalow_semi,
+  lsoaLocationData.type_bungalow_midterrace,
+  lsoaLocationData.type_bungalow_endterrace,
+  lsoaLocationData.type_maisonette,
+  lsoaLocationData.type_parkhome,
+  lsoaLocationData.type_other,
   ];
  
 	buildingtypeChart = makePieChart(buildingtypeChart,'buildingtype-chart','Building type',
@@ -386,10 +386,10 @@ makeChartLSOA = function(){
   // Tenure type
   
   tenureData = [
-  lsoaLocationData.to,
-  lsoaLocationData.Btp,
-  lsoaLocationData.ts,
-  lsoaLocationData.tu
+  lsoaLocationData.tenure_owner,
+  lsoaLocationData.tenure_privaterent,
+  lsoaLocationData.tenure_socialrent,
+  lsoaLocationData.tenure_unknown
   ];
  
   tenureChart = makePieChart(tenureChart,'tenure-chart','Tenure',
@@ -400,18 +400,18 @@ makeChartLSOA = function(){
   // Age
 
   ageData = [
-  lsoaLocationData.ap,
-  lsoaLocationData.a19001929,
-  lsoaLocationData.a19301949,
-  lsoaLocationData.a19501966,
-  lsoaLocationData.a19671975,
-  lsoaLocationData.a19761982,
-  lsoaLocationData.a19831990,
-  lsoaLocationData.a19911995,
-  lsoaLocationData.a19962002,
-  lsoaLocationData.a20032006,
-  lsoaLocationData.Bap,
-  lsoaLocationData.au,
+  lsoaLocationData.age_pre1900,
+  lsoaLocationData.age_19001929,
+  lsoaLocationData.age_19301949,
+  lsoaLocationData.age_19501966,
+  lsoaLocationData.age_19671975,
+  lsoaLocationData.age_19761982,
+  lsoaLocationData.age_19831990,
+  lsoaLocationData.age_19911995,
+  lsoaLocationData.age_19962002,
+  lsoaLocationData.age_20032006,
+  lsoaLocationData.age_post2012,
+  lsoaLocationData.age_unknown,
   ];
  
   ageChart = makePieChart(ageChart,'age-chart','Building Age',
@@ -425,13 +425,13 @@ makeChartLSOA = function(){
   // TODO: Data looks wrong
   
   floorData = [
-    lsoaLocationData.fv,
-    lsoaLocationData.fg,
-    lsoaLocationData.fa,
-    lsoaLocationData.fp,
-    lsoaLocationData.Bfv,
-    lsoaLocationData.fb,
-    lsoaLocationData.fo,
+    lsoaLocationData.floor_verygood,
+    lsoaLocationData.floor_good,
+    lsoaLocationData.floor_average,
+    lsoaLocationData.floor_poor,
+    lsoaLocationData.floor_verypoor,
+    lsoaLocationData.floor_below,
+    lsoaLocationData.floor_other,
   ];
  
   floorChart = makePieChart(floorChart,'floor-chart','',
@@ -442,14 +442,14 @@ makeChartLSOA = function(){
   // floord
   
   floordData = [
-    lsoaLocationData.fs,
-    lsoaLocationData.Bfs,
-    lsoaLocationData.Cfs,
-    lsoaLocationData.Dfs,
-    lsoaLocationData.Efs,
-    lsoaLocationData.Ffs,
-    lsoaLocationData.Bfb,
-    lsoaLocationData.Bfo
+    lsoaLocationData.floord_soliduninsulated,
+    lsoaLocationData.floord_solidinsulated,
+    lsoaLocationData.floord_solidlimitedinsulated,
+    lsoaLocationData.floord_suspendeduninsulated,
+    lsoaLocationData.floord_suspendedinsualted,
+    lsoaLocationData.floord_suspendedlimitedinsulated,
+    lsoaLocationData.floord_below,
+    lsoaLocationData.floor_other
   ];
  
   floordChart = makePieChart(floordChart,'floord-chart','',
@@ -460,12 +460,12 @@ makeChartLSOA = function(){
   // window
   
   windowData = [
-    lsoaLocationData.wv,
-    lsoaLocationData.wg,
-    lsoaLocationData.wa,
-    lsoaLocationData.wp,
-    lsoaLocationData.Bwv,
-    lsoaLocationData.wo
+    lsoaLocationData.window_verygood,
+    lsoaLocationData.window_good,
+    lsoaLocationData.window_average,
+    lsoaLocationData.window_poor,
+    lsoaLocationData.window_verypoor,
+    lsoaLocationData.window_other
   ];
  
   windowChart = makePieChart(windowChart,'window-chart','',
@@ -476,12 +476,12 @@ makeChartLSOA = function(){
   // water
   
   waterData = [
-    lsoaLocationData.Cwv,
-    lsoaLocationData.Bwg,
-    lsoaLocationData.Bwa,
-    lsoaLocationData.Bwp,
-    lsoaLocationData.Dwv,
-    lsoaLocationData.Bwo,
+    lsoaLocationData.water_verygood,
+    lsoaLocationData.water_good,
+    lsoaLocationData.water_average,
+    lsoaLocationData.water_poor,
+    lsoaLocationData.water_verypoor,
+    lsoaLocationData.water_other,
 
   ];
  
@@ -493,12 +493,12 @@ makeChartLSOA = function(){
   // waterd
   
   waterdData = [
-    lsoaLocationData.wm,
-    lsoaLocationData.wi,
-    lsoaLocationData.wc,
-    lsoaLocationData.Bwi,
-    lsoaLocationData.Cwg,
-    lsoaLocationData.Dwo
+    lsoaLocationData.waterd_mainsystem,
+    lsoaLocationData.waterd_immersion,
+    lsoaLocationData.waterd_community,
+    lsoaLocationData.waterd_instantaneous,
+    lsoaLocationData.waterd_gasmultipoint,
+    lsoaLocationData.walld_other
   ];
  
   waterdChart = makePieChart(waterdChart,'waterd-chart','',
@@ -509,11 +509,11 @@ makeChartLSOA = function(){
   // glazing
   
   glazingData = [
-    lsoaLocationData.gs,
-    lsoaLocationData.gd,
-    lsoaLocationData.gt,
-    lsoaLocationData.Bgs,
-    lsoaLocationData.gu
+    lsoaLocationData.glazing_single,
+    lsoaLocationData.glazing_double,
+    lsoaLocationData.glazing_triple,
+    lsoaLocationData.glazing_secondary,
+    lsoaLocationData.glazing_unknown
   ];
  
   glazingChart = makePieChart(glazingChart,'glazing-chart','',
@@ -524,12 +524,12 @@ makeChartLSOA = function(){
   // wall
   
   wallData = [
-    lsoaLocationData.Ewv,
-    lsoaLocationData.Dwg,
-    lsoaLocationData.Cwa,
-    lsoaLocationData.Cwp,
-    lsoaLocationData.Fwv,
-    lsoaLocationData.Cwo
+    lsoaLocationData.wall_verygood,
+    lsoaLocationData.wall_good,
+    lsoaLocationData.wall_average,
+    lsoaLocationData.wall_poor,
+    lsoaLocationData.wall_verypoor,
+    lsoaLocationData.wall_other
 
   ];
  
@@ -541,13 +541,13 @@ makeChartLSOA = function(){
   // walld
   
   walldData = [
-    lsoaLocationData.Bwc,
-    lsoaLocationData.ws,
-    lsoaLocationData.wt,
-    lsoaLocationData.Bws,
-    lsoaLocationData.Ewg,
-    lsoaLocationData.Cws,
-    lsoaLocationData.Ewo
+    lsoaLocationData.walld_cavity,
+    lsoaLocationData.walld_solid,
+    lsoaLocationData.walld_timber,
+    lsoaLocationData.walld_sandlimestone,
+    lsoaLocationData.walld_granitewhinstine,
+    lsoaLocationData.walld_system,
+    lsoaLocationData.walld_other
   ];
  
   walldChart = makePieChart(walldChart,'walld-chart','',
@@ -558,13 +558,13 @@ makeChartLSOA = function(){
   // roof
   
   roofData = [
-    lsoaLocationData.rv,
-    lsoaLocationData.rg,
-    lsoaLocationData.ra,
-    lsoaLocationData.rp,
-    lsoaLocationData.Brv,
-    lsoaLocationData.Bra,
-    lsoaLocationData.ro
+    lsoaLocationData.roof_verygood,
+    lsoaLocationData.roof_good,
+    lsoaLocationData.roof_average,
+    lsoaLocationData.roof_poor,
+    lsoaLocationData.roof_verypoor,
+    lsoaLocationData.roof_above,
+    lsoaLocationData.roof_other
 
   ];
  
@@ -576,12 +576,12 @@ makeChartLSOA = function(){
   // roofd
   
   roofdData = [
-    lsoaLocationData.Brp,
-    lsoaLocationData.rf,
-    lsoaLocationData.rr,
-    lsoaLocationData.rt,
-    lsoaLocationData.Cra,
-    lsoaLocationData.Bro
+    lsoaLocationData.roofd_pitched,
+    lsoaLocationData.roofd_flat,
+    lsoaLocationData.roofd_room,
+    lsoaLocationData.roofd_thatched,
+    lsoaLocationData.roofd_above,
+    lsoaLocationData.roofd_other
   ];
  
   roofdChart = makePieChart(roofdChart,'roofd-chart','',
@@ -592,14 +592,14 @@ makeChartLSOA = function(){
   // mainheatdesc
   
   mainheatdescData = [
-    lsoaLocationData.Bmg,
-    lsoaLocationData.Bmo,
-    lsoaLocationData.ms,
-    lsoaLocationData.Bmp,
-    lsoaLocationData.mr,
-    lsoaLocationData.mh,
-    lsoaLocationData.mc,
-    lsoaLocationData.Emo
+    lsoaLocationData.mainheatdesc_gasboiler,
+    lsoaLocationData.mainheatdesc_oilboiler,
+    lsoaLocationData.mainheatdesc_storageheater,
+    lsoaLocationData.mainheatdesc_portableheater,
+    lsoaLocationData.mainheatdesc_roomheater,
+    lsoaLocationData.mainheatdesc_heatpump,
+    lsoaLocationData.mainheatdesc_community,
+    lsoaLocationData.mainheatdesc_other
   ];
  
   mainheatdescChart = makePieChart(mainheatdescChart,'mainheatdesc-chart','',
@@ -610,12 +610,12 @@ makeChartLSOA = function(){
   // mainheat
   
   mainheatData = [
-    lsoaLocationData.mv,
-    lsoaLocationData.mg,
-    lsoaLocationData.ma,
-    lsoaLocationData.mp,
-    lsoaLocationData.Bmv,
-    lsoaLocationData.mo
+    lsoaLocationData.mainheat_verygood,
+    lsoaLocationData.mainheat_good,
+    lsoaLocationData.mainheat_average,
+    lsoaLocationData.mainheat_poor,
+    lsoaLocationData.mainheat_verypoor,
+    lsoaLocationData.mainheat_other
 
   ];
  
@@ -628,13 +628,13 @@ makeChartLSOA = function(){
   // mainfuel
   
   mainfuelData = [
-    lsoaLocationData.mm,
-    lsoaLocationData.me,
-    lsoaLocationData.Cmo,
-    lsoaLocationData.Bmc,
-    lsoaLocationData.ml,
-    lsoaLocationData.mb,
-    lsoaLocationData.md
+    lsoaLocationData.mainfuel_mainsgas,
+    lsoaLocationData.mainfuel_electric,
+    lsoaLocationData.mainfuel_oil,
+    lsoaLocationData.mainfuel_coal,
+    lsoaLocationData.mainfuel_lpg,
+    lsoaLocationData.mainfuel_biomass,
+    lsoaLocationData.mainfuel_dualfuel
   ];
  
   mainfuelChart = makePieChart(mainfuelChart,'mainfuel-chart','',
@@ -645,12 +645,12 @@ makeChartLSOA = function(){
   // mainheatcontrol
   
   mainheatcontrolData = [
-    lsoaLocationData.Cmv,
-    lsoaLocationData.Cmg,
-    lsoaLocationData.Bma,
-    lsoaLocationData.Cmp,
-    lsoaLocationData.Dmv,
-    lsoaLocationData.Dmo
+    lsoaLocationData.mainheatcontrol_verygood,
+    lsoaLocationData.mainheatcontrol_good,
+    lsoaLocationData.mainheatcontrol_average,
+    lsoaLocationData.mainheatcontrol_poor,
+    lsoaLocationData.mainheatcontrol_verypoor,
+    lsoaLocationData.mainheatcontrol_other
 
   ];
  
@@ -662,11 +662,11 @@ makeChartLSOA = function(){
   // controld
   
   controldData = [
-    lsoaLocationData.cp,
-    lsoaLocationData.Bcp,
-    lsoaLocationData.Ccp,
-    lsoaLocationData.Dcp,
-    lsoaLocationData.co
+    lsoaLocationData.controld_progthermtrvs,
+    lsoaLocationData.controld_progtherm,
+    lsoaLocationData.controld_progtrvsbypass,
+    lsoaLocationData.controld_pzones,
+    lsoaLocationData.controld_other
   ];
  
   controldChart = makePieChart(controldChart,'controld-chart','',
@@ -677,12 +677,12 @@ makeChartLSOA = function(){
   // light
   
   lightData = [
-    lsoaLocationData.lv,
-    lsoaLocationData.lg,
-    lsoaLocationData.la,
-    lsoaLocationData.lp,
-    lsoaLocationData.Blv,
-    lsoaLocationData.lo
+    lsoaLocationData.light_verygood,
+    lsoaLocationData.light_good,
+    lsoaLocationData.light_average,
+    lsoaLocationData.light_poor,
+    lsoaLocationData.light_verypoor,
+    lsoaLocationData.light_other
   ];
  
   lightChart = makePieChart(lightChart,'light-chart','',
@@ -693,8 +693,8 @@ makeChartLSOA = function(){
   // solarpv
   
   solarpvData = [
-    lsoaLocationData.sy,
-    lsoaLocationData.sn
+    lsoaLocationData.solarpv_yes,
+    lsoaLocationData.solarpv_no
   ];
  
   solarpvChart = makePieChart(solarpvChart,'solarpv-chart','',
@@ -705,8 +705,8 @@ makeChartLSOA = function(){
   // solarthermal
   
   solarthermalData = [
-    lsoaLocationData.Bsy,
-    lsoaLocationData.Bsn
+    lsoaLocationData.solarthermal_yes,
+    lsoaLocationData.solarthermal_no
   ];
  
   solarthermalChart = makePieChart(solarthermalChart,'solarthermal-chart','',
