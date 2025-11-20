@@ -31,10 +31,8 @@ var postcodeLocationData = {};
 var lsoaLocationData = {};
 
 manageCharts =  function (locationId, mapLayerId){
-  
   if(mapLayerId == 'zones'){
-    
-    capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/epc_dom/' + locationId + '.json')
+    const p = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/epc_dom/' + locationId + '.json')
         .then(function (lsoaData) {
             lsoaLocationData = lsoaData[0];
             makeChartLSOA();
@@ -43,29 +41,27 @@ manageCharts =  function (locationId, mapLayerId){
             alert('Failed to get access data for this location, or to process it correctly. Please try refreshing the page.');
             console.log(error);
         });
-  
-    
+
+    return p;
   } else if (mapLayerId == 'postcodes'){
-    
-    capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/Postcode/' + locationId + '.json')
+    const p = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/Postcode/' + locationId + '.json')
         .then(function (postcodeData) {
             postcodeLocationData = postcodeData;
-            makeChartPostcode();
+            makeChartPostcode(locationId);
         })
         .catch(function (error) {
             alert('Failed to get access data for this location, or to process it correctly. Please try refreshing the page.');
             console.log(error);
         });
+
+    return p;
   } else {
     console.log('Unknown layer for chart management: ' + mapLayerId);
+    return Promise.resolve();
   }
-  
-  
-  
 }
 
-
-makeChartPostcode = function(){
+makeChartPostcode = function(locationId){
   
   console.log("Make postcode charts");
   // Access Chart
@@ -82,6 +78,10 @@ makeChartPostcode = function(){
   if(metersChart){
 		metersChart.destroy();
 	}
+
+  // Set modal title
+  const title = locationId + ' postcode summary';
+	document.querySelector('#postcodes-chartsmodal .modal-title').innerHTML = title;
   
   // Get Control Settings
   const setting_emissions = document.getElementById("select_emissions").value;
@@ -336,8 +336,6 @@ makeChartPostcode = function(){
   });
   
 }
-
-
 
 makeChartLSOA = function(){
   
@@ -720,9 +718,6 @@ makeChartLSOA = function(){
   
 }
 
-
-
-
 makePieChart = function(chartVar, name, label, data, colours, labels){
   if (chartVar) {
     chartVar.destroy();
@@ -748,4 +743,3 @@ makePieChart = function(chartVar, name, label, data, colours, labels){
 	
 	return chartVar;
 }
-

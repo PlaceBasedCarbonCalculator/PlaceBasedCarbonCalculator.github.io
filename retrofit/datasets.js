@@ -10,7 +10,7 @@ const datasets_extra = {
 			'type': 'fill',
 			'source': {
 			'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/zones_retrofit.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/zones_retrofit_20251115.pmtiles',
 				},
 			'source-layer': 'zones',
 			'paint': {
@@ -881,7 +881,8 @@ function EPCNonDomStyling (layerId, map, settings, datasets, createLegend /* cal
 function zonesStyling (layerId, map, settings, datasets, createLegend /* callback */)
 {
 	
-	console.log("zoneStyling");
+	console.log("zoneStyling " + layerId);
+	
 	// Update the legend (even if map layer is off)
 	const field = document.querySelector ('select.updatelayer[data-layer="zones"][name="field"]').value
 	createLegend (datasets.legends.zones, field, 'zoneslegend'); // Fixed Legeng for Grades
@@ -890,21 +891,15 @@ function zonesStyling (layerId, map, settings, datasets, createLegend /* callbac
 	const daysymetricMode = document.querySelector ('input.updatelayer[data-layer="zones"][name="daysymetricmode"]').checked;
 	
 	// Set paint properties
-	//map.setPaintProperty (layerId, 'fill-color', ['step', ['get', field], getStyleColumn (field, datasets)]);
 	map.setPaintProperty (layerId, 'fill-color', ['match', ['get', field], ...getStyleColumnZones (field, datasets)]);
 	map.setPaintProperty (layerId, 'fill-opacity', (daysymetricMode ? 0.1 : 0.8)); // Very faded-out in daysymetric mode, as the buildings are coloured
 	map.setPaintProperty (layerId, 'fill-outline-color', 'rgba(0, 0, 0, 0.2)'); 
 	
 	// Set buildings layer colour/visibility
 	const buildingColour = getBuildingsColour(settings);
-	console.log((buildingColour || '#9c9898'));
-	map.setLayoutProperty ('buildings', 'visibility', (buildingColour ? 'visible' : 'none'));
-	
-	console.log("before");
 	map.setPaintProperty ('buildings', 'fill-extrusion-color', (buildingColour || '#9c9898'))
-	console.log("after");
-	
-	
+	map.setLayoutProperty ('buildings', 'visibility', (buildingColour ? 'visible' : 'none'));
+		
 }
 
 // Function to determine the buildings colour
@@ -927,6 +922,7 @@ function getBuildingsColour (settings)
 	console.log("Default to gray")
 	return '#9c9898';
 }
+
 
 
 

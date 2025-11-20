@@ -5,7 +5,7 @@
 		
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="Description" content="An interactive map of land use">
+		<meta name="Description" content="Visualise land use and planning designations across Great Britain, explore green spaces, development constraints and how land use influences local carbon footprints and resilience.">
 		
 		<!-- Google tag (gtag.js) -->
   	<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q11V10CDRV"></script>
@@ -38,7 +38,7 @@
 		<meta name="twitter:card" content="summary_large_image">
 		<meta property="og:site_name" content="Carbon & Place">
 		<meta name="twitter:image:alt" content="Carbon & Place thumbnail">
-		<title>Land Use and Planning Explorer</title>
+		<title>Land Use Explorer — Planning, Land Cover &amp; Emissions</title>
 		
 		<!-- PWA support -->
 		<link rel="manifest" href="/manifest.webmanifest">
@@ -107,10 +107,19 @@
 		<div id="welcome-modal" class="welcome-modal">
 			<span class="modal-close">&times;</span>
 			<div>
-				<h3>Land Use and Planning Explorer</h3>
+				<h1>Land Use and Planning Explorer</h1>
 				<p style="background-color: #f58291"><b>Beta Tool</b>: This tool is still in development and may contain preliminary analysis, bugs, or incomplete features. Beta tools are intended to provide an early look at upcoming features and so results should be treated with care. The tool may change at any time without warning. We are interested in your feedback and you can report issues or bugs on <a href="https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/issues" target="_blank" rel="noopener noreferrer">GitHub</a></p>
 				
 				<p>The Land Use and Planning Explorer provides more detail on how land is used in the UK. For a full explination of the tool please see the <a href="/manual/#landuseandplanningexplorer">manual</a>. You can also access sections of the manual via the help buttons (<i class="fa fa-question-circle" aria-hidden="true"></i>)</p>
+				
+				<div class="feedbackbox">
+					<div class="feedback-text">
+						<h2>How can we improve this tool?</h2>
+						<p>We would love to hear how you are using Carbon & Place and how we can make our tools more useful.</p>
+						<p><a href="/about/feedback" class="opentool">Submit Feedback</a></p>
+					</div>
+					<img src="/images/ui/feedback.webp" alt="Feedback" loading="lazy" class="feedback-image">
+				</div>
 				
 				<p>Last updated: <span id="updatedate"></span>. You may need to <a href="https://www.minitool.com/news/f5-vs-ctrl-f5.html">clear your browser cache</a> to see the latest updates.</p>
 			</div>
@@ -124,6 +133,11 @@
 				<button class="button buttonNO" value=""><strong>No</strong></button>
 			</p>
 		</div>
+
+			<!-- Loading Spinner -->
+			<div class="spinner">
+				<img src="/images/ui/spinner.svg" alt="Loading..." loading="lazy" />
+			</div>
 		
 		<!-- Main Content -->
 		<div class="mapcontent">
@@ -154,7 +168,7 @@
 			<div class="panel">
 				<p><label><input type="checkbox" class="showlayer" data-layer="floodzones" value="false"> Flood Risk</label><button data-help="landuse-floodzones" aria-label="Help flood" class="helpbutton"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 			
-			<div class="legendHorizontal"><div class="l_rHorizontal">
+			<div class="legendContextual legendHorizontal"><div class="l_rHorizontal">
 			  <div class="lbHorizontal"><span style="background-color: #ffffff"></span>Low Risk</div>
 			  <div class="lbHorizontal"><span style="background-color: #4575b4"></span>Medium Risk</div>
 			  <div class="lbHorizontal"><span style="background-color: #313695"></span>High Risk</div>
@@ -173,7 +187,7 @@
       <option value="road_night">Nighttime (8h) average</option>
       </select></p>
       
-      <div class="legendHorizontal"><div class="l_rHorizontal">
+      <div class="legendContextual legendHorizontal"><div class="l_rHorizontal">
 		  <div class="lbHorizontal"><span style="background-color: #fef0d9"></span>50db</div>
 		  <div class="lbHorizontal"><span style="background-color: #fdd49e"></span>55db</div>
 		  <div class="lbHorizontal"><span style="background-color: #fdbb84"></span>60db</div>
@@ -195,7 +209,7 @@
       <option value="rail_night">Nighttime (8h) average</option>
       </select></p>
       
-      <div class="legendHorizontal"><div class="l_rHorizontal">
+      <div class="legendContextual legendHorizontal"><div class="l_rHorizontal">
 		  <div class="lbHorizontal"><span style="background-color: #fef0d9"></span>50db</div>
 		  <div class="lbHorizontal"><span style="background-color: #fdd49e"></span>55db</div>
 		  <div class="lbHorizontal"><span style="background-color: #fdbb84"></span>60db</div>
@@ -208,7 +222,7 @@
       
       <p><label><input type="checkbox" class="showlayer" data-layer="landfill" value="false"> Historic Landfills</label><button data-help="landuse-landfill" aria-label="Help landfill" class="helpbutton"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
       
-      <div class="legendHorizontal"><div class="l_rHorizontal">
+      <div class="legendContextual legendHorizontal"><div class="l_rHorizontal">
 		  <div class="lbHorizontal"><span style="background-color: #873e07"></span> </div>
 		  </div></div>
       
@@ -220,35 +234,35 @@
 			  <p><label><input type="checkbox" class="showlayer" data-layer="ancientwoodland" value="false"> Ancient woodland</label>
 			  <button aria-label="Help purpose" class="helpbutton" data-help="landuse-ancientwoodland"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 			  
-			  <div class="legendHorizontal"><div class="l_rHorizontal">
+			  <div class="legendContextual legendHorizontal"><div class="l_rHorizontal">
 			  <div class="lbHorizontal"><span style="background-color: #bbe825"></span></div>
 			  </div></div>
 			
 			  <p><label><input type="checkbox" class="showlayer" data-layer="aonb" value="false"> Areas of outstanding natural beauty</label>
 			  <button aria-label="Help purpose" class="helpbutton" data-help="landuse-aonb"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 			  
-			  <div class="legendHorizontal"><div class="l_rHorizontal">
+			  <div class="legendContextual legendHorizontal"><div class="l_rHorizontal">
 			  <div class="lbHorizontal"><span style="background-color: #bbe825"></span></div>
 			  </div></div>
 			
 			  <p><label><input type="checkbox" class="showlayer" data-layer="conservationareas" value="false"> Conservation areas</label>
 			  <button aria-label="Help purpose" class="helpbutton" data-help="landuse-conservationareas"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 			  
-			  <div class="legendHorizontal"><div class="l_rHorizontal">
+			  <div class="legendContextual legendHorizontal"><div class="l_rHorizontal">
 			  <div class="lbHorizontal"><span style="background-color: #fb9a99"></span></div>
 			  </div></div>
 			  
 			  <p><label><input type="checkbox" class="showlayer" data-layer="greenbelt" value="false"> Greenbelt</label>
 			  <button aria-label="Help purpose" class="helpbutton" data-help="landuse-greenbelt"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 				
-				<div class="legendHorizontal"><div class="l_rHorizontal">
+				<div class="legendContextual legendHorizontal"><div class="l_rHorizontal">
 			  <div class="lbHorizontal"><span style="background-color: #22e355"></span></div>
 			  </div></div>
 				
 				<p><label><input type="checkbox" class="showlayer" data-layer="listedbuildings" value="false"> Listed buildings</label>
 				<button aria-label="Help purpose" class="helpbutton" data-help="landuse-listedbuildings"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 				
-				<div class="legendHorizontal"><div class="l_rHorizontal">
+				<div class="legendContextual legendHorizontal"><div class="l_rHorizontal">
 			  <div class="lbHorizontal"><span style="background-color: #e31d3e"></span>Grade I</div>
 			  <div class="lbHorizontal"><span style="background-color: #f6cc15"></span>Grade II*</div>
 			  <div class="lbHorizontal"><span style="background-color: #0e7e58"></span>Grade II</div>
@@ -257,7 +271,7 @@
 				<p><label><input type="checkbox" class="showlayer" data-layer="nationalparks" value="false"> National parks</label>
 				<button aria-label="Help purpose" class="helpbutton" data-help="landuse-nationalparks"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 				
-				<div class="legendHorizontal"><div class="l_rHorizontal">
+				<div class="legendContextual legendHorizontal"><div class="l_rHorizontal">
 			  <div class="lbHorizontal"><span style="background-color: #3d9c11"></span></div>
 			  </div></div>
 				
@@ -265,56 +279,56 @@
 				<p><label><input type="checkbox" class="showlayer" data-layer="naturereserves" value="false"> Nature reserves</label>
 				<button aria-label="Help purpose" class="helpbutton" data-help="landuse-naturereserves"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 				
-				<div class="legendHorizontal"><div class="l_rHorizontal">
+				<div class="legendContextual legendHorizontal"><div class="l_rHorizontal">
 			  <div class="lbHorizontal"><span style="background-color: #b2df8a"></span></div>
 			  </div></div>
 				
 				<p><label><input type="checkbox" class="showlayer" data-layer="parksandgardens" value="false"> Parks and gardens</label>
 				<button aria-label="Help purpose" class="helpbutton" data-help="landuse-parksandgardens"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 				
-				<div class="legendHorizontal"><div class="l_rHorizontal">
+				<div class="legendContextual legendHorizontal"><div class="l_rHorizontal">
 			  <div class="lbHorizontal"><span style="background-color: #33a02c"></span></div>
 			  </div></div>
 				
 				<p><label><input type="checkbox" class="showlayer" data-layer="RAMSAR" value="false"> RAMSAR wetlands</label>
 				<button aria-label="Help purpose" class="helpbutton" data-help="landuse-RAMSAR"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 				
-				<div class="legendHorizontal"><div class="l_rHorizontal">
+				<div class="legendContextual legendHorizontal"><div class="l_rHorizontal">
 			  <div class="lbHorizontal"><span style="background-color: #a6cee3"></span></div>
 			  </div></div>
 				
 				<p><label><input type="checkbox" class="showlayer" data-layer="SAC" value="false"> Special areas of conservation</label>
 				<button aria-label="Help purpose" class="helpbutton" data-help="landuse-SAC"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 				
-				<div class="legendHorizontal"><div class="l_rHorizontal">
+				<div class="legendContextual legendHorizontal"><div class="l_rHorizontal">
 			  <div class="lbHorizontal"><span style="background-color: #fb9a99"></span></div>
 			  </div></div>
 				
 				<p><label><input type="checkbox" class="showlayer" data-layer="scheduledmonuments" value="false"> Scheduled monuments</label>
 				<button aria-label="Help purpose" class="helpbutton" data-help="landuse-scheduledmonuments"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 				
-				<div class="legendHorizontal"><div class="l_rHorizontal">
+				<div class="legendContextual legendHorizontal"><div class="l_rHorizontal">
 			  <div class="lbHorizontal"><span style="background-color: #e31a1c"></span></div>
 			  </div></div>
 				
 				<p><label><input type="checkbox" class="showlayer" data-layer="SPA" value="false"> Special Protection Areas</label>
 				<button aria-label="Help purpose" class="helpbutton" data-help="landuse-SPA"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 				
-				<div class="legendHorizontal"><div class="l_rHorizontal">
+				<div class="legendContextual legendHorizontal"><div class="l_rHorizontal">
 			  <div class="lbHorizontal"><span style="background-color: #fdbf6f"></span></div>
 			  </div></div>
 				
 				<p><label><input type="checkbox" class="showlayer" data-layer="SSSI" value="false"> SSSI </label>
 				<button aria-label="Help purpose" class="helpbutton" data-help="landuse-SSSI"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 				
-				<div class="legendHorizontal"><div class="l_rHorizontal">
+				<div class="legendContextual legendHorizontal"><div class="l_rHorizontal">
 			  <div class="lbHorizontal"><span style="background-color: #cab2d6"></span></div>
 			  </div></div>
 				
 				<p><label><input type="checkbox" class="showlayer" data-layer="worldheritagesite" value="false"> World heritage sites</label>
 				<button aria-label="Help purpose" class="helpbutton" data-help="landuse-worldheritagesite"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 				
-				<div class="legendHorizontal"><div class="l_rHorizontal">
+				<div class="legendContextual legendHorizontal"><div class="l_rHorizontal">
 			  <div class="lbHorizontal"><span style="background-color: #6a3d9a"></span></div>
 			  </div></div>
 			</div>
@@ -325,7 +339,7 @@
 				<p><label><input type="checkbox" class="showlayer" data-layer="food_hygiene" value="false"> Food Hygiene</label>
 				<button aria-label="Help purpose" class="helpbutton" data-help="landuse-food_hygiene"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 				
-			<div class="legendHorizontal"><div class="l_rHorizontal">
+			<div class="legendContextual legendHorizontal"><div class="l_rHorizontal">
   		  <div class="lbHorizontal"><span style="background-color: #d7191c"></span>1</div>
   		  <div class="lbHorizontal"><span style="background-color: #fdae61"></span>2</div>
   		  <div class="lbHorizontal"><span style="background-color: #ffffbf"></span>3</div>
@@ -340,28 +354,28 @@
 			<div class="panel">
 				<p><label><input type="checkbox" data-layer="wards" class="showlayer" value="false">Wards</label>
 				<button aria-label="Help" class="helpbutton" data-help="boundaries-wards"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
-				<div class="legendHorizontal">
+				<div class="legendContextual legendHorizontal">
 					<div class="l_rHorizontal">
 						<div class="lbHorizontal"><span style="background-color: #206b07"></span></div>
 					</div>
 				</div>
 				<p><label><input type="checkbox" data-layer="la" class="showlayer" value="false">Local Authorities</label>
 				<button aria-label="Help" class="helpbutton" data-help="boundaries-la"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
-				<div class="legendHorizontal">
+				<div class="legendContextual legendHorizontal">
 					<div class="l_rHorizontal">
 						<div class="lbHorizontal"><span style="background-color: #6b0707"></span></div>
 					</div>
 				</div>
 				<p><label><input type="checkbox" data-layer="parish" class="showlayer" value="false">Parish</label>
 				<button aria-label="Help" class="helpbutton" data-help="boundaries-parish"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
-				<div class="legendHorizontal">
+				<div class="legendContextual legendHorizontal">
 					<div class="l_rHorizontal">
 						<div class="lbHorizontal"><span style="background-color: #6b0763"></span></div>
 					</div>
 				</div>
 				<p><label><input type="checkbox" data-layer="westminster" class="showlayer" value="false">Westminster Constituency</label>
 				<button aria-label="Help" class="helpbutton" data-help="boundaries-westminster"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
-				<div class="legendHorizontal">
+				<div class="legendContextual legendHorizontal">
 					<div class="l_rHorizontal">
 						<div class="lbHorizontal"><span style="background-color: #07366b"></span></div>
 					</div>

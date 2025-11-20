@@ -10,7 +10,7 @@ const datasets_extra = {
 			'type': 'fill',
 			'source': {
 			'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/zones.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/zones_pbcc_20251115.pmtiles',
 				},
 			'source-layer': 'zones',
 			'paint': {
@@ -18,23 +18,7 @@ const datasets_extra = {
 				'fill-opacity': 0.8,
 				'fill-outline-color': '#000000'
 			}
-		}/*,
-		
-		buildings: {
-			'id': 'buildings',
-			'type': 'fill',
-			'source': {
-			'type': 'vector',
-				'url': 'pmtiles://../tiles/buildings.pmtiles',
-				},
-			'source-layer': 'buildings',
-			'paint': {
-				'fill-color': '#9c9898',
-				'fill-opacity': 0.8,
-				'fill-outline-color': '#000000'
-			}
-		}
-		*/
+		},
 	},
 	
 	// Layer styling callbacks functions, each defined below
@@ -49,24 +33,50 @@ const datasets_extra = {
 		zones: {
 			'Grade': [
 				['A+','#313695'],
-  			['A' ,'#4575b4'],
-  			['A-','#4575b4'],
-  			['B+','#74add1'],
-  			['B' ,'#abd9e9'],
-  			['B-','#abd9e9'],
-  			['C+','#e0f3f8'],
-  			['C' ,'#e0f3f8'],
-  			['C-','#ffffbf'],
-  			['D+','#ffffbf'],
-  			['D' ,'#fee090'],
-  			['D-','#fee090'],
-  			['E+','#fdae61'],
-  			['E' ,'#fdae61'],
-  			['E-','#f46d43'],
-  			['F+','#d73027'],
-  			['F' ,'#d73027'],
-  			['F-','#a50026']
-			]
+				['A' ,'#4575b4'],
+				['A-','#4575b4'],
+				['B+','#74add1'],
+				['B' ,'#abd9e9'],
+				['B-','#abd9e9'],
+				['C+','#e0f3f8'],
+				['C' ,'#e0f3f8'],
+				['C-','#ffffbf'],
+				['D+','#ffffbf'],
+				['D' ,'#fee090'],
+				['D-','#fee090'],
+				['E+','#fdae61'],
+				['E' ,'#fdae61'],
+				['E-','#f46d43'],
+				['F+','#d73027'],
+				['F' ,'#d73027'],
+				['F-','#a50026']
+				],
+			'lsoa_class_code': [
+				['Cosmopolitan student neighbourhoods','#955123'],
+				['Ageing rural neighbourhoods','#007f42'],
+				['Prospering countryside life','#3ea456'],
+				['Remoter communities','#8aca8e'],
+				['Rural traits','#cfe8d1'],
+				['Achieving neighbourhoods','#00498d'],
+				['Asian traits','#2967ad'],
+				['Highly qualified professionals','#7b99c7'],
+				['Households in terraces and flats','#b9c8e1'],
+				['Challenged white communities','#e3ac20'],
+				['Constrained renters','#edca1a'],
+				['Hampered neighbourhoods','#f6e896'],
+				['Hard-pressed flat dwellers','#fcf5d8'],
+				['Ageing urban communities','#e64c2b'],
+				['Aspiring urban households','#ec773c'],
+				['Comfortable neighbourhoods','#faa460'],
+				['Endeavouring social renters','#fcc9a0'],
+				['Primary sector workers','#fee4ce'],
+				['Inner city cosmopolitan','#f79ff0'],
+				['Urban cultural mix','#6a339a'],
+				['Young ethnic communities','#9f84bd'],
+				['Affluent communities','#576362'],
+				['Ageing suburbanites','#a1a2a1'],
+				['Comfortable suburbia','#e5e4e3'],
+				]
 		},
 	},
 	
@@ -74,48 +84,57 @@ const datasets_extra = {
 	  zones: {
 			'Grade': [
 				'A+','#313695',
-  			'A' ,'#4575b4',
-  			'A-','#4575b4',
-  			'B+','#74add1',
-  			'B' ,'#abd9e9',
-  			'B-','#abd9e9',
-  			'C+','#e0f3f8',
-  			'C' ,'#e0f3f8',
-  			'C-','#ffffbf',
-  			'D+','#ffffbf',
-  			'D' ,'#fee090',
-  			'D-','#fee090',
-  			'E+','#fdae61',
-  			'E' ,'#fdae61',
-  			'E-','#f46d43',
-  			'F+','#d73027',
-  			'F' ,'#d73027',
-  			'F-','#a50026',
-  			'#000000'
-			]
+				'A' ,'#4575b4',
+				'A-','#4575b4',
+				'B+','#74add1',
+				'B' ,'#abd9e9',
+				'B-','#abd9e9',
+				'C+','#e0f3f8',
+				'C' ,'#e0f3f8',
+				'C-','#ffffbf',
+				'D+','#ffffbf',
+				'D' ,'#fee090',
+				'D-','#fee090',
+				'E+','#fdae61',
+				'E' ,'#fdae61',
+				'E-','#f46d43',
+				'F+','#d73027',
+				'F' ,'#d73027',
+				'F-','#a50026',
+				'#000000'
+			],
+			'lsoa_class_code': [
+				'1a','#955123',
+				'2a','#007f42',
+				'2b','#3ea456',
+				'2c','#8aca8e',
+				'2d','#cfe8d1',
+				'3a','#00498d',
+				'3b','#2967ad',
+				'3c','#7b99c7',
+				'3d','#b9c8e1',
+				'4a','#e3ac20',
+				'4b','#edca1a',
+				'4c','#f6e896',
+				'4d','#fcf5d8',
+				'5a','#e64c2b',
+				'5b','#ec773c',
+				'5c','#faa460',
+				'5d','#fcc9a0',
+				'5e','#fee4ce',
+				'6a','#f79ff0',
+				'7a','#6a339a',
+				'7b','#9f84bd',
+				'8a','#576362',
+				'8b','#a1a2a1',
+				'8c','#e5e4e3',
+				'#000000'
+				]
 		},
 	},
 	
 	circleColours: {
 		
-				// #!# These are presumably restatements of dzLegendColours
-		landowners: {
-			'Country': [
-				'UK', 	        '#b15928',
-				'JERSEY', 	    '#a6cee3',
-				'GUERNSEY', 	  '#1f78b4',
-				'BRITISH VIRGIN ISLANDS', 	'#fb9a99',
-				'ISLE OF MAN',	'#b2df8a',
-				'LUXEMBOURG',	'#fdbf6f',
-				'GIBRALTAR',	  '#33a02c',
-				'NETHERLANDS',	'#ff7f00',
-				'IRELAND',	    '#cab2d6',
-				'CAYMAN ISLANDS',	'#e31a1c',
-				'PANAMA',		  '#ffff99',
-				'CYPRUS',		  '#6a3d9a',
-				'#000000',
-			]
-		},
 	},
 	
 	
@@ -127,12 +146,12 @@ const datasets_extra = {
 	    zones: {
 	      // Data fields
   			// #!# Should use a main server URL setting
-  			dataUrl: 'https://pbcc.blob.core.windows.net/pbcc-data/Access/%id.json',
+  			dataUrl: 'https://pbcc.blob.core.windows.net/pbcc-data/lsoa_overview/v1/%id.json',
   			propertiesField: 'LSOA21CD',
-  			titleField: 'LSOA11CD',
+  			titleField: 'LSOA21CD',
   			
   			// Title
-  			titlePrefix: 'Neighbourhood Summary: LSOA ',
+  			titlePrefix: 'LSOA ',
   			
   			charts: [
   				[
@@ -152,9 +171,7 @@ const datasets_extra = {
 	}
 };
 
-
-const datasets = { ...datasets_common, ...datasets_extra };
-
+const datasets = mergeObjects(datasets_extra, datasets_common);
 
 // Function to create all charts
 function createCharts (chartDefinition, locationData)
@@ -178,11 +195,7 @@ function createCharts (chartDefinition, locationData)
 				borderWidth: 1
 			});
 		});
-		
-		console.log(locationData);
-		console.log(chartDefinition);
-		console.log(datasets);
-		
+				
 		// Bar labels
 		const labels = chartDefinition.years.map(years => years[1]);
 		
@@ -235,12 +248,8 @@ function renderChart (divId, title, datasets, labels)
 // Function to determine the style column
 function getStyleColumn (layerId, datasets)
 {
-  
-  
 	const style_col_selected = datasets.lineColours.zones.hasOwnProperty(layerId) ? layerId : '_';
-	//console.log(datasets.lineColours.zones['Grade']);
-	//return datasets.lineColours.zones[style_col_selected];
-	return datasets.lineColours.zones['Grade'];
+	return datasets.lineColours.zones[style_col_selected];
 }
 
 // Styling callback for data zones (including buildings styling)
@@ -248,28 +257,34 @@ function zonesStyling (layerId, map, settings, datasets, createLegend /* callbac
 {
 	// Update the legend (even if map layer is off)
 	const field = document.querySelector ('select.updatelayer[data-layer="zones"][name="field"]').value
-	createLegend (datasets.legends.zones, "Grade", 'zoneslegend'); // Fixed Legeng for Grades
-	
+	const standardGrade = ['total_grade','reduction_grade','dom_gas_grade','dom_elec_grade','car_grade','van_grade','goods_services_combined_grade','flights_grade'];
+				
 	// Get UI state
 	const daysymetricMode = document.querySelector ('input.updatelayer[data-layer="zones"][name="daysymetricmode"]').checked;
 	
+	let buildingColour = null;
 	// Set paint properties
-	//map.setPaintProperty (layerId, 'fill-color', ['step', ['get', field], getStyleColumn (field, datasets)]);
-	map.setPaintProperty (layerId, 'fill-color', ['match', ['get', field], ...getStyleColumn (field, datasets)]);
+	if (standardGrade.includes(field)) {
+		console.log('Using standard grade colour scheme');
+		createLegend (datasets.legends.zones, 'Grade', 'zoneslegend');
+		map.setPaintProperty (layerId, 'fill-color', ['match', ['get', field], ...getStyleColumn ('Grade', datasets)]);
+		buildingColour = getBuildingsColour(settings, true);
+	} else {
+		createLegend (datasets.legends.zones, field, 'zoneslegend');
+		map.setPaintProperty (layerId, 'fill-color', ['match', ['get', field], ...getStyleColumn (field, datasets)]);
+		buildingColour = getBuildingsColour(settings, false);
+	}
+
 	map.setPaintProperty (layerId, 'fill-opacity', (daysymetricMode ? 0.1 : 0.8)); // Very faded-out in daysymetric mode, as the buildings are coloured
 	map.setPaintProperty (layerId, 'fill-outline-color', 'rgba(0, 0, 0, 0.2)'); 
-	
 	// Set buildings layer colour/visibility
-	const buildingColour = getBuildingsColour(settings);
-	console.log((buildingColour || '#9c9898'));
 	map.setPaintProperty ('buildings', 'fill-extrusion-color', (buildingColour || '#9c9898'));
-	//map.setPaintProperty ('buildings', 'fill-extrusion-color', '#9c9898');
 	map.setLayoutProperty ('buildings', 'visibility', (buildingColour ? 'visible' : 'none'));
 }
 
 
 // Function to determine the buildings colour
-function getBuildingsColour (settings)
+function getBuildingsColour (settings, isStandardGrade)
 {
 	// If datazones is off, buildings shown, if vector style, as static colour appropriate to the basemap
 	
@@ -281,7 +296,11 @@ function getBuildingsColour (settings)
 	// If dasymetric mode, use a colour set based on the layer
 	if (document.querySelector ('input.updatelayer[data-layer="zones"][name="daysymetricmode"]').checked) {
 		const field = document.querySelector ('select.updatelayer[data-layer="zones"][name="field"]').value;
-		return ['match', ['get', field], ...getStyleColumn (field, datasets)];
+		if(isStandardGrade){
+			return ['match', ['get', field], ...getStyleColumn ('Grade', datasets)];
+		} else {
+			return ['match', ['get', field], ...getStyleColumn (field, datasets)];
+		}
 	}
 	
 	// Default to gray

@@ -80,7 +80,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <li>Attribute: You must attribute any public use of the data, or works produced from the data, in the manner specified in the license. For any use or redistribution of the data, or works produced from it, you must make clear to others the license of the data and keep intact any notices on the original data.</li>
 </ul> 
     
-<p>This licence does not apply to the website, map tiles, or other hosted data which is only to be used via the official Carbon & Place website. You must not link, embed, scrape or otherwise use the constituent parts of the website.</p>
+<p>This licence does not apply to the website, map tiles, or other hosted data, which is only to be used via the official Carbon & Place website. You must not link, embed, scrape or otherwise use the constituent parts of the website.</p>
 
 <h2>Source Code</h2>
 <p>The source code used in the analysis and to build the website is published under the <a href="https://github.com/PlaceBasedCarbonCalculator/build/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">GNU Affero General Public License v3.0</a>.</p>
@@ -100,16 +100,95 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 
 <h2>Citing Carbon & Place</h2>
-<p>If you reference the Carbon & Place or use screenshots or extracts from the tool in publications please cite:</p>
+<p>If you reference the Carbon & Place or use screenshots or extracts from the tool in publications, please cite:</p>
 <p><i>Morgan, Malcolm, Anable, Jillian, & Lucas, Karen. (2021). A place-based carbon calculator for England. Presented at the 29th Annual GIS Research UK Conference (GISRUK), Cardiff, Wales, UK (Online): Zenodo. <a href="http://doi.org/10.5281/zenodo.4665852">http://doi.org/10.5281/zenodo.4665852</a></i></p>
 
 
 <h2>Bulk Data Download </h2>
 <p>For data from the <a href="/legacy/data/">original Place-Based Carbon Calculator</a> see its data page.</p>
 
-<p>Outputs from other Carbon & Place tools are coming soon.</p>
+<h3>Data from the original CREDS Place-Based Carbon Calculator </h3>
+<p><a href="https://github.com/creds2/CarbonCalculator/releases/download/1.0/PBCC_LSOA_data.zip">LSOA Data</a> – this is a zipped CSV file containing all the data for each LSOA in England.</p> 
+<p><a href= "https://github.com/creds2/CarbonCalculator/releases/download/1.0/PBCC_transit_stop_frequency_2020.zip">Transit Stops</a> – this is a zipped CSV containing all the data from the Transit Stops layer for Great Britain.</p>
+<p><a href="https://github.com/creds2/CarbonCalculator/releases/download/1.0/PBCC_15min_isochrones.zip">15-minute isochrones</a> – a zipped GeoJSON file containing all the 15-minute isochrones for each LSOA in England.</p>
+<p><a href="https://github.com/creds2/CarbonCalculator/releases/download/1.0/PBCC_PCT_rnet_commute_school.zip">PCT combined route network</a> - a zipped GeoJSON file containing the combined route networks for commuting and travel to school based on the <a href="https://www.pct.bike">Propensity to Cycle Tool</a></p>
 
+<b>Outputs from other Carbon & Place tools are coming soon.</b>
 
+<h2>Experimental Data Releases </h2>
+<p>As Carbon & Place is undergoing a major update, many of the new tools are in an experimental stage. Experimental data releases are a bulk version of the data available in the Carbon & Place. However, these should be treated with care as they may contain errors. Once tools have been finalised, experimental data releases will be replaced with bulk data downloads.</p>
+
+<p>Experimental datasets are zipped and named by date of creation (e.g. yyyymmdd)</p>
+
+<h3>New Place-Based Carbon Calcualtor</h3>
+
+<h4>LSOA Carbon Footprints</h4>
+
+<p><b><a href="https://pbcc.blob.core.windows.net/pbcc-data/bulk/pbcc_lsoa_20251114.zip"> &darr; Download</a></b></p>
+
+<p>A zipped CSV providing the carbon footprints for each LSOA, from 2010 to 2020.</p> 
+
+<h4>Household Clusters</h4>
+
+<p>A zipped CSV providing the synthetic data used to produce the community photo in the PBCC. For each LSOA, the number of households has been categorised by NS-SEC, Household Composition, and Ethnicity.</p> 
+
+<p><b><a href="https://pbcc.blob.core.windows.net/pbcc-data/bulk/household_clusters_20250519.zip"> &darr; Download</a></b></p>
+
+<h3>Transport Accessability Explorer</h3>
+
+<h4>Public Transport Frequency</h4>
+
+<p>A zipped CSV providing the frequency of public transport (trips per hour) for each LSOA in Great Britain from most years from 2004 to 2023. Data is broken down by GTFS mode of travel and time of day and weekday/weekend.</p> 
+
+<p><b><a href="https://pbcc.blob.core.windows.net/pbcc-data/bulk/pt_frequency_20250519.zip"> &darr; Download</a></b></p>
+
+<h4>Access Proximity</h4>
+
+<p>A zipped CSV of the Access-Proximity data. For each 2021 LSOA in England and Wales and each class of Point of Interest (e.g. "Fish and Chip Shops"), it provides a count of the population access and proximity scores for 15, 30, 45, and 60 minutes by public transport.</p> 
+
+<p><b><a href="https://pbcc.blob.core.windows.net/pbcc-data/bulk/access_proximity_20250519.zip"> &darr; Download</a></b></p>
+
+<h3>Retrofit Explorer</h3>
+
+<h4>Domestic Energy Performance Certificates Summary</h4>
+
+<p>A zipped CSV with summary data about domestic EPC certificated in each LSOA in Great Britain.</p>
+
+<p><b><a href="https://pbcc.blob.core.windows.net/pbcc-data/bulk/epc_dom_summary_20250519.zip"> &darr; Download</a></b></p>
+
+<h4>Domestic Energy Performance Certificates</h4>
+
+<b><a href="https://pbcc.blob.core.windows.net/pbcc-data/bulk/epc_dom_20251120.zip"> &darr; Download</a></b>
+
+<h4>Non-Domestic Energy Performance Certificates</h4>
+
+<p>A zipped GeoPackage of building points with Non-Domestic Energy Performance Certificates, geolocated, cleaned and summarised</p>
+
+<p><b><a href="https://pbcc.blob.core.windows.net/pbcc-data/bulk/epc_nondomestic_20250519.zip"> &darr; Download</a></b></p>
+
+<h3>Land Ownership Explorer</h3>
+
+<h3>Land Use and Planning Explorer</h3>
+
+<h3>General</h3>
+
+<h4>Building Heights</h4>
+
+<p>A zipped GeoPackage of building polygons with height estimates. Polygons are produced by combining OS Open Data, OpenStreetMap and INSPIRE Polygons.</p>
+
+<h4>2m Digital Terrain Map of Great Britain</h4>
+
+<p>A <a href="https://github.com/protomaps/PMTiles">PMtiles</a> file containing RGB encoded webp raster tiles.</p>
+
+<p>A DTM is a raster map containing the elevation of the ground. This version was constructed to be an Open Data terrain map with a higher resolution than commonly available sources like <a href="https://www.ordnancesurvey.co.uk/products/os-terrain-50">OS Terrain 50</a>. For more details on methods and data see the <a href="https://github.com/PlaceBasedCarbonCalculator/GBDEM/">GitHub Repo</a></p>
+
+<p><b><a href="https://pbcc.blob.core.windows.net/pbcc-pmtiles/DTM.pmtiles"> &darr; Download</a></b></p>
+
+<h4>2m Digital Surface Map of Great Britain</h4>
+
+A <a href="https://github.com/protomaps/PMTiles">PMtiles</a> file containing RGB encoded webp raster tiles. 
+
+<p><b><a href="https://pbcc.blob.core.windows.net/pbcc-pmtiles/DSM.pmtiles"> &darr; Download</a></b></p>
 
 
 </div>

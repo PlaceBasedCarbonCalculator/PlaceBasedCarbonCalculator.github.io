@@ -6,27 +6,31 @@ var frequencyLocationData = {};
 
 
 manageCharts = function (locationId) {
-    capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/Access/' + locationId + '.json')
-        .then(function (accessData) {
-            accessLocationData = accessData;
-            makeChartAccess();
-            makeTableAccess();
-        })
-        .catch(function (error) {
-            alert('Failed to get access data for this location, or to process it correctly. Please try refreshing the page.');
-            console.log(error);
-        });
-        
-    capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/PTfrequency/' + locationId + '.json')
-        .then(function (frequencyData) {
-            frequencyLocationData = frequencyData;
-            //console.log(frequencyLocationData);
-            makeChartFrequency();
-        })
-        .catch(function (error) {
-            alert('Failed to get frequnecy data for this location, or to process it correctly. Please try refreshing the page.');
-            console.log(error);
-        });
+  const p1 = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/Access/' + locationId + '.json')
+    .then(function (accessData) {
+      accessLocationData = accessData;
+      makeChartAccess();
+      makeTableAccess();
+    })
+    .catch(function (error) {
+      // Keep user-visible alert for backwards compatibility, but don't reject the overall promise
+      alert('Failed to get access data for this location, or to process it correctly. Please try refreshing the page.');
+      console.log(error);
+    });
+
+  const p2 = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/PTfrequency/' + locationId + '.json')
+    .then(function (frequencyData) {
+      frequencyLocationData = frequencyData;
+      //console.log(frequencyLocationData);
+      makeChartFrequency();
+    })
+    .catch(function (error) {
+      alert('Failed to get frequnecy data for this location, or to process it correctly. Please try refreshing the page.');
+      console.log(error);
+    });
+
+  // Return a promise that resolves once both fetches have settled
+  return Promise.all([p1, p2]);
 };
 
 

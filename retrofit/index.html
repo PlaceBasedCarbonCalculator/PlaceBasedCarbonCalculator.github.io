@@ -5,7 +5,7 @@
 		
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="Description" content="An interactive map of land use">
+		<meta name="Description" content="Explore housing retrofit opportunities by neighbourhood: EPC scores, heating types, insulation potential, and estimated carbon reductions to help prioritise local retrofit programmes.">
 		
 		<!-- Google tag (gtag.js) -->
   	<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q11V10CDRV"></script>
@@ -37,7 +37,7 @@
 		<meta name="twitter:card" content="summary_large_image">
 		<meta property="og:site_name" content="Carbon & Place">
 		<meta name="twitter:image:alt" content="Carbon & Place thumbnail">
-		<title>Retrofit Explorer</title>
+		<title>Retrofit Explorer — Home Energy &amp; Insulation Opportunities</title>
 		
 		<!-- PWA support -->
 		<link rel="manifest" href="/manifest.webmanifest">
@@ -50,8 +50,8 @@
 		<script src="https://unpkg.com/pmtiles@3.0.6/dist/pmtiles.js"></script>
 		<script src="/js/lib/geocoder/maplibre-gl-geocoder.min.js"></script>
 		<link rel="stylesheet" href="/js/lib/geocoder/maplibre-gl-geocoder-small.css" type="text/css"/>
-		<script src="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.js"></script>
-		<link href="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.css" rel="stylesheet" />
+		<script src="https://unpkg.com/maplibre-gl@5.4.0/dist/maplibre-gl.js"></script>
+		<link href="https://unpkg.com/maplibre-gl@5.4.0/dist/maplibre-gl.css" rel="stylesheet" />
 		
 		<!-- Styles -->
 		<link rel="stylesheet" href="/css/main.css">
@@ -63,10 +63,33 @@
 		<script src="datasets.js"></script>
 		<script src="settings.js"></script>
 		<script src="/js/ui-common.js"></script>
-		<script src="ui.js" defer></script>
+		<script src="ui.js"></script>
 		<script>
 			document.addEventListener ('DOMContentLoaded', function () {
 			  capUi.initialise (settings, datasets);
+			  
+			  // Some pages create the map asynchronously inside capUi.initialise.
+			  // The original code assumed a global `map` existed immediately which
+			  // caused "map is not defined" console errors. Poll for the map and
+			  // attach the idle handler once it's available. If the map never
+			  // appears within the timeout, attempt a best-effort toggle.
+			  (function waitForMap(attemptsLeft) {
+				if (window.map && typeof window.map.once === 'function') {
+					window.map.once('idle', function () {
+						if (capUi && typeof capUi.toggleLayer === 'function') {
+							capUi.toggleLayer('zones'); // Hacky fix for mysterious initial layer display issue
+						}
+					});
+				} else if (attemptsLeft > 0) {
+					setTimeout(function () { waitForMap(attemptsLeft - 1); }, 200);
+				} else {
+					// Final fallback: call toggleLayer directly if possible. Some
+					// implementations of capUi may handle the refresh without map.
+					if (capUi && typeof capUi.toggleLayer === 'function') {
+						capUi.toggleLayer('zones');
+					}
+				}
+			  })(25); // ~5 seconds total (25 * 200ms)
 			});
 		</script>
 		
@@ -107,10 +130,19 @@
 		<div id="welcome-modal" class="welcome-modal">
 			<span class="modal-close">&times;</span>
 			<div>
-				<h3>Retrofit Explorer</h3>
+				<h1>Retrofit Explorer</h1>
 				<p style="background-color: #f58291"><b>Beta Tool</b>: This tool is still in development and may contain preliminary analysis, bugs, or incomplete features. Beta tools are intended to provide an early look at upcoming features and so results should be treated with care. The tool may change at any time without warning. We are interested in your feedback and you can report issues or bugs on <a href="https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/issues" target="_blank" rel="noopener noreferrer">GitHub</a></p>
 				
 				<p>The Retrofit Explorer provides more detail buildings in the UK. For a full explanation of the tool please see the <a href="/manual/#retrofitexplorer">manual</a>. You can also access sections of the manual via the help buttons (<i class="fa fa-question-circle" aria-hidden="true"></i>)</p>
+				
+				<div class="feedbackbox">
+					<div class="feedback-text">
+						<h2>How can we improve this tool?</h2>
+						<p>We would love to hear how you are using Carbon & Place and how we can make our tools more useful.</p>
+						<p><a href="/about/feedback" class="opentool">Submit Feedback</a></p>
+					</div>
+					<img src="/images/ui/feedback.webp" alt="Feedback" loading="lazy" class="feedback-image">
+				</div>
 				
 				<p>Last updated: <span id="updatedate"></span>. You may need to <a href="https://www.minitool.com/news/f5-vs-ctrl-f5.html">clear your browser cache</a> to see the latest updates.</p>
 			</div>
@@ -124,6 +156,11 @@
 				<button class="button buttonNO" value=""><strong>No</strong></button>
 			</p>
 		</div>
+
+			<!-- Loading Spinner -->
+			<div class="spinner">
+				<img src="/images/ui/spinner.svg" alt="Loading..." loading="lazy" />
+			</div>
 		
 		<!-- Main Content -->
 		<div class="mapcontent">
@@ -171,7 +208,7 @@
 					</select>
 					<button aria-label="Help purpose" class="helpbutton" data-help="retrofit-zones"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
 				</p>
-				<div id="zoneslegend" class="legendVertical">
+				<div id="zoneslegend" class="legendContextual">
 					<div class="l_rVertical">
 						<div class="lb"><span style="background-color: #ffffff"></span>&nbsp;</div>
 					</div>
@@ -193,7 +230,7 @@
 					</select>
 					<button aria-label="Help purpose" class="helpbutton" data-help="retrofit-postcodes"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
 				</p>
-				<div id="postcodeslegend" class="legendHorizontal">
+				<div id="postcodeslegend" class="legendContextual">
 					<div class="l_rHorizontal">
 						<div class="lb"><span style="background-color: #ffffff"></span>&nbsp;</div>
 					</div>
@@ -226,7 +263,7 @@
 					</select>
 					<button aria-label="Help purpose" class="helpbutton" data-help="retrofit-epc-dom"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
 				</p>
-				<div id="epcdomlegend" class="legendVertical">
+				<div id="epcdomlegend" class="legendContextual">
 					<div class="l_rHorizontal">
 						<div class="lb"><span style="background-color: #ffffff"></span>&nbsp;</div>
 					</div>
@@ -247,7 +284,7 @@
 					</select>
 					<button aria-label="Help purpose" class="helpbutton" data-help="retrofit-epc-nondom"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
 				</p>
-				<div id="epcnondomlegend" class="legendVertical">
+				<div id="epcnondomlegend" class="legendContextual">
 					<div class="l_rVertical">
 						<div class="lb"><span style="background-color: #ffffff"></span>&nbsp;</div>
 					</div>
@@ -261,28 +298,28 @@
 			<div class="panel">
 				<p><label><input type="checkbox" data-layer="wards" class="showlayer" value="false">Wards</label>
 				<button aria-label="Help" class="helpbutton" data-help="boundaries-wards"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
-				<div class="legendHorizontal">
+				<div class="legendContextual legendHorizontal">
 					<div class="l_rHorizontal">
 						<div class="lbHorizontal"><span style="background-color: #206b07"></span></div>
 					</div>
 				</div>
 				<p><label><input type="checkbox" data-layer="la" class="showlayer" value="false">Local Authorities</label>
 				<button aria-label="Help" class="helpbutton" data-help="boundaries-la"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
-				<div class="legendHorizontal">
+				<div class="legendContextual legendHorizontal">
 					<div class="l_rHorizontal">
 						<div class="lbHorizontal"><span style="background-color: #6b0707"></span></div>
 					</div>
 				</div>
 				<p><label><input type="checkbox" data-layer="parish" class="showlayer" value="false">Parish</label>
 				<button aria-label="Help" class="helpbutton" data-help="boundaries-parish"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
-				<div class="legendHorizontal">
+				<div class="legendContextual legendHorizontal">
 					<div class="l_rHorizontal">
 						<div class="lbHorizontal"><span style="background-color: #6b0763"></span></div>
 					</div>
 				</div>
 				<p><label><input type="checkbox" data-layer="westminster" class="showlayer" value="false">Westminster Constituency</label>
 				<button aria-label="Help" class="helpbutton" data-help="boundaries-westminster"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
-				<div class="legendHorizontal">
+				<div class="legendContextual legendHorizontal">
 					<div class="l_rHorizontal">
 						<div class="lbHorizontal"><span style="background-color: #07366b"></span></div>
 					</div>
@@ -330,7 +367,7 @@
   			<div class="chart-wrapper" id="gas-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Historical gas consumption</h4>
-					  <p class="chart-description">This chart shows domestic buildings' annual gas consumption in kilowatt hours in this postcode. Use the drop down menu to select either total, median, or mean emissions. Note that some areas are off the gas grid, so no emissions are reported. In these places, heating may be provided by some other fuel type, such as coal, wood, or oil.</p>
+					  <p class="chart-description">This chart shows domestic buildings' annual gas consumption in kilowatt hours in this postcode. Use the drop down menu to select either total, median, or mean consumption. Note that some areas are off the gas grid, so no emissions are reported. In these places, heating may be provided by some other fuel type, such as coal, wood, or oil.</p>
 					  
 					  <p>Chart type: <select id="select_gas" name="select_gas" onchange="makeChartPostcode()">
             <option value="median" selected>Median</option>
@@ -347,7 +384,7 @@
 				<div class="chart-wrapper" id="electricity-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Historical electricity consumption</h4>
-					  <p class="chart-description">This chart shows the annual electricity consumption in kilowatt hours by domestic buildings in this postcode. Use the drop down menu to select either total, median, or mean emissions. Consumption estimates are provided for different meter types (all, standard, and economy 7). However, data is not always available for all meter types.</p>
+					  <p class="chart-description">This chart shows the annual electricity consumption in kilowatt hours by domestic buildings in this postcode. Use the drop down menu to select either total, median, or mean consumption. Consumption estimates are provided for different meter types (all, standard, and economy 7). However, data is not always available for all meter types.</p>
 					  
 					  <p>Chart type: <select id="select_electricity" name="select_electricity" onchange="makeChartPostcode()">
             <option value="median" selected>Median</option>

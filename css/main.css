@@ -46,7 +46,7 @@ a:hover {
 }
 
 h1{
-	font-size:45px;
+	font-size:35px;
 	padding:0px;
 	line-height: 1;
 	margin:0px;
@@ -193,4 +193,21 @@ a.smaller {
 
 .externallink {
   white-space: nowrap;
+}
+
+/* Homepage tool buttons, also used in modals */
+.opentool {
+  padding: 10px;
+  background-color: green;
+  line-height: 2.3;
+}
+
+a.opentool {
+  color: #ffffff;
+}
+a.opentool:hover{
+  color: #ffffff;
+}
+a.opentool:visited{
+  color: #ffffff;
 }

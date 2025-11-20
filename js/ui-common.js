@@ -51,6 +51,7 @@ const capUi = (function () {
 		// Main function
 		initialise: function (settings, datasets)
 		{
+			console.log("Initialise UI function");
 			// Populate the settings and datasets class properties
 			_settings = settings;
 			_datasets = datasets;
@@ -73,9 +74,6 @@ const capUi = (function () {
 			// Create the map UI
 			_map = capUi.createMap ();
 			
-			// Manage layers
-			capUi.manageLayers ();
-			
 			// Create popups
 			capUi.createPopups ();
 			
@@ -94,7 +92,13 @@ const capUi = (function () {
 			}
 			
 			// Manage analytics cookie setting
-	  	capUi.manageAnalyticsCookie ();
+	  		capUi.manageAnalyticsCookie ();
+
+			// Manage layers
+			capUi.manageLayers ();
+			
+			// Adjust opentool links to use current map state
+			capUi.adjustOpenToolLinks ();
 		},
 		
 		// Welcome screen
@@ -140,6 +144,21 @@ const capUi = (function () {
 				}
 			});
 		},	
+
+		// Expand accordion panels that contain any checked layer checkboxes
+		expandAccordionsForCheckedLayers: function ()
+		{
+			// For each accordion button, open it if its following panel contains a checked .showlayer input
+			document.querySelectorAll('button.accordion').forEach(function (button) {
+				const panel = button.nextElementSibling;
+				if (!panel) { return; }
+				// If any checked layer checkbox exists inside this panel, open the accordion
+				if (panel.querySelector('input.showlayer:checked')) {
+					button.classList.add('active');
+					panel.style.display = 'block';
+				}
+			});
+		},
 		
 		
 		// Function to manage the layer controls box UI
@@ -194,17 +213,19 @@ const capUi = (function () {
 
 		parseUrl: function ()
 		{
+			console.log ("Parsing URL");
 			// Get the hash, e.g. "/layer1,layer2/#8/55.953/-3.138" would be extracted from https://example.com/#/layer1,layer2/#8/55.953/-3.138
 			const hash = window.location.hash.replace (/^#/, '');
 			// Split path component from map compoment
 			const hashComponents = hash.split ('#');
 			// End if not the intended format of /layers/#map , thus retaining the default state of the _hashComponents property
 			if (hashComponents.length != 2) {return;}
-			// Register the change in the state
+			// Register the change in the state.  The map component may include optional tilt and basemap
+			// Expected map format: zoom/lat/lng[/tilt[/basemap]]
 			_hashComponents.layers = hashComponents[0];
 			_hashComponents.map = hashComponents[1];
 			
-			//console.log (_hashComponents);
+			
 		},
 
 		// Function to register a state change, adjusting the URL
@@ -214,7 +235,7 @@ const capUi = (function () {
 			_hashComponents[component] = value;
 			
 			//console.log (_hashComponents);
-			// Construct the new hash state
+			// Construct the new hash state Note: _hashComponents.map is expected to include a leading '#' (see manageMapHash.mapHash)
 			const hashState = '#' + _hashComponents.layers + _hashComponents.map;
 
 			// Update the hash state in the browser history
@@ -226,6 +247,8 @@ const capUi = (function () {
 		// Function to set up the map UI and controls
 		createMap: function ()
 		{
+			console.log("Create map function");
+			
 			// Create the layer switcher
 			capUi.layerSwitcherHtml ();
 			
@@ -234,13 +257,22 @@ const capUi = (function () {
 			
 			// Determine initial centre/zoom location, based on the hash if present, else the settings location
 			const initialPosition = (capUi.parseMapHash () || _settings.initialPosition);
+			// If the hash contained a basemap choice, ensure the radio is selected so getBasemapStyle() matches
+			let initialBasemap = capUi.getBasemapStyle();
+			if (initialPosition && initialPosition.basemap) {
+				initialBasemap = initialPosition.basemap;
+				const basemapInput = document.getElementById(initialBasemap + '-basemap');
+				if (basemapInput) { basemapInput.checked = true; }
+			}
 			
-			// Main map setup
+			// Main map setup - include bearing and pitch if provided in the parsed hash
 			const map = new maplibregl.Map({
 				container: 'map',
-				style: '/tiles/style_' + capUi.getBasemapStyle() + '.json',
+				style: '/tiles/style_' + initialBasemap + '.json',
 				center: initialPosition.center,
 				zoom: initialPosition.zoom,
+				pitch: (initialPosition && initialPosition.pitch ? initialPosition.pitch : 0),
+				bearing: (initialPosition && initialPosition.bearing ? initialPosition.bearing : 0),
 				maxZoom: _settings.maxZoom,
 				minZoom: _settings.minZoom,
 				maxPitch: 85,
@@ -248,6 +280,19 @@ const capUi = (function () {
 				attributionControl: false, // Created manually below
 				antialias: document.getElementById('antialiascheckbox').checked
 			});
+			
+			// Manage Sky
+			map.on('load', function () {
+				map.setSky({
+					"sky-color": "#00a2ff",
+					"sky-horizon-blend": 0.2,
+					"horizon-color": "#e3fbfc",
+					"horizon-fog-blend": 0.5,
+					"fog-color": "#e3fbfc",
+					"fog-ground-blend": 0.99
+				});
+			});
+			
 			
 			// Manage hash manually, while we need full control of hashes to contain layer state
 			capUi.manageMapHash (map);
@@ -285,16 +330,7 @@ const capUi = (function () {
 				//encoding : "custom"
 				
 			}), 'top-left');
-			
-			// Add buildings; note that the style/colouring may be subsequently altered by data layers
-			
-			capUi.addBuildings(map);
-			document.getElementById('basemapform').addEventListener('change', function (e) {
-			  console.log("basemapform changed, add buildings");
-				capUi.addBuildings(map);
-			});
-			
-			
+				
 			// Add placenames support
 			map.once('idle', function () {
 				capUi.placenames(map);
@@ -345,6 +381,15 @@ const capUi = (function () {
 				maxWidth: 80,
 				unit: 'metric'
 			}), 'bottom-left');
+
+			// Add buildings; note that the style/colouring may be subsequently altered by data layers
+			console.log("Adding buildings on initial load");
+			capUi.addBuildings(map);
+						
+			document.getElementById('basemapform').addEventListener('change', function (e) {
+			  console.log("basemapform changed, add buildings");
+				capUi.addBuildings(map);
+			});
 			
 			// Fire map ready when ready, which layer-enabling can be picked up
 			map.once('idle', function () {
@@ -366,6 +411,17 @@ const capUi = (function () {
 				
 				// Fire map ready event when ready
 				map.once('idle', function () {
+					// Update the URL to include current bearing, pitch and basemap
+					const center = map.getCenter();
+					const zoom = Math.round(map.getZoom() * 100) / 100;
+					const precision = Math.ceil((zoom * Math.LN2 + Math.log(512 / 360 / 0.5)) / Math.LN10);
+					const m = Math.pow(10, precision);
+					const lng = Math.round(center.lng * m) / m;
+					const lat = Math.round(center.lat * m) / m;
+					const bearing = Math.round(map.getBearing() * 10) / 10;
+					const tilt = Math.round(map.getPitch() * 10) / 10;
+					const mapHash = `#${zoom}/${lat}/${lng}/${bearing}/${tilt}/${styleName}`;
+					capUi.registerUrlStateChange('map', mapHash);
 					document.dispatchEvent(new Event('@map/ready', {
 						'bubbles': true
 					}));
@@ -376,12 +432,15 @@ const capUi = (function () {
 			return map;
 		},
 		
-		// Function to manage the map hash manually; this is a minimal implementation covering only what we need
-		// Covers zoon,lat,lon; no support for bearing or pitch
+		// Function to manage the map hash manually; this covers zoom,lat,lng,bearing,pitch and basemap
+		// Hash format produced: #zoom/lat/lng/bearing/pitch/basemap
+		// Backwards-compatible parsing of legacy hashes (which may omit bearing)
 		// Based on the native implementation at: https://github.com/maplibre/maplibre-gl-js/blob/main/src/ui/hash.ts#L11
 
 		manageMapHash: function (map)
 		{
+			
+			console.log("Manage map hash function");
 			// Function to determine the map hash
 			function mapHash (map)
 			{
@@ -393,7 +452,10 @@ const capUi = (function () {
 				const m = Math.pow (10, precision);
 				const lng = Math.round (center.lng * m) / m;
 				const lat = Math.round (center.lat * m) / m;
-				const mapHash = `#${zoom}/${lat}/${lng}`;
+				const bearing = Math.round(map.getBearing() * 10) / 10;
+				const tilt = Math.round(map.getPitch() * 10) / 10;
+				const basemap = capUi.getBasemapStyle();
+				const mapHash = `#${zoom}/${lat}/${lng}/${bearing}/${tilt}/${basemap}`;
 				// Update the hash state
 				capUi.registerUrlStateChange ('map', mapHash);
 			}
@@ -424,14 +486,38 @@ const capUi = (function () {
 		{
 			// Extract the hash and split by /
 			const mapHash = _hashComponents.map.replace (new RegExp ('^#'), '');	// Do not read window.location.hash directly, as that will contain layer state
+			if (!mapHash) { return false; }
 			const parts = mapHash.split ('/');
 
-			// If three parts, parse out
-			if (parts.length == 3) {
+			// Need at least zoom, lat, lng
+			// Supported modes:
+			//  - short: zoom/lat/lng
+			//  - full:  zoom/lat/lng/bearing/tilt/basemap
+			if (parts.length === 3) {
+				const zoom = Number(parts[0]);
+				const lat = Number(parts[1]);
+				const lng = Number(parts[2]);
 				return {
-					center: [parts[2], parts[1]],
-					zoom: parts[0]
+					center: [lng, lat],
+					zoom: (Number.isFinite(zoom) ? zoom : undefined)
 				};
+			}
+			// Full format
+			if (parts.length >= 6) {
+				const zoom = Number(parts[0]);
+				const lat = Number(parts[1]);
+				const lng = Number(parts[2]);
+				const bearing = Number(parts[3]);
+				const pitch = Number(parts[4]);
+				const basemap = parts[5];
+				const result = {
+					center: [lng, lat],
+					zoom: (Number.isFinite(zoom) ? zoom : undefined)
+				};
+				if (Number.isFinite(bearing)) { result.bearing = bearing; }
+				if (Number.isFinite(pitch)) { result.pitch = pitch; }
+				if (basemap) { result.basemap = basemap; }
+				return result;
 			}
 
 			// Else return false
@@ -498,10 +584,12 @@ const capUi = (function () {
 		
 		addBuildings: function (map)
 		{
+			
+			console.log("Buildings function");
 			// When ready
 			map.once ('idle', function () {
 				
-				console.log("Buildings fucnction");
+				console.log("Buildings function map idle");
 				// Add the source
 				if (!map.getSource ('buildings')) {
 					map.addSource ('buildings', {
@@ -665,18 +753,27 @@ const capUi = (function () {
 				}
 				document.dispatchEvent (new Event ('@map/initiallayersset', {'bubbles': true}));
 
-				// Implement initial visibility state for all layers
-				Object.keys(_datasets.layers).forEach(layerId => {
-					capUi.toggleLayer(layerId);
-				});
-				
+				// Expand accordion panels that contain any checked layer inputs so users
+				// can immediately see which layers were loaded from the URL
+				capUi.expandAccordionsForCheckedLayers();
+	
 				// Handle layer change controls, each marked with .showlayer or .updatelayer
 				document.querySelectorAll ('.showlayer, .updatelayer').forEach ((input) => {
 					input.addEventListener ('change', function () {
 						const layerId = input.dataset.layer;
+						//console.log ('Layer change for ' + layerId);
 						capUi.toggleLayer(layerId);
 					});
 				});
+
+				// Toggle each layer to ensure visibility is set as per the checkbox state
+				Object.keys(_datasets.layers).forEach(layerId => {
+					//console.log('Initial toggle of layer ' + layerId);
+					capUi.toggleLayer(layerId);
+				});
+
+								
+
 			});
 		},
 		
@@ -705,10 +802,10 @@ const capUi = (function () {
 		
 		toggleLayer: function (layerId)
 		{
-			//console.log ('Toggling layer ' + layerId);
-			
+				
 			// Check for a dynamic styling callback and run it if present
 			if (_datasets.layerStyling[layerId]) {
+				//console.log('Running dynamic styling for ' + layerId);
 				_datasets.layerStyling[layerId] (layerId, _map, _settings, _datasets, capUi.createLegend);
 			} else {
 				capUi.createLegend (datasets.legends, layerId, layerId + 'legend');
@@ -726,33 +823,54 @@ const capUi = (function () {
 		
 		createLegend: function (legendColours, selected, selector)
 		{
-      // Do nothing if no selector for where the legend will be added
+      		// Do nothing if no selector for where the legend will be added
 			if (!document.getElementById(selector)) {return;}
-			
-			//console.log(legendColours);
-			//console.log(selected);
-			//console.log(selector);
-			
-			// Detect Horizontal or Vertical modes
-			// Create the legend HTML
-			// #!# Should be a list, not nested divs
-			let legendHtml;
-			if(document.getElementById(selector).className == "legendHorizontal") {
-			  legendHtml = '<div class="l_rHorizontal">';
-  			  selected = (legendColours.hasOwnProperty(selected) ? selected : '_');
-  			  //console.log(legendColours[selected]);
-  			  legendColours[selected].forEach(legendColour => {
-  				legendHtml += `<div class="lbHorizontal"><span style="background-color: ${legendColour[1]}"></span>${legendColour[0]}</div>`;
-  			})
-  			legendHtml += '</div>';
-			} else {
-			  legendHtml = '<div class="l_rVertical">';
-  			  selected = (legendColours.hasOwnProperty(selected) ? selected : '_');
-  			  legendColours[selected].forEach(legendColour => {
-  				legendHtml += `<div class="lbVertial"><span style="background-color: ${legendColour[1]}"></span>${legendColour[0]}</div>`;
-  			})
-			  legendHtml += '</div>';
-			}
+								
+				// Detect Horizontal, Vertical or Contextual modes
+				// Create the legend HTML
+				// #!# Should be a list, not nested divs
+				let legendHtml;
+				const el = document.getElementById(selector);
+				const cls = el ? el.className : '';
+				// Normalize selected key to a valid property
+				selected = (legendColours.hasOwnProperty(selected) ? selected : '_');
+				// Determine layout mode
+				let mode = 'vertical';
+				// Sum characters in the first element (label) of each legend entry
+				const items = legendColours[selected] || [];
+				let totalChars = 0;
+				items.forEach(it => {
+					if (it && typeof it[0] !== 'undefined') {
+						totalChars += String(it[0]).length;
+					}
+				});
+				mode = (totalChars > 39 ? 'vertical' : 'horizontal');
+				//console.log('Legend mode: ' + mode + 'nchars: ' + totalChars);
+							
+				
+				// Ensure the element receives the correct class so CSS rules apply.
+				// If the element was originally 'legendContextual' keep that class and add the
+				// chosen orientation class. If it was explicitly horizontal/vertical, keep that.
+				if (mode === 'horizontal') {
+					el.className ='legendContextual legendHorizontal';
+				} else {
+					el.className = 'legendContextual legendVertical';
+				}
+				
+				
+				if (mode === 'horizontal') {
+					legendHtml = '<div class="l_rHorizontal">';
+					(legendColours[selected] || []).forEach(legendColour => {
+						legendHtml += `<div class="lbHorizontal"><span style="background-color: ${legendColour[1]}"></span>${legendColour[0]}</div>`;
+					});
+					legendHtml += '</div>';
+				} else {
+					legendHtml = '<div class="l_rVertical">';
+					(legendColours[selected] || []).forEach(legendColour => {
+						legendHtml += `<div class="lbVertical"><span style="background-color: ${legendColour[1]}"></span>${legendColour[0]}</div>`;
+					});
+					legendHtml += '</div>';
+				}
       
 			// Set the legend
 			document.getElementById(selector).innerHTML = legendHtml;
@@ -788,51 +906,54 @@ const capUi = (function () {
 			});
 		},
 		
-		/*
-		fetchJSON: function (dataUrl)
-		{
-		  // Get the data
-			fetch(dataUrl)
-				.then(function (response) {
-					return response.json();
-				})
-				.then(function (json) {
-					//const locationData = json[0]; //TODO this is what PBCC expects
-					const locationData = json;
-					console.log ('Retrieved data for layer '+  mapLayerId + ' location ' + locationId);
-					
-					//Hide Spinner
-					//document.getElementById('loader').style.display = 'none';
-					
-					// Set the title
-					//const title = chartDefinition.titlePrefix + featureProperties[chartDefinition.titleField];
-					//document.querySelector(`#${mapLayerId}-chartsmodal .modal-title`).innerHTML = title;
-					
-					// Create the charts
-					//manageCharts(chartDefinition, locationData);
-					return locationData;
-				})
-				.catch(function (error) {	// Any error, including within called code, not just retrieval failure
-					alert ('Failed to get data for this location, or to process it correctly. Please try refreshing the page.');
-					console.log (error);
-				});
-		},
-		*/
 		
-		fetchJSON: function (dataUrl) {
+    fetchJSON: function (dataUrl) {
     return fetch(dataUrl)
         .then(function (response) {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             return response.json();
-        })
-        .catch(function (error) {
-            alert('Failed to get data for this location, or to process it correctly. Please try refreshing the page.');
-            console.log(error);
         });
     },
+    
+		manageLSOAOverview : function(mapLayerId, locationId)
+		{
+      
+			capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/lsoa_overview/v1/' + locationId + '.json')
+				.then(function (lsoaData) {
+					// Make the fetched data globally available for other scripts
+					window.lsoaHeadlineData = lsoaData;
 
+					// Set the modal title
+					const label = locationId.startsWith('S') ? 'Data Zone' : 'LSOA';
+					const title = locationId + ' a "' + lsoaData[0].lsoa_class_name + '" '+ label + ' in ' + lsoaData[0].WD25NM;
+					document.querySelector(`#${mapLayerId}-chartsmodal .modal-title`).innerHTML = title;
+					//console.log(lsoaData);
+          
+          // Hide all warning boxes
+          const allWarnings = document.getElementsByClassName("warning");
+          for (let i = 0; i < allWarnings.length; i++) {
+            allWarnings[i].style.display = 'none';
+          }
+          
+          // Show only relevant warnings
+          const warnings = lsoaData[0].warnings;
+          warnings.forEach(warn => {
+            const el = document.getElementById("warning_" + warn);
+            if (el) el.style.display = 'block';
+          });
+          
+                    
+          
+          
+        })
+        .catch(function (error) {
+            alert('Failed to get overview data for this location, or to process it correctly. Please try refreshing the page.');
+            console.log(error);
+        });
+		  
+		},
 		
 		// Function to handle chart creation
 		// Pulling out of common file as too different between tools
@@ -855,13 +976,9 @@ const capUi = (function () {
 				const location_modal = capUi.newModal (mapLayerId + '-chartsmodal');
 				
 				// Initialise the HTML structure for the set of chart boxes, writing in the titles and descriptions, and setting the canvas ID
-				//initialiseChartBoxHtml(mapLayerId, chartDefinition.charts);
-				
 				// Open modal on clicking the supported map layer
 				_map.on ('click', mapLayerId, function (e) {
 				  
-				  
-					
 					// Ensure the source matches
 					let clickedFeatures = _map.queryRenderedFeatures(e.point);
 					clickedFeatures = clickedFeatures.filter(function (el) {
@@ -877,19 +994,67 @@ const capUi = (function () {
 					// Assemble the JSON data file URL
 					const featureProperties = e.features[0].properties;
 					const locationId = featureProperties[chartDefinition.propertiesField];
-					//const dataUrl = chartDefinition.dataUrl.replace('%id', locationId);
 					
-					// Set the title
-					// TODO this is run muliple times when muliple data sources, but still works
-					console.log(chartDefinition.titlePrefix);
-					const title = chartDefinition.titlePrefix + featureProperties[chartDefinition.titleField];
-					document.querySelector(`#${mapLayerId}-chartsmodal .modal-title`).innerHTML = title;
+					// Set the title (may be async)
+					if(mapLayerId === 'zones') {
+						capUi.manageLSOAOverview(mapLayerId, locationId);
+					}
+										
+					// Show global spinner while charts are built
+					const spinner = document.querySelector('.spinner');
+					if (spinner) { spinner.style.display = 'block'; }
 					
-					// Display the modal
-					location_modal.show();
-					console.log(mapLayerId);
-					// Tool Specific Function in each ui.js
-					manageCharts(locationId, mapLayerId);
+					// Call tool-specific manageCharts. If it returns a Promise, wait on it.
+					try {
+						const result = manageCharts(locationId, mapLayerId);
+						if (result && typeof result.then === 'function') {
+							result.then(() => {
+								if (spinner) { spinner.style.display = 'none'; }
+								location_modal.show();
+							}).catch(() => {
+								// On error still hide spinner and show modal so user can see message
+								if (spinner) { spinner.style.display = 'none'; }
+								location_modal.show();
+							});
+						return;
+						}
+					} catch (err) {
+						console.error('manageCharts threw error:', err);
+					}
+					
+					// If manageCharts did not return a Promise, poll for Chart.js instances inside the modal canvases.
+					const maxWaitMs = 8000; // total wait time
+					const intervalMs = 200;
+					let waited = 0;
+					const canvases = Array.from(document.querySelectorAll('#' + mapLayerId + '-chartsmodal canvas'));
+					const checkCharts = function () {
+						// If no canvases found, treat as immediate completion
+						if (canvases.length === 0) {
+							if (spinner) { spinner.style.display = 'none'; }
+							location_modal.show();
+							return;
+						}
+						// If Chart.js is available, check for an associated chart instance for any canvas
+						let ready = false;
+						if (window.Chart && typeof window.Chart.getChart === 'function') {
+							for (const c of canvases) {
+								if (window.Chart.getChart(c)) { ready = true; break; }
+							}
+						} else {
+							// Fallback: check if any canvas has non-zero width/height after rendering (heuristic)
+							for (const c of canvases) {
+								if (c.width > 0 && c.height > 0) { ready = true; break; }
+							}
+						}
+						if (ready || waited >= maxWaitMs) {
+							if (spinner) { spinner.style.display = 'none'; }
+							location_modal.show();
+							return;
+						}
+						waited += intervalMs;
+						setTimeout(checkCharts, intervalMs);
+					};
+					setTimeout(checkCharts, intervalMs);
 					
 					
 				});
@@ -898,22 +1063,13 @@ const capUi = (function () {
 			// Create each set of charts
 			
 			Object.entries (_datasets.charts).forEach(([mapLayerId, chartDefinition]) => {
-			   //console.log(mapLayerId);
-			   //console.log(chartDefinition);
-			   //chartsModal (mapLayerId, chartDefinition);
-			   Object.entries (chartDefinition).forEach(([dataLayerId, dataDefinition]) => {
-  			   //console.log(dataLayerId);
-  			   //console.log(dataDefinition);
+			    Object.entries (chartDefinition).forEach(([dataLayerId, dataDefinition]) => {
   			   chartsModal (mapLayerId, dataDefinition);
   			 });
 			   
 			});
 			
 		},
-		
-		
-		
-		
 		
 		// Popup handler
 		// Options are: {preprocessingCallback, smallValuesThreshold, literalFields}
@@ -1070,12 +1226,20 @@ const capUi = (function () {
 		// Function to add tooltips
 		tooltips: function ()
 		{
-			tippy('[title]', {
-				content (reference) {
-					const title = reference.getAttribute('title');
-					reference.removeAttribute('title');
-					return title;
-				},
+			// Run once the map is ready; seems that the geolocation button loads too late
+			_map.once ('idle', function () {
+
+				// Apply tooltips to the map control buttons and to help buttons, as these have no visible labelling; title is used else ARIA label
+				tippy('.maplibregl-control-container [title], .maplibregl-control-container [aria-label], .helpbutton', {
+					content (element) {
+						const title = element.getAttribute ('title');
+						if (title) {
+							element.removeAttribute ('title');	// Avoid native browser tooltips also showing
+						}
+						const ariaLabel = element.getAttribute ('aria-label');
+						return title || ariaLabel;
+					},
+				});
 			});
 		},
 		
@@ -1228,6 +1392,68 @@ const capUi = (function () {
 				}
 			}
 			return "";
+		},
+		
+		
+		// Function to adjust opentool links to use current map state
+		// When a user clicks a link with class 'opentool' that contains map coordinates,
+		// this function dynamically updates the coordinates to match the current map view
+		// (zoom, lat, lng, bearing, pitch) while preserving layer state and other URL parts
+		adjustOpenToolLinks: function ()
+		{
+			// Listen for clicks on opentool links
+			document.addEventListener('click', function (e) {
+				const link = e.target.closest('a.opentool');
+				if (!link) { return; }
+				
+				// Get the href
+				let href = link.getAttribute('href');
+				if (!href || !href.includes('#')) { return; }
+				
+				// Parse the current page's map hash to extract map orientation
+				const mapHash = _hashComponents.map.replace(/^#/, '');
+				if (!mapHash) { return; } // No map state to copy
+				
+				const mapParts = mapHash.split('/');
+				
+				// We need at least zoom/lat/lng; full format is zoom/lat/lng/bearing/pitch/basemap
+				if (mapParts.length < 3) { return; }
+				
+				const currentZoom = mapParts[0];
+				const currentLat = mapParts[1];
+				const currentLng = mapParts[2];
+				const currentBearing = mapParts[3] || '0';
+				const currentPitch = mapParts[4] || '0';
+				const currentBasemap = mapParts[5] || '';
+				
+				// Split the link href by # to separate path from hash
+				const hashIndex = href.indexOf('#');
+				const basePath = href.substring(0, hashIndex);
+				const hashPart = href.substring(hashIndex + 1); // Everything after #
+				
+				// Split hash by # to separate layers from map components
+				const hashComponents = hashPart.split('#');
+				
+				// Reconstruct the URL with updated map coordinates
+				// Format: path/#layers/#zoom/lat/lng/bearing/pitch/basemap
+				let newHash = basePath + '#';
+				
+				// Add layers component if it exists
+				if (hashComponents.length >= 1) {
+					newHash += hashComponents[0]; // layers part
+				}
+				
+				// Add the updated map component with current map state
+				newHash += '#' + currentZoom + '/' + currentLat + '/' + currentLng + '/' + currentBearing + '/' + currentPitch;
+				
+				// Add basemap if one exists
+				if (currentBasemap) {
+					newHash += '/' + currentBasemap;
+				}
+				
+				// Update the link's href
+				link.setAttribute('href', newHash);
+			}, true); // Use capture phase to intercept before navigation
 		}
 	};
 	

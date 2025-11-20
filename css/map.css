@@ -221,16 +221,42 @@ input[type="radio"][id^="bm"] {
 
 
 /* Legend */
-/* Horizontal Mode */
+.legendContextual {
+  display: table;
+  table-layout: fixed;
+}
+
 .legendHorizontal {
   width: 100%;
   text-align: center;
-  display: table;
-  table-layout: fixed;
   font-size: 10px;
-
 }
 
+.legendVertical {
+  height: 100%; /* Set the height to 100% for vertical layout */
+  text-align: left;
+  font-size: 12px;
+  color: black;
+}
+
+.legendContextual div span {
+  display: inline-block;
+  border: 1px solid black;
+}
+
+.legendHorizontal div span {
+  height: 15px;
+  width: 100%;
+}
+
+.legendVertical div span {
+  width: 20px; /* Swap height and width for vertical bars */
+  height: 10px; /* Set the width to 100% for vertical bars */
+  margin-right: 10px;
+}
+
+
+/* Horizontal Mode */
 .l_rHorizontal{
   display: table-row;
 }
@@ -238,25 +264,7 @@ input[type="radio"][id^="bm"] {
 .lbHorizontal{
   display: table-cell;
 }
-
-.legendHorizontal div span {
-  display: inline-block;
-  height: 15px;
-  width: 100%;
-  border: 1px solid black;
-}
-
 /* Vertical Mode */
-.legendVertical {
-  height: 100%; /* Set the height to 100% for vertical layout */
-  text-align: left;
-  display: table;
-  table-layout: fixed;
-  font-size: 12px;
-  color: black;
-  
-}
-
 .l_rVertical {
   display: table-cell; /* Change to table-cell for vertical layout */
 }
@@ -264,15 +272,6 @@ input[type="radio"][id^="bm"] {
 .lbVertical {
   display: table-row; /* Change to table-row for vertical layout */
 }
-
-.legendVertical div span {
-  display: inline-block;
-  width: 20px; /* Swap height and width for vertical bars */
-  height: 10px; /* Set the width to 100% for vertical bars */
-  border: 1px solid black;
-  margin-right: 10px;
-}
-
 
 /* Basemap Control */
 
@@ -637,4 +636,57 @@ input:checked + .slider:before {
   content: "";
   display: table;
   clear: both;
+}
+
+
+/** Warning box **/
+
+.warning {
+  background-color: #f8d7da; 
+  border-radius: 8px;        
+  padding: 4px;
+  margin: 1px;
+  display: none;
+}
+
+/** Spinner **/
+/** Fload the spinner in the center of the screen **/
+.spinner  {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1001; /* Ensure it's above other content */
+  display: none;  /*Hidden by default */
+}
+
+
+/* Feedback box: place image on right and match image height to left text */
+.feedbackbox {
+  display: flex;
+  align-items: stretch;
+  gap: 0.75rem;
+}
+.feedbackbox .feedback-text {
+  flex: 1 1 auto;
+}
+.feedbackbox .feedback-image {
+  height: 100%;
+  width: 200px;
+  object-fit: contain;
+  margin-left: 0.5rem;
+}
+
+/* On small screens stack vertically and keep a reasonable image size */
+@media (max-width: 600px) {
+  .feedbackbox {
+    flex-direction: column;
+    align-items: center;
+  }
+  .feedbackbox .feedback-image {
+    height: auto;
+    width: 96px;
+    margin-left: 0;
+    margin-top: 0.5rem;
+  }
 }

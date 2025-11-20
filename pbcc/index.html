@@ -5,7 +5,7 @@
 		
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="Description" content="An interactive map of carbon footprints">
+		<meta name="Description" content="Explore neighbourhood-level carbon footprints across Great Britain, visualise emissions by sector, compare areas, and support local decarbonisation planning and policy.">
 		
 		<!-- Google tag (gtag.js) -->
   	<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q11V10CDRV"></script>
@@ -37,7 +37,7 @@
 		<meta name="twitter:card" content="summary_large_image">
 		<meta property="og:site_name" content="Carbon & Place">
 		<meta name="twitter:image:alt" content="Carbon & Place thumbnail">
-		<title>Place-Based Carbon Calculator</title>
+		<title>Place-Based Carbon Calculator — Neighbourhood Emissions Explorer</title>
 		
 		<!-- PWA support -->
 		<link rel="manifest" href="/manifest.webmanifest">
@@ -49,9 +49,9 @@
 		<!-- Map dependencies -->
 		<script src="https://unpkg.com/pmtiles@3.0.6/dist/pmtiles.js"></script>
 		<script src="/js/lib/geocoder/maplibre-gl-geocoder.min.js"></script>
-		<link rel="stylesheet" href="/js/lib/geocoder/maplibre-gl-geocoder-small.css" type="text/css"/>
+		<link rel="stylesheet" href="/js/lib/geocoder/maplibre-gl-geocoder-small.css" type="text/css">
 		<script src="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.js"></script>
-		<link href="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.css" rel="stylesheet" />
+		<link href="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.css" rel="stylesheet" >
 		
 		<!-- Styles -->
 		<link rel="stylesheet" href="/css/main.css">
@@ -73,8 +73,8 @@
 		</script>
 		
 		<!-- Font Awesome -->
-		<link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet" defer>
-		<link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet" defer>
+		<link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet">
+		<link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet">
 		
 		<!-- Markdown conversion -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js" defer></script>
@@ -96,7 +96,7 @@
     
 		<!-- Menu -->
 		<nav>
-			<a href="/"><img src="/images/ui/logo.webp" alt="Carbon & Place Logo" class="logo" /></a>
+			<a href="/"><img src="/images/ui/logo.webp" alt="Carbon & Place Logo" class="logo"></a>
 			<a href="/pbcc/">Place-Based Carbon Calculator</a>
 			<a href="/about/">About</a>
 			<a href="/data/">Data</a>
@@ -108,13 +108,22 @@
 		<div id="welcome-modal" class="welcome-modal">
 			<span class="modal-close">&times;</span>
 			<div class="modal-body">
-				<h3>Place-Based Carbon Calculator v2</h3>
-				<p>ALPHA</p>
+				<h1>Place-Based Carbon Calculator v2</h1>
+				<p style="background-color: #f58291"><b>Beta Tool</b>: This tool is still in development and may contain preliminary analysis, bugs, or incomplete features. Beta tools are intended to provide an early look at upcoming features and so results should be treated with care. The tool may change at any time without warning. We are interested in your feedback and you can report issues or bugs on <a href="https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/issues" target="_blank" rel="noopener noreferrer">GitHub</a></p>
+				
+				<p>The Place-Based Carbon Calculator provides estimates of neighbourhood carbon footprints. For a full explanation of the tool please see the <a href="/manual/#placebasedcarboncalculator">manual</a>. You can also access sections of the manual via the help buttons (<i class="fa fa-question-circle" aria-hidden="true"></i>)</p>
+				
+				<div class="feedbackbox">
+					<div class="feedback-text">
+						<h2>How can we improve this tool?</h2>
+						<p>We would love to hear how you are using Carbon & Place and how we can make our tools more useful.</p>
+						<p><a href="/about/feedback" class="opentool">Submit Feedback</a></p>
+					</div>
+					<img src="/images/ui/feedback.webp" alt="Feedback" loading="lazy" class="feedback-image">
+				</div>
+				
 				<p>Last updated: <span id="updatedate"></span>. You may need to <a href="https://www.minitool.com/news/f5-vs-ctrl-f5.html">clear your browser cache</a> to see the latest updates.</p>
-				<p>Date of OSM Data on which network results are based: 
-				<div id="osmupdatedate"></div>
-				</p>
-			</div>
+				</div>
 		</div>
 		
 		<!-- Cookies Warning  -->
@@ -130,6 +139,11 @@
 		<div class="mapcontent">
 			<div id="map"></div>
 		</div>
+
+			<!-- Loading Spinner -->
+			<div class="spinner">
+				<img src="/images/ui/spinner.svg" alt="Loading..." loading="lazy">
+			</div>
 		
 		<!-- Basemap control box -->
 		<div id="basemapcontrol" style="display: none;">
@@ -137,8 +151,8 @@
 			<form id="basemapform">
 				<!-- Values will be populated -->
 			</form>
-			<p><label class="switch"><input type="checkbox" id="placenamescheckbox" checked="checked" /><span class="slider round"></span></label> Place names</p>
-			<p title="Makes the map look smoother and clearer (not suitable for lower-powered devices)"><label class="switch"><input type="checkbox" id="antialiascheckbox" /><span class="slider round"></span></label> Anti-alias</p>
+			<p><label class="switch"><input type="checkbox" id="placenamescheckbox" checked="checked"><span class="slider round"></span></label> Place names</p>
+			<p title="Makes the map look smoother and clearer (not suitable for lower-powered devices)"><label class="switch"><input type="checkbox" id="antialiascheckbox"><span class="slider round"></span></label> Anti-alias</p>
 		</div>
 		
 		<!-- Show Layer Selection Panel  Button-->
@@ -155,45 +169,62 @@
 			<div class="panel">
 				<p><label><input type="checkbox" class="showlayer" data-layer="zones" value="false" checked="checked">Show layer</label></p>
 				<p>
-					<select name="field" class="updatelayer" data-layer="zones" aria-label="Neighbouhood  layer">
-						<option value="total_grade_2020" selected>Total Emissions</option>
-						<option value="dom_gas_grade_2020" >Gas</option>
-						<option value="dom_elec_grade_2020">Electricity</option>
-						<option value="car_grade_2020" >Car</option>
-						<option value="van_grade_2020">Van</option>
-						<option value="goods_services_combined_grade_2020">Goods & Services</option>
-						<option value="flights_grade_2020">Flights</option>
+					<select name="field" class="updatelayer" data-layer="zones" aria-label="Neighbourhood layer">
+						<option value="total_grade" selected>Total Emissions</option>
+						<option value="reduction_grade" >Decarbonisation progress</option>
+						<option value="dom_gas_grade" >Gas</option>
+						<option value="dom_elec_grade">Electricity</option>
+						<option value="car_grade" >Car</option>
+						<option value="van_grade">Van</option>
+						<option value="goods_services_combined_grade">Goods & Services</option>
+						<option value="flights_grade">Flights</option>
+						<option value="lsoa_class_code">Area Classification</option>
 					</select>
-					<button aria-label="Help purpose" class="helpbutton" data-help="pbcc-zones"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+					<button aria-label="Help Neighbourhoods" class="helpbutton" data-help="pbcc-zones"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
 				</p>
-				<div id="zoneslegend" class="legendHorizontal">
+				<div id="zoneslegend" class="legendContextual">
 					<div class="l_rHorizontal">
 						<div class="lb"><span style="background-color: #ffffff"></span>&nbsp;</div>
 					</div>
 				</div>
 				
-				<p><label class="switch"><input type="checkbox" name="daysymetricmode" class="updatelayer" data-layer="zones" checked><span class="slider round"></span></label> Dasymetric</p>
+				<p><label class="switch"><input type="checkbox" name="daysymetricmode" class="updatelayer" data-layer="zones" checked><span class="slider round"></span></label> Dasymetric
+				<button aria-label="Help daysymetric mode" class="helpbutton" data-help="dasymetric"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 				
 			
 			</div>
 			
 			<button class="accordion">Boundaries</button>
-			<!--
 			<div class="panel">
-				<p><label><input type="checkbox" id="wardscheckbox" class="updatelayer" value="false">Wards</label></p>
-				<div class="legend">
-					<div class="l_r">
-						<div class="lb"><span style="background-color: #206b07"></span></div>
+				<p><label><input type="checkbox" data-layer="wards" class="showlayer" value="false">Wards</label>
+				<button aria-label="Help" class="helpbutton" data-help="boundaries-wards"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<div class="legendContextual legendHorizontal">
+					<div class="l_rHorizontal">
+						<div class="lbHorizontal"><span style="background-color: #206b07"></span></div>
 					</div>
 				</div>
-				<p><label><input type="checkbox" id="lacheckbox" class="updatelayer" value="false">Local Authorities</label></p>
-				<div class="legend">
-					<div class="l_r">
-						<div class="lb"><span style="background-color: #6b0707"></span></div>
+				<p><label><input type="checkbox" data-layer="la" class="showlayer" value="false">Local Authorities</label>
+				<button aria-label="Help" class="helpbutton" data-help="boundaries-la"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<div class="legendContextual legendHorizontal">
+					<div class="l_rHorizontal">
+						<div class="lbHorizontal"><span style="background-color: #6b0707"></span></div>
+					</div>
+				</div>
+				<p><label><input type="checkbox" data-layer="parish" class="showlayer" value="false">Parish</label>
+				<button aria-label="Help" class="helpbutton" data-help="boundaries-parish"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<div class="legendContextual legendHorizontal">
+					<div class="l_rHorizontal">
+						<div class="lbHorizontal"><span style="background-color: #6b0763"></span></div>
+					</div>
+				</div>
+				<p><label><input type="checkbox" data-layer="westminster" class="showlayer" value="false">Westminster Constituency</label>
+				<button aria-label="Help" class="helpbutton" data-help="boundaries-westminster"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<div class="legendContextual legendHorizontal">
+					<div class="l_rHorizontal">
+						<div class="lbHorizontal"><span style="background-color: #07366b"></span></div>
 					</div>
 				</div>
 			</div>
-			-->
 		</div>
 		
 		<div id="overlay"></div>
@@ -220,84 +251,216 @@
           <button class="tablinks" onclick="modalTab(event, 'history')">Historical</button>
           <button class="tablinks" onclick="modalTab(event, 'housing')">Housing</button>
           <button class="tablinks" onclick="modalTab(event, 'transport')">Transport</button>
+          <button class="tablinks" onclick="modalTab(event, 'consumption')">Consumption</button>
           <button class="tablinks" onclick="modalTab(event, 'demographics')">Demographics</button>
           <button class="tablinks" onclick="modalTab(event, 'future')">Future Scenarios</button>
         </div>
 			  
+			  <!-- Data Warning -->
+			  <div class="warningbox">
+			    <div class="warning" id="warning_1">
+			      The 2022 Census in Scotland significantly changed Data Zone boundaries, historic data has been adjusted to the new boundaries
+			    </div>
+			    <div class="warning" id="warning_2">
+			      This LSOA had a complex border change between 2011 and 2021, historical data uses closest matching LSOA
+			    </div>
+			    <div class="warning" id="warning_3">
+			      This LSOA was formed in 2021 by merging two LSOAs, historical data has been merged
+			    </div>
+			    <div class="warning" id="warning_4">
+			      This LSOA was formed in 2021 by splitting two LSOAs, historical data has been split
+			    </div>
+			    <div class="warning" id="warning_5">
+			      At some point this LSOA has had zero residents
+			    </div>
+				<div class="warning" id="warning_6">
+			      In some years this LSOA has an unusually large number of company cars
+			    </div>
+			  </div>
+			  
 			  <div id="overview" class="tabcontent">
 			    
-			    <h3>Overview</h3>
+			    <h3>Overall Carbon Footprint</h3>
 			    
-			    <div style="min-height:300px">
-          <div class="chart-container" style="height:400px">
-        			<canvas id="overview-chart"></canvas>
+			    <div style="min-height:400px">
+			      
+			      <div class="chart-container" style="height:400px">
+          			<canvas id="overview-chart"></canvas>
+          	</div>
+			      
+			      <table>
+          	  <tr>
+          			<td><img src="/legacy/images/grades/undefined.jpg" width = 300 height = 300 id = "data_total_emissions_grade" alt = "Grade Image"></td>
+          		</tr>
+          		<tr>
+          		  <td style="text-align: right;" id="data_total_emissions_percap"> NA kgCO<sub>2</sub>e per person</td>
+          		</tr>
+        		</table>
         	</div>
-          <table>
+
+			<div>
+		  <p>This report card is customised for each Lower Super Output Area (LSOA) on the map. The title at the top gives the <abbr title="Lower Super Output Area">LSOA</abbr>'s unique ID, the Office for National Statistics area classification, and the ward name. Wards are usually larger than <abbr title="Lower Super Output Area">LSOA</abbr>s, but unlike LSOAs they have recognisable local names. This tab gives an overview of the LSOA's total carbon footprint, while other tabs provide more detail and additional context about different parts of the carbon footprint.</p>
+		  <p>The bar chart shows the total carbon footprint per person in units of kilograms of carbon dioxide equivalent. The first column shows the footprint of the selected <abbr title="Lower Super Output Area">LSOA</abbr>. The second column shows the average footprint of LSOAs in the same local authority. The third column shows the average footprint of all LSOAs in England. The fourth column shows the average footprint of LSOAs with the same area classification. The Office for National Statistics (ONS) produced the area classifications, which group areas into one of 24 categories based on social, economic, geographic, and demographic factors. Thus, this column represents the average of similar areas with similar populations.</p>
+          <p>The horizontal black line represents the UK's target footprint per person set out in the Committee on Climate             Change's <a href="https://www.theccc.org.uk/publication/sixth-carbon-budget/" target="_blank" rel="noopener">6th Carbon Budget</a>, covering 2032 to 2037. It is intended to provide an indication of how far we must go in the next ten years if we are to have any chance of reaching net-zero by 2050.
+          </p>
+		  <h3>Overview Tables</h3>
+		  </div>
+        	
+        	<div class="responsive-tables">
+        	  
+        	  <div>
+        	    <h4>Housing</h4>
+        	  
+        	  <table class="overviewtable">
         		  <tr>
         			<th>Name</th>
         			<th>Grade</th>
         			<th>kgCO<sub>2</sub>e per person</th>
         			</tr>
-        		  <tr>
-        			<td>Total</td>
-        			
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 50 height = 50 id = "data_total_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_total_emissions_percap">NA</td>
-        		  </tr>
-        		  <tr>
-        			<td>Electricity</td>
-        			
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 50 height = 50 id = "data_elec_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_elec_emissions_household">NA</td>
+	        	  <tr>
+	        		<td>Electricity</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_elec_emissions_grade" alt = "Grade Image"></td>
+        			<td style="text-align: right;" id="data_elec_emissions_household">NA</td>
         		  </tr>
         		  <tr>
         			<td>Gas</td>
-        			
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 50 height = 50 id = "data_gas_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_gas_emissions_household">NA</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_gas_emissions_grade" alt = "Grade Image"></td>
+        			<td style="text-align: right;" id="data_gas_emissions_household">NA</td>
         		  </tr>
         		  <tr>
         			<td>Other Heating</td>
-        			
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 50 height = 50 id = "data_other_heating_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_other_heating_emissions">NA</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_other_heating_emissions_grade" alt = "Grade Image"></td>
+        			<td style="text-align: right;" id="data_other_heating_emissions">NA</td>
         		  </tr>
         		  <tr>
-        			<td>Car Driving</td>
-        			
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 50 height = 50 id = "data_car_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_car_emissions">NA</td>
+        			<td>Other Housing</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_other_housing_emissions_grade" alt = "Grade Image"></td>
+        			<td style="text-align: right;" id="data_other_housing_emissions">NA</td>
         		  </tr>
+        		</table>
+        	  </div>
+        	  
+        	  <div>
+        	    <h4>Transport</h4>
+        		
+        		<table class="overviewtable">
+        		  <tr>
+        			<th>Name</th>
+        			<th>Grade</th>
+        			<th>kgCO<sub>2</sub>e per person</th>
+        			</tr>
+				  <tr>
+					<td>Car Driving</td>
+					<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_car_emissions_grade" alt = "Grade Image"></td>
+					<td style="text-align: right;" id="data_car_emissions">NA</td>
+				  </tr>
+				  <tr>
+					<td>Public Transport</td>
+					<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_public_transport_emissions_grade" alt = "Grade Image"></td>
+					<td style="text-align: right;" id="data_public_transport_emissions">NA</td>
+				  </tr>
         		  <tr>
         			<td>Van Driving</td>
-        			
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 50 height = 50 id = "data_van_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_van_emissions">NA</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_van_emissions_grade" alt = "Grade Image"></td>
+        			<td style="text-align: right;" id="data_van_emissions">NA</td>
+        		  </tr>
+        		  <tr>
+        			<td>Motorbikes & Company Car Driving</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_bikes_company_emissions_grade" alt = "Grade Image"></td>
+        			<td style="text-align: right;" id="data_bikes_company_emissions">NA</td>
         		  </tr>
         		  <tr>
         			<td>Flights</td>
-        			
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 50 height = 50 id = "data_flights_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_flights_emissions">NA</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_flights_emissions_grade" alt = "Grade Image"></td>
+        			<td style="text-align: right;" id="data_flights_emissions">NA</td>
         		  </tr>
         		  <tr>
-        			<td>Consumption of goods and services</td>
-        			
-        			<td><img src="/legacy/images/grades/undefined.jpg" width = 50 height = 50 id = "data_consumption_emissions_grade" alt = "Grade Image"></td>
-        			<td align='right' id="data_consumption_emissions">NA</td>
+        			<td>Vehicle Purchase</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_vehicle_purchase_emissions_grade" alt = "Grade Image"></td>
+        			<td style="text-align: right;" id="data_vehicle_purchase_emissions">NA</td>
         		  </tr>
+			    <tr>
+				    <td>Vehicle maintenance</td>
+				    <td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_vehicle_maintaince_emissions_grade" alt = "Grade Image"></td>
+				    <td style="text-align: right;" id="data_vehicle_maintaince_emissions">NA</td>
+			    </tr>
         		</table>
-          </div>
+        	  </div>
+        		
+        		<div><h4>Consumption</h4>
+        		
+        		<table class="overviewtable">
+        		  <tr>
+        			<th>Name</th>
+        			<th>Grade</th>
+        			<th>kgCO<sub>2</sub>e per person</th>
+        			</tr>
+				  <tr>
+					<td>Consumption of goods and services</td>
+					<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_consumption_emissions_grade" alt = "Grade Image"></td>
+					<td style="text-align: right;" id="data_consumption_emissions">NA</td>
+				  </tr>
+					  <tr>
+						<td>Furnishings</td>
+						<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_furnishings_emissions_grade" alt = "Grade Image"></td>
+						<td style="text-align: right;" id="data_furnishings_emissions">NA</td>
+					  </tr>
+					  <tr>
+						<td>Food and Drink</td>
+						<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_food_emissions_grade" alt = "Grade Image"></td>
+						<td style="text-align: right;" id="data_food_emissions">NA</td>
+					  </tr>
+					  <tr>
+						<td>Alcohol & Tobacco</td>
+						<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_alcohol_emissions_grade" alt = "Grade Image"></td>
+						<td style="text-align: right;" id="data_alcohol_emissions">NA</td>
+					  </tr>
+					  <tr>
+						<td>Clothing</td>
+						<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_clothing_emissions_grade" alt = "Grade Image"></td>
+						<td style="text-align: right;" id="data_clothing_emissions">NA</td>
+					  </tr>
+					  <tr>
+						<td>Communications</td>
+						<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_communications_emissions_grade" alt = "Grade Image"></td>
+						<td style="text-align: right;" id="data_communications_emissions">NA</td>
+					  </tr>
+					  <tr>
+						<td>Recreation</td>
+						<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_recreation_emissions_grade" alt = "Grade Image"></td>
+						<td style="text-align: right;" id="data_recreation_emissions">NA</td>
+					  </tr>
+					  <tr>
+						<td>Restaurants & Hotels</td>
+						<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_restaurants_emissions_grade" alt = "Grade Image"></td>
+						<td style="text-align: right;" id="data_restaurants_emissions">NA</td>
+					  </tr>
+					  <tr>
+						<td>Health</td>
+						<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_health_emissions_grade" alt = "Grade Image"></td>
+						<td style="text-align: right;" id="data_health_emissions">NA</td>
+					  </tr>
+					  <tr>
+						<td>Education</td>
+						<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_education_emissions_grade" alt = "Grade Image"></td>
+						<td style="text-align: right;" id="data_education_emissions">NA</td>
+					  </tr>
+					  <tr>
+						<td>Miscellaneous</td>
+						<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_miscellaneous_emissions_grade" alt = "Grade Image"></td>
+						<td style="text-align: right;" id="data_miscellaneous_emissions">NA</td>
+					  </tr>
+        		</table></div>
+        		
+        		
+        		
+        	</div>
+        	    	
+              	         
           <div>
-          <p>This report card is customised for each Lower Super Output Area (LSOA) on the map. The title at the top gives the       <abbr title="Lower Super Output Area">LSOA</abbr>'s unique ID, the Office for National Statistics area classification, and the Ward name. Wards are usually            larger than <abbr title="Lower Super Output Area">LSOA</abbr>s, but unlike <abbr title="Lower Super Output Area">LSOA</abbr>s have recognisable local names.
-          This tab gives an overview of the <abbr title="Lower Super Output Area">LSOA</abbr>s total carbon footprint, while other tabs give more detail and additional         context about parts of the carbon footprint.
-          </p>
-          <p>The bar chart shows the total carbon footprint per person in units of kilogrammes of carbon dioxide equivalent.        The first column shows the footprint of the selected <abbr title="Lower Super Output Area">LSOA</abbr>. The second column shows the average footprint of <abbr title="Lower Super Output Area">LSOA</abbr>s in       the same local authority. The third column shows the average footprint of all <abbr title="Lower Super Output Area">LSOA</abbr>s in England. The fourth column         shows the average footprint of <abbr title="Lower Super Output Area">LSOA</abbr>s with the same area classification. The Office for National Statistics (ONS)          produced the area classifications, which group areas into one of 24 categories based on social, economic, geographic,       and demographic factors.  Thus, this column represents the average of similar areas with similar people.
-          The horizontal black line represents the UK's target footprint per person set out in the Committee on Climate             Change's <a href="https://www.theccc.org.uk/publication/sixth-carbon-budget/" target="_blank" rel="noopener">6th Carbon Budget</a>, covering 2032 to 2037. It is intended to provide an indication of how far we must go in the next ten years if we are to have any chance of reaching net-zero by 2050.
-          </p>
           <h3>Understanding the grades</h3>
           <p><img src="/images/ui/grades.webp" style="width:100%; max-width:700px" alt="How grades are calculated" loading="lazy"></p>
-          <p>Many values have been given a grade from A+ to F- to help you understand how this <abbr title="Lower Super Output Area">LSOA</abbr> compares to others. The         grades are relative to the average <abbr title="Lower Super Output Area">LSOA</abbr>, so areas with an A+ to C- grade are better than average, while areas with a       D+ to F- grade are worse than average. Most areas are close to the average, so theses grade bands are wide,               representing 7% of <abbr title="Lower Super Output Area">LSOA</abbr>s. Towards the extremes, the grade bands narrow, so only the best 1% of <abbr title="Lower Super Output Area">LSOA</abbr>s get an A+ grade       . In some cases, it is not possible to calculate a grade due to missing data, so a NA value will be shown.</p>
+		  <p>Many values have been given a grade from A+ to F- to help you understand how this <abbr title="Lower Super Output Area">LSOA</abbr> compares to others. The grades are relative to the average LSOA, so areas with an A+ to C- grade are better than average, while areas with a D+ to F- grade are worse than average. Most areas are close to the average, so these grade bands are wide, representing around 7% of LSOAs. Towards the extremes, the grade bands narrow, so only the best 1% of LSOAs receive an A+ grade. In some cases, it is not possible to calculate a grade due to missing data, so an NA value will be shown.</p>
 			    
 			    
 			  </div>
@@ -310,8 +473,7 @@
 			    
 			    	<div class="chart-wrapper" id="overview-chartrow">
   					  <div class="chart-text">
-  							<h4 class="chart-title">Historical Emissions</h4>
-  							<p class="chart-description">Estimated per person emissions 2010 to 2020</p>
+			   				<p class="chart-description">This chart shows the average per-person carbon footprint in this area for each year since 2010. Total emissions are broken down into categories; more information on individual categories is available in the other tabs. The black horizontal line represents the UK's target footprint per person set out in the Committee on Climate Change's <a href="https://www.theccc.org.uk/publication/sixth-carbon-budget/" target="_blank" rel="noopener">6th Carbon Budget</a>, covering 2032 to 2037. It is intended to provide an indication of how far we must go in the next ten years if we are to have any chance of reaching net-zero by 2050.</p>
   						</div>
   						<div class="chart-container">
   							<canvas id="historical-chart"></canvas>
@@ -322,7 +484,212 @@
 			  
 			  <div id="transport" class="tabcontent">
 			    
-			    <h3>Housing</h3>
+			    <h3>Transport</h3>
+
+				<p>Find out more about this topic in the <a href="/transport/#/zones/#8/51.482/-0.151" class="opentool">Transport and Accessibility Explorer</a></p>
+			    
+			    <div class="chart-wrapper" id="carEmissions-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Car Emissions</h4>
+											<p class="chart-description">Carbon emissions from cars can be reduced in two main ways. First, by reducing emissions per kilometre driven through improved fuel efficiency or switching to electric vehicles. Second, by driving less. The Committee on Climate Change has said that there is no way to meet our climate targets without an overall reduction in the amount we drive. While electric cars reduce tailpipe emissions, substantial emissions occur during manufacturing, and cars still contribute to air pollution (from particulates from tyres and brakes), traffic congestion, and road injuries. It is estimated that at least 10,000 people a year are affected by air pollution in the UK. Towns and cities can become less car dependent, but this requires investment in high-quality public transport and safe walking and cycling infrastructure so that people have attractive alternatives. Cars also harm other travellers: for example, they cause traffic, slowing down buses and making pedestrians and cyclists feel unsafe, which, in turn, can push people from low-carbon modes to driving, worsening the situation. Car and van emissions are based on data from MOT tests. See the manual for more details.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="carEmissions-chart"></canvas>
+					</div>
+					</div>
+			    
+			    <div class="chart-wrapper" id="vanEmissions-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Van Emissions</h4>
+					  <p class="chart-description">Van use is a bit more complicated than car use as they are more likely to be used for work 
+						rather than personal transport. Some LSOAs have exceptionally high numbers of vans. 
+						This is because the data we have is based on the registered keeper's address. 
+						So, a company that reports all its vans to be at a single address will bias the results for the LSOA as a whole.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="vanEmissions-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="bikeCompany-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Motorbikes, Company Vehicles, and other types</h4>
+											<p class="chart-description">This chart covers other personal vehicles such as motorbikes and company cars. In a few places there are extremely large numbers of company cars; this is usually due to a leasing company that officially registers all its vehicles to a single address. In those cases we suppress the company car emissions from the total carbon footprint.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="bikeCompany-chart"></canvas>
+					</div>
+					</div>
+
+					<div class="chart-wrapper" id="publicTransport-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Public Transport</h4>
+											<p class="chart-description">This category includes busses, coaches, train, ferries and other types of public transport in the UK. Public transport is typically much lower carbon than cars and planes.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="publicTransport-chart"></canvas>
+					</div>
+					</div>
+					
+					
+					<div class="chart-wrapper" id="consumptionFlights-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Flights Emissions</h4>
+											<p class="chart-description">Flying is one of the highest carbon-emitting activities people undertake. Reducing flight emissions is therefore an important part of meeting climate targets. There are two main ways to reduce flight emissions: fly less by taking fewer trips to closer locations, and avoid flying entirely by using other means such as trains or boats. On average in Britain a person takes a return flight approximately once every two years, but this varies greatly between individuals. We estimate flight emissions for each LSOA based on our synthetic population and distribute emissions accordingly.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionFlights-chart"></canvas>
+					</div>
+					</div>
+			    
+			    
+			    <div class="chart-wrapper" id="consumptionVehiclePurchase-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Vehicle Purchase</h4>
+											<p class="chart-description">Manufacturing a car is a high-carbon activity. While most households do not purchase a car every year, across a neighbourhood there are usually sufficient purchases each year to contribute a small amount to the overall carbon footprint.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionVehiclePurchase-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="consumptionVehicleOther-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Vehicle maintenance & other</h4>
+					  <p class="chart-description">This category covers indirect emissions from vehicles that don't come from travel, such as repair and maintenance.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionVehicleOther-chart"></canvas>
+					</div>
+					</div>
+					
+					
+			    
+			    
+			    
+			    
+			  </div>
+			  
+			  <div id="consumption" class="tabcontent">
+			    
+			    <h3>Consumption of Goods and Services</h3>
+			    
+			    <div class="chart-wrapper" id="consumptionTotal-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Total Consumption of Goods and Services</h4>
+					  <p class="chart-description">Many household carbon emissions stem not from direct activities like burning gas for heating or cooking, but from embodied emissions—the carbon released during the production, transport, and delivery of goods and services we consume. These emissions, often generated abroad, are attributed to the end user in consumption-based carbon footprint models like the PBCC. Because detailed local data on purchasing habits and product origins is scarce, our estimates rely on modelling: synthetic households are created using demographic data and matched with real spending profiles from the Living Costs and Food Survey. While individual matches may be imperfect, aggregating across many households yields a reasonable approximation of neighbourhood-level consumption emissions. For more information see the <a href="/manual/#placebasedcarboncalculator">manual</a>.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionTotal-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="extratext-chartrow" style="display: block;">
+					  <h3>Detailed Consumption of Goods and Services</h3>
+			      <p>The sections below provide more detail on the types of good and services that make up the consumption footprint. Note that within individual categories consumption can fluctuate between years, due to the use of different households in the Living Costs and Food Survey. This can result in some unusually high/low years of consumption.</p>
+					</div>
+			    
+			    
+			    
+			    <div class="chart-wrapper" id="consumptionFood-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Food and non-alcoholic beverages</h4>
+					  <p class="chart-description">This category includes all edible goods purchased for home consumption—fresh produce, meat, dairy, packaged foods, and drinks like juice, tea, and bottled water. The carbon footprint here is shaped by agricultural practices (e.g. livestock farming, fertiliser use), food processing, packaging, refrigeration, and transport. Imported goods and highly processed items tend to have higher emissions. For example, beef and lamb are particularly carbon-intensive due to methane emissions and land use, while locally grown vegetables typically have a lower footprint.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionFood-chart"></canvas>
+					</div>
+					</div>
+			    
+          <div class="chart-wrapper" id="consumptionAlcohol-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Alcoholic beverages, tobacco and narcotics</h4>
+					  <p class="chart-description">This covers purchases of beer, wine, spirits, cigarettes, and other recreational substances. These products often have high embodied emissions due to intensive farming (e.g. grapes, barley, tobacco), fermentation or chemical processing, and packaging. Transport and refrigeration also play a role, especially for imported alcohol. While not consumed in large quantities by all households, their production and distribution chains can be surprisingly carbon-heavy.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionAlcohol-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="consumptionFurnishings-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Furnishings, household equipment and routine household maintenance</h4>
+					  <p class="chart-description">This includes furniture, appliances, cleaning products, tools, and materials for home upkeep. Emissions stem from the extraction and processing of raw materials (wood, metals, plastics), manufacturing, and long-distance shipping. Large appliances like fridges or washing machines have significant embodied carbon, and their energy use over time adds to the footprint. Even routine items like detergents or paint contribute through chemical production and packaging.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionFurnishings-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="consumptionClothing-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Clothing and footwear</h4>
+					  <p class="chart-description">This category encompasses garments, shoes, and accessories. The fashion industry is a major source of emissions due to textile production (especially synthetics like polyester), dyeing, finishing, and global logistics. Fast fashion accelerates this impact by encouraging frequent purchases and short product lifespans. Natural fibres like cotton can also be carbon-intensive due to water use and fertilisers. Repairing, reusing, or buying second-hand clothing can significantly reduce emissions in this category.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionClothing-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="consumptionCommunication-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Information and communication</h4>
+					  <p class="chart-description">Includes mobile phones, computers, internet subscriptions, and software services. While daily usage emissions are relatively low, the production of electronics involves mining rare earth elements, complex manufacturing, and global distribution. Devices like smartphones and laptops have high embodied carbon, and frequent upgrades amplify the impact. Cloud services and data centres also contribute, though their footprint is often less visible to consumers.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionCommunication-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="consumptionRecreation-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Recreation, sport and culture</h4>
+					  <p class="chart-description">This broad category covers books, games, sports equipment, musical instruments, event tickets, and holidays. Emissions vary widely depending on the activity—digital entertainment has a modest footprint, while international travel or imported sporting goods can be substantial. Cultural consumption like cinema or concerts involves energy use in venues and transport. Leisure choices, especially travel-based ones, can be among the most carbon-intensive aspects of personal consumption.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionRecreation-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="consumptionRestaurants-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Restaurants and accommodation services</h4>
+					  <p class="chart-description">Includes dining out, takeaways, hotels, and short-term stays. The carbon footprint here comes from food sourcing (often meat-heavy menus), energy use in kitchens and buildings, and waste generation. Accommodation adds emissions through heating, laundry, and cleaning services. Travel to and from these venues also contributes, especially for holidays involving flights or long drives. Choosing plant-based meals or eco-certified lodgings can help reduce impact.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionRestaurants-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="consumptionHealth-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Health</h4>
+					  <p class="chart-description">Covers medicines, medical devices, and healthcare services. While essential, the health sector has a notable carbon footprint due to pharmaceutical production, sterilisation processes, and energy-intensive facilities. Personal purchases like over-the-counter drugs or supplements have relatively small emissions, but hospital visits and specialised treatments involve complex supply chains and high energy use. The footprint here is less discretionary but still relevant in aggregate models.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionHealth-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="consumptionEducation-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Education services</h4>
+											<p class="chart-description">Includes tuition fees, school supplies, books, and digital learning tools. Emissions are generally modest but come from building energy use, printed materials, and IT infrastructure. For households with children or students, this category reflects both direct spending and the broader carbon intensity of educational institutions. However, it can be difficult to measure as most households do not pay for state education directly. Therefore we rely on household demographics (presence of children) and education-related spending as a proxy. Online learning platforms tend to have lower footprints than traditional classroom settings, though device use and server energy use still matter.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionEducation-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="consumptionMiscellaneous-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Miscellaneous</h4>
+					  <p class="chart-description">This includes anything that does not fit into the other categories.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionMiscellaneous-chart"></canvas>
+					</div>
+					</div>
 			    
 			  </div>
 			  
@@ -330,114 +697,133 @@
 			    
 			    <h3>Housing</h3>
 			    
+			    <p>Find out more about this topic in the <a href="/retrofit/#/zones/#8/51.482/-0.151" class="opentool">Retrofit Explorer</a></p>
 			    
-			    <h3>Housing: Historical Trends</h3>
-			    
-			    <div class="chart-wrapper" id="dwellingsct-chartrow" style="display: block;">
+			    <div class="chart-wrapper" id="gasEmissions-chartrow" style="display: block;">
 					<div class="chart-text"> 
-					  <h4 class="chart-title">Number of dwellings by council tax band</h4>
-					  <p class="chart-description">This chart shows the number of dwellings in each council tax band from 2010 to the present according to the <a href="https://www.gov.uk/government/statistics/council-tax-stock-of-properties-2024">Valuation Office Agency</a>. The VOA round this data to the nearest 10 dwellings, so minor inconsistencies may exist. Note that the I band is only used in Wales.</p>
+					  <h4 class="chart-title">Gas</h4>
+					  <p class="chart-description">Most homes in Britain use natural gas for central heating and hot water. 
+						Natural gas is a fossil fuel and releases carbon dioxide when burnt. To meet the climate targets, we need to remove all 
+						gas boilers from homes and replace them with low carbon heating solutions. We also need to reduce the amount of heating 
+						homes need by insulating and draft proofing homes. Insulating and draft proofing can be very cost-effective. 
+						It lowers energy bills and creates local jobs for installers. Many homes now have basic insulation such as 
+						cavity wall and loft insulation. However, uptake of more complex insulation such as solid wall insulation and underfloor 
+						insulation is much lower. Improvements in insulation and gas boilers' efficiency have resulted in a decline in gas consumption 
+						in most areas of Britain.</p>
 					</div>
 					<div class="chart-container">
-						<canvas id="dwellingsct-chart"></canvas>
+						<canvas id="gasEmissions-chart"></canvas>
 					</div>
 					</div>
 					
-					<div class="chart-wrapper" id="dwellingstype-chartrow" style="display: block;">
+					<div class="chart-wrapper" id="electricityEmissions-chartrow" style="display: block;">
 					<div class="chart-text"> 
-					  <h4 class="chart-title">Number of dwellings by building type</h4>
-					  <p class="chart-description">This chart shows the number of dwellings by building type from 2020 to the present according to the <a href="https://www.gov.uk/government/statistics/council-tax-stock-of-properties-2024">Valuation Office Agency</a>. The VOA round this data to the nearest 10 dwellings, so minor inconsistencies may exist.</p>
+					  <h4 class="chart-title">Electricity</h4>
+					  <p class="chart-description">Unlike gas, electricity can be a zero-carbon energy source, depending on how it is generated. 
+						In the past, the UK got most of its electricity from burning coal (a very high carbon fuel). 
+						However, we now get our electricity from a mix of gas, nuclear, and renewables such as wind and solar. 
+						This has meant that the amount of carbon dioxide emitted per unit of electricity has fallen a lot in recent years. 
+						Electricity demand has also decreased due to EU legislation requiring appliances to be more energy-efficient and replacing 
+						incandescent light bulbs with more efficient CFL and LED light bulbs. In the future, we expect electricity demand to 
+						increase as people replace gas heating with electric heat pumps and switch to electric cars. 
+						This will require the construction of new power stations, such as offshore wind farms, and more homes to generate their 
+						electricity using rooftop solar panels. </p>
 					</div>
 					<div class="chart-container">
-						<canvas id="dwellingstype-chart"></canvas>
+						<canvas id="electricityEmissions-chart"></canvas>
 					</div>
 					</div>
 					
-					<div class="chart-wrapper" id="dwellingsbedrooms-chartrow" style="display: block;">
+					<div class="chart-wrapper" id="heatingOther-chartrow" style="display: block;">
 					<div class="chart-text"> 
-					  <h4 class="chart-title">Number of dwellings by bedrooms</h4>
-					  <p class="chart-description">This chart shows the number of dwellings by the number of bedrooms from 2020 to the present according to the <a href="https://www.gov.uk/government/statistics/council-tax-stock-of-properties-2024">Valuation Office Agency</a>. The VOA round this data to the nearest 10 dwellings, so minor inconsistencies may exist.</p>
+					  <h4 class="chart-title">Other Heating</h4>
+											<p class="chart-description">A small proportion of homes in Britain use other forms of heating such as bottled gas, oil, wood and coal. These fuels tend to be more carbon intensive than natural gas and are often used in rural areas not connected to the gas grid. We have limited data on the use of these fuels at a local level, so estimates of emissions from these sources are uncertain.</p>
 					</div>
 					<div class="chart-container">
-						<canvas id="dwellingsbedrooms-chart"></canvas>
+						<canvas id="heatingOther-chart"></canvas>
 					</div>
 					</div>
 					
-					<div class="chart-wrapper" id="dwellingsage-chartrow" style="display: block;">
+					<div class="chart-wrapper" id="housingOther-chartrow" style="display: block;">
 					<div class="chart-text"> 
-					  <h4 class="chart-title">Number of dwellings by building age</h4>
-					  <p class="chart-description">This chart shows the number of dwellings by building age from 2020 to the present according to the <a href="https://www.gov.uk/government/statistics/council-tax-stock-of-properties-2024">Valuation Office Agency</a>. The VOA round this data to the nearest 10 dwellings, so minor inconsistencies may exist.</p>
+					  <h4 class="chart-title">Housing Other</h4>
+											<p class="chart-description">This category includes items such as maintenance and upgrades to houses. For most households these purchases are infrequent but sometimes large, so when averaged over a neighbourhood they contribute a moderate amount to the overall carbon footprint.</p>
 					</div>
 					<div class="chart-container">
-						<canvas id="dwellingsage-chart"></canvas>
+						<canvas id="housingOther-chart"></canvas>
 					</div>
 					</div>
 			    
 			  </div>
-			  
 			  <div id="demographics" class="tabcontent">
 			    
 			    <h3>Demographics</h3>
 			    <h4>Community Photo</h4>
-			    <div class="community_photos">
-			      <img class="family_photo" id="ff0" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff1" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff2" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff3" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff4" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff5" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff6" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff7" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff8" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff9" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff10" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff11" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff12" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff13" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff14" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff15" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff16" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff17" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff18" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff19" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff20" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff21" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff22" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff23" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff24" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff25" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff26" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff27" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff28" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff29" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff30" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff31" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff32" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff33" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff34" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff35" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff36" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff37" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff38" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff39" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff40" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff41" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff42" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff43" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff44" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff45" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff46" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      <img class="family_photo" id="ff47" src="images/ui/family_photos/unknown.png" loading="lazy">
-			      
-			    </div>
+				<div class="community_photos">
+				  <img class="family_photo" id="ff0" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff1" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff2" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff3" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff4" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff5" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff6" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff7" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff8" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff9" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff10" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff11" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff12" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff13" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff14" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff15" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff16" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff17" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff18" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff19" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff20" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff21" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff22" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff23" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff24" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff25" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff26" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff27" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff28" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff29" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff30" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff31" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff32" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff33" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff34" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff35" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff36" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff37" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff38" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff39" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff40" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff41" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff42" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff43" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff44" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff45" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff46" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff47" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  
+				</div>
 			    
-			    <p>The community photo gives an at-a-glance overview of the deomgraphics of each neighbouhood based on the 2021 Census. Each image represents households based on household compostion, socio-economic classification (NS-SEC), and ethnicity. For more details see the <a href="/manual/#communityphoto">manual</a>.</p>
+				<p>The community photo gives an at-a-glance overview of the demographics of each neighbourhood based on the 2021/22 Census. Each image represents households based on household composition, socio-economic classification (NS-SEC), and ethnicity. For more details see the <a href="/manual/#communityphoto">manual</a>.</p>
 			    
 			    
 			    <div class="chart-wrapper" id="population-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Population estimates and number of dwellings</h4>
-					  <p class="chart-description">ONS Population Estimates, VOA dwellings</p>
+					  <p class="chart-description">This chart shows estimates of the population, number of dwellings, and number of households for each year since 2010. The number of people living within an area is a fundamental variable for many of the calculations within the PBCC. Unfortunately, we only know this with certainty in 2011 and 2021/22 when the censuses were conducted. Between those dates we use the ONS mid-year population estimates. The stacked bar chart shows the distribution of residents' ages.</p>
+					  
+					  <p>Council Tax data provides a reasonably accurate record of the number of dwellings (red line) and can be used to track house building and demolition. Unfortunately, the ONS does not estimate the number of households each year, so we have estimated this number based on the known figures for the 2011 and 2021/22 censuses and changes in the number of adults and dwellings each year.</p>
+					  
+<p>Getting the number of households estimated accurately is important as many parts of the carbon footprint calculations are done on a per-household basis and only converted to a per-person basis at the final stage.</p>
+
+<p>This chart also contains adjustments for changes in the boundaries of LSOAs which occurred with each census, providing historical estimates of population within the 2021 boundaries.</p>
 					</div>
 					<div class="chart-container">
 						<canvas id="population-chart"></canvas>
@@ -445,64 +831,59 @@
 					
 					
 				</div>
+
+				<div class="chart-wrapper">
+					<h4>LSOA Characteristics</h4>
+					<table>
+						<tr>
+							<th>Name</th>
+							<th>Value</th>
+						</tr>
+						<tr>
+							<td>Local Authority Code</td>
+							<td id="data_LAD25CD">NA</td>
+						</tr>
+						<tr>
+							<td>Local Authority Name</td>
+							<td id="data_LAD25NM">NA</td>
+						</tr>
+						<tr>
+							<td>Ward Name</td>
+							<td id="data_WD25NM">NA</td>
+						</tr>
+						<tr>
+							<td>Parish Name</td>
+							<td id="data_PAR23NM">NA</td>
+						</tr>
+						<tr>
+							<td>Parlimentary Constituency</td>
+							<td id="data_PCON24NM">NA</td>
+						</tr>
+						<tr>
+							<td>LSOA Classification (2011)</td>
+							<td id="data_SOAC11NM">NA</td>
+						</tr>
+					</table>
+				</div>
+
+				<div class="chart-wrapper">
+					<h4>ONS pen portrait</h4>
+					<p>The Office for National Statistics Area Classifications 2011 group <abbr title="Lower Super Output Area">LSOAs</abbr> based on sociodemographic characteristics. Each <abbr title="Lower Super Output Area">LSOA</abbr> is grouped into a supergroup and some supergroups are further split into subgroups.</p>
+					<p><b id="data_supergroup_name">Supergroup Description</b></p>
+					<div id="penportsup"></div>
+					<p><b id="data_lsoa_class_name">Subgroup Description</b></p>
+					<div id="penportsub"></div>
+				</div>
 			    
 			    
 			  </div>
 			  
-			  <div id="future" class="tabcontent">
-			    
-			    <h3>Future Scenarios</h3>
-			    
-			    <div class="chart-wrapper" id="plefIgnore-chartrow">
-						<div class="chart-text">
-							<h4 class="chart-title">PLEF Ignore</h4>
-							<p class="chart-description">Forcast per person emissions under the PLEF Ignore scenario. Left column is a grandfathered downscaling, right column is an equity downscaling</p>
-						</div>
-						<div class="chart-container">
-							<canvas id="plefIgnore-chart"></canvas>
-						</div>
-					</div>
-					
-					<div class="chart-wrapper" id="plefSteer-chartrow">
-						<div class="chart-text">
-							<h4 class="chart-title">PLEF Steer</h4>
-							<p class="chart-description">Forcast per person emissions under the PLEF Steer scenario. Left column is a grandfathered downscaling, right column is an equity downscaling</p>
-						</div>
-						<div class="chart-container">
-							<canvas id="plefSteer-chart"></canvas>
-						</div>
-					</div>
-					
-					<div class="chart-wrapper" id="plefShift-chartrow">
-						<div class="chart-text">
-							<h4 class="chart-title">PLEF Shift</h4>
-							<p class="chart-description">Forcast per person emissions under the PLEF Shift scenario. Left column is a grandfathered downscaling, right column is an equity downscaling</p>
-						</div>
-						<div class="chart-container">
-							<canvas id="plefShift-chart"></canvas>
-						</div>
-					</div>
-					
-					<div class="chart-wrapper" id="plefTransform-chartrow">
-						<div class="chart-text">
-							<h4 class="chart-title">PLEF Transform</h4>
-							<p class="chart-description">Forcast per person emissions under the PLEF Transform scenario. Left column is a grandfathered downscaling, right column is an equity downscaling</p>
-						</div>
-						<div class="chart-container">
-							<canvas id="plefTransform-chart"></canvas>
-						</div>
-					</div>
-			  </div>
-	
-				
-					
-					
-					
-					
-
-				</div>
+			    <div id="future" class="tabcontent">
+					<h3>Future Scenarios: Coming Soon</h3>
+					<p>As part of the <a target="_blank" aria-label="EDRC Futures theme" href="https://www.edrc.ac.uk/research/futures/">Energy Demand Research Centre Futures theme</a> we are working on downscaling the <a target="_blank" aria-label="PLEF homepage" href="https://low-energy.creds.ac.uk/">Positive Low Energy Futures Scenarios</a> to provide each neighbourhood with a local decarbonisation pathway. This work is ongoing and will be added to the tool in the future.</p>
+			    </div>
 		</div>
-		
+	  </div>
 		
 	</body>
 	
