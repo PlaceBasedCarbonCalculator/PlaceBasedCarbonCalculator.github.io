@@ -18,7 +18,7 @@ manageCharts = function (locationId) {
       console.log(error);
     });
 
-  const p2 = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/PTfrequency/' + locationId + '.json')
+  const p2 = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/PTfrequency/v2/' + locationId + '.json')
     .then(function (frequencyData) {
       frequencyLocationData = frequencyData;
       //console.log(frequencyLocationData);
