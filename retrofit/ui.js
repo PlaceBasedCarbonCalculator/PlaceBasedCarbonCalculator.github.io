@@ -32,7 +32,7 @@ var lsoaLocationData = {};
 
 manageCharts =  function (locationId, mapLayerId){
   if(mapLayerId == 'zones'){
-    const p = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/epc_dom/v2/' + locationId + '.json')
+    const p = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/epc_dom/v3/' + locationId + '.json')
         .then(function (lsoaData) {
             lsoaLocationData = lsoaData[0];
             makeChartLSOA();
