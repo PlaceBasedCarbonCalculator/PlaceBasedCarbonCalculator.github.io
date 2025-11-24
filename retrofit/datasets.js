@@ -10,7 +10,7 @@ const datasets_extra = {
 			'type': 'fill',
 			'source': {
 			'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/zones_retrofit_20251122.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/zones_retrofit_20251124.pmtiles',
 				},
 			'source-layer': 'zones',
 			'paint': {
@@ -40,7 +40,7 @@ const datasets_extra = {
 			'type': 'circle',
 			'source': {
 			'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/epc_dom.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/epc_dom_20251124.pmtiles',
 				},
 			'source-layer': 'epc_dom',
 			'paint': {
@@ -123,221 +123,223 @@ const datasets_extra = {
 			],
 			'b_type': [
 				['Detached','#1f78b4'],
-  			['Semi-Detached' ,'#33a02c'],
-  			['Mid-Terrace','#e31a1c'],
-  			['Enclosed Mid-Terrace','#ff7f00'],
-  			['End-Terrace' ,'#6a3d9a'],
-  			['Enclosed End-Terrace','#b15928']
+				['Semi-Detached' ,'#33a02c'],
+				['Mid-Terrace','#e31a1c'],
+				['Enclosed Mid-Terrace','#ff7f00'],
+				['End-Terrace' ,'#6a3d9a'],
+				['Enclosed End-Terrace','#b15928']
 			],
 			'p_type': [
 				['Flat','#e31a1c'],
-  			['House' ,'#33a02c'],
-  			['Maisonette','#1f78b4'],
-  			['Bungalow','#6a3d9a'],
-  			['Park home' ,'#ff7f00']
+				['House' ,'#33a02c'],
+				['Maisonette','#1f78b4'],
+				['Bungalow','#6a3d9a'],
+				['Park home' ,'#ff7f00']
 			],
 			'age': [
 				['<1900','#9e0142'],
-  			['1900-1929' ,'#d53e4f'],
-  			['1930-1949','#f46d43'],
-  			['1950-1966','#fdae61'],
-  			['1967-1975' ,'#fee08b'],
-  			['1976-1982','#ffffbf'],
-  			['1983-1990','#e6f598'],
-  			['1991-1995','#abdda4'],
-  			['1996-2002' ,'#66c2a5'],
-  			['2003-2006','#3288bd'],
-  			['2007-2011','#5e4fa2'],
-  			['>2012','#934fa2']
+				['1900-1929' ,'#d53e4f'],
+				['1930-1949','#f46d43'],
+				['1950-1966','#fdae61'],
+				['1967-1975' ,'#fee08b'],
+				['1976-1982','#ffffbf'],
+				['1983-1990','#e6f598'],
+				['1991-1995','#abdda4'],
+				['1996-2002' ,'#66c2a5'],
+				['2003-2006','#3288bd'],
+				['2007-2011','#5e4fa2'],
+				['2012-2021','#934fa2'],
+				['>2022','#c259a7']
 			],
 			'year': [
 				['<2014','#e31d3e'],
-  			['2016','#f17e23'],
-  			['2018','#f2a867'],
-  			['2020','#f6cc15'],
-  			['2022','#8cbc42'],
-  			['2024','#0e7e58']
+				['2016','#f17e23'],
+				['2018','#f2a867'],
+				['2020','#f6cc15'],
+				['2022','#8cbc42'],
+				['2024','#0e7e58']
 			],
 			'area': [
 				['<40','#4d9221'],
-  			['40-60' ,'#7fbc41'],
-  			['60-80','#b8e186'],
-  			['80-100','#e6f5d0'],
-  			['100-120' ,'#fde0ef'],
-  			['120-140','#f1b6da'],
-  			['140-160','#de77ae'],
-  			['>160','#c51b7d']
+				['40-60' ,'#7fbc41'],
+				['60-80','#b8e186'],
+				['80-100','#e6f5d0'],
+				['100-120' ,'#fde0ef'],
+				['120-140','#f1b6da'],
+				['140-160','#de77ae'],
+				['>160','#c51b7d']
 			],
 			
 			'floor_ee': [
 				['Very Good','#2c7bb6'],
-  			['Good' ,'#abd9e9'],
-  			['Average','#ffffbf'],
-  			['Poor','#fdae61'],
-  			['Very Poor' ,'#d7191c']
+				['Good' ,'#abd9e9'],
+				['Average','#ffffbf'],
+				['Poor','#fdae61'],
+				['Very Poor' ,'#d7191c']
 			],
 			'water_ee': [
 				['Very Good','#2c7bb6'],
-  			['Good' ,'#abd9e9'],
-  			['Average','#ffffbf'],
-  			['Poor','#fdae61'],
-  			['Very Poor' ,'#d7191c']
+				['Good' ,'#abd9e9'],
+				['Average','#ffffbf'],
+				['Poor','#fdae61'],
+				['Very Poor' ,'#d7191c']
 			],
 			'wind_ee': [
 				['Very Good','#2c7bb6'],
-  			['Good' ,'#abd9e9'],
-  			['Average','#ffffbf'],
-  			['Poor','#fdae61'],
-  			['Very Poor' ,'#d7191c']
+				['Good' ,'#abd9e9'],
+				['Average','#ffffbf'],
+				['Poor','#fdae61'],
+				['Very Poor' ,'#d7191c']
 			],
 			'wall_ee': [
 				['Very Good','#2c7bb6'],
-  			['Good' ,'#abd9e9'],
-  			['Average','#ffffbf'],
-  			['Poor','#fdae61'],
-  			['Very Poor' ,'#d7191c']
+				['Good' ,'#abd9e9'],
+				['Average','#ffffbf'],
+				['Poor','#fdae61'],
+				['Very Poor' ,'#d7191c']
 			],
 			'roof_ee': [
 				['Very Good','#2c7bb6'],
-  			['Good' ,'#abd9e9'],
-  			['Average','#ffffbf'],
-  			['Poor','#fdae61'],
-  			['Very Poor' ,'#d7191c']
+				['Good' ,'#abd9e9'],
+				['Average','#ffffbf'],
+				['Poor','#fdae61'],
+				['Very Poor' ,'#d7191c']
 			],
 			'heat_ee': [
 				['Very Good','#2c7bb6'],
-  			['Good' ,'#abd9e9'],
-  			['Average','#ffffbf'],
-  			['Poor','#fdae61'],
-  			['Very Poor' ,'#d7191c']
+				['Good' ,'#abd9e9'],
+				['Average','#ffffbf'],
+				['Poor','#fdae61'],
+				['Very Poor' ,'#d7191c']
 			],
 			'con_ee': [
 				['Very Good','#2c7bb6'],
-  			['Good' ,'#abd9e9'],
-  			['Average','#ffffbf'],
-  			['Poor','#fdae61'],
-  			['Very Poor' ,'#d7191c']
+				['Good' ,'#abd9e9'],
+				['Average','#ffffbf'],
+				['Poor','#fdae61'],
+				['Very Poor' ,'#d7191c']
 			],
 			'light_ee': [
 				['Very Good','#2c7bb6'],
-  			['Good' ,'#abd9e9'],
-  			['Average','#ffffbf'],
-  			['Poor','#fdae61'],
-  			['Very Poor' ,'#d7191c']
+				['Good' ,'#abd9e9'],
+				['Average','#ffffbf'],
+				['Poor','#fdae61'],
+				['Very Poor' ,'#d7191c']
 			],
 		  'sol_wat': [
 				['yes','#fdae61'],
-  			['no','#2c7bb6']
+  				['no','#2c7bb6']
 			]
 			
 		},
 		zones: {
 			'epc_score_avg': [
 				['0-50','#d73027'],
-  			['50-55' ,'#fc8d59'],
-  			['55-60','#fee08b'],
-  			['60-65','#ffffbf'],
-  			['65-70','#d9ef8b'],
-  			['70-80' ,'#91cf60'],
-  			['80-100','#1a9850']
+				['50-55' ,'#fc8d59'],
+				['55-60','#fee08b'],
+				['60-65','#ffffbf'],
+				['65-70','#d9ef8b'],
+				['70-80' ,'#91cf60'],
+				['80-100','#1a9850']
 			],
 			'modal_age': [
 				['<1900','#9e0142'],
-  			['1900-1929' ,'#d53e4f'],
-  			['1930-1949','#f46d43'],
-  			['1950-1966','#fdae61'],
-  			['1967-1975' ,'#fee08b'],
-  			['1976-1982','#ffffbf'],
-  			['1983-1990','#e6f598'],
-  			['1991-1995','#abdda4'],
-  			['1996-2002' ,'#66c2a5'],
-  			['2003-2006','#3288bd'],
-  			['2007-2011','#5e4fa2'],
-  			['>2012','#934fa2']
+				['1900-1929' ,'#d53e4f'],
+				['1930-1949','#f46d43'],
+				['1950-1966','#fdae61'],
+				['1967-1975' ,'#fee08b'],
+				['1976-1982','#ffffbf'],
+				['1983-1990','#e6f598'],
+				['1991-1995','#abdda4'],
+				['1996-2002' ,'#66c2a5'],
+				['2003-2006','#3288bd'],
+				['2007-2011','#5e4fa2'],
+				['2012-2021','#934fa2'],
+				['>2022','#c259a7']
 			],
 			'floor_area_avg': [
 				['<40','#4d9221'],
-  			['40-60' ,'#7fbc41'],
-  			['60-80','#b8e186'],
-  			['80-100','#e6f5d0'],
-  			['100-120' ,'#fde0ef'],
-  			['120-140','#f1b6da'],
-  			['140-160','#de77ae'],
-  			['>160','#c51b7d']
+				['40-60' ,'#7fbc41'],
+				['60-80','#b8e186'],
+				['80-100','#e6f5d0'],
+				['100-120' ,'#fde0ef'],
+				['120-140','#f1b6da'],
+				['140-160','#de77ae'],
+				['>160','#c51b7d']
 			],
 			'modal_wall': [
 				['Very Good','#2c7bb6'],
-  			['Good' ,'#abd9e9'],
-  			['Average','#ffffbf'],
-  			['Poor','#fdae61'],
-  			['Very Poor' ,'#d7191c']
+				['Good' ,'#abd9e9'],
+				['Average','#ffffbf'],
+				['Poor','#fdae61'],
+				['Very Poor' ,'#d7191c']
 			],
 			'modal_roof': [
 				['Very Good','#2c7bb6'],
-  			['Good' ,'#abd9e9'],
-  			['Average','#ffffbf'],
-  			['Poor','#fdae61'],
-  			['Very Poor' ,'#d7191c'],
-  			['Another property above' ,'#4d9221']
+				['Good' ,'#abd9e9'],
+				['Average','#ffffbf'],
+				['Poor','#fdae61'],
+				['Very Poor' ,'#d7191c'],
+				['Another property above' ,'#4d9221']
 			],
 			'modal_heat': [
 				['Very Good','#2c7bb6'],
-  			['Good' ,'#abd9e9'],
-  			['Average','#ffffbf'],
-  			['Poor','#fdae61'],
-  			['Very Poor' ,'#d7191c']
+				['Good' ,'#abd9e9'],
+				['Average','#ffffbf'],
+				['Poor','#fdae61'],
+				['Very Poor' ,'#d7191c']
 			],
 			'modal_window': [
 				['Very Good','#2c7bb6'],
-  			['Good' ,'#abd9e9'],
-  			['Average','#ffffbf'],
-  			['Poor','#fdae61'],
-  			['Very Poor' ,'#d7191c']
+				['Good' ,'#abd9e9'],
+				['Average','#ffffbf'],
+				['Poor','#fdae61'],
+				['Very Poor' ,'#d7191c']
 			],
 			'modal_mainheat': [
 				['Community','#377eb8'],
-  			['Gas boiler' ,'#e41a1c'],
-  			['Heat pump','#4daf4a'],
-  			['Oil boiler','#984ea3'],
-  			['Room heater' ,'#ffff33'],
-  			['Storage heater' ,'#ff7f00']
+				['Gas boiler' ,'#e41a1c'],
+				['Heat pump','#4daf4a'],
+				['Oil boiler','#984ea3'],
+				['Room heater' ,'#ffff33'],
+				['Storage heater' ,'#ff7f00']
 			],
 			'modal_mainfuel': [
 				['Biomass','#4daf4a'],
-  			['Electricity' ,'#377eb8'],
-  			['LPG','#ff7f00'],
-  			['Mains gas','#e41a1c'],
-  			['Oil' ,'#984ea3']
+				['Electricity' ,'#377eb8'],
+				['LPG','#ff7f00'],
+				['Mains gas','#e41a1c'],
+				['Oil' ,'#984ea3']
 			],
 			'modal_floord': [
 				['Another property below','#225ea8'],
-  			['Solid insulated' ,'#b2e2e2'],
-  			['Solid limited insulation','#66c2a4'],
-  			['Solid uninsulated','#238b45'],
-  			['Suspended limited insulation' ,'#df65b0'],
-  			['Suspended uninsulated' ,'#ce1256']
+				['Solid insulated' ,'#b2e2e2'],
+				['Solid limited insulation','#66c2a4'],
+				['Solid uninsulated','#238b45'],
+				['Suspended limited insulation' ,'#df65b0'],
+				['Suspended uninsulated' ,'#ce1256']
 			],
 			'modal_type': [
 				['Flat' ,'#e31a1c'],
-  			['House detached' ,'#c2e699'],
-  			['House semi-detached' ,'#78c679'],
-  			['House end-terrace' ,'#31a354'],
-  			['House mid-terrace' ,'#006837'],
-  			['Bungalow detached','#fbb4b9'],
+				['House detached' ,'#c2e699'],
+				['House semi-detached' ,'#78c679'],
+				['House end-terrace' ,'#31a354'],
+				['House mid-terrace' ,'#006837'],
+				['Bungalow detached','#fbb4b9'],
 				['Bungalow semi-detached','#f768a1'],
-  			['Bungalow end-terrace' ,'#c51b8a'],
-  			['Bungalow mid-terrace','#7a0177'],
-  			['Maisonette' ,'#1f78b4'],
-  			['Park home' ,'#fa7c00']
+				['Bungalow end-terrace' ,'#c51b8a'],
+				['Bungalow mid-terrace','#7a0177'],
+				['Maisonette' ,'#1f78b4'],
+				['Park home' ,'#fa7c00']
 			],
 		  'percent_EPC': [
 				['<30%','#ffffb2'],
-  			['30-50%' ,'#fed976'],
-  			['50-60%','#feb24c'],
-  			['60-70%','#fd8d3c'],
-  			['70-80%' ,'#fc4e2a'],
-  			['80-90%','#e31a1c'],
-  			['>90%','#b10026']
+				['30-50%' ,'#fed976'],
+				['50-60%','#feb24c'],
+				['60-70%','#fd8d3c'],
+				['70-80%' ,'#fc4e2a'],
+				['80-90%','#e31a1c'],
+				['>90%','#b10026']
 			]
 			
 		},
@@ -386,24 +388,24 @@ const datasets_extra = {
 	  postcodes: {
 			'Grade': [
 				'A+','#313695',
-  			'A' ,'#4575b4',
-  			'A-','#4575b4',
-  			'B+','#74add1',
-  			'B' ,'#abd9e9',
-  			'B-','#abd9e9',
-  			'C+','#e0f3f8',
-  			'C' ,'#e0f3f8',
-  			'C-','#ffffbf',
-  			'D+','#ffffbf',
-  			'D' ,'#fee090',
-  			'D-','#fee090',
-  			'E+','#fdae61',
-  			'E' ,'#fdae61',
-  			'E-','#f46d43',
-  			'F+','#d73027',
-  			'F' ,'#d73027',
-  			'F-','#a50026',
-  			'#000000'
+				'A' ,'#4575b4',
+				'A-','#4575b4',
+				'B+','#74add1',
+				'B' ,'#abd9e9',
+				'B-','#abd9e9',
+				'C+','#e0f3f8',
+				'C' ,'#e0f3f8',
+				'C-','#ffffbf',
+				'D+','#ffffbf',
+				'D' ,'#fee090',
+				'D-','#fee090',
+				'E+','#fdae61',
+				'E' ,'#fdae61',
+				'E-','#f46d43',
+				'F+','#d73027',
+				'F' ,'#d73027',
+				'F-','#a50026',
+				'#000000'
 			]
 		},
 		
@@ -411,122 +413,123 @@ const datasets_extra = {
 		zones: {
 			'epc_score_avg': [
 				'0-50','#d73027',
-  			'50-55' ,'#fc8d59',
-  			'55-60','#fee08b',
-  			'60-65','#ffffbf',
-  			'65-70','#d9ef8b',
-  			'70-80' ,'#91cf60',
-  			'80-100','#1a9850',
-  			'#000000'
+				'50-55' ,'#fc8d59',
+				'55-60','#fee08b',
+				'60-65','#ffffbf',
+				'65-70','#d9ef8b',
+				'70-80' ,'#91cf60',
+				'80-100','#1a9850',
+				'#000000'
 			],
 			'modal_age': [
 				'pre1900','#9e0142',
-  			'19001929' ,'#d53e4f',
-  			'19301949','#f46d43',
-  			'19501966','#fdae61',
-  			'19671975' ,'#fee08b',
-  			'19761982','#ffffbf',
-  			'19831990','#e6f598',
-  			'19911995','#abdda4',
-  			'19962002' ,'#66c2a5',
-  			'20032006','#3288bd',
-  			'20072011','#5e4fa2',
-  			'post2012','#934fa2',
-  			'#000000'
+				'19001929' ,'#d53e4f',
+				'19301949','#f46d43',
+				'19501966','#fdae61',
+				'19671975' ,'#fee08b',
+				'19761982','#ffffbf',
+				'19831990','#e6f598',
+				'19911995','#abdda4',
+				'19962002' ,'#66c2a5',
+				'20032006','#3288bd',
+				'20072011','#5e4fa2',
+				'20122021','#934fa2',
+				'post2022','#c259a7',
+				'#000000'
 			],
 			'floor_area_avg': [
-			  '0-40','#4d9221',
-  			'40-60' ,'#7fbc41',
-  			'60-80','#b8e186',
-  			'80-100','#e6f5d0',
-  			'100-120' ,'#fde0ef',
-  			'120-140','#f1b6da',
-  			'140-160','#de77ae',
-  			'160-500','#c51b7d',
-  			'#000000'
+			  	'0-40','#4d9221',
+				'40-60' ,'#7fbc41',
+				'60-80','#b8e186',
+				'80-100','#e6f5d0',
+				'100-120' ,'#fde0ef',
+				'120-140','#f1b6da',
+				'140-160','#de77ae',
+				'160-500','#c51b7d',
+				'#000000'
 			],
 			'modal_wall': [
 				'verygood','#2c7bb6',
-  			'good' ,'#abd9e9',
-  			'average','#ffffbf',
-  			'poor','#fdae61',
-  			'verypoor' ,'#d7191c',
-  			'#000000'
+				'good' ,'#abd9e9',
+				'average','#ffffbf',
+				'poor','#fdae61',
+				'verypoor' ,'#d7191c',
+				'#000000'
 			],
 			'modal_roof': [
 				'verygood','#2c7bb6',
-  			'good' ,'#abd9e9',
-  			'average','#ffffbf',
-  			'poor','#fdae61',
-  			'verypoor' ,'#d7191c',
-  			'above' ,'#4d9221',
-  			'#000000'
+				'good' ,'#abd9e9',
+				'average','#ffffbf',
+				'poor','#fdae61',
+				'verypoor' ,'#d7191c',
+				'above' ,'#4d9221',
+				'#000000'
 			],
 			'modal_heat': [
 				'verygood','#2c7bb6',
-  			'good' ,'#abd9e9',
-  			'average','#ffffbf',
-  			'poor','#fdae61',
-  			'verypoor' ,'#d7191c',
-  			'#000000'
+				'good' ,'#abd9e9',
+				'average','#ffffbf',
+				'poor','#fdae61',
+				'verypoor' ,'#d7191c',
+				'#000000'
 			],
 			'modal_window': [
 				'verygood','#2c7bb6',
-  			'good' ,'#abd9e9',
-  			'average','#ffffbf',
-  			'poor','#fdae61',
-  			'verypoor' ,'#d7191c',
-  			'#000000'
+				'good' ,'#abd9e9',
+				'average','#ffffbf',
+				'poor','#fdae61',
+				'verypoor' ,'#d7191c',
+				'#000000'
 			],
 			'modal_mainheat': [
 				'community','#377eb8',
-  			'gasboiler' ,'#e41a1c',
-  			'heatpump','#4daf4a',
-  			'oilboiler','#984ea3',
-  			'roomheater' ,'#ffff33',
-  			'storageheater' ,'#ff7f00',
-  			'#000000'
+				'gasboiler' ,'#e41a1c',
+				'heatpump','#4daf4a',
+				'oilboiler','#984ea3',
+				'roomheater' ,'#ffff33',
+				'storageheater' ,'#ff7f00',
+				'#000000'
 			],
 			'modal_mainfuel': [
 				'biomass','#4daf4a',
-  			'electric' ,'#377eb8',
-  			'lpg','#ff7f00',
-  			'mainsgas','#e41a1c',
-  			'oil' ,'#984ea3',
-  			'#000000'
+				'electric' ,'#377eb8',
+				'lpg','#ff7f00',
+				'mainsgas','#e41a1c',
+				'oil' ,'#984ea3',
+				'#000000'
 			],
 			'modal_floord': [
 				'below','#225ea8',
-  			'solidinsulated' ,'#b2e2e2',
-  			'solidlimitedinsulated','#66c2a4',
-  			'soliduninsulated','#238b45',
-  			'suspendedlimitedinsulated' ,'#df65b0',
-  			'suspendeduninsulated' ,'#ce1256',
-  			'#000000'
+				'solidinsulated' ,'#b2e2e2',
+				'solidlimitedinsulated','#66c2a4',
+				'soliduninsulated','#238b45',
+				'suspendedlimitedinsulated' ,'#df65b0',
+				'suspendeduninsulated' ,'#ce1256',
+				'#000000'
 			],
 			'modal_type': [
-			  'flat' ,'#e31a1c',
-  			'house_detached' ,'#c2e699',
-  			'house_semi' ,'#78c679',
-  			'house_endterrace' ,'#31a354',
-  			'house_midterrace' ,'#006837',
-  			'bungalow_detached','#fbb4b9',
+			  	'flat' ,'#e31a1c',
+				'house_detached' ,'#c2e699',
+				'house_semi' ,'#78c679',
+				'house_endterrace' ,'#31a354',
+				'house_midterrace' ,'#006837',
+				'bungalow_detached','#fbb4b9',
 				'bungalow_semi','#f768a1',
-  			'bungalow_endterrace' ,'#c51b8a',
-  			'bungalow_midterrace','#7a0177',
-  			'maisonette' ,'#1f78b4',
-  			'parkhome' ,'#fa7c00',
-  			'#000000'
+				'bungalow_endterrace' ,'#c51b8a',
+				'bungalow_midterrace','#7a0177',
+				'maisonette' ,'#1f78b4',
+				'parkhome' ,'#fa7c00',
+				'#000000'
 			],
 		  'percent_EPC': [
 				'0-30','#ffffb2',
-  			'30-50' ,'#fed976',
-  			'50-60','#feb24c',
-  			'60-70','#fd8d3c',
-  			'70-80' ,'#fc4e2a',
-  			'80-90','#e31a1c',
-  			'90-200','#b10026',
-  			'#000000'
+				'30-50' ,'#fed976',
+				'50-60','#feb24c',
+				'60-70','#fd8d3c',
+				'70-80' ,'#fc4e2a',
+				'80-90','#e31a1c',
+				'90-200','#b10026',
+				'#000000'
 			]
 			
 		},
@@ -534,134 +537,135 @@ const datasets_extra = {
 		epc_dom: {
 			'cur_rate': [
 				'A','#0e7e58',
-  			'B' ,'#2aa45b',
-  			'C','#8cbc42',
-  			'D','#f6cc15',
-  			'E' ,'#f2a867',
-  			'F','#f17e23',
-  			'G','#e31d3e',
-  			'#000000'
+				'B' ,'#2aa45b',
+				'C','#8cbc42',
+				'D','#f6cc15',
+				'E' ,'#f2a867',
+				'F','#f17e23',
+				'G','#e31d3e',
+				'#000000'
 			],
 			'b_type': [
 				'Detached','#1f78b4',
-  			'Semi-Detached' ,'#33a02c',
-  			'Mid-Terrace','#e31a1c',
-  			'Enclosed Mid-Terrace','#ff7f00',
-  			'End-Terrace' ,'#6a3d9a',
-  			'Enclosed End-Terrace','#b15928',
-  			'#000000'
+				'Semi-Detached' ,'#33a02c',
+				'Mid-Terrace','#e31a1c',
+				'Enclosed Mid-Terrace','#ff7f00',
+				'End-Terrace' ,'#6a3d9a',
+				'Enclosed End-Terrace','#b15928',
+				'#000000'
 			],
 			'p_type': [
 				'Flat','#e31a1c',
-  			'House' ,'#33a02c',
-  			'Maisonette','#1f78b4',
-  			'Bungalow','#6a3d9a',
-  			'Park home' ,'#ff7f00',
-  			'#000000'
+				'House' ,'#33a02c',
+				'Maisonette','#1f78b4',
+				'Bungalow','#6a3d9a',
+				'Park home' ,'#ff7f00',
+				'#000000'
 			],
 			'age': [
 				'before 1900','#9e0142',
-  			'1900-1929' ,'#d53e4f',
-  			'1930-1949','#f46d43',
-  			'1950-1966','#fdae61',
-  			'1967-1975' ,'#fee08b',
-  			'1976-1982','#ffffbf',
-  			'1983-1990','#e6f598',
-  			'1991-1995','#abdda4',
-  			'1996-2002' ,'#66c2a5',
-  			'2003-2006','#3288bd',
-  			'2007-2011','#5e4fa2',
-  			'2012 onwards','#934fa2',
-  			'#000000'
+				'1900-1929' ,'#d53e4f',
+				'1930-1949','#f46d43',
+				'1950-1966','#fdae61',
+				'1967-1975' ,'#fee08b',
+				'1976-1982','#ffffbf',
+				'1983-1990','#e6f598',
+				'1991-1995','#abdda4',
+				'1996-2002' ,'#66c2a5',
+				'2003-2006','#3288bd',
+				'2007-2011','#5e4fa2',
+				'2012-2021','#934fa2',
+				'2022 onwards','#c259a7',
+				'#000000'
 			],
 			'year': [
 				2014,'#e31d3e',
-  			2016,'#f17e23',
-  			2018,'#f6cc15',
-  			2020 ,'#f2a867',
-  			2022,'#8cbc42',
-  			2024,'#0e7e58'
+				2016,'#f17e23',
+				2018,'#f6cc15',
+				2020 ,'#f2a867',
+				2022,'#8cbc42',
+				2024,'#0e7e58'
 			],
 			'area': [
 				0,'#4d9221',
-  			40 ,'#7fbc41',
-  			60,'#b8e186',
-  			80,'#e6f5d0',
-  			100 ,'#fde0ef',
-  			120,'#f1b6da',
-  			140,'#de77ae',
-  			160,'#c51b7d'
+				40 ,'#7fbc41',
+				60,'#b8e186',
+				80,'#e6f5d0',
+				100 ,'#fde0ef',
+				120,'#f1b6da',
+				140,'#de77ae',
+				160,'#c51b7d'
 			],
 			
 			
 			'floor_ee': [
 				'Very Good','#2c7bb6',
-  			'Good' ,'#abd9e9',
-  			'Average','#ffffbf',
-  			'Poor','#fdae61',
-  			'Very Poor' ,'#d7191c',
-  			'#000000'
+				'Good' ,'#abd9e9',
+				'Average','#ffffbf',
+				'Poor','#fdae61',
+				'Very Poor' ,'#d7191c',
+				'#000000'
 			],
 			'water_ee': [
 				'Very Good','#2c7bb6',
-  			'Good' ,'#abd9e9',
-  			'Average','#ffffbf',
-  			'Poor','#fdae61',
-  			'Very Poor' ,'#d7191c',
-  			'#000000'
+				'Good' ,'#abd9e9',
+				'Average','#ffffbf',
+				'Poor','#fdae61',
+				'Very Poor' ,'#d7191c',
+				'#000000'
 			],
 			'wind_ee': [
 				'Very Good','#2c7bb6',
-  			'Good' ,'#abd9e9',
-  			'Average','#ffffbf',
-  			'Poor','#fdae61',
-  			'Very Poor' ,'#d7191c',
-  			'#000000'
+				'Good' ,'#abd9e9',
+				'Average','#ffffbf',
+				'Poor','#fdae61',
+				'Very Poor' ,'#d7191c',
+				'#000000'
 			],
 			'wall_ee': [
 				'Very Good','#2c7bb6',
-  			'Good' ,'#abd9e9',
-  			'Average','#ffffbf',
-  			'Poor','#fdae61',
-  			'Very Poor' ,'#d7191c',
-  			'#000000'
+				'Good' ,'#abd9e9',
+				'Average','#ffffbf',
+				'Poor','#fdae61',
+				'Very Poor' ,'#d7191c',
+				'#000000'
 			],
 			'roof_ee': [
 				'Very Good','#2c7bb6',
-  			'Good' ,'#abd9e9',
-  			'Average','#ffffbf',
-  			'Poor','#fdae61',
-  			'Very Poor' ,'#d7191c',
-  			'#000000'
+				'Good' ,'#abd9e9',
+				'Average','#ffffbf',
+				'Poor','#fdae61',
+				'Very Poor' ,'#d7191c',
+				'#000000'
 			],
 			'heat_ee': [
 				'Very Good','#2c7bb6',
-  			'Good' ,'#abd9e9',
-  			'Average','#ffffbf',
-  			'Poor','#fdae61',
-  			'Very Poor' ,'#d7191c',
-  			'#000000'
+				'Good' ,'#abd9e9',
+				'Average','#ffffbf',
+				'Poor','#fdae61',
+				'Very Poor' ,'#d7191c',
+				'#000000'
 			],
 			'con_ee': [
 				'Very Good','#2c7bb6',
-  			'Good' ,'#abd9e9',
-  			'Average','#ffffbf',
-  			'Poor','#fdae61',
-  			'Very Poor' ,'#d7191c',
-  			'#000000'
+				'Good' ,'#abd9e9',
+				'Average','#ffffbf',
+				'Poor','#fdae61',
+				'Very Poor' ,'#d7191c',
+				'#000000'
 			],
 			'light_ee': [
 				'Very Good','#2c7bb6',
-  			'Good' ,'#abd9e9',
-  			'Average','#ffffbf',
-  			'Poor','#fdae61',
-  			'Very Poor' ,'#d7191c',
-  			'#000000'
+				'Good' ,'#abd9e9',
+				'Average','#ffffbf',
+				'Poor','#fdae61',
+				'Very Poor' ,'#d7191c',
+				'#000000'
 			],
 		  'sol_wat': [
 				'yes','#fdae61',
-  			'no','#2c7bb6',
-  			'#000000'
+				'no','#2c7bb6',
+				'#000000'
 			]
 			
 		},
@@ -669,41 +673,41 @@ const datasets_extra = {
 		epc_nondom: {
 			'band': [
 				'A','#0e7e58',
-  			'B' ,'#2aa45b',
-  			'C','#8cbc42',
-  			'D','#f6cc15',
-  			'E' ,'#f2a867',
-  			'F','#f17e23',
-  			'G','#e31d3e',
-  			'#000000'
+				'B' ,'#2aa45b',
+				'C','#8cbc42',
+				'D','#f6cc15',
+				'E' ,'#f2a867',
+				'F','#f17e23',
+				'G','#e31d3e',
+				'#000000'
 			],
 			'transaction': [
 				'Mandatory issue (Display in public building)','#1f78b4',
-  			'Mandatory issue (Marketed sale)' ,'#33a02c',
-  		  'Mandatory issue (Non-marketed sale)','#e31a1c',
-  			'Mandatory issue (Property on construction)','#ff7f00',
-  			'Mandatory issue (Property to let)' ,'#6a3d9a',
-  			'Voluntary (No legal requirement for an EPC)','#b15928',
-  			'Voluntary re-issue (A valid EPC is already lodged)','#ffff99',
-  			'#000000'
+				'Mandatory issue (Marketed sale)' ,'#33a02c',
+				'Mandatory issue (Non-marketed sale)','#e31a1c',
+				'Mandatory issue (Property on construction)','#ff7f00',
+				'Mandatory issue (Property to let)' ,'#6a3d9a',
+				'Voluntary (No legal requirement for an EPC)','#b15928',
+				'Voluntary re-issue (A valid EPC is already lodged)','#ffff99',
+				'#000000'
 			],
 			'year': [
 				2014,'#e31d3e',
-  			2016,'#f17e23',
-  			2018,'#f6cc15',
-  			2020 ,'#f2a867',
-  			2022,'#8cbc42',
-  			2024,'#0e7e58'
+				2016,'#f17e23',
+				2018,'#f6cc15',
+				2020 ,'#f2a867',
+				2022,'#8cbc42',
+				2024,'#0e7e58'
 			],
 			'area': [
 				0,'#4d9221',
-  			40 ,'#7fbc41',
-  			60,'#b8e186',
-  			80,'#e6f5d0',
-  			100 ,'#fde0ef',
-  			120,'#f1b6da',
-  			140,'#de77ae',
-  			160,'#c51b7d'
+				40 ,'#7fbc41',
+				60,'#b8e186',
+				80,'#e6f5d0',
+				100 ,'#fde0ef',
+				120,'#f1b6da',
+				140,'#de77ae',
+				160,'#c51b7d'
 			]
 			
 		},
