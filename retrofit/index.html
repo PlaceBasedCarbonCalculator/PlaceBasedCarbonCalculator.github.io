@@ -337,7 +337,7 @@
 		</div>
 		
 		
-		<!-- Modal -->
+		<!-- Modal PostCodes-->
 		<div class="modal" id="postcodes-chartsmodal" style="display: none;">
 			<div class="modal-header">
 				<span class="modal-close">×</span>
@@ -415,243 +415,308 @@
 			</div>
 		</div>
 		
-		
+		<!-- Modal LSOA-->
 		<div class="modal" id="zones-chartsmodal" style="display: none;">
 			<div class="modal-header">
 				<span class="modal-close">×</span>
 				<h2 class="modal-title">Neighbourhood Summary</h2>
 			</div>
 			<div class="modal-body">
+
+				<!-- Tab links -->
+				<div class="tab">
+				<button class="tablinks" onclick="modalTab(event, 'energy')">Energy Consumption</button>
+				<button class="tablinks" onclick="modalTab(event, 'epcs')" id="defaultOpen">EPCs</button>
+				<button class="tablinks" onclick="modalTab(event, 'prices')">Prices</button>
+				</div>
+
+				<!-- Data Warning -->
+				<div class="warningbox">
+					<div class="warning" id="warning_1">
+					The 2022 Census in Scotland significantly changed Data Zone boundaries, historic data has been adjusted to the new boundaries
+					</div>
+					<div class="warning" id="warning_2">
+					This LSOA had a complex border change between 2011 and 2021, historical data uses closest matching LSOA
+					</div>
+					<div class="warning" id="warning_3">
+					This LSOA was formed in 2021 by merging two LSOAs, historical data has been merged
+					</div>
+					<div class="warning" id="warning_4">
+					This LSOA was formed in 2021 by splitting two LSOAs, historical data has been split
+					</div>
+					<div class="warning" id="warning_5">
+					At some point this LSOA has had zero residents
+					</div>
+					<div class="warning" id="warning_6">
+					In some years this LSOA has an unusually large number of company cars
+					</div>
+				</div>
+
+				<div id="energy" class="tabcontent">
+
+				</div>
+
+				<div id="epcs" class="tabcontent">
+					<p>This report summarises the Domestic Energy Performance Certificates from 2024. Since 2008, houses in the UK have had to get an Energy Performance Certificate (EPC) when they are sold or rented. An EPC requires a qualified assessor to visit the dwelling and take measurements of the building's construction and energy efficiency, which makes EPCs a valuable tool for understanding the energy use and carbon emissions from our homes. However, EPCs have significant problems. Research has shown that the EPC grades are not great at predicting real-world energy use and that as many as 80% of EPCs contain at least one error. EPCs are also not a representative sample of houses as they are only required under specific circumstances (e.g., when a house is sold). EPCs are likely to under-estimate the uptake of retrofit measures, as many people make home improvements just after buying a house. Thus, the EPC may be out of date shortly after it is issued. For all these reasons, EPC data should be treated with care. We have chosen to include it here as it is the best available data and helps draw attention to the low quality of housing data in the UK. For this tool, we took an extract of the EPC database from 2020 and summarised the results for each LSOA. In cases where a property had more than on EPC, only the most recent EPC was considered. Some of the data presented here are scraped from the text description written in the EPCs, so some missing data and double counting may exist. That means this data must be seen as indicative rather than conclusive.</p>
 			  
-			  <p>This report summarises the Domestic Energy Performance Certificates from 2024. Since 2008, houses in the UK have had to get an Energy Performance Certificate (EPC) when they are sold or rented. An EPC requires a qualified assessor to visit the dwelling and take measurements of the building's construction and energy efficiency, which makes EPCs a valuable tool for understanding the energy use and carbon emissions from our homes. However, EPCs have significant problems. Research has shown that the EPC grades are not great at predicting real-world energy use and that as many as 80% of EPCs contain at least one error. EPCs are also not a representative sample of houses as they are only required under specific circumstances (e.g., when a house is sold). EPCs are likely to under-estimate the uptake of retrofit measures, as many people make home improvements just after buying a house. Thus, the EPC may be out of date shortly after it is issued. For all these reasons, EPC data should be treated with care. We have chosen to include it here as it is the best available data and helps draw attention to the low quality of housing data in the UK. For this tool, we took an extract of the EPC database from 2020 and summarised the results for each LSOA. In cases where a property had more than on EPC, only the most recent EPC was considered. Some of the data presented here are scraped from the text description written in the EPCs, so some missing data and double counting may exist. That means this data must be seen as indicative rather than conclusive.</p>
+					<div class="chart-wrapper" id="epcrating-chartrow" style="display: block;">
+						<div class="chart-text"> 
+						<h4 class="chart-title">EPC ratings</h4>
+						<p class="chart-description">The EPC score is the headline result rating homes on a scale from A (most efficient) to G (least efficient). To meet the climate targets, we need all homes to be A or B graded as soon as possible.</p>
+						</div>
+						<div class="chart-container">
+							<canvas id="epcrating-chart"></canvas>
+						</div>
+					</div>
+  			
+  			
+					<div class="chart-wrapper" id="buildingtype-chartrow" style="display: block;">
+						<div class="chart-text"> 
+						<h4 class="chart-title">Building type</h4>
+						<p class="chart-description">A summary of the types of domestic buildings.</p>
+						</div>
+						<div class="chart-container">
+							<canvas id="buildingtype-chart"></canvas>
+						</div>
+					</div>
+  			
+					<div class="chart-wrapper" id="tenure-chartrow" style="display: block;">
+						<div class="chart-text"> 
+						<h4 class="chart-title">Tenure</h4>
+						<p class="chart-description">A summary of type of tenure as recorded on the EPC. Not that is may have changed after the EPC was issued. Also as EPCs are required for rental properties but only required for owner-occupied properties at the time of sale, rental property may be over-represented in the EPC data.</p>
+						</div>
+						<div class="chart-container">
+							<canvas id="tenure-chart"></canvas>
+						</div>
+					</div>
+  			
+  			
+					<div class="chart-wrapper" id="age-chartrow" style="display: block;">
+						<div class="chart-text"> 
+						<h4 class="chart-title">Building Age</h4>
+						<p class="chart-description">A summary of the estimated construction date of dwellings.</p>
+						</div>
+						<div class="chart-container">
+							<canvas id="age-chart"></canvas>
+						</div>
+					</div>
+				
+				
+					<div class="chart-wrapper" id="wall-chartrow" style="display: block;">
+						<div class="chart-text"> 
+						<h4 class="chart-title">Walls rating</h4>
+						<p class="chart-description">About 35% of heat is lost through a house's walls, so insulating the walls is an excellent way to reduce energy use. Most homes built after the 1920s have cavity walls that are easy and cheap to insulate with blown glass fibre wool. However, care must be taken to install the insulation correctly to prevent damp crossing the cavity, particularly in places that get driving rain or have stone cavity walls. In these properties, expanding foam of polystyrene bead insulation can be more expensive but reduce the risk of damp and mould growth. Older homes with solid walls require either external or internal insulation. These options are more expensive than cavity wall insulation, and internal insulation requires redecoration of the rooms. </p>
+						</div>
+						<div class="chart-container">
+							<canvas id="wall-chart"></canvas>
+						</div>
+					</div>
+				
+					<div class="chart-wrapper" id="walld-chartrow" style="display: block;">
+						<div class="chart-text"> 
+						<h4 class="chart-title">Walls description</h4>
+						<p class="chart-description">A description of the construction of the external walls. The most common type of wall are brick or block cavity walls, which are cheap and easy to insulate with cavity wall insulation. Other types of wall require more expensive internal or external insulation.</p>
+						</div>
+						<div class="chart-container">
+							<canvas id="walld-chart"></canvas>
+						</div>
+					</div>
+				
+					<div class="chart-wrapper" id="roof-chartrow" style="display: block;">
+						<div class="chart-text"> 
+						<h4 class="chart-title">Roof rating</h4>
+						<p class="chart-description">About 25% of heat is lost through the roof of the property. For homes with pitched roofs, loft insulation is one of the cheapest and easiest forms of insulation. The uptake of loft insulation has been reasonably high due to low cost and government incentives. However, many homes have less than the recommended minimum of 300mm of insulation, and flat roofs remain challenging to insulate. Dwellings with another dwelling above, such as flats are consider to not have a roof and a recorded as "Dwelling Above" only the top floor flat would have a roof rating.</p>
+						</div>
+						<div class="chart-container">
+							<canvas id="roof-chart"></canvas>
+						</div>
+					</div>
+				
+					<div class="chart-wrapper" id="roofd-chartrow" style="display: block;">
+						<div class="chart-text"> 
+						<h4 class="chart-title">Roof Description</h4>
+						<p class="chart-description">The type of roof affects how the building can be insulated. Pitched roofs are the easiest to insulate, while flat roofs are harder to insulate.</p>
+						</div>
+						<div class="chart-container">
+							<canvas id="roofd-chart"></canvas>
+						</div>
+					</div>
+				
+					<div class="chart-wrapper" id="floor-chartrow" style="display: block;">
+						<div class="chart-text"> 
+						<h4 class="chart-title">Floor rating</h4>
+						<p class="chart-description">About 15% of heat is lost through the floors of homes. EPCs are especially bad at recording the floor construction, so there is often a lot of missing data. Many homes built before the 1950s have suspended timber floors, which are relatively simple to insulate either by accessing the crawl space under the floor and attaching insulation to the underside or by lifting the floorboards. Homes built after the 1960s are more likely to have solid concrete floors. These are difficult to insulate as you either have to dig into the concrete slab or insulate on top of the slap, raising the floor level. Not this classification only applies to ground floor properties, so flats often are classified as "Dwelling Below". </p>
+						</div>
+						<div class="chart-container">
+							<canvas id="floor-chart"></canvas>
+						</div>
+					</div>
+				
+				
+					<div class="chart-wrapper" id="floord-chartrow" style="display: block;">
+						<div class="chart-text"> 
+						<h4 class="chart-title">Floor Description</h4>
+						<p class="chart-description">Ground floors of homes typically come in two types. Suspended floors are raised slightly above ground level and outside air can circulate in the void beneath the floor to prevent mould and damp. This was common for homes built before the 1940s. Conversely solid floors are built directly on the ground usually of concrete and are more common in post-1940s homes. Both floor types can result in heat loss if not insulated, but the way the floors are insulated is different. This chart shows the distribution of different floor types.</p>
+						</div>
+						<div class="chart-container">
+							<canvas id="floord-chart"></canvas>
+						</div>
+					</div>
+				
+				
+					<div class="chart-wrapper" id="window-chartrow" style="display: block;">
+						<div class="chart-text"> 
+						<h4 class="chart-title">Windows rating</h4>
+						<p class="chart-description">Around 10% of heat is lost through windows and doors. Most houses now have double-glazing, although many have the less efficient early forms of double-glazing. New double or triple glazing is an expensive option for energy saving. However, it is often installed as it is perceived to add value to the property.</p>
+						</div>
+						<div class="chart-container">
+							<canvas id="window-chart"></canvas>
+						</div>
+					</div>
+				
+					<div class="chart-wrapper" id="glazing-chartrow" style="display: block;">
+						<div class="chart-text"> 
+						<h4 class="chart-title">Glazing type</h4>
+						<p class="chart-description">A summary of the type of glazing used.</p>
+						</div>
+						<div class="chart-container">
+							<canvas id="glazing-chart"></canvas>
+						</div>
+					</div>
+				
+				
+					<div class="chart-wrapper" id="mainheat-chartrow" style="display: block;">
+						<div class="chart-text"> 
+						<h4 class="chart-title">Main heating system rating</h4>
+						<p class="chart-description">This chart shows the efficiency rating of heating systems. An efficient heating system uses less energy than an inefficient system to provide the same amount of heating. Note that a very efficient heating system may not be low carbon. For example a modern condensing gas boiler has an efficiency of over 90% yet is it still a high carbon heating source as it is fuelled by gas.  For more details see the heating descriptions below.</p>
+						</div>
+						<div class="chart-container">
+							<canvas id="mainheat-chart"></canvas>
+						</div>
+					</div>
+				
+					<div class="chart-wrapper" id="mainheatdesc-chartrow" style="display: block;">
+						<div class="chart-text"> 
+						<h4 class="chart-title">Main heating system description</h4>
+						<p class="chart-description">Most homes in England have gas central heating, often with a condensing boiler. If properly installed and maintained, these have high efficiencies (above 90%). As gas is a fossil fuel, we need to replace all gas boilers with low carbon heating systems such as heat pumps as soon as possible. While heat pumps are even more efficient than gas boilers, they are significantly more expensive to install (around £10,000 for a new heat pump vs £2,000 for a new gas boiler). It is more common to find homes heated with oil boilers, storage heaters, or even coal fires off the gas grid. These heating types are both high carbon and expensive to operate, so heat pumps can be more financially attractive.</p>
+						</div>
+						<div class="chart-container">
+							<canvas id="mainheatdesc-chart"></canvas>
+						</div>
+					</div>
+				
+					<div class="chart-wrapper" id="mainfuel-chartrow" style="display: block;">
+						<div class="chart-text"> 
+						<h4 class="chart-title">Main fuel description</h4>
+						<p class="chart-description">Description of the main type of heating fuel used in the home.</p>
+						</div>
+						<div class="chart-container">
+							<canvas id="mainfuel-chart"></canvas>
+						</div>
+					</div>
+				
+					<div class="chart-wrapper" id="mainheatcontrol-chartrow" style="display: block;">
+						<div class="chart-text"> 
+						<h4 class="chart-title">Heating Control Rating</h4>
+						<p class="chart-description">Heating controls help save energy by turning off the heating when it is not needed. Common types of heating control include thermostats, timers, and Thermostatic Radiator Valves (TRVs). Upgrading heating controls can be a low-cost way to get a small reduction in energy use.</p>
+						</div>
+						<div class="chart-container">
+							<canvas id="mainheatcontrol-chart"></canvas>
+						</div>
+					</div>
+				
+					<div class="chart-wrapper" id="controld-chartrow" style="display: block;">
+						<div class="chart-text"> 
+						<h4 class="chart-title">Heating Control Description</h4>
+						<p class="chart-description">Heating controls can come in lots of different combinations, but some of the most common combinations are shown in this charts. A good heating system should have a programmer to allow you to decide when in the day you want heating; ad thermostat so that the heating system turns off once the house is warm, and Thermostatic Radiator Valves (TRVs) to enable room-to-room adjustments. More complex heating systems have heating zones enabling different settings for different parts of the home.</p>
+						</div>
+						<div class="chart-container">
+							<canvas id="controld-chart"></canvas>
+						</div>
+					</div>
+				
+				
+					<div class="chart-wrapper" id="water-chartrow" style="display: block;">
+						<div class="chart-text"> 
+						<h4 class="chart-title">Hot water system rating</h4>
+						<p class="chart-description">The energy efficiency of the hot water system is rated from Very Good to Very Poor.</p>
+						</div>
+						<div class="chart-container">
+							<canvas id="water-chart"></canvas>
+						</div>
+					</div>
+				
+					<div class="chart-wrapper" id="waterd-chartrow" style="display: block;">
+						<div class="chart-text"> 
+						<h4 class="chart-title">Hot water system description</h4>
+						<p class="chart-description">A description of how hot water is provided. The most common approach is for hot water to be provided by the main heating system. However some homes have separate space and water heating systems.</p>
+						</div>
+						<div class="chart-container">
+							<canvas id="waterd-chart"></canvas>
+						</div>
+					</div>
+				
+				
+					<div class="chart-wrapper" id="light-chartrow" style="display: block;">
+						<div class="chart-text"> 
+						<h4 class="chart-title">Lights Rating</h4>
+						<p class="chart-description">Lights are one of the easiest energy efficiency measures to adopt. Modern LED bulbs are highly efficient and affordable. Since the ban on inefficient light bulbs in 2016 and 2019 a gradual phase out of inefficient lighting is expected. This may not yet be reflected in EPC data as EPC can be several year out of date.</p>
+						</div>
+						<div class="chart-container">
+							<canvas id="light-chart"></canvas>
+						</div>
+					</div>
+				
+					<div class="chart-wrapper" id="solarpv-chartrow" style="display: block;">
+						<div class="chart-text"> 
+						<h4 class="chart-title">Solar Photovoltaics</h4>
+						<p class="chart-description">Solar PV panels generate electricity from sunlight. While the cost of PV panels has dropped significantly in recent years the cost of installing them on the roof of a building can still be high. Homes with solar panels can use the electricity or sell it to the grid. </p>
+						</div>
+						<div class="chart-container">
+							<canvas id="solarpv-chart"></canvas>
+						</div>
+					</div>
+				
+					<div class="chart-wrapper" id="solarthermal-chartrow" style="display: block;">
+						<div class="chart-text"> 
+						<h4 class="chart-title">Solar Thermal</h4>
+						<p class="chart-description">Solar Thermal panels provide hot water from sunlight. Often in the UK they are pre-heating the water and some other technology (such as immersion heater) is needed to bring the water up to full temperature.  However, they can be a cost effective way to reduce energy demand for hot water even on cloudy days.</p>
+						</div>
+						<div class="chart-container">
+							<canvas id="solarthermal-chart"></canvas>
+						</div>
+					</div>
+
+				</div>
+
+				<div id="prices" class="tabcontent">
+
+					<p>This section shows property price data for the selected area based on the Land Registry Price Paid data.</p>
+
+					<div class="chart-wrapper" id="prices-chartrow" style="display: block;">
+						<div class="chart-text"> 
+						<h4 class="chart-title">Property Prices</h4>
+						<p class="chart-description">A box plot showing the distribution of property prices in the area over time.</p>
+						</div>
+						<div class="chart-container">
+							<canvas id="prices-chart"></canvas>
+						</div>
+					</div>
+
+					<div class="chart-wrapper" id="transactions-chartrow" style="display: block;">
+						<div class="chart-text"> 
+						<h4 class="chart-title">Transactions</h4>
+						<p class="chart-description">A chart showing the number of property transactions in the area over time.</p>
+						</div>
+						<div class="chart-container">
+							<canvas id="transactions-chart"></canvas>
+						</div>
+					</div>
+
+				</div>
+
 			  
-			  <div class="chart-wrapper" id="epcrating-chartrow" style="display: block;">
-					<div class="chart-text"> 
-					  <h4 class="chart-title">EPC ratings</h4>
-					  <p class="chart-description">The EPC score is the headline result rating homes on a scale from A (most efficient) to G (least efficient). To meet the climate targets, we need all homes to be A or B graded as soon as possible.</p>
-					</div>
-					<div class="chart-container">
-						<canvas id="epcrating-chart"></canvas>
-					</div>
-				</div>
-  			
-  			
-  			<div class="chart-wrapper" id="buildingtype-chartrow" style="display: block;">
-					<div class="chart-text"> 
-					  <h4 class="chart-title">Building type</h4>
-					  <p class="chart-description">A summary of the types of domestic buildings.</p>
-					</div>
-					<div class="chart-container">
-						<canvas id="buildingtype-chart"></canvas>
-					</div>
-				</div>
-  			
-  			<div class="chart-wrapper" id="tenure-chartrow" style="display: block;">
-					<div class="chart-text"> 
-					  <h4 class="chart-title">Tenure</h4>
-					  <p class="chart-description">A summary of type of tenure as recorded on the EPC. Not that is may have changed after the EPC was issued. Also as EPCs are required for rental properties but only required for owner-occupied properties at the time of sale, rental property may be over-represented in the EPC data.</p>
-					</div>
-					<div class="chart-container">
-						<canvas id="tenure-chart"></canvas>
-					</div>
-				</div>
-  			
-  			
-  			<div class="chart-wrapper" id="age-chartrow" style="display: block;">
-					<div class="chart-text"> 
-					  <h4 class="chart-title">Building Age</h4>
-					  <p class="chart-description">A summary of the estimated construction date of dwellings.</p>
-					</div>
-					<div class="chart-container">
-						<canvas id="age-chart"></canvas>
-					</div>
-				</div>
-				
-				
-				<div class="chart-wrapper" id="wall-chartrow" style="display: block;">
-					<div class="chart-text"> 
-					  <h4 class="chart-title">Walls rating</h4>
-					  <p class="chart-description">About 35% of heat is lost through a house's walls, so insulating the walls is an excellent way to reduce energy use. Most homes built after the 1920s have cavity walls that are easy and cheap to insulate with blown glass fibre wool. However, care must be taken to install the insulation correctly to prevent damp crossing the cavity, particularly in places that get driving rain or have stone cavity walls. In these properties, expanding foam of polystyrene bead insulation can be more expensive but reduce the risk of damp and mould growth. Older homes with solid walls require either external or internal insulation. These options are more expensive than cavity wall insulation, and internal insulation requires redecoration of the rooms. </p>
-					</div>
-					<div class="chart-container">
-						<canvas id="wall-chart"></canvas>
-					</div>
-				</div>
-				
-				<div class="chart-wrapper" id="walld-chartrow" style="display: block;">
-					<div class="chart-text"> 
-					  <h4 class="chart-title">Walls description</h4>
-					  <p class="chart-description">A description of the construction of the external walls. The most common type of wall are brick or block cavity walls, which are cheap and easy to insulate with cavity wall insulation. Other types of wall require more expensive internal or external insulation.</p>
-					</div>
-					<div class="chart-container">
-						<canvas id="walld-chart"></canvas>
-					</div>
-				</div>
-				
-				<div class="chart-wrapper" id="roof-chartrow" style="display: block;">
-					<div class="chart-text"> 
-					  <h4 class="chart-title">Roof rating</h4>
-					  <p class="chart-description">About 25% of heat is lost through the roof of the property. For homes with pitched roofs, loft insulation is one of the cheapest and easiest forms of insulation. The uptake of loft insulation has been reasonably high due to low cost and government incentives. However, many homes have less than the recommended minimum of 300mm of insulation, and flat roofs remain challenging to insulate. Dwellings with another dwelling above, such as flats are consider to not have a roof and a recorded as "Dwelling Above" only the top floor flat would have a roof rating.</p>
-					</div>
-					<div class="chart-container">
-						<canvas id="roof-chart"></canvas>
-					</div>
-				</div>
-				
-				<div class="chart-wrapper" id="roofd-chartrow" style="display: block;">
-					<div class="chart-text"> 
-					  <h4 class="chart-title">Roof Description</h4>
-					  <p class="chart-description">The type of roof affects how the building can be insulated. Pitched roofs are the easiest to insulate, while flat roofs are harder to insulate.</p>
-					</div>
-					<div class="chart-container">
-						<canvas id="roofd-chart"></canvas>
-					</div>
-				</div>
-				
-				<div class="chart-wrapper" id="floor-chartrow" style="display: block;">
-					<div class="chart-text"> 
-					  <h4 class="chart-title">Floor rating</h4>
-					  <p class="chart-description">About 15% of heat is lost through the floors of homes. EPCs are especially bad at recording the floor construction, so there is often a lot of missing data. Many homes built before the 1950s have suspended timber floors, which are relatively simple to insulate either by accessing the crawl space under the floor and attaching insulation to the underside or by lifting the floorboards. Homes built after the 1960s are more likely to have solid concrete floors. These are difficult to insulate as you either have to dig into the concrete slab or insulate on top of the slap, raising the floor level. Not this classification only applies to ground floor properties, so flats often are classified as "Dwelling Below". </p>
-					</div>
-					<div class="chart-container">
-						<canvas id="floor-chart"></canvas>
-					</div>
-				</div>
-				
-				
-				<div class="chart-wrapper" id="floord-chartrow" style="display: block;">
-					<div class="chart-text"> 
-					  <h4 class="chart-title">Floor Description</h4>
-					  <p class="chart-description">Ground floors of homes typically come in two types. Suspended floors are raised slightly above ground level and outside air can circulate in the void beneath the floor to prevent mould and damp. This was common for homes built before the 1940s. Conversely solid floors are built directly on the ground usually of concrete and are more common in post-1940s homes. Both floor types can result in heat loss if not insulated, but the way the floors are insulated is different. This chart shows the distribution of different floor types.</p>
-					</div>
-					<div class="chart-container">
-						<canvas id="floord-chart"></canvas>
-					</div>
-				</div>
-				
-				
-				<div class="chart-wrapper" id="window-chartrow" style="display: block;">
-					<div class="chart-text"> 
-					  <h4 class="chart-title">Windows rating</h4>
-					  <p class="chart-description">Around 10% of heat is lost through windows and doors. Most houses now have double-glazing, although many have the less efficient early forms of double-glazing. New double or triple glazing is an expensive option for energy saving. However, it is often installed as it is perceived to add value to the property.</p>
-					</div>
-					<div class="chart-container">
-						<canvas id="window-chart"></canvas>
-					</div>
-				</div>
-				
-				<div class="chart-wrapper" id="glazing-chartrow" style="display: block;">
-					<div class="chart-text"> 
-					  <h4 class="chart-title">Glazing type</h4>
-					  <p class="chart-description">A summary of the type of glazing used.</p>
-					</div>
-					<div class="chart-container">
-						<canvas id="glazing-chart"></canvas>
-					</div>
-				</div>
-				
-				
-				<div class="chart-wrapper" id="mainheat-chartrow" style="display: block;">
-					<div class="chart-text"> 
-					  <h4 class="chart-title">Main heating system rating</h4>
-					  <p class="chart-description">This chart shows the efficiency rating of heating systems. An efficient heating system uses less energy than an inefficient system to provide the same amount of heating. Note that a very efficient heating system may not be low carbon. For example a modern condensing gas boiler has an efficiency of over 90% yet is it still a high carbon heating source as it is fuelled by gas.  For more details see the heating descriptions below.</p>
-					</div>
-					<div class="chart-container">
-						<canvas id="mainheat-chart"></canvas>
-					</div>
-				</div>
-				
-				<div class="chart-wrapper" id="mainheatdesc-chartrow" style="display: block;">
-					<div class="chart-text"> 
-					  <h4 class="chart-title">Main heating system description</h4>
-					  <p class="chart-description">Most homes in England have gas central heating, often with a condensing boiler. If properly installed and maintained, these have high efficiencies (above 90%). As gas is a fossil fuel, we need to replace all gas boilers with low carbon heating systems such as heat pumps as soon as possible. While heat pumps are even more efficient than gas boilers, they are significantly more expensive to install (around £10,000 for a new heat pump vs £2,000 for a new gas boiler). It is more common to find homes heated with oil boilers, storage heaters, or even coal fires off the gas grid. These heating types are both high carbon and expensive to operate, so heat pumps can be more financially attractive.</p>
-					</div>
-					<div class="chart-container">
-						<canvas id="mainheatdesc-chart"></canvas>
-					</div>
-				</div>
-				
-				<div class="chart-wrapper" id="mainfuel-chartrow" style="display: block;">
-					<div class="chart-text"> 
-					  <h4 class="chart-title">Main fuel description</h4>
-					  <p class="chart-description">Description of the main type of heating fuel used in the home.</p>
-					</div>
-					<div class="chart-container">
-						<canvas id="mainfuel-chart"></canvas>
-					</div>
-				</div>
-				
-				<div class="chart-wrapper" id="mainheatcontrol-chartrow" style="display: block;">
-					<div class="chart-text"> 
-					  <h4 class="chart-title">Heating Control Rating</h4>
-					  <p class="chart-description">Heating controls help save energy by turning off the heating when it is not needed. Common types of heating control include thermostats, timers, and Thermostatic Radiator Valves (TRVs). Upgrading heating controls can be a low-cost way to get a small reduction in energy use.</p>
-					</div>
-					<div class="chart-container">
-						<canvas id="mainheatcontrol-chart"></canvas>
-					</div>
-				</div>
-				
-				<div class="chart-wrapper" id="controld-chartrow" style="display: block;">
-					<div class="chart-text"> 
-					  <h4 class="chart-title">Heating Control Description</h4>
-					  <p class="chart-description">Heating controls can come in lots of different combinations, but some of the most common combinations are shown in this charts. A good heating system should have a programmer to allow you to decide when in the day you want heating; ad thermostat so that the heating system turns off once the house is warm, and Thermostatic Radiator Valves (TRVs) to enable room-to-room adjustments. More complex heating systems have heating zones enabling different settings for different parts of the home.</p>
-					</div>
-					<div class="chart-container">
-						<canvas id="controld-chart"></canvas>
-					</div>
-				</div>
-				
-				
-				<div class="chart-wrapper" id="water-chartrow" style="display: block;">
-					<div class="chart-text"> 
-					  <h4 class="chart-title">Hot water system rating</h4>
-					  <p class="chart-description">The energy efficiency of the hot water system is rated from Very Good to Very Poor.</p>
-					</div>
-					<div class="chart-container">
-						<canvas id="water-chart"></canvas>
-					</div>
-				</div>
-				
-				<div class="chart-wrapper" id="waterd-chartrow" style="display: block;">
-					<div class="chart-text"> 
-					  <h4 class="chart-title">Hot water system description</h4>
-					  <p class="chart-description">A description of how hot water is provided. The most common approach is for hot water to be provided by the main heating system. However some homes have separate space and water heating systems.</p>
-					</div>
-					<div class="chart-container">
-						<canvas id="waterd-chart"></canvas>
-					</div>
-				</div>
-				
-				
-				<div class="chart-wrapper" id="light-chartrow" style="display: block;">
-					<div class="chart-text"> 
-					  <h4 class="chart-title">Lights Rating</h4>
-					  <p class="chart-description">Lights are one of the easiest energy efficiency measures to adopt. Modern LED bulbs are highly efficient and affordable. Since the ban on inefficient light bulbs in 2016 and 2019 a gradual phase out of inefficient lighting is expected. This may not yet be reflected in EPC data as EPC can be several year out of date.</p>
-					</div>
-					<div class="chart-container">
-						<canvas id="light-chart"></canvas>
-					</div>
-				</div>
-				
-				<div class="chart-wrapper" id="solarpv-chartrow" style="display: block;">
-					<div class="chart-text"> 
-					  <h4 class="chart-title">Solar Photovoltaics</h4>
-					  <p class="chart-description">Solar PV panels generate electricity from sunlight. While the cost of PV panels has dropped significantly in recent years the cost of installing them on the roof of a building can still be high. Homes with solar panels can use the electricity or sell it to the grid. </p>
-					</div>
-					<div class="chart-container">
-						<canvas id="solarpv-chart"></canvas>
-					</div>
-				</div>
-				
-				<div class="chart-wrapper" id="solarthermal-chartrow" style="display: block;">
-					<div class="chart-text"> 
-					  <h4 class="chart-title">Solar Thermal</h4>
-					  <p class="chart-description">Solar Thermal panels provide hot water from sunlight. Often in the UK they are pre-heating the water and some other technology (such as immersion heater) is needed to bring the water up to full temperature.  However, they can be a cost effective way to reduce energy demand for hot water even on cloudy days.</p>
-					</div>
-					<div class="chart-container">
-						<canvas id="solarthermal-chart"></canvas>
-					</div>
-				</div>
+			  
 				
 				
 			</div>

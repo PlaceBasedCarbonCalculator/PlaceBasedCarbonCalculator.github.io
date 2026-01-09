@@ -267,7 +267,7 @@ makeChartFrequency = function(){
 	const Night = frequencyLocationData[day + '_Night_' + md];
 	const years = frequencyLocationData['year']
 	
-	//console.log(MorningPeak);
+	console.log(MorningPeak);
 	
 	var freqencyctx = document.getElementById('frequency-chart').getContext('2d');
 	frequencyChart = new Chart(freqencyctx, {

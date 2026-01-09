@@ -27,22 +27,27 @@ var lightChart;
 var solarpvChart;
 var solarthermalChart;
 
+var pricesChart;
+var transactionsChart;
+
 var postcodeLocationData = {};
 var lsoaLocationData = {};
+var pricesLocationData = {};
 
 manageCharts =  function (locationId, mapLayerId){
   if(mapLayerId == 'zones'){
-    const p = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/epc_dom/v3/' + locationId + '.json')
-        .then(function (lsoaData) {
-            lsoaLocationData = lsoaData[0];
-            makeChartLSOA();
-        })
-        .catch(function (error) {
-            alert('Failed to get access data for this location, or to process it correctly. Please try refreshing the page.');
-            console.log(error);
-        });
 
-    return p;
+    const pEPC = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/epc_dom/v3/' + locationId + '.json')
+      .then(data => { lsoaLocationData = data[0]; makeChartLSOA(); })
+      .catch(err => { console.error('EPC failed:', err); });  
+    
+    
+    const pPrices = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/prices/v1/' + locationId + '.json')
+      .then(data => { pricesLocationData = data; makeChartPrices(); })
+      .catch(err => { console.error('Prices failed:', err); });
+
+    return Promise.all([pEPC, pPrices]);
+    //return p;
   } else if (mapLayerId == 'postcodes'){
     const p = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/Postcode/' + locationId + '.json')
         .then(function (postcodeData) {
@@ -333,6 +338,153 @@ makeChartPostcode = function(locationId){
         }
       }
     },
+  });
+  
+}
+
+makeChartPrices = function(){
+  
+  console.log("Make prices charts");
+  
+  // Destroy old charts
+  if(pricesChart){
+    pricesChart.destroy();
+  }
+  if(transactionsChart){
+    transactionsChart.destroy();
+  }
+  
+  // Prepare data for box and whisker chart (prices)
+  // Using line chart to show median with range indicators
+  const pricesData = {
+    labels: pricesLocationData.year,
+    datasets: [
+      {
+        label: 'Maximum Price',
+        data: pricesLocationData.price_max,
+        borderColor: '#c0c0c0',
+        backgroundColor: 'transparent',
+        borderWidth: 1,
+        borderDash: [5, 5],
+        fill: false,
+        pointRadius: 0,
+        tension: 0.1
+      },
+      {
+        label: 'Upper Quartile (Q3)',
+        data: pricesLocationData.price_75,
+        borderColor: '#a8d5e8',
+        backgroundColor: 'transparent',
+        borderWidth: 1,
+        fill: false,
+        pointRadius: 0,
+        tension: 0.1
+      },
+      {
+        label: 'Median Price',
+        data: pricesLocationData.price_median,
+        borderColor: '#2b8cbe',
+        backgroundColor: '#2b8cbe',
+        borderWidth: 2,
+        fill: false,
+        pointRadius: 4,
+        pointBackgroundColor: '#2b8cbe',
+        tension: 0.1
+      },
+      {
+        label: 'Lower Quartile (Q1)',
+        data: pricesLocationData.price_25,
+        borderColor: '#a8d5e8',
+        backgroundColor: 'transparent',
+        borderWidth: 1,
+        fill: false,
+        pointRadius: 0,
+        tension: 0.1
+      },
+      {
+        label: 'Minimum Price',
+        data: pricesLocationData.price_min,
+        borderColor: '#c0c0c0',
+        backgroundColor: 'transparent',
+        borderWidth: 1,
+        borderDash: [5, 5],
+        fill: false,
+        pointRadius: 0,
+        tension: 0.1
+      }
+    ]
+  };
+  
+  // Create price chart
+  var pricesctx = document.getElementById('prices-chart').getContext('2d');
+  pricesChart = new Chart(pricesctx, {
+    type: 'line',
+    data: pricesData,
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: 'Price (£)'
+          },
+          beginAtZero: false
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Year'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      }
+    }
+  });
+  
+  // Prepare data for transactions bar chart
+  const transactionsData = {
+    labels: pricesLocationData.year,
+    datasets: [{
+      label: 'Number of Transactions',
+      data: pricesLocationData.transactions,
+      backgroundColor: '#d7191c',
+      borderColor: '#d7191c',
+      borderWidth: 1
+    }]
+  };
+  
+  // Create transactions chart
+  var transactionsctx = document.getElementById('transactions-chart').getContext('2d');
+  transactionsChart = new Chart(transactionsctx, {
+    type: 'bar',
+    data: transactionsData,
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: 'Number of Transactions'
+          },
+          beginAtZero: true
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Year'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      }
+    }
   });
   
 }
@@ -745,3 +897,32 @@ makePieChart = function(chartVar, name, label, data, colours, labels){
 	
 	return chartVar;
 }
+
+// Function for modal tabs
+modalTab = function (evt, tabName) {
+  // Declare all variables
+  var i, tabcontent, tablinks;
+
+  // Get all elements with class="tabcontent" and hide them
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+
+  // Get all elements with class="tablinks" and remove the class "active"
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+  // Show the current tab, and add an "active" class to the button that opened the tab
+  document.getElementById(tabName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+// Click on modal tab open by default
+document.addEventListener('DOMContentLoaded', function() {
+  var defaultOpenBtn = document.getElementById("defaultOpen");
+  if (defaultOpenBtn) {
+    defaultOpenBtn.click();
+  }
+});
