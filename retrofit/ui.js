@@ -44,7 +44,15 @@ manageCharts =  function (locationId, mapLayerId){
     
     const pPrices = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/prices/v1/' + locationId + '.json')
       .then(data => { pricesLocationData = data; makeChartPrices(); })
-      .catch(err => { console.error('Prices failed:', err); });
+      .catch(err => { 
+        console.error('Prices failed:', err);
+        if(pricesChart){
+          pricesChart.destroy();
+        }
+        if(transactionsChart){
+          transactionsChart.destroy();
+        }
+      });
 
     return Promise.all([pEPC, pPrices]);
     //return p;
@@ -368,7 +376,8 @@ makeChartPrices = function(){
         borderDash: [5, 5],
         fill: false,
         pointRadius: 0,
-        tension: 0.1
+        tension: 0.1,
+        hidden: true
       },
       {
         label: 'Upper Quartile (Q3)',
@@ -422,6 +431,7 @@ makeChartPrices = function(){
     data: pricesData,
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       scales: {
         y: {
           title: {
@@ -464,6 +474,7 @@ makeChartPrices = function(){
     data: transactionsData,
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       scales: {
         y: {
           title: {
