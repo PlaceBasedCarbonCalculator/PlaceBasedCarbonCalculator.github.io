@@ -417,7 +417,7 @@ The map has gaps where no data is available. This can be because all the buildin
 <!-- /#retrofit-postcodes -->
 
 <!-- #retrofit-epc-dom -->
-#### Domestic EPC
+#### Domestic Properties
 
 The Domestic EPC layer shows homes with domestic Energy Performance Certificates. The map is based on a national extract from June 2024. Only the most recent one is shown when a building has more than one EPC.
 
@@ -454,7 +454,7 @@ Please note that the Scotland EPC register is separate and slightly different to
 <!-- /#retrofit-epc-dom -->
 
 <!-- #retrofit-epc-nondom -->
-#### Non-domestic EPC
+#### Non-domestic Properties
 
 The Non-domestic EPC layer shows buildings with non-domestic Energy Performance Certificates. The map is based on a national extract from June 2024. Only the most recent one is shown when a building has more than one EPC.
 
@@ -479,6 +479,22 @@ Please note that the Scotland EPC register is separate and slightly different to
 
 <!-- /#retrofit-epc-nondom -->
 
+<!-- #retrofit-uprn-unknown -->
+#### Unknown Properties
+
+The domestic and non-domestic layers show the point locations using the Unique Property Reference Number (UPRN) locations. The locations of UPRNs are free open data, but additional information such as addresses and property characteristics are usually commercial data and not freely available. 
+
+This means that we know properties exist, because they have a UPRN, but we don't know anything about them in the public record because they don't have an Energy Performance Certificate or they have not been sold since 1995 in England and Wales. In Scotland there is not a public list of property sales.
+
+This layer shows the location of all UPRNs that are not included in the Domestic or Non-Domestic Property layers and exists to highlight how many properties exist that we do not know anything about.
+
+Clicking on a UPRN will show its ID number whether the property currently exists and whether the UPRN has been recently added to the database (since 2020).
+
+##### Data Sources
+
+[Open UPRN](https://www.ordnancesurvey.co.uk/products/os-open-uprn)
+
+<!-- /#retrofit-uprn-unknown -->
 
 ### Report Card
 

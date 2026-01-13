@@ -192,7 +192,7 @@
 			<div class="panel">
 				<p><label><input type="checkbox" class="showlayer" data-layer="zones" value="false">Show layer</label></p>
 				<p>
-					<select name="field" class="updatelayer" data-layer="zones" aria-label="Neighbourhood  layer">
+					<select name="field" class="updatelayer" data-layer="zones" aria-label="Neighbourhood layer">
 						<option value="epc_score_avg">Average EPC score</option>
 						<option value="floor_area_avg" >Average floor area</option>
 						<option value="modal_age">Building age (most common)</option>
@@ -223,7 +223,7 @@
 			<div class="panel">
 				<p><label><input type="checkbox" class="showlayer" data-layer="postcodes" value="false">Show layer</label></p>
 				<p>
-				  	<select name="field" class="updatelayer" data-layer="postcodes" aria-label="Postcodes  layer">
+				  	<select name="field" class="updatelayer" data-layer="postcodes" aria-label="Postcodes layer">
 						<option value="combined" selected>Combined Emissions</option>
 						<option value="gas" >Gas Emissions</option>
 						<option value="elec">Electricity Emissions</option>
@@ -239,14 +239,15 @@
 			
 			</div>
 			
-			<button class="accordion">Domestic EPC</button>
+			<button class="accordion">Domestic Properties</button>
 			<div class="panel">
 				<p><label><input type="checkbox" class="showlayer" data-layer="epc_dom" value="false">Show layer</label></p>
 				<p>
-				  	<select name="field" class="updatelayer" data-layer="epc_dom" aria-label="Postcodes  layer">
+				  	<select name="field" class="updatelayer" data-layer="epc_dom" aria-label="Domestic Properties layer">
 						<option value="cur_rate" selected>Rating</option>
 						<option value="b_type" >Building Type</option>
 						<option value="p_type" >Property Type</option>
+						<option value="tenure" >Tenure (when EPC performed)</option>
 						<option value="age">Building Age</option>
 						<option value="year">Last Assessed</option>
 						<option value="area">Floor Area</option>
@@ -259,9 +260,12 @@
 						<option value="con_ee" >Controls Rating</option>
 						<option value="light_ee" >Lighting Rating</option>
 						<option value="sol_wat" >Solar Thermal</option>
+						<option value="pv" >Solar PV</option>
+						<option value="price_2024" >Price 2024 (estimated)</option>
+						<option value="freehold" >Freehold / Leasehold (when last sold)</option>
 						
 					</select>
-					<button aria-label="Help purpose" class="helpbutton" data-help="retrofit-epc-dom"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+					<button aria-label="Help Domestic Properties" class="helpbutton" data-help="retrofit-epc-dom"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
 				</p>
 				<div id="epcdomlegend" class="legendContextual">
 					<div class="l_rHorizontal">
@@ -271,18 +275,20 @@
 				
 			
 			</div>
-			
-			<button class="accordion">Non-Domestic EPC</button>
+
+			<button class="accordion">Non-Domestic Properties</button>
 			<div class="panel">
 				<p><label><input type="checkbox" class="showlayer" data-layer="epc_nondom" value="false">Show layer</label></p>
 				<p>
-				  	<select name="field" class="updatelayer" data-layer="epc_nondom" aria-label="Postcodes  layer">
+				  	<select name="field" class="updatelayer" data-layer="epc_nondom" aria-label="Non-Domestic Properties layer">
 						<option value="band" selected>Rating</option>
 						<option value="transaction" >Transaction</option>
 						<option value="area" >Floor Area</option>
 						<option value="year">Last Assessed</option>
+						<option value="price_2024" >Price 2024 (estimated)</option>
+						<option value="freehold" >Freehold / Leasehold (when last sold)</option>
 					</select>
-					<button aria-label="Help purpose" class="helpbutton" data-help="retrofit-epc-nondom"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+					<button aria-label="Help Non-Domestic Properties" class="helpbutton" data-help="retrofit-epc-nondom"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
 				</p>
 				<div id="epcnondomlegend" class="legendContextual">
 					<div class="l_rVertical">
@@ -291,6 +297,13 @@
 				</div>
 				
 			
+			</div>
+
+			<button class="accordion">Unknown Properties</button>
+			<div class="panel">
+				<p><label><input type="checkbox" class="showlayer" data-layer="uprn_unknown" value="false">Show layer</label> 
+					<button aria-label="Help Unknown Properties" class="helpbutton" data-help="retrofit-uprn-unknown"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+							
 			</div>
 			
 			<button class="accordion">Boundaries</button>
@@ -728,10 +741,12 @@
 		<!-- Template for map popup -->
 		<template id="epc_dom-popup">
 			<div class="mappopup">
-				<h4>Domestic EPC</h4>
+				<h4>Domestic Property: {address}</h4>
+				<p><b>UPRN:</b> {UPRN}</p>
+
+				<h5>Energy Performance Certificate Details</h5>
 				<table>
 					<tr><th>Variable</th><th>Value</th></tr>
-					<tr><th>Address</td><td>{addr}</td></tr>
 					<tr><th>Rating</td><td>{cur_rate} {cur_ee}/{per_ee}</td></tr>
 					<tr><th>Building type</td><td>{b_type} {p_type}</td></tr>
 					<tr><th>Building Age</td><td>{age}</td></tr>
@@ -746,20 +761,31 @@
 					<tr><th>Heating Fuel</td><td>{fuel}</td></tr>
 					<tr><th>Heating Controls</td><td>{con_d} ({con_ee})</td></tr>
 					<tr><th>Hot water</td><td>{water_d} ({water_ee})</td></tr>
+					<tr><th>Lights</td><td>{light_ee}</td></tr>
 					<tr><th>Solar Water Heating</td><td>{sol_wat}</td></tr>
 					<tr><th>Solar PV</td><td>{pv}</td></tr>
-					<tr><th>Lights</td><td>{light_ee}</td></tr>
 					
+				</table>
+				<h5>Land Registry Details</h5>
+				<p>England and Wales Only</p>
+				<table>
+					<tr><th>Variable</th><th>Value</th></tr>
+					<tr><th>Last Sold</td><td>{date}</td></tr>
+					<tr><th>Price Last Sold</td><td>{price}</td></tr>
+					<tr><th>Price 2024 (est)</td><td>{price_2024}</td></tr>
+					<tr><th>Property Type</td><td>{property_type}</td></tr>
+					<tr><th>Freehold/Leasehold</td><td>{freehold}</td></tr>
 				</table>
 		</template>
 		
 		
 		<template id="epc_nondom-popup">
 			<div class="mappopup">
-				<h4>Non-Domestic EPC</h4>
+				<h4>Non-Domestic Property: {address}</h4>
+				<p><b>UPRN:</b> {UPRN}</p>
+				<h5>Energy Performance Certificate Details</h5>
 				<table>
 					<tr><th>Variable</th><th>Value</th></tr>
-					<tr><th>Address</td><td>{adr2}</td></tr>
 					<tr><th>Rating</td><td>{band} ({rating})</td></tr>
 					<tr><th>Building type</td><td>{type}</td></tr>
 					<tr><th>Transaction</td><td>{transaction}</td></tr>
@@ -767,7 +793,31 @@
 					<tr><th>Floor area</td><td>{area} (m2)</td></tr>
 					<tr><th>Fuel</td><td>{fuel}</td></tr>
 				</table>
+
+				<h5>Land Registry Details</h5>
+				<p>England and Wales Only</p>
+				<table>
+					<tr><th>Variable</th><th>Value</th></tr>
+					<tr><th>Last Sold</td><td>{date}</td></tr>
+					<tr><th>Price Last Sold</td><td>{price}</td></tr>
+					<tr><th>Price 2024 (est)</td><td>{price_2024}</td></tr>
+					<tr><th>Property Type</td><td>{property_type}</td></tr>
+					<tr><th>Freehold/Leasehold</td><td>{freehold}</td></tr>
+				</table>
 		</template>
+
+		<template id="uprn_unknown-popup">
+			<div class="mappopup">
+				<h4>Unknown Property</h4>
+				<p><b>UPRN:</b> {UPRN}</p>
+
+				<table>
+					<tr><th>Variable</th><th>Value</th></tr>
+					<tr><th>Exists</td><td>{exists}</td></tr>
+					<tr><th>New since 2020</td><td>{newbuild}</td></tr>
+				</table>
+		</template>
+
 
 	</body>
 	

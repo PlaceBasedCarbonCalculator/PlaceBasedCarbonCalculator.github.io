@@ -40,7 +40,7 @@ const datasets_extra = {
 			'type': 'circle',
 			'source': {
 			'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/epc_dom_20251124.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/epc_dom_20260113.pmtiles',
 				},
 			'source-layer': 'epc_dom',
 			'paint': {
@@ -61,7 +61,7 @@ const datasets_extra = {
 			'type': 'circle',
 			'source': {
 			'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/epc_nondom.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/epc_nondom_20260113.pmtiles',
 				},
 			'source-layer': 'epc_nondom',
 			'paint': {
@@ -73,6 +73,27 @@ const datasets_extra = {
             [22, 180]
           ]
         }
+			}
+		},
+
+		uprn_unknown: {
+			'id': 'uprn_unknown',
+			'type': 'circle',
+			'source': {
+			'type': 'vector',
+				'url': 'pmtiles://%tileserverUrl/uprn_unknown_20260113.pmtiles',
+				},
+			'source-layer': 'uprn_unknown',
+			'paint': {
+				'circle-color': '#ff0000ff',
+			  	// make circles larger as the user zooms from z12 to z22
+				'circle-radius': {
+				'base': 2.5,
+				'stops': [
+					[8, 3],
+					[22, 180]
+				]
+				}
 			}
 		}
 	},
@@ -135,6 +156,13 @@ const datasets_extra = {
 				['Maisonette','#1f78b4'],
 				['Bungalow','#6a3d9a'],
 				['Park home' ,'#ff7f00']
+			],
+			'tenure': [
+				['Rented (social)','#1f78b4'],
+				['Rented (private)','#e31a1c'],
+				['Owner occupied' ,'#33a02c'],
+				['Missing' ,'#000000'],
+				['Unknown','#999898']
 			],
 			'age': [
 				['<1900','#9e0142'],
@@ -226,9 +254,33 @@ const datasets_extra = {
 				['Poor','#fdae61'],
 				['Very Poor' ,'#d7191c']
 			],
-		  'sol_wat': [
+		  	'sol_wat': [
 				['yes','#fdae61'],
-  				['no','#2c7bb6']
+  				['no','#2c7bb6'],
+				['No data','#000000']
+			],
+			'pv': [
+				['yes','#fdae61'],
+  				['no','#2c7bb6'],
+				['No data','#000000']
+			],
+			'price_2024': [
+				['<£200k','#276419'],
+				['£200-300k','#4d9221'],
+				['£300-400k','#7fbc41'],
+				['£400-500k','#b8e186'],
+				['£500-600k','#e6f5d0'],
+				['£600-800k','#fde0ef'],
+				['£800-1000k','#f1b6da'],
+				['£1-2m','#de77ae'],
+				['£2-3m','#c51b7d'],
+				['>£3m','#8e0152'],
+				['No Data','#000000']
+			],
+			'freehold': [
+				['Freehold','#1f78b4'],
+				['Leasehold','#e31a1c'],
+				['No Data','#000000']
 			]
 			
 		},
@@ -346,41 +398,53 @@ const datasets_extra = {
 		epc_nondom: {
 			'band': [
 				['A','#0e7e58'],
-  			['B' ,'#2aa45b'],
-  			['C','#8cbc42'],
-  			['D','#f6cc15'],
-  			['E' ,'#f2a867'],
-  			['F','#f17e23'],
-  			['G','#e31d3e']
+				['B' ,'#2aa45b'],
+				['C','#8cbc42'],
+				['D','#f6cc15'],
+				['E' ,'#f2a867'],
+				['F','#f17e23'],
+				['G','#e31d3e']
 			],
 			'transaction': [
 				['Mandatory issue (Display in public building)','#1f78b4'],
-  			['Mandatory issue (Marketed sale)' ,'#33a02c'],
-  			['Mandatory issue (Non-marketed sale)','#e31a1c'],
-  			['Mandatory issue (Property on construction)','#ff7f00'],
-  			['Mandatory issue (Property to let)' ,'#6a3d9a'],
-  			['Voluntary (No legal requirement for an EPC)','#b15928'],
-  			['Voluntary re-issue (A valid EPC is already lodged)','#ffff99']
+				['Mandatory issue (Marketed sale)' ,'#33a02c'],
+				['Mandatory issue (Non-marketed sale)','#e31a1c'],
+				['Mandatory issue (Property on construction)','#ff7f00'],
+				['Mandatory issue (Property to let)' ,'#6a3d9a'],
+				['Voluntary (No legal requirement for an EPC)','#b15928'],
+				['Voluntary re-issue (A valid EPC is already lodged)','#ffff99']
 			],
 			'year': [
 				['<2014','#e31d3e'],
-  			['2016','#f17e23'],
-  			['2018','#f2a867'],
-  			['2020','#f6cc15'],
-  			['2022','#8cbc42'],
-  			['2024','#0e7e58']
+  				['2016','#f17e23'],
+  				['2018','#f2a867'],
+  				['2020','#f6cc15'],
+  				['2022','#8cbc42'],
+  				['2024','#0e7e58']
 			],
 			'area': [
 				['<40','#4d9221'],
-  			['40-60' ,'#7fbc41'],
-  			['60-80','#b8e186'],
-  			['80-100','#e6f5d0'],
-  			['100-120' ,'#fde0ef'],
-  			['120-140','#f1b6da'],
-  			['140-160','#de77ae'],
-  			['>160','#c51b7d']
+  				['40-60' ,'#7fbc41'],
+  				['60-80','#b8e186'],
+  				['80-100','#e6f5d0'],
+  				['100-120' ,'#fde0ef'],
+  				['120-140','#f1b6da'],
+  				['140-160','#de77ae'],
+  				['>160','#c51b7d']
+			],
+			'price_2024': [
+				['<£200k','#276419'],
+				['£200-300k','#4d9221'],
+				['£300-400k','#7fbc41'],
+				['£400-500k','#b8e186'],
+				['£500-600k','#e6f5d0'],
+				['£600-800k','#fde0ef'],
+				['£800-1000k','#f1b6da'],
+				['£1-2m','#de77ae'],
+				['£2-3m','#c51b7d'],
+				['>£3m','#8e0152'],
+				['No Data','#000000']
 			]
-			
 		},
 	},
 	
@@ -588,15 +652,14 @@ const datasets_extra = {
 			],
 			'area': [
 				0,'#4d9221',
-				40 ,'#7fbc41',
+				40,'#7fbc41',
 				60,'#b8e186',
 				80,'#e6f5d0',
-				100 ,'#fde0ef',
+				100,'#fde0ef',
 				120,'#f1b6da',
 				140,'#de77ae',
 				160,'#c51b7d'
-			],
-			
+			],		
 			
 			'floor_ee': [
 				'Very Good','#2c7bb6',
@@ -662,11 +725,40 @@ const datasets_extra = {
 				'Very Poor' ,'#d7191c',
 				'#000000'
 			],
-		  'sol_wat': [
-				'yes','#fdae61',
-				'no','#2c7bb6',
+			'sol_wat': [
+					'yes','#fdae61',
+					'no','#2c7bb6',
+					'#000000'
+				],
+			'pv': [
+					'yes','#fdae61',
+					'no','#2c7bb6',
+					'#000000'
+				],
+			'price_2024': [
+				0,'#276419',
+				200000,'#4d9221',
+				300000,'#7fbc41',
+				400000,'#b8e186',
+				500000,'#e6f5d0',
+				600000,'#fde0ef',
+				800000,'#f1b6da',
+				1000000,'#de77ae',
+				2000000,'#c51b7d',
+				3000000,'#8e0152'
+			],
+			'tenure': [
+				'rented (social)','#1f78b4',
+				'owner-occupied' ,'#33a02c',
+				'rented (private)','#e31a1c',
+				'unknown','#999898',
 				'#000000'
-			]
+			],
+			'freehold': [
+				'F','#2c7bb6',
+				'L' ,'#d7191c',
+				'#000000'
+			],
 			
 		},
 		
@@ -708,6 +800,18 @@ const datasets_extra = {
 				120,'#f1b6da',
 				140,'#de77ae',
 				160,'#c51b7d'
+			],
+			'price_2024': [
+				0,'#276419',
+				200000,'#4d9221',
+				300000,'#7fbc41',
+				400000,'#b8e186',
+				500000,'#e6f5d0',
+				600000,'#fde0ef',
+				800000,'#f1b6da',
+				1000000,'#de77ae',
+				2000000,'#c51b7d',
+				3000000,'#8e0152'
 			]
 			
 		},
@@ -764,15 +868,20 @@ const datasets_extra = {
 	
 	// Popups
 	popups: {
-	  'epc_dom': {
+	  	'epc_dom': {
 			layerId: 'epc_dom',
 			templateId: 'epc_dom-popup',
-			preprocessingCallback: popupCallback,	// Defined below
+			preprocessingCallback: popupCallback,
 		},
 		'epc_nondom': {
 			layerId: 'epc_nondom',
 			templateId: 'epc_nondom-popup',
-			preprocessingCallback: popupCallback,	// Defined below
+			preprocessingCallback: popupCallback,
+		},
+		'uprn_unknown': {
+			layerId: 'uprn_unknown',
+			templateId: 'uprn_unknown-popup',
+			preprocessingCallback: popupCallback,
 		}
 	}
 };
@@ -823,8 +932,8 @@ function postcodesStyling (layerId, map, settings, datasets, createLegend /* cal
 function getEPCDomStyleColumn (layerId, datasets)
 {
 	const style_col_selected = datasets.lineColours.epc_dom.hasOwnProperty(layerId) ? layerId : '_';
-	//console.log(style_col_selected);
-	//console.log(datasets.lineColours.epc_dom[style_col_selected]);
+	console.log(style_col_selected);
+	console.log(datasets.lineColours.epc_dom[style_col_selected]);
 	return datasets.lineColours.epc_dom[style_col_selected];
 }
 
@@ -839,7 +948,7 @@ function EPCDomStyling (layerId, map, settings, datasets, createLegend /* callba
 	const style = getEPCDomStyleColumn (field, datasets);
 	//console.log(style);
 
-  let interpolate = ['area', 'year'];
+  let interpolate = ['area', 'year', 'price_2024'];
 
 	// Set paint properties
 	if(interpolate.includes(field)){
@@ -870,7 +979,7 @@ function EPCNonDomStyling (layerId, map, settings, datasets, createLegend /* cal
 	const style = getEPCNonDomStyleColumn (field, datasets);
 	//console.log(style);
 
-  let interpolate = ['area', 'year'];
+  let interpolate = ['area', 'year','price_2024'];
 
 	// Set paint properties
 	if(interpolate.includes(field)){
