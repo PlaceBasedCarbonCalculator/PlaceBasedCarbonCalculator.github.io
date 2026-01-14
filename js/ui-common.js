@@ -99,6 +99,9 @@ const capUi = (function () {
 			
 			// Adjust opentool links to use current map state
 			capUi.adjustOpenToolLinks ();
+
+			// Setup print button handlers
+			capUi.initPrintButtons ();
 		},
 		
 		// Welcome screen
@@ -126,7 +129,21 @@ const capUi = (function () {
 			//capUi.setCookie (cookieName, 'true');
 		},
 
-		
+		// Modal print buttons
+		initPrintButtons:function () {
+			const printButtons = document.querySelectorAll('.print-button');
+			
+			printButtons.forEach(function(button) {
+				button.addEventListener('click', function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+				
+				// Simply trigger the print dialog - CSS handles the rest
+				window.print();
+				});
+			});
+		},
+
 		// Function to manage an accordion
 		accordion: function ()
 		{

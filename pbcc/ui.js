@@ -1947,3 +1947,24 @@ function lsoaCharacteristicsTable(lsoadata) {
 	document.getElementById("data_lsoa_class_name").innerHTML = 'Subgroup Description: "' + lsoadata.lsoa_class_name + '"';
 }
 
+// Initialize print button functionality
+function initPrintButtons() {
+  const printButtons = document.querySelectorAll('.print-button');
+  
+  printButtons.forEach(function(button) {
+    button.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      // Simply trigger the print dialog - CSS handles the rest
+      window.print();
+    });
+  });
+}
+
+// Initialize print buttons when page loads
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initPrintButtons);
+} else {
+  initPrintButtons();
+}

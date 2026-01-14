@@ -1184,22 +1184,5 @@ document.addEventListener('DOMContentLoaded', function() {
   if (defaultOpenBtn) {
     defaultOpenBtn.click();
   }
-  
-  // Setup print button handlers
-  initPrintButtons();
 });
 
-// Initialize print button functionality
-function initPrintButtons() {
-  const printButtons = document.querySelectorAll('.print-button');
-  
-  printButtons.forEach(function(button) {
-    button.addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      
-      // Simply trigger the print dialog - CSS handles the rest
-      window.print();
-    });
-  });
-}

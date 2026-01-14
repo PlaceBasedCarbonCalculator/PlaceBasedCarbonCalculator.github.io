@@ -352,3 +352,25 @@ modalTab = function (evt, tabName) {
 }
 
 document.getElementById("defaultOpen").click();
+
+// Initialize print button functionality
+function initPrintButtons() {
+  const printButtons = document.querySelectorAll('.print-button');
+  
+  printButtons.forEach(function(button) {
+    button.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      // Simply trigger the print dialog - CSS handles the rest
+      window.print();
+    });
+  });
+}
+
+// Initialize print buttons when page loads
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initPrintButtons);
+} else {
+  initPrintButtons();
+}

@@ -354,6 +354,7 @@
 		<div class="modal" id="postcodes-chartsmodal" style="display: none;">
 			<div class="modal-header">
 				<span class="modal-close">×</span>
+				<button class="print-button" aria-label="Print this modal" title="Print this page">Print</button>
 				<h2 class="modal-title">Postcode Summary: XXXXX</h2>
 			</div>
 			<div class="modal-body">
@@ -432,6 +433,7 @@
 		<div class="modal" id="zones-chartsmodal" style="display: none;">
 			<div class="modal-header">
 				<span class="modal-close">×</span>
+				<button class="print-button" aria-label="Print this modal" title="Print this page">Print</button>
 				<h2 class="modal-title">Neighbourhood Summary</h2>
 			</div>
 			<div class="modal-body">
@@ -466,7 +468,69 @@
 				</div>
 
 				<div id="energy" class="tabcontent">
-
+					<p>This page provides a summary of the LSOA level domestic gas and electricity consumption data published by the Department of Energy Security and Net Zero (DESNZ). </p>
+			  
+					<div class="chart-wrapper" id="emissionsLSOA-chartrow" style="display: block;">
+						<div class="chart-text"> 
+							<h4 class="chart-title">Historical domestic gas and electricity emissions</h4>
+							<p class="chart-description">This chart shows the annual emissions from this postcode of gas and domestic buildings' electricity consumption. Use the drop down menu to select either total, median, or mean emissions. Note that some areas are off the gas grid, so no emissions are reported. In these places, heating may be provided by some other fuel type, such as coal, wood, or oil. Emissions have been calculated by Carbon & Place by multiplying energy consumption by annual emissions factors for the UK. For electricity consumption, emissions per kWh have declined in recent years, resulting in falling emissions even if electricity consumption has remained constant.</p>
+							<p>Chart type: 
+							<select id="select_emissionsLSOA" name="select_emissionsLSOA" onchange="makeChartLSOAEnergy()">
+								<option value="median" selected>Median</option>
+								<option value="mean">Mean</option>
+								<option value="total">Total</option>
+							</select></p>
+						</div>
+						<div class="chart-container">
+							<canvas id="emissions-chart"></canvas>
+						</div>
+					</div>
+  			
+  			
+					<div class="chart-wrapper" id="gasLSOA-chartrow" style="display: block;">
+						<div class="chart-text"> 
+							<h4 class="chart-title">Historical gas consumption</h4>
+							<p class="chart-description">This chart shows domestic buildings' annual gas consumption in kilowatt hours in this postcode. Use the drop down menu to select either total, median, or mean consumption. Note that some areas are off the gas grid, so no emissions are reported. In these places, heating may be provided by some other fuel type, such as coal, wood, or oil.</p>
+							
+							<p>Chart type: <select id="select_gasLSOA" name="select_gasLSOA" onchange="makeChartLSOAEnergy()">
+								<option value="median" selected>Median</option>
+								<option value="mean">Mean</option>
+								<option value="total">Total</option>
+								</select></p>
+						</div>
+						<div class="chart-container">
+							<canvas id="gasLSOA-chart"></canvas>
+						</div>
+					</div>
+				
+				
+					<div class="chart-wrapper" id="electricityLSOA-chartrow" style="display: block;">
+						<div class="chart-text"> 
+							<h4 class="chart-title">Historical electricity consumption</h4>
+							<p class="chart-description">This chart shows the annual electricity consumption in kilowatt hours by domestic buildings in this postcode. Use the drop down menu to select either total, median, or mean consumption. Consumption estimates are provided for different meter types (all, standard, and economy 7). However, data is not always available for all meter types.</p>
+							
+							<p>Chart type: <select id="select_electricityLSOA" name="select_electricityLSOA" onchange="makeChartLSOAEnergy()">
+							<option value="median" selected>Median</option>
+							<option value="mean">Mean</option>
+							<option value="total">Total</option>
+							</select></p>
+						</div>
+						<div class="chart-container">
+							<canvas id="electricityLSOA-chart"></canvas>
+						</div>
+					</div>
+					
+					<div class="chart-wrapper" id="metersLSOA-chartrow" style="display: block;">
+						<div class="chart-text"> 
+							<h4 class="chart-title">Historical gas and electricity meters</h4>
+							<p class="chart-description">This chart shows this postcode's total number of domestic gas and electricity meters. Electricity meters are also broken down into standard and economy 7 metres. In theory, the total number of all electricity meters should match the total of standard and economy 7 meters. However, there can be slight differences or even missing data due to how the data is reported. Therefore, two columns are shown for electricity meters to show the different counts.</p>
+							<p>Changes in the number of meters may indicate house building/demolition and the difference between gas and electricity meters can indicate the presence of off-gas grid homes.</p>
+							</div>
+						
+						<div class="chart-container">
+							<canvas id="metersLSOA-chart"></canvas>
+						</div>
+					</div>
 				</div>
 
 				<div id="epcs" class="tabcontent">
