@@ -1,8 +1,13 @@
-// Local Chart Mangement
+// Local Chart Management
 var emissionsChart;
 var gasChart;
 var electricityChart;
 var metersChart;
+
+var emissionsLSOAChart;
+var gasLSOAChart;
+var electricityLSOAChart;
+var metersLSOAChart;
 
 var epcratingChart;
 var buildingtypeChart;
@@ -33,6 +38,7 @@ var transactionsChart;
 var postcodeLocationData = {};
 var lsoaLocationData = {};
 var pricesLocationData = {};
+var lsoaEnergyData = {};
 
 manageCharts =  function (locationId, mapLayerId){
   if(mapLayerId == 'zones'){
@@ -41,6 +47,9 @@ manageCharts =  function (locationId, mapLayerId){
       .then(data => { lsoaLocationData = data[0]; makeChartLSOA(); })
       .catch(err => { console.error('EPC failed:', err); });  
     
+    const pEnergy = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/lsoa_gas_electric/v1/' + locationId + '.json')
+      .then(data => { lsoaEnergyData = data; makeChartLSOAEnergy(); })
+      .catch(err => { console.error('Energy failed:', err); });  
     
     const pPrices = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/prices/v1/' + locationId + '.json')
       .then(data => { pricesLocationData = data; makeChartPrices(); })
@@ -54,7 +63,7 @@ manageCharts =  function (locationId, mapLayerId){
         }
       });
 
-    return Promise.all([pEPC, pPrices]);
+    return Promise.all([pEPC, pPrices, pEnergy]);
     //return p;
   } else if (mapLayerId == 'postcodes'){
     const p = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/Postcode/' + locationId + '.json')
@@ -349,6 +358,245 @@ makeChartPostcode = function(locationId){
   });
   
 }
+
+makeChartLSOAEnergy = function(locationId){
+  
+  console.log("Make LSOA Energy Charts charts");
+  // Access Chart
+  // Destroy old chart
+	if(emissionsLSOAChart){
+		emissionsLSOAChart.destroy();
+	}
+	if(gasLSOAChart){
+		gasLSOAChart.destroy();
+	}
+	if(electricityLSOAChart){
+		electricityLSOAChart.destroy();
+	}
+  if(metersLSOAChart){
+		metersLSOAChart.destroy();
+	}
+
+  // Get Control Settings
+  const setting_emissions = document.getElementById("select_emissionsLSOA").value;
+	const setting_gas = document.getElementById("select_gasLSOA").value;
+  const setting_electricity = document.getElementById("select_electricityLSOA").value;
+  
+  let data_emissions_gas;
+  let data_emissions_elec;
+  let data_elec_all;
+
+  // Get data
+  /*
+  if(setting_emissions == "total"){
+     data_emissions_gas = lsoaEnergyData['Bgt'];
+     data_emissions_elec = lsoaEnergyData['Beta'];
+  } else if (setting_emissions == "mean") {
+     data_emissions_gas = lsoaEnergyData['Egm'];
+     data_emissions_elec = lsoaEnergyData['Eema'];
+  } else if (setting_emissions == "median") {
+     data_emissions_gas = lsoaEnergyData['Dgm'];
+     data_emissions_elec = lsoaEnergyData['Dema'];
+  }
+  */
+  if(setting_electricity == "total"){
+     data_elec_all = lsoaEnergyData['total_elec_kwh'];
+  } else if (setting_electricity == "mean") {
+     data_elec_all = lsoaEnergyData['mean_elec_kwh'];
+  } else if (setting_electricity == "median") {
+     data_elec_all = lsoaEnergyData['median_elec_kwh'];
+  }
+  
+  if(setting_gas == "total"){
+     data_gas = lsoaEnergyData['total_gas_kwh'];
+  } else if (setting_gas == "mean") {
+     data_gas = lsoaEnergyData['mean_gas_kwh'];
+  } else if (setting_gas == "median") {
+     data_gas = lsoaEnergyData['median_gas_kwh'];
+  }
+  
+  
+  
+  const labels = lsoaEnergyData.year;
+  const dataMeters = {
+    labels: labels,
+    datasets: [
+      {
+        label: 'Gas',
+        data: lsoaEnergyData['meters_gas'],
+        backgroundColor: '#2b8cbe',
+        stack: 'Stack 0',
+      },
+      {
+        label: 'Electric',
+        data: lsoaEnergyData['meters_elec'],
+        backgroundColor: '#b30000',
+        stack: 'Stack 1',
+      }
+    ]
+  };
+  
+  /*
+  const dataEmissions = {
+    labels: labels,
+      datasets: [
+        {
+          label: 'Gas',
+          data: data_emissions_gas,
+          borderColor: '#2b8cbe',
+          backgroundColor: '#2b8cbe',
+        },
+        {
+          label: 'Electricity',
+          data: data_emissions_elec,
+          borderColor: '#b30000',
+          backgroundColor: '#b30000',
+        }
+      ]
+    };
+	*/
+	const dataElectricity = {
+    labels: labels,
+      datasets: [
+        {
+          label: 'Electricity meters',
+          data: data_elec_all,
+          borderColor: '#b30000',
+          backgroundColor: '#b30000',
+        }
+      ]
+    };
+	
+	
+	const dataGas = {
+    labels: labels,
+      datasets: [
+        {
+          label: 'Gas meters',
+          data: data_gas,
+          borderColor: '#2b8cbe',
+          backgroundColor: '#2b8cbe',
+        }
+      ]
+    };
+	
+	var metersctx = document.getElementById('metersLSOA-chart').getContext('2d');
+	metersLSOAChart = new Chart(metersctx, {
+    type: 'bar',
+      data: dataMeters,
+      options: {
+        responsive: true,
+        interaction: {
+          intersect: false,
+        },
+        scales: {
+          x: {
+            stacked: true,
+            title: {
+              display: true,
+              text: 'Year'
+            }
+          },
+          y: {
+            stacked: true,
+            title: {
+              display: true,
+              text: 'Meters'
+            }
+          }
+        }
+      }
+  });
+	/*
+	var emissionsctx = document.getElementById('emissionsLSOA-chart').getContext('2d');
+	emissionsChart = new Chart(emissionsctx, {
+    type: 'line',
+    data: dataEmissions,
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: 'Emissions kgCO2e'
+          },
+          beginAtZero: true
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Year'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      }
+    },
+  });
+  */
+  var gasctx = document.getElementById('gasLSOA-chart').getContext('2d');
+	gasLSOAChart = new Chart(gasctx, {
+    type: 'line',
+    data: dataGas,
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: 'Gas Consumption kWh'
+          },
+          beginAtZero: true
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Year'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      }
+    },
+  });
+	
+	var electricityctx = document.getElementById('electricityLSOA-chart').getContext('2d');
+	electricityLSOAChart = new Chart(electricityctx, {
+    type: 'line',
+    data: dataElectricity,
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: 'Consumption kWh'
+          },
+          beginAtZero: true
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Year'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      }
+    },
+  });
+  
+}
+
 
 makeChartPrices = function(){
   
@@ -936,4 +1184,22 @@ document.addEventListener('DOMContentLoaded', function() {
   if (defaultOpenBtn) {
     defaultOpenBtn.click();
   }
+  
+  // Setup print button handlers
+  initPrintButtons();
 });
+
+// Initialize print button functionality
+function initPrintButtons() {
+  const printButtons = document.querySelectorAll('.print-button');
+  
+  printButtons.forEach(function(button) {
+    button.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      // Simply trigger the print dialog - CSS handles the rest
+      window.print();
+    });
+  });
+}
