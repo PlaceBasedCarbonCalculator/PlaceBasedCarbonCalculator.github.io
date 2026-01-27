@@ -273,6 +273,102 @@ input[type="radio"][id^="bm"] {
   display: table-row; /* Change to table-row for vertical layout */
 }
 
+/* Bivariate Legend */
+.bivariateLegend {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px;
+}
+
+.bivariateContainer {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr auto;
+  gap: 8px;
+  align-items: center;
+  justify-items: start;
+}
+
+.bivariateYLabel {
+  grid-column: 1;
+  grid-row: 2;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: 12px;
+  font-weight: bold;
+  white-space: nowrap;
+  padding: 0 5px;
+}
+
+.bivariateYLowHigh {
+  grid-column: 1;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 10px;
+  padding: 0 5px;
+  height: 200px;
+  text-align: center;
+}
+
+.bivariateYHigh {
+  order: -1;
+}
+
+.bivariateYLow {
+  order: 1;
+}
+
+.bivariateGridWrapper {
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.bivariateRow {
+  display: flex;
+  gap: 0;
+}
+
+.bivariateCell {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #333;
+  box-sizing: border-box;
+}
+
+.bivariateXLowHighLabel {
+  grid-column: 2;
+  grid-row: 3;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 3px 0;
+}
+
+.bivariateXLow {
+  font-size: 10px;
+  flex: 0 0 auto;
+}
+
+.bivariateXHigh {
+  font-size: 10px;
+  flex: 0 0 auto;
+}
+
+.bivariateXLabel {
+  font-size: 12px;
+  font-weight: bold;
+  flex: 1;
+  text-align: center;
+  padding: 0 10px;
+}
+
 /* Basemap Control */
 
 /* Basemap selection */

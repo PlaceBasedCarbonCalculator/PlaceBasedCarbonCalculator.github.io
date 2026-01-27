@@ -459,7 +459,7 @@ makeChartLSOAEnergy = function(locationId){
     labels: labels,
       datasets: [
         {
-          label: 'Electricity meters',
+          label: 'Domestic Electricity',
           data: data_elec_all,
           borderColor: '#b30000',
           backgroundColor: '#b30000',
@@ -472,7 +472,7 @@ makeChartLSOAEnergy = function(locationId){
     labels: labels,
       datasets: [
         {
-          label: 'Gas meters',
+          label: 'Domestic Gas',
           data: data_gas,
           borderColor: '#2b8cbe',
           backgroundColor: '#2b8cbe',

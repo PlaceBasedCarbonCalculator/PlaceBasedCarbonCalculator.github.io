@@ -205,6 +205,7 @@
 						<option value="modal_floord">Floor type (most common)</option>
 						<option value="modal_type">Building type (most common)</option>
 						<option value="percent_EPC">% of homes with an EPC</option>
+						<option value="fuelcost_bivaraite">Energy bills vs Income</option>
 					</select>
 					<button aria-label="Help purpose" class="helpbutton" data-help="retrofit-zones"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
 				</p>
@@ -214,7 +215,7 @@
 					</div>
 				</div>
 				
-				<p><label class="switch"><input type="checkbox" name="daysymetricmode" class="updatelayer" data-layer="zones" checked><span class="slider round"></span></label> Dasymetric</p>
+				<p><label class="switch"><input type="checkbox" name="daysymetricmode" class="updatelayer" data-layer="zones" checked><span class="slider round"></span></label> Dasymetric <button aria-label="Help daysymetric mode" class="helpbutton" data-help="dasymetric"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 				
 			
 			</div>
@@ -507,7 +508,7 @@
 					<div class="chart-wrapper" id="electricityLSOA-chartrow" style="display: block;">
 						<div class="chart-text"> 
 							<h4 class="chart-title">Historical electricity consumption</h4>
-							<p class="chart-description">This chart shows the annual electricity consumption in kilowatt hours by domestic buildings in this postcode. Use the drop down menu to select either total, median, or mean consumption. Consumption estimates are provided for different meter types (all, standard, and economy 7). However, data is not always available for all meter types.</p>
+							<p class="chart-description">This chart shows the annual electricity consumption in kilowatt hours by domestic buildings in this postcode. Use the drop down menu to select either total, median, or mean consumption.</p>
 							
 							<p>Chart type: <select id="select_electricityLSOA" name="select_electricityLSOA" onchange="makeChartLSOAEnergy()">
 							<option value="median" selected>Median</option>
@@ -523,7 +524,7 @@
 					<div class="chart-wrapper" id="metersLSOA-chartrow" style="display: block;">
 						<div class="chart-text"> 
 							<h4 class="chart-title">Historical gas and electricity meters</h4>
-							<p class="chart-description">This chart shows this postcode's total number of domestic gas and electricity meters. Electricity meters are also broken down into standard and economy 7 metres. In theory, the total number of all electricity meters should match the total of standard and economy 7 meters. However, there can be slight differences or even missing data due to how the data is reported. Therefore, two columns are shown for electricity meters to show the different counts.</p>
+							<p class="chart-description">This chart shows this postcode's total number of domestic gas and electricity meters.</p>
 							<p>Changes in the number of meters may indicate house building/demolition and the difference between gas and electricity meters can indicate the presence of off-gas grid homes.</p>
 							</div>
 						
