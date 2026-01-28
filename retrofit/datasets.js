@@ -9,8 +9,9 @@ const datasets_extra = {
 			'id': 'zones',
 			'type': 'fill',
 			'source': {
-			'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/zones_retrofit_20251124.pmtiles',
+				'type': 'vector',
+				//'url': 'pmtiles://%tileserverUrl/zones_retrofit_20251124.pmtiles',
+				'url': 'pmtiles://zones_retrofit.pmtiles',
 				},
 			'source-layer': 'zones',
 			'paint': {
@@ -39,7 +40,7 @@ const datasets_extra = {
 			'id': 'epc_dom',
 			'type': 'circle',
 			'source': {
-			'type': 'vector',
+				'type': 'vector',
 				'url': 'pmtiles://%tileserverUrl/epc_dom_20260113.pmtiles',
 				},
 			'source-layer': 'epc_dom',
@@ -384,6 +385,12 @@ const datasets_extra = {
 				['Maisonette' ,'#1f78b4'],
 				['Park home' ,'#fa7c00']
 			],
+			'modal_tenure': [
+				['Rented (social)','#1f78b4'],
+				['Rented (private)','#e31a1c'],
+				['Owner occupied' ,'#33a02c'],
+				['Unknown','#999898']
+			],
 		  	'percent_EPC': [
 				['<30%','#ffffb2'],
 				['30-50%' ,'#fed976'],
@@ -392,6 +399,49 @@ const datasets_extra = {
 				['70-80%' ,'#fc4e2a'],
 				['80-90%','#e31a1c'],
 				['>90%','#b10026']
+			],
+			'price_2024': [
+				['<£200k','#276419'],
+				['£200-300k','#4d9221'],
+				['£300-400k','#7fbc41'],
+				['£400-500k','#b8e186'],
+				['£500-600k','#e6f5d0'],
+				['£600-800k','#fde0ef'],
+				['£800-1000k','#f1b6da'],
+				['£1-2m','#de77ae'],
+				['£2-3m','#c51b7d'],
+				['>£3m','#8e0152'],
+				['No Data','#000000']
+			],
+			'house_income_ratio': [
+				['<2','#4d9221'],
+				['2-4','#7fbc41'],
+				['4-6','#b8e186'],
+				['6-8','#e6f5d0'],
+				['8-10','#fde0ef'],
+				['10-12','#f1b6da'],
+				['12-14','#de77ae'],
+				['>14','#c51b7d']
+			],
+			'median_gas_kwh': [
+				['<6000 kWh','#4575b4'],
+				['6000-8000 kWh','#91bfdb'],
+				['8000-10000 kWh','#e0f3f8'],
+				['10000-12000 kWh','#ffffbf'],
+				['12000-14000 kWh','#fee090'],
+				['14000-16000 kWh','#fc8d59'],
+				['>16000 kWh','#d73027'],
+				['No data','#000000']
+			],
+			'median_elec_kwh': [
+				['<1000 kWh','#4575b4'],
+				['1500-2000 kWh','#91bfdb'],
+				['2000-2500 kWh','#e0f3f8'],
+				['2500-3000 kWh','#ffffbf'],
+				['3000-3500 kWh','#fee090'],
+				['3500-4000 kWh','#fc8d59'],
+				['>4000 kWh','#d73027'],
+				['No data','#000000'],
 			],
 			'fuelcost_bivaraite': {
 				'mode': 'bivariate',
@@ -616,6 +666,13 @@ const datasets_extra = {
 				'parkhome' ,'#fa7c00',
 				'#000000'
 			],
+			'modal_tenure': [
+				'socialrent','#1f78b4',
+				'owner' ,'#33a02c',
+				'privaterent','#e31a1c',
+				'unknown','#999898',
+				'#000000'
+			],
 		  	'percent_EPC': [
 				'0-30','#ffffb2',
 				'30-50' ,'#fed976',
@@ -626,6 +683,48 @@ const datasets_extra = {
 				'90-200','#b10026',
 				'#000000'
 			],
+			'price_2024': [
+				0,'#276419',
+				200000,'#4d9221',
+				300000,'#7fbc41',
+				400000,'#b8e186',
+				500000,'#e6f5d0',
+				600000,'#fde0ef',
+				800000,'#f1b6da',
+				1000000,'#de77ae',
+				2000000,'#c51b7d',
+				3000000,'#8e0152'
+			],	
+			'house_income_ratio': [
+				0,'#4d9221',
+				2,'#7fbc41',
+				4,'#b8e186',
+				6,'#e6f5d0',
+				8,'#fde0ef',
+				10,'#f1b6da',
+				12,'#de77ae',
+				14,'#c51b7d'
+			],	
+			'median_gas_kwh': [
+				0,'#000000',
+				1,'#4575b4',
+				6000,'#91bfdb',
+				8000,'#e0f3f8',
+				10000,'#ffffbf',
+				12000,'#fee090',
+				14000,'#fc8d59',
+				16000,'#d73027'
+			],	
+			'median_elec_kwh': [
+				0,'#000000',
+				1,'#4575b4',
+				1500,'#91bfdb',
+				2000,'#e0f3f8',
+				2500,'#ffffbf',
+				3000,'#fee090',
+				3500,'#fc8d59',
+				4000,'#d73027'
+			],	
 			'fuelcost_bivaraite': [
 				11,'#F07621',
 				12,'#F3896D',		
@@ -1062,8 +1161,17 @@ function zonesStyling (layerId, map, settings, datasets, createLegend /* callbac
 	// Get UI state
 	const daysymetricMode = document.querySelector ('input.updatelayer[data-layer="zones"][name="daysymetricmode"]').checked;
 	
+	let interpolate = ['price_2024', 'house_income_ratio','median_gas_kwh','median_elec_kwh'];
+
 	// Set paint properties
-	map.setPaintProperty (layerId, 'fill-color', ['match', ['get', field], ...getStyleColumnZones (field, datasets)]);
+	if(interpolate.includes(field)){
+	  map.setPaintProperty (layerId, 'fill-color', ['interpolate', ['linear'], ['get', field], ...getStyleColumnZones (field, datasets)]);
+	} else {
+	  map.setPaintProperty (layerId, 'fill-color', ['match', ['get', field], ...getStyleColumnZones (field, datasets)]);
+	}
+
+
+	//map.setPaintProperty (layerId, 'fill-color', ['match', ['get', field], ...getStyleColumnZones (field, datasets)]);
 	map.setPaintProperty (layerId, 'fill-opacity', (daysymetricMode ? 0.1 : 0.8)); // Very faded-out in daysymetric mode, as the buildings are coloured
 	map.setPaintProperty (layerId, 'fill-outline-color', 'rgba(0, 0, 0, 0.2)'); 
 	
@@ -1087,7 +1195,15 @@ function getBuildingsColour (settings)
 	// If dasymetric mode, use a colour set based on the layer
 	if (document.querySelector ('input.updatelayer[data-layer="zones"][name="daysymetricmode"]').checked) {
 		const field = document.querySelector ('select.updatelayer[data-layer="zones"][name="field"]').value;
-		return ['match', ['get', field], ...getStyleColumnZones (field, datasets)];
+
+		let interpolate = ['price_2024', 'house_income_ratio','median_gas_kwh','median_elec_kwh'];
+
+		// Set paint properties
+		if(interpolate.includes(field)){
+			return ['interpolate', ['linear'], ['get', field], ...getStyleColumnZones (field, datasets)];
+		} else {
+			return ['match', ['get', field], ...getStyleColumnZones (field, datasets)];
+		}
 	}
 	
 	// Default to gray
