@@ -945,7 +945,7 @@ const capUi = (function () {
 			for (let y = 5; y >= 1; y--) {
 				legendHtml += '<div class="bivariateRow">';
 				for (let x = 1; x <= 5; x++) {
-					const cellCode = parseInt(String(y) + String(x));
+					const cellCode = parseInt(String(x) + String(y));
 					const cellColor = colorMap[cellCode] || '#cccccc';
 					legendHtml += `<div class="bivariateCell" style="background-color: ${cellColor}"></div>`;
 				}
