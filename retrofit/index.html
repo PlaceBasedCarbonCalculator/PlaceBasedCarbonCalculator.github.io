@@ -478,8 +478,8 @@
 			  
 					<div class="chart-wrapper" id="emissionsLSOA-chartrow" style="display: block;">
 						<div class="chart-text"> 
-							<h4 class="chart-title">Historical domestic gas and electricity emissions</h4>
-							<p class="chart-description">This chart shows the annual emissions from this postcode of gas and domestic buildings' electricity consumption. Use the drop down menu to select either total, median, or mean emissions. Note that some areas are off the gas grid, so no emissions are reported. In these places, heating may be provided by some other fuel type, such as coal, wood, or oil. Emissions have been calculated by Carbon & Place by multiplying energy consumption by annual emissions factors for the UK. For electricity consumption, emissions per kWh have declined in recent years, resulting in falling emissions even if electricity consumption has remained constant.</p>
+							<h4 class="chart-title">Historical household energy emissions</h4>
+							<p class="chart-description">This chart shows the annual household emissions from this neighbourhood for gas, electricity, and other heating fuel. Use the drop down menu to select either total, median, or mean emissions. We have very limited data on other heating fuels such as oil or wood and so these emissions are estimated.</p>
 							<p>Chart type: 
 							<select id="select_emissionsLSOA" name="select_emissionsLSOA" onchange="makeChartLSOAEnergy()">
 								<option value="median" selected>Median</option>
@@ -488,11 +488,20 @@
 							</select></p>
 						</div>
 						<div class="chart-container">
-							<canvas id="emissions-chart"></canvas>
+							<canvas id="emissionsLSOA-chart"></canvas>
 						</div>
 					</div>
   			
-  			
+					<div class="chart-wrapper" id="energybillsLSOA-chartrow" style="display: block;">
+						<div class="chart-text"> 
+							<h4 class="chart-title">Typical energy bills</h4>
+							<p class="chart-description">This chart shows the typical annual household energy bills for domestic buildings in this neighbourhood. Bills are calculated based on local consumption and typical pricing data. We have very limited data on other heating fuels such as oil or wood and so these bills are estimated.</p>
+						</div>
+						<div class="chart-container">
+							<canvas id="energybillsLSOA-chart"></canvas>
+						</div>
+					</div>
+
 					<div class="chart-wrapper" id="gasLSOA-chartrow" style="display: block;">
 						<div class="chart-text"> 
 							<h4 class="chart-title">Historical gas consumption</h4>

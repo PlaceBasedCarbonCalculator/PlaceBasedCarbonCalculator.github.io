@@ -8,6 +8,7 @@ var emissionsLSOAChart;
 var gasLSOAChart;
 var electricityLSOAChart;
 var metersLSOAChart;
+var energybillsLSOAChart;
 
 var epcratingChart;
 var buildingtypeChart;
@@ -47,7 +48,7 @@ manageCharts =  function (locationId, mapLayerId){
       .then(data => { lsoaLocationData = data[0]; makeChartLSOA(); })
       .catch(err => { console.error('EPC failed:', err); });  
     
-    const pEnergy = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/lsoa_gas_electric/v1/' + locationId + '.json')
+    const pEnergy = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/lsoa_gas_electric/v2/' + locationId + '.json')
       .then(data => { lsoaEnergyData = data; makeChartLSOAEnergy(); })
       .catch(err => { console.error('Energy failed:', err); });  
     
@@ -376,6 +377,9 @@ makeChartLSOAEnergy = function(locationId){
   if(metersLSOAChart){
 		metersLSOAChart.destroy();
 	}
+  if(energybillsLSOAChart){
+		energybillsLSOAChart.destroy();
+	}
 
   // Get Control Settings
   const setting_emissions = document.getElementById("select_emissionsLSOA").value;
@@ -387,18 +391,21 @@ makeChartLSOAEnergy = function(locationId){
   let data_elec_all;
 
   // Get data
-  /*
+  
   if(setting_emissions == "total"){
-     data_emissions_gas = lsoaEnergyData['Bgt'];
-     data_emissions_elec = lsoaEnergyData['Beta'];
+     data_emissions_gas = lsoaEnergyData['total_gas_kgco2e'];
+     data_emissions_elec = lsoaEnergyData['total_elec_kgco2e'];
+     data_emissions_other = lsoaEnergyData['total_other_kgco2e'];
   } else if (setting_emissions == "mean") {
-     data_emissions_gas = lsoaEnergyData['Egm'];
-     data_emissions_elec = lsoaEnergyData['Eema'];
+     data_emissions_gas = lsoaEnergyData['mean_gas_kgco2e'];
+     data_emissions_elec = lsoaEnergyData['mean_elec_kgco2e'];
+     data_emissions_other = lsoaEnergyData['mean_other_kgco2e'];
   } else if (setting_emissions == "median") {
-     data_emissions_gas = lsoaEnergyData['Dgm'];
-     data_emissions_elec = lsoaEnergyData['Dema'];
+     data_emissions_gas = lsoaEnergyData['median_gas_kgco2e'];
+     data_emissions_elec = lsoaEnergyData['median_elec_kgco2e'];
+     data_emissions_other = lsoaEnergyData['mean_other_kgco2e']; // Using mean for other as median not available
   }
-  */
+  
   if(setting_electricity == "total"){
      data_elec_all = lsoaEnergyData['total_elec_kwh'];
   } else if (setting_electricity == "mean") {
@@ -436,7 +443,7 @@ makeChartLSOAEnergy = function(locationId){
     ]
   };
   
-  /*
+  
   const dataEmissions = {
     labels: labels,
       datasets: [
@@ -451,10 +458,16 @@ makeChartLSOAEnergy = function(locationId){
           data: data_emissions_elec,
           borderColor: '#b30000',
           backgroundColor: '#b30000',
+        },
+        {
+          label: 'Other',
+          data: data_emissions_other,
+          borderColor: '#008000',
+          backgroundColor: '#008000',
         }
       ]
     };
-	*/
+	
 	const dataElectricity = {
     labels: labels,
       datasets: [
@@ -480,6 +493,36 @@ makeChartLSOAEnergy = function(locationId){
       ]
     };
 	
+    const dataEnergyBills = {
+    labels: labels,
+      datasets: [
+        {
+          label: 'Gas',
+          data: lsoaEnergyData['gas_average_bill'],
+          borderColor: '#2b8cbe',
+          backgroundColor: '#2b8cbe',
+        },
+        {
+          label: 'Electricity',
+          data: lsoaEnergyData['elec_average_bill'],
+          borderColor: '#b30000',
+          backgroundColor: '#b30000',
+        },
+        {
+          label: 'Other',
+          data: lsoaEnergyData['otherheating_average_bill'],
+          borderColor: '#008000',
+          backgroundColor: '#008000',
+        },
+        {
+          label: 'Total',
+          data: lsoaEnergyData['energy_average_bill'],
+          borderColor: '#420144',
+          backgroundColor: '#420144',
+        }
+      ]
+    };
+
 	var metersctx = document.getElementById('metersLSOA-chart').getContext('2d');
 	metersLSOAChart = new Chart(metersctx, {
     type: 'bar',
@@ -507,9 +550,9 @@ makeChartLSOAEnergy = function(locationId){
         }
       }
   });
-	/*
+	
 	var emissionsctx = document.getElementById('emissionsLSOA-chart').getContext('2d');
-	emissionsChart = new Chart(emissionsctx, {
+	emissionsLSOAChart = new Chart(emissionsctx, {
     type: 'line',
     data: dataEmissions,
     options: {
@@ -536,7 +579,36 @@ makeChartLSOAEnergy = function(locationId){
       }
     },
   });
-  */
+
+  var energybillsctx = document.getElementById('energybillsLSOA-chart').getContext('2d');
+	energybillsLSOAChart = new Chart(energybillsctx, {
+    type: 'line',
+    data: dataEnergyBills,
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: 'Average Bill (£)'
+          },
+          beginAtZero: true
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Year'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      }
+    },
+  });
+  
   var gasctx = document.getElementById('gasLSOA-chart').getContext('2d');
 	gasLSOAChart = new Chart(gasctx, {
     type: 'line',
