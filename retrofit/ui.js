@@ -67,7 +67,7 @@ manageCharts =  function (locationId, mapLayerId){
     return Promise.all([pEPC, pPrices, pEnergy]);
     //return p;
   } else if (mapLayerId == 'postcodes'){
-    const p = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/Postcode/' + locationId + '.json')
+    const p = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/postcode_energy/v2/' + locationId + '.json')
         .then(function (postcodeData) {
             postcodeLocationData = postcodeData;
             makeChartPostcode(locationId);
@@ -122,65 +122,65 @@ makeChartPostcode = function(locationId){
   // Get data
   // Not doing emissions for standard and eco7 meters
   if(setting_emissions == "total"){
-     data_emissions_gas = postcodeLocationData['Bgt'];
-     data_emissions_elec = postcodeLocationData['Beta'];
+     data_emissions_gas = postcodeLocationData['gas_totalkgco2e'];
+     data_emissions_elec = postcodeLocationData['elec_totalkgco2e_all'];
   } else if (setting_emissions == "mean") {
-     data_emissions_gas = postcodeLocationData['Egm'];
-     data_emissions_elec = postcodeLocationData['Eema'];
+     data_emissions_gas = postcodeLocationData['gas_meankgco2e'];
+     data_emissions_elec = postcodeLocationData['elec_meankgco2e_all'];
   } else if (setting_emissions == "median") {
-     data_emissions_gas = postcodeLocationData['Dgm'];
-     data_emissions_elec = postcodeLocationData['Dema'];
+     data_emissions_gas = postcodeLocationData['gas_mediankgco2e'];
+     data_emissions_elec = postcodeLocationData['elec_mediankgco2e_all'];
   }
   
   if(setting_electricity == "total"){
-     data_elec_all = postcodeLocationData['eta'];
-     data_elec_std = postcodeLocationData['ets'];
-     data_elec_eco7 = postcodeLocationData['ete'];
+     data_elec_all = postcodeLocationData['elec_totalkwh_all'];
+     data_elec_std = postcodeLocationData['elec_totalkwh_std'];
+     data_elec_eco7 = postcodeLocationData['elec_totalkwh_eco7'];
   } else if (setting_electricity == "mean") {
-     data_elec_all = postcodeLocationData['Bema'];
-     data_elec_std = postcodeLocationData['Bems'];
-     data_elec_eco7 = postcodeLocationData['Beme'];
+     data_elec_all = postcodeLocationData['elec_meankwh_all'];
+     data_elec_std = postcodeLocationData['elec_meankwh_std'];
+     data_elec_eco7 = postcodeLocationData['elec_meankwh_eco7'];
   } else if (setting_electricity == "median") {
-     data_elec_all = postcodeLocationData['Cems'];
-     data_elec_std = postcodeLocationData['Cema'];
-     data_elec_eco7 = postcodeLocationData['Ceme'];
+     data_elec_all = postcodeLocationData['elec_mediankwh_all'];
+     data_elec_std = postcodeLocationData['elec_mediankwh_std'];
+     data_elec_eco7 = postcodeLocationData['elec_mediankwh_eco7'];
   }
   
   if(setting_gas == "total"){
-     data_gas = postcodeLocationData['gt'];
+     data_gas = postcodeLocationData['gas_totalkwh'];
   } else if (setting_gas == "mean") {
-     data_gas = postcodeLocationData['Bgm'];
+     data_gas = postcodeLocationData['gas_meankwh'];
   } else if (setting_gas == "median") {
-     data_gas = postcodeLocationData['Cgm'];
+     data_gas = postcodeLocationData['gas_mediankwh'];
   }
   
   
   
-  const labels = [2015,2016,2017,2018,2019,2020,2021,2022]
+  const labels = postcodeLocationData['year'];
   const dataMeters = {
     labels: labels,
     datasets: [
       {
         label: 'Gas',
-        data: postcodeLocationData['gm'],
+        data: postcodeLocationData['gas_meters'],
         backgroundColor: '#2b8cbe',
         stack: 'Stack 0',
       },
       {
         label: 'Electric (all)',
-        data: postcodeLocationData['ema'],
+        data: postcodeLocationData['elec_meters_all'],
         backgroundColor: '#b30000',
         stack: 'Stack 1',
       },
       {
         label: 'Electric (Standard)',
-        data: postcodeLocationData['ems'],
+        data: postcodeLocationData['elec_meters_std'],
         backgroundColor: '#e34a33',
         stack: 'Stack 2',
       },
       {
         label: 'Electric (Economy 7)',
-        data: postcodeLocationData['eme'],
+        data: postcodeLocationData['elec_meters_eco7'],
         backgroundColor: '#fdcc8a',
         stack: 'Stack 2',
       }
