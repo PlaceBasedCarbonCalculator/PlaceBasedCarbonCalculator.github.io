@@ -44,7 +44,7 @@ var lsoaEnergyData = {};
 manageCharts =  function (locationId, mapLayerId){
   if(mapLayerId == 'zones'){
 
-    const pEPC = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/epc_dom/v3/' + locationId + '.json')
+    const pEPC = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/epc_dom/v4/' + locationId + '.json')
       .then(data => { lsoaLocationData = data[0]; makeChartLSOA(); })
       .catch(err => { console.error('EPC failed:', err); });  
     

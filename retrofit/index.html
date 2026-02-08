@@ -446,8 +446,8 @@
 
 				<!-- Tab links -->
 				<div class="tab">
-				<button class="tablinks" onclick="modalTab(event, 'energy')">Energy Consumption</button>
-				<button class="tablinks" onclick="modalTab(event, 'epcs')" id="defaultOpen">EPCs</button>
+				<button class="tablinks" onclick="modalTab(event, 'energy')" id="defaultOpen">Energy Consumption</button>
+				<button class="tablinks" onclick="modalTab(event, 'epcs')" >EPCs</button>
 				<button class="tablinks" onclick="modalTab(event, 'prices')">Prices</button>
 				</div>
 
@@ -474,12 +474,13 @@
 				</div>
 
 				<div id="energy" class="tabcontent">
-					<p>This page provides a summary of the LSOA level domestic gas and electricity consumption data published by the Department of Energy Security and Net Zero (DESNZ). </p>
+					<p>This page provides a summary of the LSOA level domestic gas and electricity consumption data published by the <a href="https://www.gov.uk/government/collections/sub-national-electricity-consumption-data" target="_blank">Department of Energy Security and Net Zero (DESNZ)</a>.</p>
 			  
 					<div class="chart-wrapper" id="emissionsLSOA-chartrow" style="display: block;">
 						<div class="chart-text"> 
 							<h4 class="chart-title">Historical household energy emissions</h4>
-							<p class="chart-description">This chart shows the annual household emissions from this neighbourhood for gas, electricity, and other heating fuel. Use the drop down menu to select either total, median, or mean emissions. We have very limited data on other heating fuels such as oil or wood and so these emissions are estimated.</p>
+							<p class="chart-description">This chart shows the annual household emissions from this neighbourhood for gas, electricity, and other heating fuel. We have very limited data on other heating fuels such as oil or wood and so these emissions are estimated.</p>
+							<p>Use the drop down menu to select either total, median, or mean consumption.</p>
 							<p>Chart type: 
 							<select id="select_emissionsLSOA" name="select_emissionsLSOA" onchange="makeChartLSOAEnergy()">
 								<option value="median" selected>Median</option>
@@ -505,8 +506,8 @@
 					<div class="chart-wrapper" id="gasLSOA-chartrow" style="display: block;">
 						<div class="chart-text"> 
 							<h4 class="chart-title">Historical gas consumption</h4>
-							<p class="chart-description">This chart shows domestic buildings' annual gas consumption in kilowatt hours in this postcode. Use the drop down menu to select either total, median, or mean consumption. Note that some areas are off the gas grid, so no emissions are reported. In these places, heating may be provided by some other fuel type, such as coal, wood, or oil.</p>
-							
+							<p class="chart-description">This chart shows domestic buildings' annual gas consumption in kilowatt hours in this neighbourhood. Note that some areas are off the gas grid, so no emissions are reported. In these places, heating may be provided by some other fuel type, such as coal, wood, or oil.</p>
+							<p>Use the drop down menu to select either total, median, or mean consumption.</p>
 							<p>Chart type: <select id="select_gasLSOA" name="select_gasLSOA" onchange="makeChartLSOAEnergy()">
 								<option value="median" selected>Median</option>
 								<option value="mean">Mean</option>
@@ -522,8 +523,8 @@
 					<div class="chart-wrapper" id="electricityLSOA-chartrow" style="display: block;">
 						<div class="chart-text"> 
 							<h4 class="chart-title">Historical electricity consumption</h4>
-							<p class="chart-description">This chart shows the annual electricity consumption in kilowatt hours by domestic buildings in this postcode. Use the drop down menu to select either total, median, or mean consumption.</p>
-							
+							<p class="chart-description">This chart shows the annual electricity consumption in kilowatt hours by domestic buildings in this neighbourhood.</p>
+							<p>Use the drop down menu to select either total, median, or mean consumption.</p>
 							<p>Chart type: <select id="select_electricityLSOA" name="select_electricityLSOA" onchange="makeChartLSOAEnergy()">
 							<option value="median" selected>Median</option>
 							<option value="mean">Mean</option>
@@ -538,7 +539,7 @@
 					<div class="chart-wrapper" id="metersLSOA-chartrow" style="display: block;">
 						<div class="chart-text"> 
 							<h4 class="chart-title">Historical gas and electricity meters</h4>
-							<p class="chart-description">This chart shows this postcode's total number of domestic gas and electricity meters.</p>
+							<p class="chart-description">This chart shows this neighbourhood's total number of domestic gas and electricity meters.</p>
 							<p>Changes in the number of meters may indicate house building/demolition and the difference between gas and electricity meters can indicate the presence of off-gas grid homes.</p>
 							</div>
 						
@@ -549,7 +550,8 @@
 				</div>
 
 				<div id="epcs" class="tabcontent">
-					<p>This report summarises the Domestic Energy Performance Certificates from 2024. Since 2008, houses in the UK have had to get an Energy Performance Certificate (EPC) when they are sold or rented. An EPC requires a qualified assessor to visit the dwelling and take measurements of the building's construction and energy efficiency, which makes EPCs a valuable tool for understanding the energy use and carbon emissions from our homes. However, EPCs have significant problems. Research has shown that the EPC grades are not great at predicting real-world energy use and that as many as 80% of EPCs contain at least one error. EPCs are also not a representative sample of houses as they are only required under specific circumstances (e.g., when a house is sold). EPCs are likely to under-estimate the uptake of retrofit measures, as many people make home improvements just after buying a house. Thus, the EPC may be out of date shortly after it is issued. For all these reasons, EPC data should be treated with care. We have chosen to include it here as it is the best available data and helps draw attention to the low quality of housing data in the UK. For this tool, we took an extract of the EPC database from 2020 and summarised the results for each LSOA. In cases where a property had more than on EPC, only the most recent EPC was considered. Some of the data presented here are scraped from the text description written in the EPCs, so some missing data and double counting may exist. That means this data must be seen as indicative rather than conclusive.</p>
+					<p>This page summarises the Domestic Energy Performance Certificates from 2025. Since 2008, houses in the UK have had to get an Energy Performance Certificate (EPC) when they are sold or rented. An EPC requires a qualified assessor to visit the dwelling and take measurements of the building's construction and energy efficiency, which makes EPCs a valuable tool for understanding the energy use and carbon emissions from our homes. However, EPCs have significant problems. Research has shown that the EPC grades are not great at <a href = "https://www.ucl.ac.uk/bartlett/news/2023/apr/energy-performance-certificates-great-britain-overpredict-energy-use-study-finds" target="_blank">predicting real-world energy use</a> and that <a href="https://www.sciencedirect.com/science/article/abs/pii/S0301421519301867" target="_blank">as many as 60% of EPCs contain at least one error</a>.</p>
+					<p>EPCs are also not a representative sample of houses as they are only required under specific circumstances (e.g., when a house is sold). EPCs are likely to under-estimate the uptake of retrofit measures, as many people make home improvements just after buying a house. Thus, the EPC may be out of date shortly after it is issued. For all these reasons, EPC data should be treated with care. We have chosen to include it here as it is the best available data and helps draw attention to the low quality of housing data in the UK.</p>
 			  
 					<div class="chart-wrapper" id="epcrating-chartrow" style="display: block;">
 						<div class="chart-text"> 
@@ -575,7 +577,7 @@
 					<div class="chart-wrapper" id="tenure-chartrow" style="display: block;">
 						<div class="chart-text"> 
 						<h4 class="chart-title">Tenure</h4>
-						<p class="chart-description">A summary of type of tenure as recorded on the EPC. Not that is may have changed after the EPC was issued. Also as EPCs are required for rental properties but only required for owner-occupied properties at the time of sale, rental property may be over-represented in the EPC data.</p>
+						<p class="chart-description">A summary of type of tenure as recorded on the EPC. Note that is may have changed after the EPC was issued. Also as EPCs are required for rental properties but only required for owner-occupied properties at the time of sale, rental property may be over-represented in the EPC data.</p>
 						</div>
 						<div class="chart-container">
 							<canvas id="tenure-chart"></canvas>
@@ -637,7 +639,7 @@
 					<div class="chart-wrapper" id="floor-chartrow" style="display: block;">
 						<div class="chart-text"> 
 						<h4 class="chart-title">Floor rating</h4>
-						<p class="chart-description">About 15% of heat is lost through the floors of homes. EPCs are especially bad at recording the floor construction, so there is often a lot of missing data. Many homes built before the 1950s have suspended timber floors, which are relatively simple to insulate either by accessing the crawl space under the floor and attaching insulation to the underside or by lifting the floorboards. Homes built after the 1960s are more likely to have solid concrete floors. These are difficult to insulate as you either have to dig into the concrete slab or insulate on top of the slap, raising the floor level. Not this classification only applies to ground floor properties, so flats often are classified as "Dwelling Below". </p>
+						<p class="chart-description">About 15% of heat is lost through the floors of homes. EPCs are especially bad at recording the floor construction, so there is often a lot of missing data. Many homes built before the 1950s have suspended timber floors, which are relatively simple to insulate either by accessing the crawl space under the floor and attaching insulation to the underside or by lifting the floorboards. Homes built after the 1960s are more likely to have solid concrete floors. These are difficult to insulate as you either have to dig into the concrete slab or insulate on top of the slap, raising the floor level. Note this classification only applies to ground floor properties, so flats are often classified as "Dwelling Below". </p>
 						</div>
 						<div class="chart-container">
 							<canvas id="floor-chart"></canvas>

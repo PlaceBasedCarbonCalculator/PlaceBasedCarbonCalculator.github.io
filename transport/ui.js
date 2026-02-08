@@ -1,8 +1,13 @@
 // Local Chart Mangement
 var accessChart;
 var frequencyChart;
+var privateVehicleBodyChart;
+var privateVehicleFuelChart;
+var companyVehicleBodyChart;
+var companyVehicleFuelChart;
 var accessLocationData = {};
 var frequencyLocationData = {};
+var vehicleLocationData = {};
 
 
 manageCharts = function (locationId) {
@@ -21,7 +26,6 @@ manageCharts = function (locationId) {
   const p2 = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/PTfrequency/v2/' + locationId + '.json')
     .then(function (frequencyData) {
       frequencyLocationData = frequencyData;
-      //console.log(frequencyLocationData);
       makeChartFrequency();
     })
     .catch(function (error) {
@@ -29,8 +33,18 @@ manageCharts = function (locationId) {
       console.log(error);
     });
 
+  const p3 = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/vehicle_summary/v1/' + locationId + '.json')
+    .then(function (vehicleData) {
+      vehicleLocationData = vehicleData;
+      makeChartVehicles();
+    })
+    .catch(function (error) {
+      alert('Failed to get vehicle data for this location, or to process it correctly. Please try refreshing the page.');
+      console.log(error);
+    });
+
   // Return a promise that resolves once both fetches have settled
-  return Promise.all([p1, p2]);
+  return Promise.all([p1, p2, p3]);
 };
 
 
@@ -327,6 +341,327 @@ makeChartFrequency = function(){
     }
 	});
 
+}
+
+
+makeChartVehicles = function(){
+  
+  // Access Chart
+  // Destroy old chart
+	if(privateVehicleBodyChart){
+    privateVehicleBodyChart.destroy();
+  }
+  if(privateVehicleFuelChart){
+    privateVehicleFuelChart.destroy();
+  }
+  if(companyVehicleBodyChart){
+    companyVehicleBodyChart.destroy();
+  }
+  if(companyVehicleFuelChart){
+    companyVehicleFuelChart.destroy();
+  }
+  
+  const labels = vehicleLocationData['year'];
+  const dataprivateVehicleBody = {
+    labels: labels,
+    datasets: [
+      {
+        label: 'Cars (Licensed)',
+        data: vehicleLocationData['Cars_Licensed_PRIVATE'],
+        backgroundColor: '#2b8cbe',
+        stack: 'Stack 0',
+      },
+      {
+        label: 'Motorcycles (Licensed)',
+        data: vehicleLocationData['Motorcycles_Licensed_PRIVATE'],
+        backgroundColor: '#b30000',
+        stack: 'Stack 0',
+      },
+      {
+        label: 'Other (Licensed)',
+        data: vehicleLocationData['Other_Licensed_PRIVATE'],
+        backgroundColor: '#1c8607',
+        stack: 'Stack 0',
+      },
+      {
+        label: 'Cars (SORN)',
+        data: vehicleLocationData['Cars_SORN_PRIVATE'],
+        backgroundColor: '#9ed4f0',
+        stack: 'Stack 1',
+      },
+      {
+        label: 'Motorcycles (SORN)',
+        data: vehicleLocationData['Motorcycles_SORN_PRIVATE'],
+        backgroundColor: '#ee8f8f',
+        stack: 'Stack 1',
+      },
+      {
+        label: 'Other (SORN)',
+        data: vehicleLocationData['Other_SORN_PRIVATE'],
+        backgroundColor: '#89f18e',
+        stack: 'Stack 1',
+      },
+    ]
+  };
+
+  const datacompanyVehicleBody = {
+    labels: labels,
+    datasets: [
+      {
+        label: 'Cars (Licensed)',
+        data: vehicleLocationData['Cars_Licensed_COMPANY'],
+        backgroundColor: '#2b8cbe',
+        stack: 'Stack 0',
+      },
+      {
+        label: 'Motorcycles (Licensed)',
+        data: vehicleLocationData['Motorcycles_Licensed_COMPANY'],
+        backgroundColor: '#b30000',
+        stack: 'Stack 0',
+      },
+      {
+        label: 'Other (Licensed)',
+        data: vehicleLocationData['Other_Licensed_COMPANY'],
+        backgroundColor: '#1c8607',
+        stack: 'Stack 0',
+      },
+      {
+        label: 'Cars (SORN)',
+        data: vehicleLocationData['Cars_SORN_COMPANY'],
+        backgroundColor: '#9ed4f0',
+        stack: 'Stack 1',
+      },
+      {
+        label: 'Motorcycles (SORN)',
+        data: vehicleLocationData['Motorcycles_SORN_COMPANY'],
+        backgroundColor: '#ee8f8f',
+        stack: 'Stack 1',
+      },
+      {
+        label: 'Other (SORN)',
+        data: vehicleLocationData['Other_SORN_COMPANY'],
+        backgroundColor: '#89f18e',
+        stack: 'Stack 1',
+      },
+    ]
+  };
+  
+  const dataprivateVehicleFuel = {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Battery Electric',
+          data: vehicleLocationData['BEV_PRIVATE'],
+          backgroundColor: '#07c220',
+          stack: 'Stack 0',
+        },
+        {
+          label: 'Hybrid',
+          data: vehicleLocationData['HEV_PRIVATE'],
+          backgroundColor: '#0042f7',
+          stack: 'Stack 0',
+        },
+        {
+          label: 'Plug-in Hybrid',
+          data: vehicleLocationData['PHEV_PRIVATE'],
+          backgroundColor: '#17d9f3',
+          stack: 'Stack 0',
+        },
+        {
+          label: 'Range Extended Electric',
+          data: vehicleLocationData['REEV_PRIVATE'],
+          backgroundColor: '#e7e40e',
+          stack: 'Stack 0',
+        },
+        {
+          label: 'Fuel Cell',
+          data: vehicleLocationData['fuelcell_PRIVATE'],
+          backgroundColor: '#9b0386',
+          stack: 'Stack 0',
+        },
+        {
+          label: 'Petrol/Diesel (ULEV)',
+          data: vehicleLocationData['iceULEV_PRIVATE'],
+          backgroundColor: '#da7a0c',
+          stack: 'Stack 0',
+        },
+        {
+          label: 'Petrol/Diesel',
+          data: vehicleLocationData['ice_PRIVATE'],
+          backgroundColor: '#ee2405',
+          stack: 'Stack 0',
+        },
+      ]
+    };
+
+
+  const datacompanyVehicleFuel = {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Battery Electric',
+          data: vehicleLocationData['BEV_COMPANY'],
+
+          backgroundColor: '#07c220',
+          stack: 'Stack 0',
+        },
+        {
+          label: 'Hybrid',
+          data: vehicleLocationData['HEV_COMPANY'],
+          backgroundColor: '#0042f7',
+          stack: 'Stack 0',
+        },
+        {
+          label: 'Plug-in Hybrid',
+          data: vehicleLocationData['PHEV_COMPANY'],
+          backgroundColor: '#17d9f3',
+          stack: 'Stack 0',
+        },
+        {
+          label: 'Range Extended Electric',
+          data: vehicleLocationData['REEV_COMPANY'],
+          backgroundColor: '#e7e40e',
+          stack: 'Stack 0',
+        },
+        {
+          label: 'Fuel Cell',
+          data: vehicleLocationData['fuelcell_COMPANY'],
+          backgroundColor: '#9b0386',
+          stack: 'Stack 0',
+        },
+        {
+          label: 'Petrol/Diesel (ULEV)',
+          data: vehicleLocationData['iceULEV_COMPANY'],
+          backgroundColor: '#da7a0c',
+          stack: 'Stack 0',
+        },
+        {
+          label: 'Petrol/Diesel',
+          data: vehicleLocationData['ice_COMPANY'],
+          backgroundColor: '#ee2405',
+          stack: 'Stack 0',
+        },
+      ]
+    };
+  
+  var privateVehicleBodyctx = document.getElementById('privateVehicleBody-chart').getContext('2d');
+	privateVehicleBodyChart = new Chart(privateVehicleBodyctx, {
+    type: 'bar',
+    data: dataprivateVehicleBody,
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: 'Number of Vehicles'
+          },
+          beginAtZero: true
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Year'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      }
+    },
+  });
+	
+  var privateVehicleFuelctx = document.getElementById('privateVehicleFuel-chart').getContext('2d');
+  privateVehicleFuelChart = new Chart(privateVehicleFuelctx, {
+    type: 'bar',
+    data: dataprivateVehicleFuel,
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: 'Number of Vehicles'
+          },
+          beginAtZero: true
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Year'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      }
+    },
+  });
+
+  var companyVehicleBodyctx = document.getElementById('companyVehicleBody-chart').getContext('2d');
+  companyVehicleBodyChart = new Chart(companyVehicleBodyctx, {
+    type: 'bar',
+    data: datacompanyVehicleBody,
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: 'Number of Vehicles'
+          },
+          beginAtZero: true
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Year'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      }
+    },
+  });
+
+  var companyVehicleFuelctx = document.getElementById('companyVehicleFuel-chart').getContext('2d');
+  companyVehicleFuelChart = new Chart(companyVehicleFuelctx, {
+    type: 'bar',
+    data: datacompanyVehicleFuel,
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: 'Number of Vehicles'
+          },
+          beginAtZero: true
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Year'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      }
+    },
+  });
+
+
+  
 }
 
 // Function for modal tabs
