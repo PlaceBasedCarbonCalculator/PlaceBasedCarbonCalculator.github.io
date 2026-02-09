@@ -5,6 +5,7 @@ var privateVehicleBodyChart;
 var privateVehicleFuelChart;
 var companyVehicleBodyChart;
 var companyVehicleFuelChart;
+var vehiclePPChart;
 var accessLocationData = {};
 var frequencyLocationData = {};
 var vehicleLocationData = {};
@@ -46,10 +47,6 @@ manageCharts = function (locationId) {
   // Return a promise that resolves once both fetches have settled
   return Promise.all([p1, p2, p3]);
 };
-
-
-
-
 
 
 makeChartAccess = function(){
@@ -281,7 +278,7 @@ makeChartFrequency = function(){
 	const Night = frequencyLocationData[day + '_Night_' + md];
 	const years = frequencyLocationData['year']
 	
-	console.log(MorningPeak);
+	//console.log(MorningPeak);
 	
 	var freqencyctx = document.getElementById('frequency-chart').getContext('2d');
 	frequencyChart = new Chart(freqencyctx, {
@@ -343,7 +340,6 @@ makeChartFrequency = function(){
 
 }
 
-
 makeChartVehicles = function(){
   
   // Access Chart
@@ -360,6 +356,9 @@ makeChartVehicles = function(){
   if(companyVehicleFuelChart){
     companyVehicleFuelChart.destroy();
   }
+  if(vehiclePPChart){
+    vehiclePPChart.destroy();
+  }
   
   const labels = vehicleLocationData['year'];
   const dataprivateVehicleBody = {
@@ -372,22 +371,16 @@ makeChartVehicles = function(){
         stack: 'Stack 0',
       },
       {
-        label: 'Motorcycles (Licensed)',
-        data: vehicleLocationData['Motorcycles_Licensed_PRIVATE'],
-        backgroundColor: '#b30000',
-        stack: 'Stack 0',
-      },
-      {
-        label: 'Other (Licensed)',
-        data: vehicleLocationData['Other_Licensed_PRIVATE'],
-        backgroundColor: '#1c8607',
-        stack: 'Stack 0',
-      },
-      {
         label: 'Cars (SORN)',
         data: vehicleLocationData['Cars_SORN_PRIVATE'],
         backgroundColor: '#9ed4f0',
         stack: 'Stack 1',
+      },
+      {
+        label: 'Motorcycles (Licensed)',
+        data: vehicleLocationData['Motorcycles_Licensed_PRIVATE'],
+        backgroundColor: '#b30000',
+        stack: 'Stack 0',
       },
       {
         label: 'Motorcycles (SORN)',
@@ -395,6 +388,12 @@ makeChartVehicles = function(){
         backgroundColor: '#ee8f8f',
         stack: 'Stack 1',
       },
+      {
+        label: 'Other (Licensed)',
+        data: vehicleLocationData['Other_Licensed_PRIVATE'],
+        backgroundColor: '#1c8607',
+        stack: 'Stack 0',
+      },     
       {
         label: 'Other (SORN)',
         data: vehicleLocationData['Other_SORN_PRIVATE'],
@@ -414,22 +413,16 @@ makeChartVehicles = function(){
         stack: 'Stack 0',
       },
       {
-        label: 'Motorcycles (Licensed)',
-        data: vehicleLocationData['Motorcycles_Licensed_COMPANY'],
-        backgroundColor: '#b30000',
-        stack: 'Stack 0',
-      },
-      {
-        label: 'Other (Licensed)',
-        data: vehicleLocationData['Other_Licensed_COMPANY'],
-        backgroundColor: '#1c8607',
-        stack: 'Stack 0',
-      },
-      {
         label: 'Cars (SORN)',
         data: vehicleLocationData['Cars_SORN_COMPANY'],
         backgroundColor: '#9ed4f0',
         stack: 'Stack 1',
+      },
+      {
+        label: 'Motorcycles (Licensed)',
+        data: vehicleLocationData['Motorcycles_Licensed_COMPANY'],
+        backgroundColor: '#b30000',
+        stack: 'Stack 0',
       },
       {
         label: 'Motorcycles (SORN)',
@@ -437,6 +430,12 @@ makeChartVehicles = function(){
         backgroundColor: '#ee8f8f',
         stack: 'Stack 1',
       },
+      {
+        label: 'Other (Licensed)',
+        data: vehicleLocationData['Other_Licensed_COMPANY'],
+        backgroundColor: '#1c8607',
+        stack: 'Stack 0',
+      },     
       {
         label: 'Other (SORN)',
         data: vehicleLocationData['Other_SORN_COMPANY'],
@@ -494,8 +493,7 @@ makeChartVehicles = function(){
       ]
     };
 
-
-  const datacompanyVehicleFuel = {
+    const datacompanyVehicleFuel = {
       labels: labels,
       datasets: [
         {
@@ -544,12 +542,64 @@ makeChartVehicles = function(){
       ]
     };
   
+    const dataVehiclePP = {
+      labels: labels.slice(0, 15), // Miss last year as no data
+      datasets: [
+        {
+          label: 'Per Person',
+          data: vehicleLocationData['vehiclesPPers'].slice(0, 15),
+          backgroundColor: '#07c220',
+        },
+        {
+          label: 'Per Adult',
+          data: vehicleLocationData['vehiclesPAdult'].slice(0, 15),
+          backgroundColor: '#0042f7',
+        },
+        {
+          label: 'Per Household',
+          data: vehicleLocationData['vehiclesPHousehold'].slice(0, 15),
+          backgroundColor: '#f50c0c',
+        }
+      ]
+    };
+
+  var vehiclePPctx = document.getElementById('vehiclePP-chart').getContext('2d');
+	vehiclePPChart = new Chart(vehiclePPctx, {
+    type: 'line',
+    data: dataVehiclePP,
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: 'Number of Vehicles'
+          },
+          beginAtZero: true
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Year'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      }
+    },
+  });
+
   var privateVehicleBodyctx = document.getElementById('privateVehicleBody-chart').getContext('2d');
 	privateVehicleBodyChart = new Chart(privateVehicleBodyctx, {
     type: 'bar',
     data: dataprivateVehicleBody,
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       scales: {
         y: {
           title: {
@@ -579,6 +629,7 @@ makeChartVehicles = function(){
     data: dataprivateVehicleFuel,
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       scales: {
         y: {
           title: {
@@ -608,6 +659,7 @@ makeChartVehicles = function(){
     data: datacompanyVehicleBody,
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       scales: {
         y: {
           title: {
@@ -637,6 +689,7 @@ makeChartVehicles = function(){
     data: datacompanyVehicleFuel,
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       scales: {
         y: {
           title: {

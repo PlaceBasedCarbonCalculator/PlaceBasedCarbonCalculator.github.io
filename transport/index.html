@@ -169,13 +169,18 @@
 			<div class="panel">
 				<p><label><input type="checkbox" class="showlayer" data-layer="zones" value="false">Show layer</label></p>
 				<p>
-					<select name="field" class="updatelayer" data-layer="zones" aria-label="Neighbouhood  layer">
+					<select name="field" class="updatelayer" data-layer="zones" aria-label="Neighbourhood  layer">
 						<option value="change_bus_2008_2023" selected>Change in buses/hour (2008-2023)</option>
 						<option value="tph_daytime_avg_2023_3">Buses/hour (daytime average)</option>
 						<option value="tph_daytime_avg_2023_2">Trains/hour (daytime average)</option>
 						<option value="tph_daytime_avg_2023_0">Trams/hour (daytime average)</option>
 						<option value="tph_daytime_avg_2023_1">Subway/hour (daytime average)</option>
 						<option value="tph_daytime_avg_2023_4">Ferries/hour (daytime average)</option>
+						<option value="pBEV_PRIVATE">% Vehicles BEV (Private)</option>
+						<option value="pULEV_PRIVATE">% Vehicles ULEV (Private)</option>
+						<option value="pBEV_COMPANY">% Vehicles BEV (Company)</option>
+						<option value="pULEV_COMPANY">% Vehicles ULEV (Company)</option>
+						<option value="vehiclesPHousehold">Private vehicles per household</option>
 					</select>
 					<button aria-label="Help purpose" class="helpbutton" data-help="transport-zones"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
 				</p>
@@ -186,7 +191,7 @@
 				</div>
 				
 				
-				<p><label class="switch"><input type="checkbox" name="daysymetricmode" class="updatelayer" data-layer="zones" checked><span class="slider round"></span></label> Dasymetric</p>
+				<p><label class="switch"><input type="checkbox" name="daysymetricmode" class="updatelayer" data-layer="zones" checked><span class="slider round"></span></label> Dasymetric <button aria-label="Help daysymetric mode" class="helpbutton" data-help="dasymetric"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 			
 			</div>
 			
@@ -274,8 +279,8 @@
 					
 					<div class="chart-wrapper" id="privateVehicleBody-chartrow" style="display: block;">
 						<div class="chart-text"> 
-							<h4 class="chart-title">Private Vehicle Body Types</h4>
-							<p class="chart-description">TEXT</p>
+							<h4 class="chart-title">Private vehicles by body type and licence</h4>
+							<p class="chart-description">This chart shows the number of private vehicles in the LSOA by body type and licence status. Licenced vehicles can be legally driven on public roads, while those with a Statutory Off Road Notification (SORN) are not registered for road use. Three types of vehicles are shown: cars, motorbikes, and other vehicles (mostly vans).</p>
 						</div>
 						<div class="chart-container">
 							<canvas id="privateVehicleBody-chart"></canvas>
@@ -284,18 +289,29 @@
 
 					<div class="chart-wrapper" id="privateVehicleFuel-chartrow" style="display: block;">
 						<div class="chart-text"> 
-							<h4 class="chart-title">Private Vehicle Fuel Types</h4>
-							<p class="chart-description">TEXT</p>
+							<h4 class="chart-title">Private vehicles fuel type and licence</h4>
+							<p class="chart-description">This chart shows the number of private vehicles in the LSOA by fuel type and licence status. It highlights the uptake of Battery Electric Vehicles (BEVs) which have zero tailpipe emissions, but still contribute to overall vehicle emissions through electricity generation, and their manufacture. Ultra Low Emission Vehicles (ULEVs) are defined as vehicles that produce less than 75g/km of CO2 emissions at the tailpipe. However for some types of vehicles, such as plug-in hybrids, the definition assumes usage patters that <a href="https://www.transportenvironment.org/articles/plug-in-hybrids-pollute-almost-as-much-as-petrol-cars-eu-data" target="_blank"> may not</a> reflect <a href="https://iopscience.iop.org/article/10.1088/1748-9326/abef8c/pdf" target="_blank">real world</a> usage.</p>
 						</div>
 						<div class="chart-container">
 							<canvas id="privateVehicleFuel-chart"></canvas>
 						</div>
 					</div>
 
+					<div class="chart-wrapper" id="vehiclePP-chartrow" style="display: block;">
+						<div class="chart-text"> 
+							<h4 class="chart-title">Private vehicles ownership rate</h4>
+							<p class="chart-description">This chart shows three measures of the ownership rate of private vehicles, per person, per adult, and per household. Each measure tells a different story about how vehicle ownership interacts with the demographics and needs of the population.</p>
+						</div>
+						<div class="chart-container">
+							<canvas id="vehiclePP-chart"></canvas>
+						</div>
+					</div>
+
+
 					<div class="chart-wrapper" id="companyVehicleBody-chartrow" style="display: block;">
 						<div class="chart-text"> 
-							<h4 class="chart-title">Company Vehicle Body Types</h4>
-							<p class="chart-description">TEXT</p>
+							<h4 class="chart-title">Company vehicles by body type and licence</h4>
+							<p class="chart-description">This chart shows the number of company vehicles in the LSOA by body type and licence status. Company vehicles are those registered to a business or organisation rather than an individual.</p>
 						</div>
 						<div class="chart-container">
 							<canvas id="companyVehicleBody-chart"></canvas>
@@ -304,8 +320,8 @@
 
 					<div class="chart-wrapper" id="companyVehicleFuel-chartrow" style="display: block;">
 						<div class="chart-text"> 
-							<h4 class="chart-title">Company Vehicle Fuel Types</h4>
-							<p class="chart-description">TEXT</p>
+							<h4 class="chart-title">Company vehicles fuel type and licence</h4>
+							<p class="chart-description">This chart shows the number of company vehicles in the LSOA by fuel type and licence status.</p>
 						</div>
 						<div class="chart-container">
 							<canvas id="companyVehicleFuel-chart"></canvas>

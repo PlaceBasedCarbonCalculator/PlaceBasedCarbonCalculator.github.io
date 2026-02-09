@@ -153,6 +153,8 @@ The Transport and Accessibility Explorer allows a deep dive into the issues rela
 <!-- #transport-zones -->
 #### Neighbourhoods
 
+![Transport Zones](/images/manual/transport_zones.webp)
+
 The Neighbourhoods layer uses the Lower Super Output Areas (LSOA) to report a range of transport statistics.
 
 **Change in buses/hour (2008 - 2023)**
@@ -163,6 +165,21 @@ This layer shows the change in bus frequency (trips per hour daytime average) of
 
 These layers show the frequency of service (trips per hour) for each type of transport stopping in or near each neighbourhood in 2023. Note that not all types of transport are available in every neighbourhood. Places with no timetabled services are shown in black.
 
+**Percentage of Low Emission Vehicles**
+
+Four layer show the adoption of low emission vehicles, either Battery Electric Vehicles (BEVs), which are fully electric with no tailpipe emissions. Or Ultra Low Emission Vehicles (ULEVs), which covers a range of technologies that include efficient Petrol/Diesel vehicles, hybrids, plug-in hybrids, and BEVs.
+
+* % Vehicles BEV (Private)
+* % Vehicles ULEV (Private)
+* % Vehicles BEV (Company)
+* % Vehicles ULEV (Company)
+
+Private vehicles are registered to an individual, while company vehicles are registered to an organisation.
+
+**Vehicles per Household**
+
+This layer shows an estimate of the number of private vehicles per household in the neighbourhood. It is and indicator of car dependency. 
+
 Clicking on any neighbourhood brings up the report card that provides more information.
 
 <!-- /#transport-zones -->
@@ -171,30 +188,16 @@ Clicking on any neighbourhood brings up the report card that provides more infor
 
 Clicking on any neighbourhood in the map opens the report card.
 
-#### Accessibility & Proximity 
+#### Vehicle Ownership
 
-Accessibility and proximity are two core concepts of sustainable transport planning. Proximity is a simple measure of how far away people are from the things they need. Accessibility is a more complex concept that accounts for real-world travel times, costs, and other factors that affect people's ability to get where they need to be. 
+This page provides access to an enhanced version of the [Vehicle Licencing Statistics](https://www.gov.uk/government/statistical-data-sets/vehicle-licensing-statistics-data-files) published by the Department for Transport.
 
-Accessibility can be improved by improving proximity (bringing people closer to the things they need) or mobility (enabling people to move further and faster),  but enhancing proximity is usually considered more sustainable and desirable. This is because people can walk, cycle, or take public transport when shops and services are nearby. All of these options are cheaper and less resource-intensive. But when services are far away, people are more likely to use cars, which are expensive to own and run and [very costly for society as a whole](https://doi.org/10.1016/j.jtrangeo.2024.103817). Cars and their infrastructure also occupy a lot of space, further spreading out towns and cities, reducing proximity and increasing car dependency.
+The official version of the datasets suppresses small values (1-4) for privacy protection and excludes some useful information. This is a problem of using the data as it is harder to model, analyse, and plot incomplete and inconsistent data.
 
-The Accessibility-Proximity analysis attempts to capture whether a neighbourhood has enough of the shops and services that people need within a reasonable distance.
+The version presented in Carbon & Place is the output of a model that seeks to infill missing data with plausible values to create a complete dataset that is easier to analyse.  While this output is based on and very closely resembles the official dataset, care should be taken with any small values (less than 4) as these are indicative rather than definitive.
 
+With a standardise dataset is is possible to calculate metrics of interest such as the number of vehicles per household, which is a useful measure of car dependence.
 
-##### Method
-
-The creation of these plots is straightforward.  
-
-First, the [Ordnance Survey Points of Interest](https://www.ordnancesurvey.co.uk/products/points-of-interest) (POI) have been selected as a list of destinations people may wish to access. The POI data includes a broader set of destinations than is usually considered in accessibility metrics. In total, 2,477,906 locations are divided into 385 different categories. Second, the 34,753 2011 Lower Super Output Area population-weighted centroids are used as origins to measure accessibility. Third, public transport isochrones and circular buffers are produced around each centroid. In this case, the 15, 30, 45, and 60-minute isochrones are paired with 0.75, 1.5, 2.25, and 3-mile buffers implying a 3-mph walking speed. Fourth, the number of each type of POI is counted for each time and distance band. This is divided by the resident population within the measured area to provide a per capita measure. For example, in Great Britain, there are 6.46 restaurants for 10,000 people. Finally, the results are presented as a scatter plot with the proximity (distance) count on the x-axis and accessibility (time) count on the y-axis. For both axes, the scale is normalised to show the number of standard deviations from the national average, so the average location would appear in the centre of the graph.
-
-##### Accessibility & Proximity Summary Table
-
-The table lists 385 types of destinations listed in the [Ordnance Survey Points of Interest](https://www.ordnancesurvey.co.uk/products/points-of-interest). For each destination, eight scores are shown. The four accessibility scores are based on the number of destinations that can be reached by public transport in 15, 30, 45, and 60 minutes. At the same time, the four proximity scores are based on the number of destinations that are within 0.75, 1.5, 2.25, and 3 miles. Each score is on a scale from -3 to +3, which describes how many [standard deviations](https://en.wikipedia.org/wiki/Standard_deviation) the neighbourhood is from the national average. 89% of neighbourhoods are within three standard deviations of the average, while values greater than +3 or less than -3 are truncated to that range. 
-
-Scores greater than 0 (better than the national average) are highlighted in green, and scores less than 0 (worse than the national average) are shown in red.
-
-##### Accessibility & Proximity Summary Chart
-
-The interactive chart shows the same information in the table more visually. The 30-minute / 1.5-mile data is plotted on the graph, with the 1.5-mile proximity score on the x-axis and the 30-minute accessibility score on the y-axis. Click on any dot to see the name of the destination. 
 
 
 #### Public Transport Frequency
@@ -246,6 +249,34 @@ One of the strongest patterns to emerge from the data is that in most of the cou
 ##### Acknowledgement
 
 We are grateful to Friends of the Earth UK, who funded part of this work. They have published their own [tools and analysis](https://policy.friendsoftheearth.uk/insight/how-britains-bus-services-have-drastically-declined).
+
+
+#### Accessibility & Proximity 
+
+Accessibility and proximity are two core concepts of sustainable transport planning. Proximity is a simple measure of how far away people are from the things they need. Accessibility is a more complex concept that accounts for real-world travel times, costs, and other factors that affect people's ability to get where they need to be. 
+
+Accessibility can be improved by improving proximity (bringing people closer to the things they need) or mobility (enabling people to move further and faster),  but enhancing proximity is usually considered more sustainable and desirable. This is because people can walk, cycle, or take public transport when shops and services are nearby. All of these options are cheaper and less resource-intensive. But when services are far away, people are more likely to use cars, which are expensive to own and run and [very costly for society as a whole](https://doi.org/10.1016/j.jtrangeo.2024.103817). Cars and their infrastructure also occupy a lot of space, further spreading out towns and cities, reducing proximity and increasing car dependency.
+
+The Accessibility-Proximity analysis attempts to capture whether a neighbourhood has enough of the shops and services that people need within a reasonable distance.
+
+
+##### Method
+
+The creation of these plots is straightforward.  
+
+First, the [Ordnance Survey Points of Interest](https://www.ordnancesurvey.co.uk/products/points-of-interest) (POI) have been selected as a list of destinations people may wish to access. The POI data includes a broader set of destinations than is usually considered in accessibility metrics. In total, 2,477,906 locations are divided into 385 different categories. Second, the 34,753 2011 Lower Super Output Area population-weighted centroids are used as origins to measure accessibility. Third, public transport isochrones and circular buffers are produced around each centroid. In this case, the 15, 30, 45, and 60-minute isochrones are paired with 0.75, 1.5, 2.25, and 3-mile buffers implying a 3-mph walking speed. Fourth, the number of each type of POI is counted for each time and distance band. This is divided by the resident population within the measured area to provide a per capita measure. For example, in Great Britain, there are 6.46 restaurants for 10,000 people. Finally, the results are presented as a scatter plot with the proximity (distance) count on the x-axis and accessibility (time) count on the y-axis. For both axes, the scale is normalised to show the number of standard deviations from the national average, so the average location would appear in the centre of the graph.
+
+##### Accessibility & Proximity Summary Table
+
+The table lists 385 types of destinations listed in the [Ordnance Survey Points of Interest](https://www.ordnancesurvey.co.uk/products/points-of-interest). For each destination, eight scores are shown. The four accessibility scores are based on the number of destinations that can be reached by public transport in 15, 30, 45, and 60 minutes. At the same time, the four proximity scores are based on the number of destinations that are within 0.75, 1.5, 2.25, and 3 miles. Each score is on a scale from -3 to +3, which describes how many [standard deviations](https://en.wikipedia.org/wiki/Standard_deviation) the neighbourhood is from the national average. 89% of neighbourhoods are within three standard deviations of the average, while values greater than +3 or less than -3 are truncated to that range. 
+
+Scores greater than 0 (better than the national average) are highlighted in green, and scores less than 0 (worse than the national average) are shown in red.
+
+##### Accessibility & Proximity Summary Chart
+
+The interactive chart shows the same information in the table more visually. The 30-minute / 1.5-mile data is plotted on the graph, with the 1.5-mile proximity score on the x-axis and the 30-minute accessibility score on the y-axis. Click on any dot to see the name of the destination. 
+
+
 
 ## Land Ownership Explorer
 
