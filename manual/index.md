@@ -488,6 +488,8 @@ The map has gaps where no data is available. This can be because all the buildin
 <!-- #retrofit-epc-dom -->
 #### Domestic Properties
 
+![Domestic properties](/images/manual/domestic_properties.webp)
+
 The domestic properties layer combines data about Energy Performance Certificates (England, Scotland, and Wales) with Land Registry price data (England and Wales only). The map is based on a national extract from September 2025. If a property has multiple EPCs or sales records only the most recent one is shown.
 
 The drop-down menu enables you to change the visualised characteristics.
@@ -511,7 +513,7 @@ The drop-down menu enables you to change the visualised characteristics.
 * Price 2024 (Estimated): Estimated property value based historic sales data
 * Freehold / Leasehold: Freehold or Leasehold at time of last sale
 
-Clicking on any EPC will display a popup with more details.
+Clicking on any EPC will display a popup with more details. This includes descriptions from the EPC such as roof, walls, floor, heating, and controls and the most recent sales data from the Land Registry when available.
 
 Please note that the Scotland EPC register is separate and slightly different to the England and Wales register. In Carbon & Place we have harmonised the datasets and this can results in slight inconstancies with the Scottish data. For example Scotland uses slightly different age bands, and these have been mapped to the closest equivalent used in England and Wales.
 
@@ -592,8 +594,11 @@ For households off the gas grid it is necessary to estimate their consumption of
 
 ##### EPCs
 
+This page report summary statistics for domestic properties with EPCs.
 
 ##### Prices
+
+This page reports summary statistics from the Land Registry Price Paid data for England and Wales for domestic and non-domestic properties.
 
 
 #### Postcodes
