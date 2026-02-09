@@ -64,7 +64,7 @@ While LSOAs are small, they still contain thousands of people. Hence, any data a
 <!-- #dasymetric -->
 #### Dasymetric Mapping
 
-![Dasymetric](/images/manual/dasymetric.webp)
+![Dasymetric](/images/manual/dasymetric-animation.webp)
 
 *Dasymetric (left) and Choropleth (right) mapping techniques*
 
@@ -153,6 +153,8 @@ The Transport and Accessibility Explorer allows a deep dive into the issues rela
 <!-- #transport-zones -->
 #### Neighbourhoods
 
+![Transport Zones](/images/manual/transport_zones.webp)
+
 The Neighbourhoods layer uses the Lower Super Output Areas (LSOA) to report a range of transport statistics.
 
 **Change in buses/hour (2008 - 2023)**
@@ -163,6 +165,21 @@ This layer shows the change in bus frequency (trips per hour daytime average) of
 
 These layers show the frequency of service (trips per hour) for each type of transport stopping in or near each neighbourhood in 2023. Note that not all types of transport are available in every neighbourhood. Places with no timetabled services are shown in black.
 
+**Percentage of Low Emission Vehicles**
+
+Four layer show the adoption of low emission vehicles, either Battery Electric Vehicles (BEVs), which are fully electric with no tailpipe emissions. Or Ultra Low Emission Vehicles (ULEVs), which covers a range of technologies that include efficient Petrol/Diesel vehicles, hybrids, plug-in hybrids, and BEVs.
+
+* % Vehicles BEV (Private)
+* % Vehicles ULEV (Private)
+* % Vehicles BEV (Company)
+* % Vehicles ULEV (Company)
+
+Private vehicles are registered to an individual, while company vehicles are registered to an organisation.
+
+**Vehicles per Household**
+
+This layer shows an estimate of the number of private vehicles per household in the neighbourhood. It is and indicator of car dependency. 
+
 Clicking on any neighbourhood brings up the report card that provides more information.
 
 <!-- /#transport-zones -->
@@ -171,31 +188,24 @@ Clicking on any neighbourhood brings up the report card that provides more infor
 
 Clicking on any neighbourhood in the map opens the report card.
 
-#### Accessibility & Proximity 
+#### Vehicle Ownership
 
-Accessibility and proximity are two core concepts of sustainable transport planning. Proximity is a simple measure of how far away people are from the things they need. Accessibility is a more complex concept that accounts for real-world travel times, costs, and other factors that affect people's ability to get where they need to be. 
+This page provides access to an enhanced version of the [Vehicle Licencing Statistics](https://www.gov.uk/government/statistical-data-sets/vehicle-licensing-statistics-data-files) published by the Department for Transport.
 
-Accessibility can be improved by improving proximity (bringing people closer to the things they need) or mobility (enabling people to move further and faster),  but enhancing proximity is usually considered more sustainable and desirable. This is because people can walk, cycle, or take public transport when shops and services are nearby. All of these options are cheaper and less resource-intensive. But when services are far away, people are more likely to use cars, which are expensive to own and run and [very costly for society as a whole](https://doi.org/10.1016/j.jtrangeo.2024.103817). Cars and their infrastructure also occupy a lot of space, further spreading out towns and cities, reducing proximity and increasing car dependency.
+The official version of the datasets suppresses small values (1-4) for privacy protection and excludes some useful information. This is a problem of using the data as it is harder to model, analyse, and plot incomplete and inconsistent data.
 
-The Accessibility-Proximity analysis attempts to capture whether a neighbourhood has enough of the shops and services that people need within a reasonable distance.
+The version presented in Carbon & Place is the output of a model that seeks to infill missing data with plausible values to create a complete dataset that is easier to analyse.  While this output is based on and very closely resembles the official dataset, care should be taken with any small values (less than 4) as these are indicative rather than definitive.
 
+With a standardise dataset is is possible to calculate metrics of interest such as the number of vehicles per household, which is a useful measure of car dependence.
 
-##### Method
+The data divides vehicles based on the following categories:
 
-The creation of these plots is straightforward.  
+* Body Type - Car, Motorbike, Other (mostly vans but also specialist vehicles such as tractors and excavators)
+* Licenced Status - Licences for use on the road, or Statutory Off Road Notice (SORN)
+* Fuel Type - Battery Electric, Plug-in Hybrid etc.
+* Keepership - Private or Company
 
-First, the [Ordnance Survey Points of Interest](https://www.ordnancesurvey.co.uk/products/points-of-interest) (POI) have been selected as a list of destinations people may wish to access. The POI data includes a broader set of destinations than is usually considered in accessibility metrics. In total, 2,477,906 locations are divided into 385 different categories. Second, the 34,753 2011 Lower Super Output Area population-weighted centroids are used as origins to measure accessibility. Third, public transport isochrones and circular buffers are produced around each centroid. In this case, the 15, 30, 45, and 60-minute isochrones are paired with 0.75, 1.5, 2.25, and 3-mile buffers implying a 3-mph walking speed. Fourth, the number of each type of POI is counted for each time and distance band. This is divided by the resident population within the measured area to provide a per capita measure. For example, in Great Britain, there are 6.46 restaurants for 10,000 people. Finally, the results are presented as a scatter plot with the proximity (distance) count on the x-axis and accessibility (time) count on the y-axis. For both axes, the scale is normalised to show the number of standard deviations from the national average, so the average location would appear in the centre of the graph.
-
-##### Accessibility & Proximity Summary Table
-
-The table lists 385 types of destinations listed in the [Ordnance Survey Points of Interest](https://www.ordnancesurvey.co.uk/products/points-of-interest). For each destination, eight scores are shown. The four accessibility scores are based on the number of destinations that can be reached by public transport in 15, 30, 45, and 60 minutes. At the same time, the four proximity scores are based on the number of destinations that are within 0.75, 1.5, 2.25, and 3 miles. Each score is on a scale from -3 to +3, which describes how many [standard deviations](https://en.wikipedia.org/wiki/Standard_deviation) the neighbourhood is from the national average. 89% of neighbourhoods are within three standard deviations of the average, while values greater than +3 or less than -3 are truncated to that range. 
-
-Scores greater than 0 (better than the national average) are highlighted in green, and scores less than 0 (worse than the national average) are shown in red.
-
-##### Accessibility & Proximity Summary Chart
-
-The interactive chart shows the same information in the table more visually. The 30-minute / 1.5-mile data is plotted on the graph, with the 1.5-mile proximity score on the x-axis and the 30-minute accessibility score on the y-axis. Click on any dot to see the name of the destination. 
-
+Unfortunately we don't have the full combination of variables. Which means there are some limitation. For example we can not say how many electric cars there are in an area, only how many electric vehicles there are. The data also does not provide information on the number of Petrol/Diesel vehicles there are. However this can be inferred by removing other fuel types from the total number of vehicles. This is a simplifying assumption as there are small numbers of vehicle using unusual fuels such as coal, vegetable oil, LNG and LPG.
 
 #### Public Transport Frequency
 
@@ -246,6 +256,34 @@ One of the strongest patterns to emerge from the data is that in most of the cou
 ##### Acknowledgement
 
 We are grateful to Friends of the Earth UK, who funded part of this work. They have published their own [tools and analysis](https://policy.friendsoftheearth.uk/insight/how-britains-bus-services-have-drastically-declined).
+
+
+#### Accessibility & Proximity 
+
+Accessibility and proximity are two core concepts of sustainable transport planning. Proximity is a simple measure of how far away people are from the things they need. Accessibility is a more complex concept that accounts for real-world travel times, costs, and other factors that affect people's ability to get where they need to be. 
+
+Accessibility can be improved by improving proximity (bringing people closer to the things they need) or mobility (enabling people to move further and faster),  but enhancing proximity is usually considered more sustainable and desirable. This is because people can walk, cycle, or take public transport when shops and services are nearby. All of these options are cheaper and less resource-intensive. But when services are far away, people are more likely to use cars, which are expensive to own and run and [very costly for society as a whole](https://doi.org/10.1016/j.jtrangeo.2024.103817). Cars and their infrastructure also occupy a lot of space, further spreading out towns and cities, reducing proximity and increasing car dependency.
+
+The Accessibility-Proximity analysis attempts to capture whether a neighbourhood has enough of the shops and services that people need within a reasonable distance.
+
+
+##### Method
+
+The creation of these plots is straightforward.  
+
+First, the [Ordnance Survey Points of Interest](https://www.ordnancesurvey.co.uk/products/points-of-interest) (POI) have been selected as a list of destinations people may wish to access. The POI data includes a broader set of destinations than is usually considered in accessibility metrics. In total, 2,477,906 locations are divided into 385 different categories. Second, the 34,753 2011 Lower Super Output Area population-weighted centroids are used as origins to measure accessibility. Third, public transport isochrones and circular buffers are produced around each centroid. In this case, the 15, 30, 45, and 60-minute isochrones are paired with 0.75, 1.5, 2.25, and 3-mile buffers implying a 3-mph walking speed. Fourth, the number of each type of POI is counted for each time and distance band. This is divided by the resident population within the measured area to provide a per capita measure. For example, in Great Britain, there are 6.46 restaurants for 10,000 people. Finally, the results are presented as a scatter plot with the proximity (distance) count on the x-axis and accessibility (time) count on the y-axis. For both axes, the scale is normalised to show the number of standard deviations from the national average, so the average location would appear in the centre of the graph.
+
+##### Accessibility & Proximity Summary Table
+
+The table lists 385 types of destinations listed in the [Ordnance Survey Points of Interest](https://www.ordnancesurvey.co.uk/products/points-of-interest). For each destination, eight scores are shown. The four accessibility scores are based on the number of destinations that can be reached by public transport in 15, 30, 45, and 60 minutes. At the same time, the four proximity scores are based on the number of destinations that are within 0.75, 1.5, 2.25, and 3 miles. Each score is on a scale from -3 to +3, which describes how many [standard deviations](https://en.wikipedia.org/wiki/Standard_deviation) the neighbourhood is from the national average. 89% of neighbourhoods are within three standard deviations of the average, while values greater than +3 or less than -3 are truncated to that range. 
+
+Scores greater than 0 (better than the national average) are highlighted in green, and scores less than 0 (worse than the national average) are shown in red.
+
+##### Accessibility & Proximity Summary Chart
+
+The interactive chart shows the same information in the table more visually. The 30-minute / 1.5-mile data is plotted on the graph, with the 1.5-mile proximity score on the x-axis and the 30-minute accessibility score on the y-axis. Click on any dot to see the name of the destination. 
+
+
 
 ## Land Ownership Explorer
 
@@ -371,16 +409,47 @@ The drop-down menu enables you to change the visualised characteristics.
 * Floor type (most common)
 * Building type (most common)
 * % of homes with an EPC
+* Average Property Price (2024)
+* Property Price to Income Ratio
+* Gas Use
+* Electricity Use
+* Energy bills vs Income
 
-Note that this data summarises the homes with an EPC rather than every home in the neighbourhood and that EPCs can be outdated. The percentage of homes with an EPC layer helps to identify neighbourhoods where EPC data may be unrepresentative.  
+
+Note that some of these layers summarises the homes with an EPC rather than every home in the neighbourhood and that EPCs can be outdated. The percentage of homes with an EPC layer helps to identify neighbourhoods where EPC data may be unrepresentative.  
+
+##### Property Price Data
+
+House price data comes from the Land Registry of England and Wales, so is not available for Scotland. It includes domestic and non-domestic properties. The prices in 2024 are estimated by taking the sale price of each property and extrapolating forward to 2024 based on local property price trends. For example if a terraced house sold for £100,000 in 2014 and since then the average price of terraced houses in the same Local Authority had increased by 50% the property would now be estimated to be worth £150,000. This is a simple model of property prices that does not account for small local variations or changes in the property, so should not be used in personal financial decision making. However it is sufficient to show the spatial variation in property prices. This method also excludes all properties that have not been sold since 1995 when the Land Resitry dataset begins.
+
+The Property Price to Income Ratio map gives an indication of affordability as households where prices are much higher than incomes may struggle to afford rent or mortgage costs. However this can be mitigated if households own their homes outright. Not also that this map does not take account of the differing types of housing in different areas. For example some areas of London have fairly low ratios, but these areas may be mostly small flats. While another area in the North of England may have large houses for a similar property price to income ratio.
+
+High property prices can reflect area with a significant number of non-domestic properties, this can skew price to income ratios. Unfortuantly the Land Registry data does not clearly distinguish between domestic and non-domestic properties.
+
+##### Energy bills vs Income
+
+![Energy bills vs Income](/images/manual/energy_income.webp)
+
+The Energy bills vs Income map is a bivariate map, which uses colour to show two variables at the same time. In this case the relationship between household income and household energy bills. The legend show how the colours match pairs of values.
+
+* Purple - High income (top 20%) and high bills (top 20%) 
+* Green - High income (top 20%)  and low bills (bottom 20%) 
+* Pink - Low income (bottom 20%)  and high bills (top 20%)
+* Orange - Low income (bottom 20%) and low bills (bottom 20%)
+* White - Average income (middle 20%) and average bills (middle 20%)
+
+Between the corner extremes are colour gradients, which represent each 20% band. 
+
+The map highlight issues of affordability, for example people in areas of low income and high bills (Pink) are at risk of fuel poverty. However it also reflect types of housing, for example small flats typically have lower bills as they need less heating than larger houses.
+
 
 ##### Data Sources
 
-[England and Wales](https://epc.opendatacommunities.org/)
+[EPCs England and Wales](https://epc.opendatacommunities.org/)
 
-[Scotland](https://www.scottishepcregister.org.uk/)
+[EPCs Scotland](https://www.scottishepcregister.org.uk/)
 
-
+[Land Registry Price Paid Data](https://www.gov.uk/guidance/about-the-price-paid-data)
 <!-- /#retrofit-zones -->
 
 <!-- #retrofit-postcodes -->
@@ -417,9 +486,11 @@ The map has gaps where no data is available. This can be because all the buildin
 <!-- /#retrofit-postcodes -->
 
 <!-- #retrofit-epc-dom -->
-#### Domestic EPC
+#### Domestic Properties
 
-The Domestic EPC layer shows homes with domestic Energy Performance Certificates. The map is based on a national extract from June 2024. Only the most recent one is shown when a building has more than one EPC.
+![Domestic properties](/images/manual/domestic_properties.webp)
+
+The domestic properties layer combines data about Energy Performance Certificates (England, Scotland, and Wales) with Land Registry price data (England and Wales only). The map is based on a national extract from September 2025. If a property has multiple EPCs or sales records only the most recent one is shown.
 
 The drop-down menu enables you to change the visualised characteristics.
 
@@ -438,8 +509,11 @@ The drop-down menu enables you to change the visualised characteristics.
 * Controls Rating: Energy efficiency rating (Very Good to Very Poor)
 * Lighting Rating: Energy efficiency rating (Very Good to Very Poor)
 * Solar Thermal: Has solar thermal heating (Yes/No)
+* Solar PV: Has solar photo voltaic (Yes/No)
+* Price 2024 (Estimated): Estimated property value based historic sales data
+* Freehold / Leasehold: Freehold or Leasehold at time of last sale
 
-Clicking on any EPC will display a popup with more details.
+Clicking on any EPC will display a popup with more details. This includes descriptions from the EPC such as roof, walls, floor, heating, and controls and the most recent sales data from the Land Registry when available.
 
 Please note that the Scotland EPC register is separate and slightly different to the England and Wales register. In Carbon & Place we have harmonised the datasets and this can results in slight inconstancies with the Scottish data. For example Scotland uses slightly different age bands, and these have been mapped to the closest equivalent used in England and Wales.
 
@@ -454,9 +528,9 @@ Please note that the Scotland EPC register is separate and slightly different to
 <!-- /#retrofit-epc-dom -->
 
 <!-- #retrofit-epc-nondom -->
-#### Non-domestic EPC
+#### Non-domestic Properties
 
-The Non-domestic EPC layer shows buildings with non-domestic Energy Performance Certificates. The map is based on a national extract from June 2024. Only the most recent one is shown when a building has more than one EPC.
+The domestic properties layer combines data about Energy Performance Certificates (England, Scotland, and Wales) with Land Registry price data (England and Wales only). The map is based on a national extract from September 2025. If a property has multiple EPCs or sales records only the most recent one is shown.
 
 The drop-down menu enables you to change the visualised characteristics.
 
@@ -464,8 +538,10 @@ The drop-down menu enables you to change the visualised characteristics.
 * Transaction: The type of transaction that caused an EPC to be issued
 * Floor Area: Total floor area (m2)
 * Last Assessed: Year that the EPC was issued
+* Price 2024 (Estimated): Estimated property value based historic sales data
+* Freehold / Leasehold: Freehold or Leasehold at time of last sale
 
-Clicking on any EPC will display a popup with more details.
+Clicking on any point will display a popup with more details.
 
 Please note that the Scotland EPC register is separate and slightly different to the England and Wales register. In Carbon & Place we have harmonised the datasets and this can results in slight inconstancies with the Scottish data. For example Scotland uses slightly different age bands, and these have been mapped to the closest equivalent used in England and Wales.
 
@@ -479,17 +555,55 @@ Please note that the Scotland EPC register is separate and slightly different to
 
 <!-- /#retrofit-epc-nondom -->
 
+<!-- #retrofit-uprn-unknown -->
+#### Unknown Properties
+
+The domestic and non-domestic layers show the point locations using the Unique Property Reference Number (UPRN) locations. The locations of UPRNs are free open data, but additional information such as addresses and property characteristics are usually commercial data and not freely available. 
+
+This means that we know properties exist, because they have a UPRN, but we don't know anything about them in the public record because they don't have an Energy Performance Certificate or they have not been sold since 1995 in England and Wales. In Scotland there is not a public list of property sales.
+
+This layer shows the location of all UPRNs that are not included in the Domestic or Non-Domestic Property layers and exists to highlight how many properties exist that we do not know anything about.
+
+Clicking on a UPRN will show its ID number whether the property currently exists and whether the UPRN has been recently added to the database (since 2020).
+
+##### Data Sources
+
+[Open UPRN](https://www.ordnancesurvey.co.uk/products/os-open-uprn)
+
+<!-- /#retrofit-uprn-unknown -->
 
 ### Report Card
 
 #### Neighbourhoods
 
-The neighbourhood report card summarises the domestic EPCs in each neighbourhood.  
+The neighbourhood report card summarises the domestic EPCs in each neighbourhood. 
+
+##### Energy Consumption
+
+This page provides historical data (2015 - 2024) about domestic gas and electricity consumption.
+
+For each postcode, data is provided as follows:
+
+* Mean: Average values (i.e. total divided by number of homes)
+* Median: Middle values (i.e. half of homes are above and half of homes are below)
+* Total: All homes added together
+
+There is also an estimate of the average household bill. This estimate has been made based on the local (LSOA) energy consumption data but regional data on typical unit rates and standing charges.  While this gives a rough idea of household spending on energy it does not account for households who have adopted specialist tariff and so may over estimate bills in places with a lot of electric vehicles or heat pumps.
+
+For households off the gas grid it is necessary to estimate their consumption of other heating fuels such as oil, wood, or solid fuels. Otherwise these mostly rural areas appear to have very low bills. There is no local data on this type of energy consumption, however the 2011 and 2021/22 Censuses give a measure of how many households use these fuels in each area. From this we make assumptions about typical heating demand and prices to provide a rough estimate of energy bills. 
+
+##### EPCs
+
+This page report summary statistics for domestic properties with EPCs.
+
+##### Prices
+
+This page reports summary statistics from the Land Registry Price Paid data for England and Wales for domestic and non-domestic properties.
 
 
 #### Postcodes
 
-The report card provides historical data (2015 - 2022) about domestic gas and electricity consumption.
+The report card provides historical data (2015 - 2024) about domestic gas and electricity consumption.
 
 For each postcode, data is provided as follows:
 
@@ -650,6 +764,14 @@ Household composition considers the number and age of people in a household and 
 
 A dependent child is a person aged 0 to 15 years in a household, or a person aged 16 to 18 years who is in full-time education and lives in a family with their parent, parents, grandparent or grandparents.
 
+[Ethnicity](https://www.ons.gov.uk/peoplepopulationandcommunity/culturalidentity/ethnicity/bulletins/ethnicgroupenglandandwales/census2021)
+
+The family photos include three ethnic categories. 
+
+* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_White.webp) **White**: White, (English, Welsh, Scottish, Northern Irish or British),  Irish, Gypsy or Irish Traveller, Roma, Other White (74.4% of population)
+* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_Black.webp) **Black**: Black, Black British, Black Welsh, Caribbean or African (4.0% of population)
+* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_Other.webp) **Other**: Asian, Asian British, Asian Welsh, Mixed, Multiple, or Other ethnic group (14.3% of population)
+
 [National Statistics Socio-Economic Classification (NS-SEC) of the household reference person](https://www.ons.gov.uk/methodology/classificationsandstandards/otherclassifications/thenationalstatisticssocioeconomicclassificationnssecrebasedonsoc2010)
 
 NS-SEC classifies people based on their jobs, there are six categories.
@@ -664,14 +786,6 @@ NS-SEC classifies people based on their jobs, there are six categories.
 Note that the NS-SEC classification apply to the household reference person. This is usually the person who pays the rent/mortgage. In the case of joint contributions, the higher earner is chosen. This means that only the NS-SEC of the highest earner is depicted in the family photo. For example, in a couple where one person was a banker and the other a cleaner, the household would be represented by the “Higher” category and show two people in higher roles.
 
 Retired people's NS-SEC classification is based on their previous job. 
-
-[Ethnicity](https://www.ons.gov.uk/peoplepopulationandcommunity/culturalidentity/ethnicity/bulletins/ethnicgroupenglandandwales/census2021)
-
-The family photos include three ethnic categories. 
-
-* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_White.webp) **White**: White, (English, Welsh, Scottish, Northern Irish or British),  Irish, Gypsy or Irish Traveller, Roma, Other White (74.4% of population)
-* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_Black.webp) **Black**: Black, Black British, Black Welsh, Caribbean or African (4.0% of population)
-* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_Other.webp) **Other**: Asian, Asian British, Asian Welsh, Mixed, Multiple, or Other ethnic group (14.3% of population)
 
 ###### Notable limitations
 

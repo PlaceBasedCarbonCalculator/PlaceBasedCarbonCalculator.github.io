@@ -273,6 +273,102 @@ input[type="radio"][id^="bm"] {
   display: table-row; /* Change to table-row for vertical layout */
 }
 
+/* Bivariate Legend */
+.bivariateLegend {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px;
+}
+
+.bivariateContainer {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr auto;
+  gap: 8px;
+  align-items: center;
+  justify-items: start;
+}
+
+.bivariateYLabel {
+  grid-column: 1;
+  grid-row: 2;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: 12px;
+  font-weight: bold;
+  white-space: nowrap;
+  padding: 0 5px;
+}
+
+.bivariateYLowHigh {
+  grid-column: 1;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 10px;
+  padding: 0 5px;
+  height: 200px;
+  text-align: center;
+}
+
+.bivariateYHigh {
+  order: -1;
+}
+
+.bivariateYLow {
+  order: 1;
+}
+
+.bivariateGridWrapper {
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.bivariateRow {
+  display: flex;
+  gap: 0;
+}
+
+.bivariateCell {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #333;
+  box-sizing: border-box;
+}
+
+.bivariateXLowHighLabel {
+  grid-column: 2;
+  grid-row: 3;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 3px 0;
+}
+
+.bivariateXLow {
+  font-size: 10px;
+  flex: 0 0 auto;
+}
+
+.bivariateXHigh {
+  font-size: 10px;
+  flex: 0 0 auto;
+}
+
+.bivariateXLabel {
+  font-size: 12px;
+  font-weight: bold;
+  flex: 1;
+  text-align: center;
+  padding: 0 10px;
+}
+
 /* Basemap Control */
 
 /* Basemap selection */
@@ -688,5 +784,289 @@ input:checked + .slider:before {
     width: 96px;
     margin-left: 0;
     margin-top: 0.5rem;
+  }
+}
+
+
+/* Print Button Styling */
+.print-button {
+  background-color: #717e82;
+  color: white;
+  border: 1px solid #ffffff;
+  padding: 8px 16px;
+  margin-left: 12px;
+  margin-right: 20px;
+  cursor: pointer;
+  font-size: 0.95em;
+  border-radius: 3px;
+  float: right;
+  transition: background-color 0.3s;
+}
+
+.print-button:hover {
+  background-color: #5a6469;
+}
+
+.print-button i {
+  margin-right: 6px;
+}
+
+/* Print media styles */
+@media print {
+  /* Preserve colors in print */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+  
+  /* Override main.css height constraint during print */
+  html, body {
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: static !important;
+  }
+  
+  /* Hide non-modal page elements */
+  #overlay,
+  nav,
+  #basemapcontrol,
+  #showrightbox,
+  #rightbox,
+  #help_modal,
+  #welcome-modal,
+  .mapcontent,
+  .spinner {
+    display: none !important;
+  }
+  
+  /* Hide all modals by default */
+  .modal {
+    display: none !important;
+  }
+  
+  /* Only show the visible modal (the one with inline style display: block) */
+  .modal[style*="display: block"] {
+    position: static !important;
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+    left: auto !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    background: white !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    z-index: auto !important;
+    border: none !important;
+  }
+  
+  /* Reset header positioning for visible modal */
+  .modal[style*="display: block"] > .modal-header {
+    position: static !important;
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: auto !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    z-index: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    page-break-inside: avoid;
+  }
+  
+  /* Reset body positioning for visible modal */
+  .modal[style*="display: block"] > .modal-body {
+    position: static !important;
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    overflow: visible !important;
+    overflow-y: visible !important;
+    overflow-x: visible !important;
+    margin: 0 !important;
+    padding: 20px !important;
+  }
+  
+  /* Modal content for welcome/help modals */
+  .modal-content {
+    position: static !important;
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: auto !important;
+  }
+  
+  /* Header styling */
+  .modal-header {
+    background-color: #717e82 !important;
+    color: white !important;
+    padding: 12px 16px !important;
+    margin: 0 !important;
+    display: block !important;
+    page-break-inside: avoid;
+  }
+  
+  .modal-title {
+    color: white !important;
+    margin: 0 !important;
+    display: block !important;
+  }
+  
+  /* Hide buttons */
+  .modal-close,
+  .print-button {
+    display: none !important;
+  }
+  
+  /* Body styling */
+  .modal-body {
+    color: #000 !important;
+    background: white !important;
+    padding: 20px !important;
+    display: block !important;
+    margin: 0 !important;
+    height: auto !important;
+  }
+  
+  /* A4 page sizing - standard margins and width */
+  .modal[style*="display: block"],
+  .modal[style*="display: block"] > .modal-body {
+    max-width: 200mm !important;
+    width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+  
+  /* Content flows naturally across pages */
+  .chart-wrapper {
+    display: block !important;
+    width: 100% !important;
+    margin: 15px 0 !important;
+    padding: 0 !important;
+    page-break-inside: auto;
+  }
+  
+  .chart-text {
+    display: block !important;
+    width: 100% !important;
+    float: none !important;
+    margin: 0 0 12px 0 !important;
+    padding: 0 !important;
+    page-break-inside: avoid;
+  }
+  
+  .chart-container {
+    display: block !important;
+    width: 100% !important;
+    float: none !important;
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+    position: relative !important;
+    margin: 10px 0 !important;
+    padding: 0 !important;
+  }
+  
+  canvas {
+    max-width: 100% !important;
+    height: auto !important;
+    display: block !important;
+  }
+  
+  /* Show all tabs */
+  .tab {
+    display: none !important;
+  }
+  
+  .tabcontent {
+    display: block !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  /* Warnings */
+  .warningbox {
+    margin: 12px 0 !important;
+    padding: 8px !important;
+    border: 1px solid #f4a582 !important;
+    background-color: #fff4e6 !important;
+    page-break-inside: avoid;
+  }
+  
+  .warning {
+    margin: 3px 0 !important;
+    color: #000 !important;
+    font-size: 0.9em !important;
+  }
+  
+  /* Tables */
+  table {
+    width: 100% !important;
+    margin: 10px 0 !important;
+    border-collapse: collapse !important;
+    font-size: 0.85em !important;
+  }
+  
+  th, td {
+    padding: 6px !important;
+    border: 1px solid #999 !important;
+    color: #000 !important;
+    text-align: left !important;
+  }
+  
+  th {
+    background-color: #f0f0f0 !important;
+    font-weight: bold !important;
+  }
+  
+  /* Text elements - reduce spacing for print */
+  h1, h2, h3, h4, h5, h6 {
+    color: #000 !important;
+    margin: 8px 0 4px 0 !important;
+  }
+  
+  p {
+    color: #000 !important;
+    margin: 6px 0 !important;
+    font-size: 0.95em !important;
+  }
+  
+  li {
+    color: #000 !important;
+    margin: 3px 0 !important;
+  }
+  
+  a {
+    color: #0066cc !important;
+    text-decoration: underline !important;
+  }
+  
+  /* Reduce padding and margins for print efficiency */
+  select {
+    font-size: 0.9em !important;
   }
 }

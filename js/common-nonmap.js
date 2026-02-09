@@ -98,3 +98,31 @@ getCookie = function (name)
 // Run Functions
 topnav ();
 manageAnalyticsCookie ();
+
+// Ensure external links open in a new tab and use safe rel attributes
+(function ensureExternalLinksOpenNewTab() {
+	document.addEventListener('DOMContentLoaded', function () {
+		try {
+			var anchors = document.querySelectorAll('a[href^="http"]');
+			anchors.forEach(function (a) {
+				try {
+					var url = new URL(a.href, location.href);
+					if (url.hostname !== location.hostname) {
+						if (!a.hasAttribute('target') || a.getAttribute('target') !== '_blank') {
+							a.setAttribute('target', '_blank');
+						}
+						var rel = a.getAttribute('rel') || '';
+						var parts = rel.split(/\s+/).filter(Boolean);
+						if (parts.indexOf('noopener') === -1) { parts.push('noopener'); }
+						if (parts.indexOf('noreferrer') === -1) { parts.push('noreferrer'); }
+						a.setAttribute('rel', parts.join(' '));
+					}
+				} catch (e) {
+					// ignore malformed URLs
+				}
+			});
+		} catch (e) {
+			// no-op
+		}
+	});
+})();

@@ -1,8 +1,14 @@
-// Local Chart Mangement
+// Local Chart Management
 var emissionsChart;
 var gasChart;
 var electricityChart;
 var metersChart;
+
+var emissionsLSOAChart;
+var gasLSOAChart;
+var electricityLSOAChart;
+var metersLSOAChart;
+var energybillsLSOAChart;
 
 var epcratingChart;
 var buildingtypeChart;
@@ -27,24 +33,41 @@ var lightChart;
 var solarpvChart;
 var solarthermalChart;
 
+var pricesChart;
+var transactionsChart;
+
 var postcodeLocationData = {};
 var lsoaLocationData = {};
+var pricesLocationData = {};
+var lsoaEnergyData = {};
 
 manageCharts =  function (locationId, mapLayerId){
   if(mapLayerId == 'zones'){
-    const p = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/epc_dom/v3/' + locationId + '.json')
-        .then(function (lsoaData) {
-            lsoaLocationData = lsoaData[0];
-            makeChartLSOA();
-        })
-        .catch(function (error) {
-            alert('Failed to get access data for this location, or to process it correctly. Please try refreshing the page.');
-            console.log(error);
-        });
 
-    return p;
+    const pEPC = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/epc_dom/v4/' + locationId + '.json')
+      .then(data => { lsoaLocationData = data[0]; makeChartLSOA(); })
+      .catch(err => { console.error('EPC failed:', err); });  
+    
+    const pEnergy = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/lsoa_gas_electric/v2/' + locationId + '.json')
+      .then(data => { lsoaEnergyData = data; makeChartLSOAEnergy(); })
+      .catch(err => { console.error('Energy failed:', err); });  
+    
+    const pPrices = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/prices/v1/' + locationId + '.json')
+      .then(data => { pricesLocationData = data; makeChartPrices(); })
+      .catch(err => { 
+        console.error('Prices failed:', err);
+        if(pricesChart){
+          pricesChart.destroy();
+        }
+        if(transactionsChart){
+          transactionsChart.destroy();
+        }
+      });
+
+    return Promise.all([pEPC, pPrices, pEnergy]);
+    //return p;
   } else if (mapLayerId == 'postcodes'){
-    const p = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/Postcode/' + locationId + '.json')
+    const p = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/postcode_energy/v2/' + locationId + '.json')
         .then(function (postcodeData) {
             postcodeLocationData = postcodeData;
             makeChartPostcode(locationId);
@@ -99,65 +122,65 @@ makeChartPostcode = function(locationId){
   // Get data
   // Not doing emissions for standard and eco7 meters
   if(setting_emissions == "total"){
-     data_emissions_gas = postcodeLocationData['Bgt'];
-     data_emissions_elec = postcodeLocationData['Beta'];
+     data_emissions_gas = postcodeLocationData['gas_totalkgco2e'];
+     data_emissions_elec = postcodeLocationData['elec_totalkgco2e_all'];
   } else if (setting_emissions == "mean") {
-     data_emissions_gas = postcodeLocationData['Egm'];
-     data_emissions_elec = postcodeLocationData['Eema'];
+     data_emissions_gas = postcodeLocationData['gas_meankgco2e'];
+     data_emissions_elec = postcodeLocationData['elec_meankgco2e_all'];
   } else if (setting_emissions == "median") {
-     data_emissions_gas = postcodeLocationData['Dgm'];
-     data_emissions_elec = postcodeLocationData['Dema'];
+     data_emissions_gas = postcodeLocationData['gas_mediankgco2e'];
+     data_emissions_elec = postcodeLocationData['elec_mediankgco2e_all'];
   }
   
   if(setting_electricity == "total"){
-     data_elec_all = postcodeLocationData['eta'];
-     data_elec_std = postcodeLocationData['ets'];
-     data_elec_eco7 = postcodeLocationData['ete'];
+     data_elec_all = postcodeLocationData['elec_totalkwh_all'];
+     data_elec_std = postcodeLocationData['elec_totalkwh_std'];
+     data_elec_eco7 = postcodeLocationData['elec_totalkwh_eco7'];
   } else if (setting_electricity == "mean") {
-     data_elec_all = postcodeLocationData['Bema'];
-     data_elec_std = postcodeLocationData['Bems'];
-     data_elec_eco7 = postcodeLocationData['Beme'];
+     data_elec_all = postcodeLocationData['elec_meankwh_all'];
+     data_elec_std = postcodeLocationData['elec_meankwh_std'];
+     data_elec_eco7 = postcodeLocationData['elec_meankwh_eco7'];
   } else if (setting_electricity == "median") {
-     data_elec_all = postcodeLocationData['Cems'];
-     data_elec_std = postcodeLocationData['Cema'];
-     data_elec_eco7 = postcodeLocationData['Ceme'];
+     data_elec_all = postcodeLocationData['elec_mediankwh_all'];
+     data_elec_std = postcodeLocationData['elec_mediankwh_std'];
+     data_elec_eco7 = postcodeLocationData['elec_mediankwh_eco7'];
   }
   
   if(setting_gas == "total"){
-     data_gas = postcodeLocationData['gt'];
+     data_gas = postcodeLocationData['gas_totalkwh'];
   } else if (setting_gas == "mean") {
-     data_gas = postcodeLocationData['Bgm'];
+     data_gas = postcodeLocationData['gas_meankwh'];
   } else if (setting_gas == "median") {
-     data_gas = postcodeLocationData['Cgm'];
+     data_gas = postcodeLocationData['gas_mediankwh'];
   }
   
   
   
-  const labels = [2015,2016,2017,2018,2019,2020,2021,2022]
+  const labels = postcodeLocationData['year'];
   const dataMeters = {
     labels: labels,
     datasets: [
       {
         label: 'Gas',
-        data: postcodeLocationData['gm'],
+        data: postcodeLocationData['gas_meters'],
         backgroundColor: '#2b8cbe',
         stack: 'Stack 0',
       },
       {
         label: 'Electric (all)',
-        data: postcodeLocationData['ema'],
+        data: postcodeLocationData['elec_meters_all'],
         backgroundColor: '#b30000',
         stack: 'Stack 1',
       },
       {
         label: 'Electric (Standard)',
-        data: postcodeLocationData['ems'],
+        data: postcodeLocationData['elec_meters_std'],
         backgroundColor: '#e34a33',
         stack: 'Stack 2',
       },
       {
         label: 'Electric (Economy 7)',
-        data: postcodeLocationData['eme'],
+        data: postcodeLocationData['elec_meters_eco7'],
         backgroundColor: '#fdcc8a',
         stack: 'Stack 2',
       }
@@ -333,6 +356,466 @@ makeChartPostcode = function(locationId){
         }
       }
     },
+  });
+  
+}
+
+makeChartLSOAEnergy = function(locationId){
+  
+  console.log("Make LSOA Energy Charts charts");
+  // Access Chart
+  // Destroy old chart
+	if(emissionsLSOAChart){
+		emissionsLSOAChart.destroy();
+	}
+	if(gasLSOAChart){
+		gasLSOAChart.destroy();
+	}
+	if(electricityLSOAChart){
+		electricityLSOAChart.destroy();
+	}
+  if(metersLSOAChart){
+		metersLSOAChart.destroy();
+	}
+  if(energybillsLSOAChart){
+		energybillsLSOAChart.destroy();
+	}
+
+  // Get Control Settings
+  const setting_emissions = document.getElementById("select_emissionsLSOA").value;
+	const setting_gas = document.getElementById("select_gasLSOA").value;
+  const setting_electricity = document.getElementById("select_electricityLSOA").value;
+  
+  let data_emissions_gas;
+  let data_emissions_elec;
+  let data_elec_all;
+
+  // Get data
+  
+  if(setting_emissions == "total"){
+     data_emissions_gas = lsoaEnergyData['total_gas_kgco2e'];
+     data_emissions_elec = lsoaEnergyData['total_elec_kgco2e'];
+     data_emissions_other = lsoaEnergyData['total_other_kgco2e'];
+  } else if (setting_emissions == "mean") {
+     data_emissions_gas = lsoaEnergyData['mean_gas_kgco2e'];
+     data_emissions_elec = lsoaEnergyData['mean_elec_kgco2e'];
+     data_emissions_other = lsoaEnergyData['mean_other_kgco2e'];
+  } else if (setting_emissions == "median") {
+     data_emissions_gas = lsoaEnergyData['median_gas_kgco2e'];
+     data_emissions_elec = lsoaEnergyData['median_elec_kgco2e'];
+     data_emissions_other = lsoaEnergyData['mean_other_kgco2e']; // Using mean for other as median not available
+  }
+  
+  if(setting_electricity == "total"){
+     data_elec_all = lsoaEnergyData['total_elec_kwh'];
+  } else if (setting_electricity == "mean") {
+     data_elec_all = lsoaEnergyData['mean_elec_kwh'];
+  } else if (setting_electricity == "median") {
+     data_elec_all = lsoaEnergyData['median_elec_kwh'];
+  }
+  
+  if(setting_gas == "total"){
+     data_gas = lsoaEnergyData['total_gas_kwh'];
+  } else if (setting_gas == "mean") {
+     data_gas = lsoaEnergyData['mean_gas_kwh'];
+  } else if (setting_gas == "median") {
+     data_gas = lsoaEnergyData['median_gas_kwh'];
+  }
+  
+  
+  
+  const labels = lsoaEnergyData.year;
+  const dataMeters = {
+    labels: labels,
+    datasets: [
+      {
+        label: 'Gas',
+        data: lsoaEnergyData['meters_gas'],
+        backgroundColor: '#2b8cbe',
+        stack: 'Stack 0',
+      },
+      {
+        label: 'Electric',
+        data: lsoaEnergyData['meters_elec'],
+        backgroundColor: '#b30000',
+        stack: 'Stack 1',
+      }
+    ]
+  };
+  
+  
+  const dataEmissions = {
+    labels: labels,
+      datasets: [
+        {
+          label: 'Gas',
+          data: data_emissions_gas,
+          borderColor: '#2b8cbe',
+          backgroundColor: '#2b8cbe',
+        },
+        {
+          label: 'Electricity',
+          data: data_emissions_elec,
+          borderColor: '#b30000',
+          backgroundColor: '#b30000',
+        },
+        {
+          label: 'Other',
+          data: data_emissions_other,
+          borderColor: '#008000',
+          backgroundColor: '#008000',
+        }
+      ]
+    };
+	
+	const dataElectricity = {
+    labels: labels,
+      datasets: [
+        {
+          label: 'Domestic Electricity',
+          data: data_elec_all,
+          borderColor: '#b30000',
+          backgroundColor: '#b30000',
+        }
+      ]
+    };
+	
+	
+	const dataGas = {
+    labels: labels,
+      datasets: [
+        {
+          label: 'Domestic Gas',
+          data: data_gas,
+          borderColor: '#2b8cbe',
+          backgroundColor: '#2b8cbe',
+        }
+      ]
+    };
+	
+    const dataEnergyBills = {
+    labels: labels,
+      datasets: [
+        {
+          label: 'Gas',
+          data: lsoaEnergyData['gas_average_bill'],
+          borderColor: '#2b8cbe',
+          backgroundColor: '#2b8cbe',
+        },
+        {
+          label: 'Electricity',
+          data: lsoaEnergyData['elec_average_bill'],
+          borderColor: '#b30000',
+          backgroundColor: '#b30000',
+        },
+        {
+          label: 'Other',
+          data: lsoaEnergyData['otherheating_average_bill'],
+          borderColor: '#008000',
+          backgroundColor: '#008000',
+        },
+        {
+          label: 'Total',
+          data: lsoaEnergyData['energy_average_bill'],
+          borderColor: '#420144',
+          backgroundColor: '#420144',
+        }
+      ]
+    };
+
+	var metersctx = document.getElementById('metersLSOA-chart').getContext('2d');
+	metersLSOAChart = new Chart(metersctx, {
+    type: 'bar',
+      data: dataMeters,
+      options: {
+        responsive: true,
+        interaction: {
+          intersect: false,
+        },
+        scales: {
+          x: {
+            stacked: true,
+            title: {
+              display: true,
+              text: 'Year'
+            }
+          },
+          y: {
+            stacked: true,
+            title: {
+              display: true,
+              text: 'Meters'
+            }
+          }
+        }
+      }
+  });
+	
+	var emissionsctx = document.getElementById('emissionsLSOA-chart').getContext('2d');
+	emissionsLSOAChart = new Chart(emissionsctx, {
+    type: 'line',
+    data: dataEmissions,
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: 'Emissions kgCO2e'
+          },
+          beginAtZero: true
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Year'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      }
+    },
+  });
+
+  var energybillsctx = document.getElementById('energybillsLSOA-chart').getContext('2d');
+	energybillsLSOAChart = new Chart(energybillsctx, {
+    type: 'line',
+    data: dataEnergyBills,
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: 'Average Bill (£)'
+          },
+          beginAtZero: true
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Year'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      }
+    },
+  });
+  
+  var gasctx = document.getElementById('gasLSOA-chart').getContext('2d');
+	gasLSOAChart = new Chart(gasctx, {
+    type: 'line',
+    data: dataGas,
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: 'Gas Consumption kWh'
+          },
+          beginAtZero: true
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Year'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      }
+    },
+  });
+	
+	var electricityctx = document.getElementById('electricityLSOA-chart').getContext('2d');
+	electricityLSOAChart = new Chart(electricityctx, {
+    type: 'line',
+    data: dataElectricity,
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: 'Consumption kWh'
+          },
+          beginAtZero: true
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Year'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      }
+    },
+  });
+  
+}
+
+
+makeChartPrices = function(){
+  
+  console.log("Make prices charts");
+  
+  // Destroy old charts
+  if(pricesChart){
+    pricesChart.destroy();
+  }
+  if(transactionsChart){
+    transactionsChart.destroy();
+  }
+  
+  // Prepare data for box and whisker chart (prices)
+  // Using line chart to show median with range indicators
+  const pricesData = {
+    labels: pricesLocationData.year,
+    datasets: [
+      {
+        label: 'Maximum Price',
+        data: pricesLocationData.price_max,
+        borderColor: '#c0c0c0',
+        backgroundColor: 'transparent',
+        borderWidth: 1,
+        borderDash: [5, 5],
+        fill: false,
+        pointRadius: 0,
+        tension: 0.1,
+        hidden: true
+      },
+      {
+        label: 'Upper Quartile (Q3)',
+        data: pricesLocationData.price_75,
+        borderColor: '#a8d5e8',
+        backgroundColor: 'transparent',
+        borderWidth: 1,
+        fill: false,
+        pointRadius: 0,
+        tension: 0.1
+      },
+      {
+        label: 'Median Price',
+        data: pricesLocationData.price_median,
+        borderColor: '#2b8cbe',
+        backgroundColor: '#2b8cbe',
+        borderWidth: 2,
+        fill: false,
+        pointRadius: 4,
+        pointBackgroundColor: '#2b8cbe',
+        tension: 0.1
+      },
+      {
+        label: 'Lower Quartile (Q1)',
+        data: pricesLocationData.price_25,
+        borderColor: '#a8d5e8',
+        backgroundColor: 'transparent',
+        borderWidth: 1,
+        fill: false,
+        pointRadius: 0,
+        tension: 0.1
+      },
+      {
+        label: 'Minimum Price',
+        data: pricesLocationData.price_min,
+        borderColor: '#c0c0c0',
+        backgroundColor: 'transparent',
+        borderWidth: 1,
+        borderDash: [5, 5],
+        fill: false,
+        pointRadius: 0,
+        tension: 0.1
+      }
+    ]
+  };
+  
+  // Create price chart
+  var pricesctx = document.getElementById('prices-chart').getContext('2d');
+  pricesChart = new Chart(pricesctx, {
+    type: 'line',
+    data: pricesData,
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: 'Price (£)'
+          },
+          beginAtZero: false
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Year'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      }
+    }
+  });
+  
+  // Prepare data for transactions bar chart
+  const transactionsData = {
+    labels: pricesLocationData.year,
+    datasets: [{
+      label: 'Number of Transactions',
+      data: pricesLocationData.transactions,
+      backgroundColor: '#d7191c',
+      borderColor: '#d7191c',
+      borderWidth: 1
+    }]
+  };
+  
+  // Create transactions chart
+  var transactionsctx = document.getElementById('transactions-chart').getContext('2d');
+  transactionsChart = new Chart(transactionsctx, {
+    type: 'bar',
+    data: transactionsData,
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: 'Number of Transactions'
+          },
+          beginAtZero: true
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Year'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      }
+    }
   });
   
 }
@@ -745,3 +1228,33 @@ makePieChart = function(chartVar, name, label, data, colours, labels){
 	
 	return chartVar;
 }
+
+// Function for modal tabs
+modalTab = function (evt, tabName) {
+  // Declare all variables
+  var i, tabcontent, tablinks;
+
+  // Get all elements with class="tabcontent" and hide them
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+
+  // Get all elements with class="tablinks" and remove the class "active"
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+  // Show the current tab, and add an "active" class to the button that opened the tab
+  document.getElementById(tabName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+// Click on modal tab open by default
+document.addEventListener('DOMContentLoaded', function() {
+  var defaultOpenBtn = document.getElementById("defaultOpen");
+  if (defaultOpenBtn) {
+    defaultOpenBtn.click();
+  }
+});
+

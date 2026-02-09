@@ -99,6 +99,9 @@ const capUi = (function () {
 			
 			// Adjust opentool links to use current map state
 			capUi.adjustOpenToolLinks ();
+
+			// Setup print button handlers
+			capUi.initPrintButtons ();
 		},
 		
 		// Welcome screen
@@ -126,7 +129,21 @@ const capUi = (function () {
 			//capUi.setCookie (cookieName, 'true');
 		},
 
-		
+		// Modal print buttons
+		initPrintButtons:function () {
+			const printButtons = document.querySelectorAll('.print-button');
+			
+			printButtons.forEach(function(button) {
+				button.addEventListener('click', function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+				
+				// Simply trigger the print dialog - CSS handles the rest
+				window.print();
+				});
+			});
+		},
+
 		// Function to manage an accordion
 		accordion: function ()
 		{
@@ -826,54 +843,131 @@ const capUi = (function () {
       		// Do nothing if no selector for where the legend will be added
 			if (!document.getElementById(selector)) {return;}
 								
-				// Detect Horizontal, Vertical or Contextual modes
-				// Create the legend HTML
-				// #!# Should be a list, not nested divs
-				let legendHtml;
-				const el = document.getElementById(selector);
-				const cls = el ? el.className : '';
-				// Normalize selected key to a valid property
-				selected = (legendColours.hasOwnProperty(selected) ? selected : '_');
-				// Determine layout mode
-				let mode = 'vertical';
-				// Sum characters in the first element (label) of each legend entry
-				const items = legendColours[selected] || [];
-				let totalChars = 0;
+			const el = document.getElementById(selector);
+			const cls = el ? el.className : '';
+			
+			// Normalize selected key to a valid property
+			selected = (legendColours.hasOwnProperty(selected) ? selected : '_');
+			
+			// Get the selected legend data
+			const selectedLegend = legendColours[selected];
+			
+			// Check if this is a bivariate legend
+			if (selectedLegend && selectedLegend.mode === 'bivariate') {
+				// Handle bivariate legend
+				capUi.createBivariateLegend(selectedLegend, selector);
+				return;
+			}
+			
+			// Detect Horizontal, Vertical or Contextual modes
+			// Create the legend HTML
+			// #!# Should be a list, not nested divs
+			let legendHtml;
+			// Determine layout mode
+			let mode = 'vertical';
+			// Sum characters in the first element (label) of each legend entry
+			const items = selectedLegend || [];
+			let totalChars = 0;
+			if (Array.isArray(items)) {
 				items.forEach(it => {
 					if (it && typeof it[0] !== 'undefined') {
 						totalChars += String(it[0]).length;
 					}
 				});
-				mode = (totalChars > 39 ? 'vertical' : 'horizontal');
-				//console.log('Legend mode: ' + mode + 'nchars: ' + totalChars);
-							
-				
-				// Ensure the element receives the correct class so CSS rules apply.
-				// If the element was originally 'legendContextual' keep that class and add the
-				// chosen orientation class. If it was explicitly horizontal/vertical, keep that.
-				if (mode === 'horizontal') {
-					el.className ='legendContextual legendHorizontal';
-				} else {
-					el.className = 'legendContextual legendVertical';
+			}
+			mode = (totalChars > 39 ? 'vertical' : 'horizontal');
+			//console.log('Legend mode: ' + mode + 'nchars: ' + totalChars);
+						
+			
+			// Ensure the element receives the correct class so CSS rules apply.
+			// If the element was originally 'legendContextual' keep that class and add the
+			// chosen orientation class. If it was explicitly horizontal/vertical, keep that.
+			if (mode === 'horizontal') {
+				el.className ='legendContextual legendHorizontal';
+			} else {
+				el.className = 'legendContextual legendVertical';
+			}
+			
+			
+			if (mode === 'horizontal') {
+				legendHtml = '<div class="l_rHorizontal">';
+				(items || []).forEach(legendColour => {
+					legendHtml += `<div class="lbHorizontal"><span style="background-color: ${legendColour[1]}"></span>${legendColour[0]}</div>`;
+				});
+				legendHtml += '</div>';
+			} else {
+				legendHtml = '<div class="l_rVertical">';
+				(items || []).forEach(legendColour => {
+					legendHtml += `<div class="lbVertical"><span style="background-color: ${legendColour[1]}"></span>${legendColour[0]}</div>`;
+				});
+				legendHtml += '</div>';
+			}
+  
+		// Set the legend
+		document.getElementById(selector).innerHTML = legendHtml;
+		},
+		
+		// Function to create a bivariate legend (5x5 grid)
+		createBivariateLegend: function (legendColours, selector)
+		{
+			const el = document.getElementById(selector);
+			if (!el) { return; }
+			
+			// Create a color map for fast lookup: store colours indexed by their 2-digit code
+			const colorMap = {};
+			(legendColours.colours || []).forEach(item => {
+				colorMap[item[0]] = item[1];
+			});
+			
+			// Extract labels (first is x-axis, second is y-axis)
+			const xLabel = (legendColours.labels && legendColours.labels[0]) ? legendColours.labels[0] : '';
+			const yLabel = (legendColours.labels && legendColours.labels[1]) ? legendColours.labels[1] : '';
+			
+			// Create the bivariate legend HTML structure
+			// Grid coordinates: XY where X is 1-5 (left to right), Y is 1-5 (bottom to top)
+			let legendHtml = '<div class="bivariateContainer">';
+			
+			// Y-axis label (rotated)
+			if (yLabel) {
+				legendHtml += `<div class="bivariateYLabel">${yLabel}</div>`;
+			}
+			
+			// Y-axis low/high labels
+			legendHtml += '<div class="bivariateYLowHigh">';
+			legendHtml += '<div class="bivariateYHigh">High</div>';
+			legendHtml += '<div class="bivariateYLow">Low</div>';
+			legendHtml += '</div>';
+			
+			// Grid wrapper
+			legendHtml += '<div class="bivariateGridWrapper">';
+			
+			// Create the grid: iterate from top to bottom (5 to 1) for visual display
+			for (let y = 5; y >= 1; y--) {
+				legendHtml += '<div class="bivariateRow">';
+				for (let x = 1; x <= 5; x++) {
+					const cellCode = parseInt(String(x) + String(y));
+					const cellColor = colorMap[cellCode] || '#cccccc';
+					legendHtml += `<div class="bivariateCell" style="background-color: ${cellColor}"></div>`;
 				}
-				
-				
-				if (mode === 'horizontal') {
-					legendHtml = '<div class="l_rHorizontal">';
-					(legendColours[selected] || []).forEach(legendColour => {
-						legendHtml += `<div class="lbHorizontal"><span style="background-color: ${legendColour[1]}"></span>${legendColour[0]}</div>`;
-					});
-					legendHtml += '</div>';
-				} else {
-					legendHtml = '<div class="l_rVertical">';
-					(legendColours[selected] || []).forEach(legendColour => {
-						legendHtml += `<div class="lbVertical"><span style="background-color: ${legendColour[1]}"></span>${legendColour[0]}</div>`;
-					});
-					legendHtml += '</div>';
-				}
-      
-			// Set the legend
-			document.getElementById(selector).innerHTML = legendHtml;
+				legendHtml += '</div>';
+			}
+			
+			legendHtml += '</div>'; // End bivariateGridWrapper
+			
+			// X-axis low/high labels with center label
+			legendHtml += '<div class="bivariateXLowHighLabel">';
+			legendHtml += '<div class="bivariateXLow">Low</div>';
+			if (xLabel) {
+				legendHtml += `<div class="bivariateXLabel">${xLabel}</div>`;
+			}
+			legendHtml += '<div class="bivariateXHigh">High</div>';
+			legendHtml += '</div>';
+			
+			legendHtml += '</div>'; // End bivariateContainer
+			
+			// Apply bivariate legend class and set innerHTML
+			el.className = 'legendContextual bivariateLegend';
+			el.innerHTML = legendHtml;
 		},
 		
 		// Function to manage layer state URL
@@ -1458,3 +1552,31 @@ const capUi = (function () {
 	};
 	
 } ());
+
+// Ensure external links open in a new tab and use safe rel attributes
+(function ensureExternalLinksOpenNewTab() {
+	document.addEventListener('DOMContentLoaded', function () {
+		try {
+			var anchors = document.querySelectorAll('a[href^="http"]');
+			anchors.forEach(function (a) {
+				try {
+					var url = new URL(a.href, location.href);
+					if (url.hostname !== location.hostname) {
+						if (!a.hasAttribute('target') || a.getAttribute('target') !== '_blank') {
+							a.setAttribute('target', '_blank');
+						}
+						var rel = a.getAttribute('rel') || '';
+						var parts = rel.split(/\s+/).filter(Boolean);
+						if (parts.indexOf('noopener') === -1) { parts.push('noopener'); }
+						if (parts.indexOf('noreferrer') === -1) { parts.push('noreferrer'); }
+						a.setAttribute('rel', parts.join(' '));
+					}
+				} catch (e) {
+					// ignore malformed URLs
+				}
+			});
+		} catch (e) {
+			// no-op
+		}
+	});
+})();

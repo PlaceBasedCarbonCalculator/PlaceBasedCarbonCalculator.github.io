@@ -10,7 +10,7 @@ function loadManual ()
       document.querySelector ('#content').innerHTML = mdToHtml (text);
       followAnchorHash ();
       createToc ();
-      createEditLink ();
+      //createEditLink ();
     })
     .catch (function (error) {
       console.log(error);

@@ -330,7 +330,7 @@ makeChartHistorical = function(){
 		['Cars GB'                 , 'car_kgco2e_percap' , 'rgb(130,255,61)'      , 'rgb(0,0,0)'],
 		['Vans GB'                 , 'van_kgco2e_percap' , 'rgb(130,255,61)'      , 'rgb(0,0,0)'],
 		['Bikes & Company Vehicles GB' , 'company_bike_kgco2e_percap', 'rgb(130,255,61)'    , 'rgb(0,0,0)'],
-		['Vehicle Maintaince GB'   , 'transport_optranequip_other_kgco2e_percap','rgb(130,255,61)', 'rgb(0,0,0)'  ],
+		['Vehicle Maintenance GB'   , 'transport_optranequip_other_kgco2e_percap','rgb(130,255,61)', 'rgb(0,0,0)'  ],
 		['Public Transport GB'     , 'transport_pt_kgco2e_percap', 'rgb(130,255,61)'  , 'rgb(0,0,0)'],
 		['Flights GB'              , 'flights_kgco2e_percap', 'rgb(130,255,61)'   , 'rgb(0,0,0)'],
 		['Goods & Services GB'     , 'goods_services_combined_kgco2e_percap', 'rgb(130,255,61)', 'rgb(0,0,0)']
@@ -422,6 +422,7 @@ makeChartHistorical = function(){
       ...data_gb.datasets.map(ds => ({ ...ds, standardLabel: getStandardLabel(ds.stack) }))
     ]
   };
+
 
   // Make Overview table
   // Find the index of the label '2019' in data.labels
@@ -754,7 +755,7 @@ overviewChart = new Chart(document.getElementById('overview-chart').getContext('
   consumptionMiscellaneousChart = makeStandardConsumptionChart('consumptionMiscellaneous-chart','Miscellaneous');
   consumptionFlightsChart = makeStandardConsumptionChart('consumptionFlights-chart','Flights');
   consumptionVehiclePurchaseChart = makeStandardConsumptionChart('consumptionVehiclePurchase-chart','Vehicle Purchase');
-  consumptionVehicleOtherChart = makeStandardConsumptionChart('consumptionVehicleOther-chart','Vehicle Maintaince');
+  consumptionVehicleOtherChart = makeStandardConsumptionChart('consumptionVehicleOther-chart','Vehicle Maintenance');
   gasChart = makeStandardConsumptionChart('gasEmissions-chart','Gas');
   electricChart = makeStandardConsumptionChart('electricityEmissions-chart','Electricity');
   otherHeatingChart = makeStandardConsumptionChart('heatingOther-chart','Other Heating');
@@ -1946,3 +1947,24 @@ function lsoaCharacteristicsTable(lsoadata) {
 	document.getElementById("data_lsoa_class_name").innerHTML = 'Subgroup Description: "' + lsoadata.lsoa_class_name + '"';
 }
 
+// Initialize print button functionality
+function initPrintButtons() {
+  const printButtons = document.querySelectorAll('.print-button');
+  
+  printButtons.forEach(function(button) {
+    button.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      // Simply trigger the print dialog - CSS handles the rest
+      window.print();
+    });
+  });
+}
+
+// Initialize print buttons when page loads
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initPrintButtons);
+} else {
+  initPrintButtons();
+}

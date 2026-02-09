@@ -9,8 +9,9 @@ const datasets_extra = {
 			'id': 'zones',
 			'type': 'fill',
 			'source': {
-			'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/zones_retrofit_20251124.pmtiles',
+				'type': 'vector',
+				'url': 'pmtiles://%tileserverUrl/zones_retrofit_20260206.pmtiles',
+				//'url': 'pmtiles://zones_retrofit.pmtiles',
 				},
 			'source-layer': 'zones',
 			'paint': {
@@ -39,8 +40,8 @@ const datasets_extra = {
 			'id': 'epc_dom',
 			'type': 'circle',
 			'source': {
-			'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/epc_dom_20251124.pmtiles',
+				'type': 'vector',
+				'url': 'pmtiles://%tileserverUrl/epc_dom_20260113.pmtiles',
 				},
 			'source-layer': 'epc_dom',
 			'paint': {
@@ -61,7 +62,7 @@ const datasets_extra = {
 			'type': 'circle',
 			'source': {
 			'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/epc_nondom.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/epc_nondom_20260113.pmtiles',
 				},
 			'source-layer': 'epc_nondom',
 			'paint': {
@@ -73,6 +74,27 @@ const datasets_extra = {
             [22, 180]
           ]
         }
+			}
+		},
+
+		uprn_unknown: {
+			'id': 'uprn_unknown',
+			'type': 'circle',
+			'source': {
+			'type': 'vector',
+				'url': 'pmtiles://%tileserverUrl/uprn_unknown_20260113.pmtiles',
+				},
+			'source-layer': 'uprn_unknown',
+			'paint': {
+				'circle-color': '#ff0000ff',
+			  	// make circles larger as the user zooms from z12 to z22
+				'circle-radius': {
+				'base': 2.5,
+				'stops': [
+					[8, 3],
+					[22, 180]
+				]
+				}
 			}
 		}
 	},
@@ -89,28 +111,28 @@ const datasets_extra = {
 	
 	// #!# These need to be merged with lineColours
 	legends: {
-    postcodes: {
-			'Grade': [
-				['A+','#313695'],
-  			['A' ,'#4575b4'],
-  			['A-','#4575b4'],
-  			['B+','#74add1'],
-  			['B' ,'#abd9e9'],
-  			['B-','#abd9e9'],
-  			['C+','#e0f3f8'],
-  			['C' ,'#e0f3f8'],
-  			['C-','#ffffbf'],
-  			['D+','#ffffbf'],
-  			['D' ,'#fee090'],
-  			['D-','#fee090'],
-  			['E+','#fdae61'],
-  			['E' ,'#fdae61'],
-  			['E-','#f46d43'],
-  			['F+','#d73027'],
-  			['F' ,'#d73027'],
-  			['F-','#a50026']
-  		]
-    },
+		postcodes: {
+				'Grade': [
+					['A+','#313695'],
+				['A' ,'#4575b4'],
+				['A-','#4575b4'],
+				['B+','#74add1'],
+				['B' ,'#abd9e9'],
+				['B-','#abd9e9'],
+				['C+','#e0f3f8'],
+				['C' ,'#e0f3f8'],
+				['C-','#ffffbf'],
+				['D+','#ffffbf'],
+				['D' ,'#fee090'],
+				['D-','#fee090'],
+				['E+','#fdae61'],
+				['E' ,'#fdae61'],
+				['E-','#f46d43'],
+				['F+','#d73027'],
+				['F' ,'#d73027'],
+				['F-','#a50026']
+			]
+		},
 		epc_dom: {
 			'cur_rate': [
 				['A','#0e7e58'],
@@ -135,6 +157,13 @@ const datasets_extra = {
 				['Maisonette','#1f78b4'],
 				['Bungalow','#6a3d9a'],
 				['Park home' ,'#ff7f00']
+			],
+			'tenure': [
+				['Rented (social)','#1f78b4'],
+				['Rented (private)','#e31a1c'],
+				['Owner occupied' ,'#33a02c'],
+				['Missing' ,'#000000'],
+				['Unknown','#999898']
 			],
 			'age': [
 				['<1900','#9e0142'],
@@ -226,9 +255,33 @@ const datasets_extra = {
 				['Poor','#fdae61'],
 				['Very Poor' ,'#d7191c']
 			],
-		  'sol_wat': [
+		  	'sol_wat': [
 				['yes','#fdae61'],
-  				['no','#2c7bb6']
+  				['no','#2c7bb6'],
+				['No data','#000000']
+			],
+			'pv': [
+				['yes','#fdae61'],
+  				['no','#2c7bb6'],
+				['No data','#000000']
+			],
+			'price_2024': [
+				['<£200k','#276419'],
+				['£200-300k','#4d9221'],
+				['£300-400k','#7fbc41'],
+				['£400-500k','#b8e186'],
+				['£500-600k','#e6f5d0'],
+				['£600-800k','#fde0ef'],
+				['£800-1000k','#f1b6da'],
+				['£1-2m','#de77ae'],
+				['£2-3m','#c51b7d'],
+				['>£3m','#8e0152'],
+				['No Data','#000000']
+			],
+			'freehold': [
+				['Freehold','#1f78b4'],
+				['Leasehold','#e31a1c'],
+				['No Data','#000000']
 			]
 			
 		},
@@ -332,7 +385,13 @@ const datasets_extra = {
 				['Maisonette' ,'#1f78b4'],
 				['Park home' ,'#fa7c00']
 			],
-		  'percent_EPC': [
+			'modal_tenure': [
+				['Rented (social)','#1f78b4'],
+				['Rented (private)','#e31a1c'],
+				['Owner occupied' ,'#33a02c'],
+				['Unknown','#999898']
+			],
+		  	'percent_EPC': [
 				['<30%','#ffffb2'],
 				['30-50%' ,'#fed976'],
 				['50-60%','#feb24c'],
@@ -340,47 +399,138 @@ const datasets_extra = {
 				['70-80%' ,'#fc4e2a'],
 				['80-90%','#e31a1c'],
 				['>90%','#b10026']
-			]
+			],
+			'price_2024': [
+				['<£200k','#276419'],
+				['£200-300k','#4d9221'],
+				['£300-400k','#7fbc41'],
+				['£400-500k','#b8e186'],
+				['£500-600k','#e6f5d0'],
+				['£600-800k','#fde0ef'],
+				['£800-1000k','#f1b6da'],
+				['£1-2m','#de77ae'],
+				['£2-3m','#c51b7d'],
+				['>£3m','#8e0152'],
+				['No Data','#000000']
+			],
+			'house_income_ratio': [
+				['<2','#4d9221'],
+				['2-4','#7fbc41'],
+				['4-6','#b8e186'],
+				['6-8','#e6f5d0'],
+				['8-10','#fde0ef'],
+				['10-12','#f1b6da'],
+				['12-14','#de77ae'],
+				['>14','#c51b7d']
+			],
+			'median_gas_kwh': [
+				['<6000 kWh','#4575b4'],
+				['6000-8000 kWh','#91bfdb'],
+				['8000-10000 kWh','#e0f3f8'],
+				['10000-12000 kWh','#ffffbf'],
+				['12000-14000 kWh','#fee090'],
+				['14000-16000 kWh','#fc8d59'],
+				['>16000 kWh','#d73027'],
+				['No data','#000000']
+			],
+			'median_elec_kwh': [
+				['<1000 kWh','#4575b4'],
+				['1500-2000 kWh','#91bfdb'],
+				['2000-2500 kWh','#e0f3f8'],
+				['2500-3000 kWh','#ffffbf'],
+				['3000-3500 kWh','#fee090'],
+				['3500-4000 kWh','#fc8d59'],
+				['>4000 kWh','#d73027'],
+				['No data','#000000'],
+			],
+			'fuelcost_bivaraite': {
+				'mode': 'bivariate',
+				'labels': ['Energy Bills','Income'],
+				'colours': [
+					[11,'#F07621'],
+					[21,'#F3896D'],		
+					[31,'#F597A5'],
+					[41,'#EF5091'],
+					[51,'#E90C7E'],
+					[12,'#DEB15C'],
+					[22,'#EDBD9D'],
+					[32,'#F8CBD1'],
+					[42,'#E991BB'],
+					[52,'#D959A6'],
+					[13,'#CEE28D'],
+					[23,'#E8F0CC'],
+					[33,'#FAFAFA'],
+					[43,'#E3CBE1'],
+					[53,'#CC9BC8'],
+					[14,'#7BBC6D'],
+					[24,'#AAD2B0'],
+					[34,'#D6E7EB'],
+					[44,'#BCB3D2'],
+					[54,'#9D7CB8'],
+					[15,'#0D8943'],
+					[25,'#51A788'],
+					[35,'#9BC8D2'],
+					[45,'#7A8BB9'],
+					[55,'#5950A1']
+				]
+			}
 			
 		},
 		epc_nondom: {
 			'band': [
 				['A','#0e7e58'],
-  			['B' ,'#2aa45b'],
-  			['C','#8cbc42'],
-  			['D','#f6cc15'],
-  			['E' ,'#f2a867'],
-  			['F','#f17e23'],
-  			['G','#e31d3e']
+				['B' ,'#2aa45b'],
+				['C','#8cbc42'],
+				['D','#f6cc15'],
+				['E' ,'#f2a867'],
+				['F','#f17e23'],
+				['G','#e31d3e']
 			],
 			'transaction': [
 				['Mandatory issue (Display in public building)','#1f78b4'],
-  			['Mandatory issue (Marketed sale)' ,'#33a02c'],
-  			['Mandatory issue (Non-marketed sale)','#e31a1c'],
-  			['Mandatory issue (Property on construction)','#ff7f00'],
-  			['Mandatory issue (Property to let)' ,'#6a3d9a'],
-  			['Voluntary (No legal requirement for an EPC)','#b15928'],
-  			['Voluntary re-issue (A valid EPC is already lodged)','#ffff99']
+				['Mandatory issue (Marketed sale)' ,'#33a02c'],
+				['Mandatory issue (Non-marketed sale)','#e31a1c'],
+				['Mandatory issue (Property on construction)','#ff7f00'],
+				['Mandatory issue (Property to let)' ,'#6a3d9a'],
+				['Voluntary (No legal requirement for an EPC)','#b15928'],
+				['Voluntary re-issue (A valid EPC is already lodged)','#ffff99']
 			],
 			'year': [
 				['<2014','#e31d3e'],
-  			['2016','#f17e23'],
-  			['2018','#f2a867'],
-  			['2020','#f6cc15'],
-  			['2022','#8cbc42'],
-  			['2024','#0e7e58']
+  				['2016','#f17e23'],
+  				['2018','#f2a867'],
+  				['2020','#f6cc15'],
+  				['2022','#8cbc42'],
+  				['2024','#0e7e58']
 			],
 			'area': [
 				['<40','#4d9221'],
-  			['40-60' ,'#7fbc41'],
-  			['60-80','#b8e186'],
-  			['80-100','#e6f5d0'],
-  			['100-120' ,'#fde0ef'],
-  			['120-140','#f1b6da'],
-  			['140-160','#de77ae'],
-  			['>160','#c51b7d']
+  				['40-60' ,'#7fbc41'],
+  				['60-80','#b8e186'],
+  				['80-100','#e6f5d0'],
+  				['100-120' ,'#fde0ef'],
+  				['120-140','#f1b6da'],
+  				['140-160','#de77ae'],
+  				['>160','#c51b7d']
+			],
+			'price_2024': [
+				['<£200k','#276419'],
+				['£200-300k','#4d9221'],
+				['£300-400k','#7fbc41'],
+				['£400-500k','#b8e186'],
+				['£500-600k','#e6f5d0'],
+				['£600-800k','#fde0ef'],
+				['£800-1000k','#f1b6da'],
+				['£1-2m','#de77ae'],
+				['£2-3m','#c51b7d'],
+				['>£3m','#8e0152'],
+				['No Data','#000000']
+			],
+			'freehold': [
+				['Freehold','#1f78b4'],
+				['Leasehold','#e31a1c'],
+				['No Data','#000000']
 			]
-			
 		},
 	},
 	
@@ -521,7 +671,14 @@ const datasets_extra = {
 				'parkhome' ,'#fa7c00',
 				'#000000'
 			],
-		  'percent_EPC': [
+			'modal_tenure': [
+				'socialrent','#1f78b4',
+				'owner' ,'#33a02c',
+				'privaterent','#e31a1c',
+				'unknown','#999898',
+				'#000000'
+			],
+		  	'percent_EPC': [
 				'0-30','#ffffb2',
 				'30-50' ,'#fed976',
 				'50-60','#feb24c',
@@ -529,6 +686,76 @@ const datasets_extra = {
 				'70-80' ,'#fc4e2a',
 				'80-90','#e31a1c',
 				'90-200','#b10026',
+				'#000000'
+			],
+			'price_2024': [
+				0,'#276419',
+				200000,'#4d9221',
+				300000,'#7fbc41',
+				400000,'#b8e186',
+				500000,'#e6f5d0',
+				600000,'#fde0ef',
+				800000,'#f1b6da',
+				1000000,'#de77ae',
+				2000000,'#c51b7d',
+				3000000,'#8e0152'
+			],	
+			'house_income_ratio': [
+				0,'#4d9221',
+				2,'#7fbc41',
+				4,'#b8e186',
+				6,'#e6f5d0',
+				8,'#fde0ef',
+				10,'#f1b6da',
+				12,'#de77ae',
+				14,'#c51b7d'
+			],	
+			'median_gas_kwh': [
+				0,'#000000',
+				1,'#4575b4',
+				6000,'#91bfdb',
+				8000,'#e0f3f8',
+				10000,'#ffffbf',
+				12000,'#fee090',
+				14000,'#fc8d59',
+				16000,'#d73027'
+			],	
+			'median_elec_kwh': [
+				0,'#000000',
+				1,'#4575b4',
+				1500,'#91bfdb',
+				2000,'#e0f3f8',
+				2500,'#ffffbf',
+				3000,'#fee090',
+				3500,'#fc8d59',
+				4000,'#d73027'
+			],	
+			'fuelcost_bivaraite': [
+				11,'#F07621',
+				21,'#F3896D',		
+				31,'#F597A5',
+				41,'#EF5091',
+				51,'#E90C7E',
+				12,'#DEB15C',
+				22,'#EDBD9D',
+				32,'#F8CBD1',
+				42,'#E991BB',
+				52,'#D959A6',
+				13,'#CEE28D',
+				23,'#E8F0CC',
+				33,'#FAFAFA',
+				43,'#E3CBE1',
+				53,'#CC9BC8',
+				14,'#7BBC6D',
+				24,'#AAD2B0',
+				34,'#D6E7EB',
+				44,'#BCB3D2',
+				54,'#9D7CB8',
+				15,'#0D8943',
+				25,'#51A788',
+				35,'#9BC8D2',
+				45,'#7A8BB9',
+				55,'#5950A1',
 				'#000000'
 			]
 			
@@ -588,15 +815,14 @@ const datasets_extra = {
 			],
 			'area': [
 				0,'#4d9221',
-				40 ,'#7fbc41',
+				40,'#7fbc41',
 				60,'#b8e186',
 				80,'#e6f5d0',
-				100 ,'#fde0ef',
+				100,'#fde0ef',
 				120,'#f1b6da',
 				140,'#de77ae',
 				160,'#c51b7d'
-			],
-			
+			],		
 			
 			'floor_ee': [
 				'Very Good','#2c7bb6',
@@ -662,11 +888,40 @@ const datasets_extra = {
 				'Very Poor' ,'#d7191c',
 				'#000000'
 			],
-		  'sol_wat': [
-				'yes','#fdae61',
-				'no','#2c7bb6',
+			'sol_wat': [
+					'yes','#fdae61',
+					'no','#2c7bb6',
+					'#000000'
+				],
+			'pv': [
+					'yes','#fdae61',
+					'no','#2c7bb6',
+					'#000000'
+				],
+			'price_2024': [
+				0,'#276419',
+				200000,'#4d9221',
+				300000,'#7fbc41',
+				400000,'#b8e186',
+				500000,'#e6f5d0',
+				600000,'#fde0ef',
+				800000,'#f1b6da',
+				1000000,'#de77ae',
+				2000000,'#c51b7d',
+				3000000,'#8e0152'
+			],
+			'tenure': [
+				'rented (social)','#1f78b4',
+				'owner-occupied' ,'#33a02c',
+				'rented (private)','#e31a1c',
+				'unknown','#999898',
 				'#000000'
-			]
+			],
+			'freehold': [
+				'F','#2c7bb6',
+				'L' ,'#d7191c',
+				'#000000'
+			],
 			
 		},
 		
@@ -708,6 +963,23 @@ const datasets_extra = {
 				120,'#f1b6da',
 				140,'#de77ae',
 				160,'#c51b7d'
+			],
+			'price_2024': [
+				0,'#276419',
+				200000,'#4d9221',
+				300000,'#7fbc41',
+				400000,'#b8e186',
+				500000,'#e6f5d0',
+				600000,'#fde0ef',
+				800000,'#f1b6da',
+				1000000,'#de77ae',
+				2000000,'#c51b7d',
+				3000000,'#8e0152'
+			],
+			'freehold': [
+				'F','#2c7bb6',
+				'L' ,'#d7191c',
+				'#000000'
 			]
 			
 		},
@@ -764,15 +1036,20 @@ const datasets_extra = {
 	
 	// Popups
 	popups: {
-	  'epc_dom': {
+	  	'epc_dom': {
 			layerId: 'epc_dom',
 			templateId: 'epc_dom-popup',
-			preprocessingCallback: popupCallback,	// Defined below
+			preprocessingCallback: popupCallback,
 		},
 		'epc_nondom': {
 			layerId: 'epc_nondom',
 			templateId: 'epc_nondom-popup',
-			preprocessingCallback: popupCallback,	// Defined below
+			preprocessingCallback: popupCallback,
+		},
+		'uprn_unknown': {
+			layerId: 'uprn_unknown',
+			templateId: 'uprn_unknown-popup',
+			preprocessingCallback: popupCallback,
 		}
 	}
 };
@@ -823,8 +1100,8 @@ function postcodesStyling (layerId, map, settings, datasets, createLegend /* cal
 function getEPCDomStyleColumn (layerId, datasets)
 {
 	const style_col_selected = datasets.lineColours.epc_dom.hasOwnProperty(layerId) ? layerId : '_';
-	//console.log(style_col_selected);
-	//console.log(datasets.lineColours.epc_dom[style_col_selected]);
+	console.log(style_col_selected);
+	console.log(datasets.lineColours.epc_dom[style_col_selected]);
 	return datasets.lineColours.epc_dom[style_col_selected];
 }
 
@@ -839,7 +1116,7 @@ function EPCDomStyling (layerId, map, settings, datasets, createLegend /* callba
 	const style = getEPCDomStyleColumn (field, datasets);
 	//console.log(style);
 
-  let interpolate = ['area', 'year'];
+  let interpolate = ['area', 'year', 'price_2024'];
 
 	// Set paint properties
 	if(interpolate.includes(field)){
@@ -870,7 +1147,7 @@ function EPCNonDomStyling (layerId, map, settings, datasets, createLegend /* cal
 	const style = getEPCNonDomStyleColumn (field, datasets);
 	//console.log(style);
 
-  let interpolate = ['area', 'year'];
+  let interpolate = ['area', 'year','price_2024'];
 
 	// Set paint properties
 	if(interpolate.includes(field)){
@@ -894,8 +1171,17 @@ function zonesStyling (layerId, map, settings, datasets, createLegend /* callbac
 	// Get UI state
 	const daysymetricMode = document.querySelector ('input.updatelayer[data-layer="zones"][name="daysymetricmode"]').checked;
 	
+	let interpolate = ['price_2024', 'house_income_ratio','median_gas_kwh','median_elec_kwh'];
+
 	// Set paint properties
-	map.setPaintProperty (layerId, 'fill-color', ['match', ['get', field], ...getStyleColumnZones (field, datasets)]);
+	if(interpolate.includes(field)){
+	  map.setPaintProperty (layerId, 'fill-color', ['interpolate', ['linear'], ['get', field], ...getStyleColumnZones (field, datasets)]);
+	} else {
+	  map.setPaintProperty (layerId, 'fill-color', ['match', ['get', field], ...getStyleColumnZones (field, datasets)]);
+	}
+
+
+	//map.setPaintProperty (layerId, 'fill-color', ['match', ['get', field], ...getStyleColumnZones (field, datasets)]);
 	map.setPaintProperty (layerId, 'fill-opacity', (daysymetricMode ? 0.1 : 0.8)); // Very faded-out in daysymetric mode, as the buildings are coloured
 	map.setPaintProperty (layerId, 'fill-outline-color', 'rgba(0, 0, 0, 0.2)'); 
 	
@@ -919,7 +1205,15 @@ function getBuildingsColour (settings)
 	// If dasymetric mode, use a colour set based on the layer
 	if (document.querySelector ('input.updatelayer[data-layer="zones"][name="daysymetricmode"]').checked) {
 		const field = document.querySelector ('select.updatelayer[data-layer="zones"][name="field"]').value;
-		return ['match', ['get', field], ...getStyleColumnZones (field, datasets)];
+
+		let interpolate = ['price_2024', 'house_income_ratio','median_gas_kwh','median_elec_kwh'];
+
+		// Set paint properties
+		if(interpolate.includes(field)){
+			return ['interpolate', ['linear'], ['get', field], ...getStyleColumnZones (field, datasets)];
+		} else {
+			return ['match', ['get', field], ...getStyleColumnZones (field, datasets)];
+		}
 	}
 	
 	// Default to gray
