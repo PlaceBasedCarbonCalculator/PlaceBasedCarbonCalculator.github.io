@@ -198,7 +198,14 @@ The version presented in Carbon & Place is the output of a model that seeks to i
 
 With a standardise dataset is is possible to calculate metrics of interest such as the number of vehicles per household, which is a useful measure of car dependence.
 
+The data divides vehicles based on the following categories:
 
+* Body Type - Car, Motorbike, Other (mostly vans but also specialist vehicles such as tractors and excavators)
+* Licenced Status - Licences for use on the road, or Statutory Off Road Notice (SORN)
+* Fuel Type - Battery Electric, Plug-in Hybrid etc.
+* Keepership - Private or Company
+
+Unfortunately we don't have the full combination of variables. Which means there are some limitation. For example we can not say how many electric cars there are in an area, only how many electric vehicles there are. The data also does not provide information on the number of Petrol/Diesel vehicles there are. However this can be inferred by removing other fuel types from the total number of vehicles. This is a simplifying assumption as there are small numbers of vehicle using unusual fuels such as coal, vegetable oil, LNG and LPG.
 
 #### Public Transport Frequency
 
