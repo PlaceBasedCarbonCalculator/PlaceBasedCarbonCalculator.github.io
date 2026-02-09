@@ -525,6 +525,11 @@ const datasets_extra = {
 				['£2-3m','#c51b7d'],
 				['>£3m','#8e0152'],
 				['No Data','#000000']
+			],
+			'freehold': [
+				['Freehold','#1f78b4'],
+				['Leasehold','#e31a1c'],
+				['No Data','#000000']
 			]
 		},
 	},
@@ -970,6 +975,11 @@ const datasets_extra = {
 				1000000,'#de77ae',
 				2000000,'#c51b7d',
 				3000000,'#8e0152'
+			],
+			'freehold': [
+				'F','#2c7bb6',
+				'L' ,'#d7191c',
+				'#000000'
 			]
 			
 		},
