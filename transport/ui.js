@@ -20,7 +20,7 @@ manageCharts = function (locationId) {
     })
     .catch(function (error) {
       // Keep user-visible alert for backwards compatibility, but don't reject the overall promise
-      alert('Failed to get access data for this location, or to process it correctly. Please try refreshing the page.');
+      //alert('Failed to get access data for this location, or to process it correctly. Please try refreshing the page.');
       console.log(error);
     });
 

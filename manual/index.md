@@ -64,7 +64,7 @@ While LSOAs are small, they still contain thousands of people. Hence, any data a
 <!-- #dasymetric -->
 #### Dasymetric Mapping
 
-![Dasymetric](/images/manual/dasymetric.webp)
+![Dasymetric](/images/manual/dasymetric-animation.webp)
 
 *Dasymetric (left) and Choropleth (right) mapping techniques*
 
@@ -764,6 +764,14 @@ Household composition considers the number and age of people in a household and 
 
 A dependent child is a person aged 0 to 15 years in a household, or a person aged 16 to 18 years who is in full-time education and lives in a family with their parent, parents, grandparent or grandparents.
 
+[Ethnicity](https://www.ons.gov.uk/peoplepopulationandcommunity/culturalidentity/ethnicity/bulletins/ethnicgroupenglandandwales/census2021)
+
+The family photos include three ethnic categories. 
+
+* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_White.webp) **White**: White, (English, Welsh, Scottish, Northern Irish or British),  Irish, Gypsy or Irish Traveller, Roma, Other White (74.4% of population)
+* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_Black.webp) **Black**: Black, Black British, Black Welsh, Caribbean or African (4.0% of population)
+* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_Other.webp) **Other**: Asian, Asian British, Asian Welsh, Mixed, Multiple, or Other ethnic group (14.3% of population)
+
 [National Statistics Socio-Economic Classification (NS-SEC) of the household reference person](https://www.ons.gov.uk/methodology/classificationsandstandards/otherclassifications/thenationalstatisticssocioeconomicclassificationnssecrebasedonsoc2010)
 
 NS-SEC classifies people based on their jobs, there are six categories.
@@ -778,14 +786,6 @@ NS-SEC classifies people based on their jobs, there are six categories.
 Note that the NS-SEC classification apply to the household reference person. This is usually the person who pays the rent/mortgage. In the case of joint contributions, the higher earner is chosen. This means that only the NS-SEC of the highest earner is depicted in the family photo. For example, in a couple where one person was a banker and the other a cleaner, the household would be represented by the “Higher” category and show two people in higher roles.
 
 Retired people's NS-SEC classification is based on their previous job. 
-
-[Ethnicity](https://www.ons.gov.uk/peoplepopulationandcommunity/culturalidentity/ethnicity/bulletins/ethnicgroupenglandandwales/census2021)
-
-The family photos include three ethnic categories. 
-
-* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_White.webp) **White**: White, (English, Welsh, Scottish, Northern Irish or British),  Irish, Gypsy or Irish Traveller, Roma, Other White (74.4% of population)
-* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_Black.webp) **Black**: Black, Black British, Black Welsh, Caribbean or African (4.0% of population)
-* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_Other.webp) **Other**: Asian, Asian British, Asian Welsh, Mixed, Multiple, or Other ethnic group (14.3% of population)
 
 ###### Notable limitations
 
