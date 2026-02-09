@@ -409,16 +409,47 @@ The drop-down menu enables you to change the visualised characteristics.
 * Floor type (most common)
 * Building type (most common)
 * % of homes with an EPC
+* Average Property Price (2024)
+* Property Price to Income Ratio
+* Gas Use
+* Electricity Use
+* Energy bills vs Income
 
-Note that this data summarises the homes with an EPC rather than every home in the neighbourhood and that EPCs can be outdated. The percentage of homes with an EPC layer helps to identify neighbourhoods where EPC data may be unrepresentative.  
+
+Note that some of these layers summarises the homes with an EPC rather than every home in the neighbourhood and that EPCs can be outdated. The percentage of homes with an EPC layer helps to identify neighbourhoods where EPC data may be unrepresentative.  
+
+##### Property Price Data
+
+House price data comes from the Land Registry of England and Wales, so is not available for Scotland. It includes domestic and non-domestic properties. The prices in 2024 are estimated by taking the sale price of each property and extrapolating forward to 2024 based on local property price trends. For example if a terraced house sold for £100,000 in 2014 and since then the average price of terraced houses in the same Local Authority had increased by 50% the property would now be estimated to be worth £150,000. This is a simple model of property prices that does not account for small local variations or changes in the property, so should not be used in personal financial decision making. However it is sufficient to show the spatial variation in property prices. This method also excludes all properties that have not been sold since 1995 when the Land Resitry dataset begins.
+
+The Property Price to Income Ratio map gives an indication of affordability as households where prices are much higher than incomes may struggle to afford rent or mortgage costs. However this can be mitigated if households own their homes outright. Not also that this map does not take account of the differing types of housing in different areas. For example some areas of London have fairly low ratios, but these areas may be mostly small flats. While another area in the North of England may have large houses for a similar property price to income ratio.
+
+High property prices can reflect area with a significant number of non-domestic properties, this can skew price to income ratios. Unfortuantly the Land Registry data does not clearly distinguish between domestic and non-domestic properties.
+
+##### Energy bills vs Income
+
+![Energy bills vs Income](/images/manual/energy_income.webp)
+
+The Energy bills vs Income map is a bivariate map, which uses colour to show two variables at the same time. In this case the relationship between household income and household energy bills. The legend show how the colours match pairs of values.
+
+* Purple - High income (top 20%) and high bills (top 20%) 
+* Green - High income (top 20%)  and low bills (bottom 20%) 
+* Pink - Low income (bottom 20%)  and high bills (top 20%)
+* Orange - Low income (bottom 20%) and low bills (bottom 20%)
+* White - Average income (middle 20%) and average bills (middle 20%)
+
+Between the corner extremes are colour gradients, which represent each 20% band. 
+
+The map highlight issues of affordability, for example people in areas of low income and high bills (Pink) are at risk of fuel poverty. However it also reflect types of housing, for example small flats typically have lower bills as they need less heating than larger houses.
+
 
 ##### Data Sources
 
-[England and Wales](https://epc.opendatacommunities.org/)
+[EPCs England and Wales](https://epc.opendatacommunities.org/)
 
-[Scotland](https://www.scottishepcregister.org.uk/)
+[EPCs Scotland](https://www.scottishepcregister.org.uk/)
 
-
+[Land Registry Price Paid Data](https://www.gov.uk/guidance/about-the-price-paid-data)
 <!-- /#retrofit-zones -->
 
 <!-- #retrofit-postcodes -->
@@ -457,7 +488,7 @@ The map has gaps where no data is available. This can be because all the buildin
 <!-- #retrofit-epc-dom -->
 #### Domestic Properties
 
-The Domestic EPC layer shows homes with domestic Energy Performance Certificates. The map is based on a national extract from June 2024. Only the most recent one is shown when a building has more than one EPC.
+The domestic properties layer combines data about Energy Performance Certificates (England, Scotland, and Wales) with Land Registry price data (England and Wales only). The map is based on a national extract from September 2025. If a property has multiple EPCs or sales records only the most recent one is shown.
 
 The drop-down menu enables you to change the visualised characteristics.
 
@@ -476,6 +507,9 @@ The drop-down menu enables you to change the visualised characteristics.
 * Controls Rating: Energy efficiency rating (Very Good to Very Poor)
 * Lighting Rating: Energy efficiency rating (Very Good to Very Poor)
 * Solar Thermal: Has solar thermal heating (Yes/No)
+* Solar PV: Has solar photo voltaic (Yes/No)
+* Price 2024 (Estimated): Estimated property value based historic sales data
+* Freehold / Leasehold: Freehold or Leasehold at time of last sale
 
 Clicking on any EPC will display a popup with more details.
 
@@ -494,7 +528,7 @@ Please note that the Scotland EPC register is separate and slightly different to
 <!-- #retrofit-epc-nondom -->
 #### Non-domestic Properties
 
-The Non-domestic EPC layer shows buildings with non-domestic Energy Performance Certificates. The map is based on a national extract from June 2024. Only the most recent one is shown when a building has more than one EPC.
+The domestic properties layer combines data about Energy Performance Certificates (England, Scotland, and Wales) with Land Registry price data (England and Wales only). The map is based on a national extract from September 2025. If a property has multiple EPCs or sales records only the most recent one is shown.
 
 The drop-down menu enables you to change the visualised characteristics.
 
@@ -502,8 +536,10 @@ The drop-down menu enables you to change the visualised characteristics.
 * Transaction: The type of transaction that caused an EPC to be issued
 * Floor Area: Total floor area (m2)
 * Last Assessed: Year that the EPC was issued
+* Price 2024 (Estimated): Estimated property value based historic sales data
+* Freehold / Leasehold: Freehold or Leasehold at time of last sale
 
-Clicking on any EPC will display a popup with more details.
+Clicking on any point will display a popup with more details.
 
 Please note that the Scotland EPC register is separate and slightly different to the England and Wales register. In Carbon & Place we have harmonised the datasets and this can results in slight inconstancies with the Scottish data. For example Scotland uses slightly different age bands, and these have been mapped to the closest equivalent used in England and Wales.
 
@@ -538,12 +574,31 @@ Clicking on a UPRN will show its ID number whether the property currently exists
 
 #### Neighbourhoods
 
-The neighbourhood report card summarises the domestic EPCs in each neighbourhood.  
+The neighbourhood report card summarises the domestic EPCs in each neighbourhood. 
+
+##### Energy Consumption
+
+This page provides historical data (2015 - 2024) about domestic gas and electricity consumption.
+
+For each postcode, data is provided as follows:
+
+* Mean: Average values (i.e. total divided by number of homes)
+* Median: Middle values (i.e. half of homes are above and half of homes are below)
+* Total: All homes added together
+
+There is also an estimate of the average household bill. This estimate has been made based on the local (LSOA) energy consumption data but regional data on typical unit rates and standing charges.  While this gives a rough idea of household spending on energy it does not account for households who have adopted specialist tariff and so may over estimate bills in places with a lot of electric vehicles or heat pumps.
+
+For households off the gas grid it is necessary to estimate their consumption of other heating fuels such as oil, wood, or solid fuels. Otherwise these mostly rural areas appear to have very low bills. There is no local data on this type of energy consumption, however the 2011 and 2021/22 Censuses give a measure of how many households use these fuels in each area. From this we make assumptions about typical heating demand and prices to provide a rough estimate of energy bills. 
+
+##### EPCs
+
+
+##### Prices
 
 
 #### Postcodes
 
-The report card provides historical data (2015 - 2022) about domestic gas and electricity consumption.
+The report card provides historical data (2015 - 2024) about domestic gas and electricity consumption.
 
 For each postcode, data is provided as follows:
 
