@@ -74,7 +74,7 @@ manageCharts = function (locationId) {
 			];
 
 			return Promise.all(urlsSecondary.map(capUi.fetchJSON))
-				.then(([laData, oacData]) => {
+				.then(([oacData, laData]) => {
 					laHistoricalData = laData;
 					oacHistoricalData = oacData;
 
@@ -354,47 +354,48 @@ makeChartHistorical = function(){
 		});
 	});
 	
+	//console.log(laHistoricalData);
 	component_la.forEach(comp => {
-    const values = laHistoricalData[comp[1]] || [];
-    
-    data_la.datasets.push({
-      label: comp[0],
-      data: values,
-      gradelabel: Array.isArray(values) ? new Array(values.length).fill('') : [],
-      backgroundColor: comp[2],
-      borderColor: comp[3],
-      borderWidth: 1,
-      stack: 'Stack 1'
-    });
-  });
+		const values = laHistoricalData[comp[1]] || [];
+		
+		data_la.datasets.push({
+		label: comp[0],
+		data: values,
+		gradelabel: Array.isArray(values) ? new Array(values.length).fill('') : [],
+		backgroundColor: comp[2],
+		borderColor: comp[3],
+		borderWidth: 1,
+		stack: 'Stack 1'
+		});
+	});
   
-  component_oac.forEach(comp => {
-    const values = oacHistoricalData[comp[1]] || [];
-    
-    data_oac.datasets.push({
-      label: comp[0],
-      data: values,
-      gradelabel: Array.isArray(values) ? new Array(values.length).fill('') : [],
-      backgroundColor: comp[2],
-      borderColor: comp[3],
-      borderWidth: 1,
-      stack: 'Stack 2'
-    });
-  });
+	component_oac.forEach(comp => {
+		const values = oacHistoricalData[comp[1]] || [];
+		
+		data_oac.datasets.push({
+		label: comp[0],
+		data: values,
+		gradelabel: Array.isArray(values) ? new Array(values.length).fill('') : [],
+		backgroundColor: comp[2],
+		borderColor: comp[3],
+		borderWidth: 1,
+		stack: 'Stack 2'
+		});
+	});
   
-  component_GB.forEach(comp => {
-    const values = gbHistoricalData[comp[1]] || [];
-    
-    data_gb.datasets.push({
-      label: comp[0],
-      data: values,
-      gradelabel: Array.isArray(values) ? new Array(values.length).fill('') : [],
-      backgroundColor: comp[2],
-      borderColor: comp[3],
-      borderWidth: 1,
-      stack: 'Stack 3'
-    });
-  });
+	component_GB.forEach(comp => {
+		const values = gbHistoricalData[comp[1]] || [];
+		
+		data_gb.datasets.push({
+		label: comp[0],
+		data: values,
+		gradelabel: Array.isArray(values) ? new Array(values.length).fill('') : [],
+		backgroundColor: comp[2],
+		borderColor: comp[3],
+		borderWidth: 1,
+		stack: 'Stack 3'
+		});
+	});
 
   data.labels = locationData['year'];
   
@@ -411,7 +412,7 @@ makeChartHistorical = function(){
 
   
 
-
+ //console.log(data_la);
 
   const combinedData = {
     labels: locationData['year'],
@@ -423,6 +424,7 @@ makeChartHistorical = function(){
     ]
   };
 
+  //console.log(combinedData);
 
   // Make Overview table
   // Find the index of the label '2019' in data.labels
