@@ -1669,6 +1669,33 @@ modalTab = function (evt, tabName) {
 // Click on modal tab open by default
 document.getElementById("defaultOpen").click();
 
+// Function to switch chart description tabs
+switchChartTab = function (evt, tabName) {
+  // Find the parent chart-description-tabs container
+  var tabsContainer = evt.currentTarget.closest('.chart-description-tabs');
+  
+  // Get all tab content divs within this container and hide them
+  var tabContents = tabsContainer.querySelectorAll('.chart-description-tab-content');
+  tabContents.forEach(function(content) {
+    content.classList.remove('active');
+    content.style.display = 'none';
+  });
+  
+  // Get all tab buttons within this container and remove the "active" class
+  var tabButtons = tabsContainer.querySelectorAll('.chart-tab-btn');
+  tabButtons.forEach(function(button) {
+    button.classList.remove('active');
+  });
+  
+  // Show the current tab and add "active" class to button
+  var selectedContent = document.getElementById(tabName);
+  if (selectedContent) {
+    selectedContent.classList.add('active');
+    selectedContent.style.display = 'block';
+    evt.currentTarget.classList.add('active');
+  }
+}
+
 // Function to switch Pen Portrait description
 function switchPenPortSub(SOAC11NM) {
   

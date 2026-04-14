@@ -474,7 +474,18 @@
 			    
 			    	<div class="chart-wrapper" id="overview-chartrow">
   					  <div class="chart-text">
-			   				<p class="chart-description">This chart shows the average per-person carbon footprint in this area for each year since 2010. Total emissions are broken down into categories; more information on individual categories is available in the other tabs. The black horizontal line represents the UK's target footprint per person set out in the Committee on Climate Change's <a href="https://www.theccc.org.uk/publication/sixth-carbon-budget/" target="_blank" rel="noopener">6th Carbon Budget</a>, covering 2032 to 2037. It is intended to provide an indication of how far we must go in the next ten years if we are to have any chance of reaching net-zero by 2050.</p>
+			   				<div class="chart-description-tabs">
+								<div class="chart-description-tab-buttons">
+									<button onclick="switchChartTab(event, 'descTab-overview-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+									<button onclick="switchChartTab(event, 'descTab-overview-chartrow-policy')" class="chart-tab-btn">Policy</button>
+									<button onclick="switchChartTab(event, 'descTab-overview-chartrow-methods')" class="chart-tab-btn">Methods</button>
+								</div>
+								<div id="descTab-overview-chartrow-overview" class="chart-description-tab-content active">
+									<p>This chart shows the average per-person carbon footprint in this area for each year since 2010. Total emissions are broken down into categories; more information on individual categories is available in the other tabs. The black horizontal line represents the UK's target footprint per person set out in the Committee on Climate Change's <a href="https://www.theccc.org.uk/publication/sixth-carbon-budget/" target="_blank" rel="noopener">6th Carbon Budget</a>, covering 2032 to 2037. It is intended to provide an indication of how far we must go in the next ten years if we are to have any chance of reaching net-zero by 2050.</p>
+								</div>
+								<div id="descTab-overview-chartrow-policy" class="chart-description-tab-content"></div>
+								<div id="descTab-overview-chartrow-methods" class="chart-description-tab-content"></div>
+							</div>
   						</div>
   						<div class="chart-container">
   							<canvas id="historical-chart"></canvas>
@@ -492,7 +503,18 @@
 			    <div class="chart-wrapper" id="carEmissions-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Car Emissions</h4>
-											<p class="chart-description">Carbon emissions from cars can be reduced in two main ways. First, by reducing emissions per kilometre driven through improved fuel efficiency or switching to electric vehicles. Second, by driving less. The Committee on Climate Change has said that there is no way to meet our climate targets without an overall reduction in the amount we drive. While electric cars reduce tailpipe emissions, substantial emissions occur during manufacturing, and cars still contribute to air pollution (from particulates from tyres and brakes), traffic congestion, and road injuries. It is estimated that at least 10,000 people a year are affected by air pollution in the UK. Towns and cities can become less car dependent, but this requires investment in high-quality public transport and safe walking and cycling infrastructure so that people have attractive alternatives. Cars also harm other travellers: for example, they cause traffic, slowing down buses and making pedestrians and cyclists feel unsafe, which, in turn, can push people from low-carbon modes to driving, worsening the situation. Car and van emissions are based on data from MOT tests. See the manual for more details.</p>
+						<div class="chart-description-tabs">
+							<div class="chart-description-tab-buttons">
+								<button onclick="switchChartTab(event, 'descTab-carEmissions-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+								<button onclick="switchChartTab(event, 'descTab-carEmissions-chartrow-policy')" class="chart-tab-btn">Policy</button>
+								<button onclick="switchChartTab(event, 'descTab-carEmissions-chartrow-methods')" class="chart-tab-btn">Methods</button>
+							</div>
+							<div id="descTab-carEmissions-chartrow-overview" class="chart-description-tab-content active">
+								<p>Carbon emissions from cars can be reduced in two main ways. First, by reducing emissions per kilometre driven through improved fuel efficiency or switching to electric vehicles. Second, by driving less. The Committee on Climate Change has said that there is no way to meet our climate targets without an overall reduction in the amount we drive. While electric cars reduce tailpipe emissions, substantial emissions occur during manufacturing, and cars still contribute to air pollution (from particulates from tyres and brakes), traffic congestion, and road injuries. It is estimated that at least 10,000 people a year are affected by air pollution in the UK. Towns and cities can become less car dependent, but this requires investment in high-quality public transport and safe walking and cycling infrastructure so that people have attractive alternatives. Cars also harm other travellers: for example, they cause traffic, slowing down buses and making pedestrians and cyclists feel unsafe, which, in turn, can push people from low-carbon modes to driving, worsening the situation. Car and van emissions are based on data from MOT tests. See the manual for more details.</p>
+							</div>
+							<div id="descTab-carEmissions-chartrow-policy" class="chart-description-tab-content"></div>
+							<div id="descTab-carEmissions-chartrow-methods" class="chart-description-tab-content"></div>
+						</div>
 					</div>
 					<div class="chart-container">
 						<canvas id="carEmissions-chart"></canvas>
@@ -502,10 +524,18 @@
 			    <div class="chart-wrapper" id="vanEmissions-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Van Emissions</h4>
-					  <p class="chart-description">Van use is a bit more complicated than car use as they are more likely to be used for work 
-						rather than personal transport. Some LSOAs have exceptionally high numbers of vans. 
-						This is because the data we have is based on the registered keeper's address. 
-						So, a company that reports all its vans to be at a single address will bias the results for the LSOA as a whole.</p>
+					  <div class="chart-description-tabs">
+							<div class="chart-description-tab-buttons">
+								<button onclick="switchChartTab(event, 'descTab-vanEmissions-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+								<button onclick="switchChartTab(event, 'descTab-vanEmissions-chartrow-policy')" class="chart-tab-btn">Policy</button>
+								<button onclick="switchChartTab(event, 'descTab-vanEmissions-chartrow-methods')" class="chart-tab-btn">Methods</button>
+							</div>
+							<div id="descTab-vanEmissions-chartrow-overview" class="chart-description-tab-content active">
+								<p>Van use is a bit more complicated than car use as they are more likely to be used for work rather than personal transport. Some LSOAs have exceptionally high numbers of vans. This is because the data we have is based on the registered keeper's address. So, a company that reports all its vans to be at a single address will bias the results for the LSOA as a whole.</p>
+							</div>
+							<div id="descTab-vanEmissions-chartrow-policy" class="chart-description-tab-content"></div>
+							<div id="descTab-vanEmissions-chartrow-methods" class="chart-description-tab-content"></div>
+						</div>
 					</div>
 					<div class="chart-container">
 						<canvas id="vanEmissions-chart"></canvas>
@@ -515,7 +545,18 @@
 					<div class="chart-wrapper" id="bikeCompany-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Motorbikes, Company Vehicles, and other types</h4>
-											<p class="chart-description">This chart covers other personal vehicles such as motorbikes and company cars. In a few places there are extremely large numbers of company cars; this is usually due to a leasing company that officially registers all its vehicles to a single address. In those cases we suppress the company car emissions from the total carbon footprint.</p>
+											<div class="chart-description-tabs">
+												<div class="chart-description-tab-buttons">
+													<button onclick="switchChartTab(event, 'descTab-bikeCompany-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+													<button onclick="switchChartTab(event, 'descTab-bikeCompany-chartrow-policy')" class="chart-tab-btn">Policy</button>
+													<button onclick="switchChartTab(event, 'descTab-bikeCompany-chartrow-methods')" class="chart-tab-btn">Methods</button>
+												</div>
+												<div id="descTab-bikeCompany-chartrow-overview" class="chart-description-tab-content active">
+													<p>This chart covers other personal vehicles such as motorbikes and company cars. In a few places there are extremely large numbers of company cars; this is usually due to a leasing company that officially registers all its vehicles to a single address. In those cases we suppress the company car emissions from the total carbon footprint.</p>
+												</div>
+												<div id="descTab-bikeCompany-chartrow-policy" class="chart-description-tab-content"></div>
+												<div id="descTab-bikeCompany-chartrow-methods" class="chart-description-tab-content"></div>
+											</div>
 					</div>
 					<div class="chart-container">
 						<canvas id="bikeCompany-chart"></canvas>
@@ -525,7 +566,18 @@
 					<div class="chart-wrapper" id="publicTransport-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Public Transport</h4>
-											<p class="chart-description">This category includes busses, coaches, train, ferries and other types of public transport in the UK. Public transport is typically much lower carbon than cars and planes.</p>
+											<div class="chart-description-tabs">
+												<div class="chart-description-tab-buttons">
+													<button onclick="switchChartTab(event, 'descTab-publicTransport-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+													<button onclick="switchChartTab(event, 'descTab-publicTransport-chartrow-policy')" class="chart-tab-btn">Policy</button>
+													<button onclick="switchChartTab(event, 'descTab-publicTransport-chartrow-methods')" class="chart-tab-btn">Methods</button>
+												</div>
+												<div id="descTab-publicTransport-chartrow-overview" class="chart-description-tab-content active">
+													<p>This category includes busses, coaches, train, ferries and other types of public transport in the UK. Public transport is typically much lower carbon than cars and planes.</p>
+												</div>
+												<div id="descTab-publicTransport-chartrow-policy" class="chart-description-tab-content"></div>
+												<div id="descTab-publicTransport-chartrow-methods" class="chart-description-tab-content"></div>
+											</div>
 					</div>
 					<div class="chart-container">
 						<canvas id="publicTransport-chart"></canvas>
@@ -536,7 +588,18 @@
 					<div class="chart-wrapper" id="consumptionFlights-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Flights Emissions</h4>
-											<p class="chart-description">Flying is one of the highest carbon-emitting activities people undertake. Reducing flight emissions is therefore an important part of meeting climate targets. There are two main ways to reduce flight emissions: fly less by taking fewer trips to closer locations, and avoid flying entirely by using other means such as trains or boats. On average in Britain a person takes a return flight approximately once every two years, but this varies greatly between individuals. We estimate flight emissions for each LSOA based on our synthetic population and distribute emissions accordingly.</p>
+											<div class="chart-description-tabs">
+												<div class="chart-description-tab-buttons">
+													<button onclick="switchChartTab(event, 'descTab-consumptionFlights-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+													<button onclick="switchChartTab(event, 'descTab-consumptionFlights-chartrow-policy')" class="chart-tab-btn">Policy</button>
+													<button onclick="switchChartTab(event, 'descTab-consumptionFlights-chartrow-methods')" class="chart-tab-btn">Methods</button>
+												</div>
+												<div id="descTab-consumptionFlights-chartrow-overview" class="chart-description-tab-content active">
+													<p>Flying is one of the highest carbon-emitting activities people undertake. Reducing flight emissions is therefore an important part of meeting climate targets. There are two main ways to reduce flight emissions: fly less by taking fewer trips to closer locations, and avoid flying entirely by using other means such as trains or boats. On average in Britain a person takes a return flight approximately once every two years, but this varies greatly between individuals. We estimate flight emissions for each LSOA based on our synthetic population and distribute emissions accordingly.</p>
+												</div>
+												<div id="descTab-consumptionFlights-chartrow-policy" class="chart-description-tab-content"></div>
+												<div id="descTab-consumptionFlights-chartrow-methods" class="chart-description-tab-content"></div>
+											</div>
 					</div>
 					<div class="chart-container">
 						<canvas id="consumptionFlights-chart"></canvas>
@@ -547,7 +610,18 @@
 			    <div class="chart-wrapper" id="consumptionVehiclePurchase-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Vehicle Purchase</h4>
-											<p class="chart-description">Manufacturing a car is a high-carbon activity. While most households do not purchase a car every year, across a neighbourhood there are usually sufficient purchases each year to contribute a small amount to the overall carbon footprint.</p>
+											<div class="chart-description-tabs">
+												<div class="chart-description-tab-buttons">
+													<button onclick="switchChartTab(event, 'descTab-consumptionVehiclePurchase-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+													<button onclick="switchChartTab(event, 'descTab-consumptionVehiclePurchase-chartrow-policy')" class="chart-tab-btn">Policy</button>
+													<button onclick="switchChartTab(event, 'descTab-consumptionVehiclePurchase-chartrow-methods')" class="chart-tab-btn">Methods</button>
+												</div>
+												<div id="descTab-consumptionVehiclePurchase-chartrow-overview" class="chart-description-tab-content active">
+													<p>Manufacturing a car is a high-carbon activity. While most households do not purchase a car every year, across a neighbourhood there are usually sufficient purchases each year to contribute a small amount to the overall carbon footprint.</p>
+												</div>
+												<div id="descTab-consumptionVehiclePurchase-chartrow-policy" class="chart-description-tab-content"></div>
+												<div id="descTab-consumptionVehiclePurchase-chartrow-methods" class="chart-description-tab-content"></div>
+											</div>
 					</div>
 					<div class="chart-container">
 						<canvas id="consumptionVehiclePurchase-chart"></canvas>
@@ -557,7 +631,18 @@
 					<div class="chart-wrapper" id="consumptionVehicleOther-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Vehicle maintenance & other</h4>
-					  <p class="chart-description">This category covers indirect emissions from vehicles that don't come from travel, such as repair and maintenance.</p>
+					  <div class="chart-description-tabs">
+							<div class="chart-description-tab-buttons">
+								<button onclick="switchChartTab(event, 'descTab-consumptionVehicleOther-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+								<button onclick="switchChartTab(event, 'descTab-consumptionVehicleOther-chartrow-policy')" class="chart-tab-btn">Policy</button>
+								<button onclick="switchChartTab(event, 'descTab-consumptionVehicleOther-chartrow-methods')" class="chart-tab-btn">Methods</button>
+							</div>
+							<div id="descTab-consumptionVehicleOther-chartrow-overview" class="chart-description-tab-content active">
+								<p>This category covers indirect emissions from vehicles that don't come from travel, such as repair and maintenance.</p>
+							</div>
+							<div id="descTab-consumptionVehicleOther-chartrow-policy" class="chart-description-tab-content"></div>
+							<div id="descTab-consumptionVehicleOther-chartrow-methods" class="chart-description-tab-content"></div>
+						</div>
 					</div>
 					<div class="chart-container">
 						<canvas id="consumptionVehicleOther-chart"></canvas>
@@ -578,7 +663,18 @@
 			    <div class="chart-wrapper" id="consumptionTotal-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Total Consumption of Goods and Services</h4>
-					  <p class="chart-description">Many household carbon emissions stem not from direct activities like burning gas for heating or cooking, but from embodied emissions—the carbon released during the production, transport, and delivery of goods and services we consume. These emissions, often generated abroad, are attributed to the end user in consumption-based carbon footprint models like the PBCC. Because detailed local data on purchasing habits and product origins is scarce, our estimates rely on modelling: synthetic households are created using demographic data and matched with real spending profiles from the Living Costs and Food Survey. While individual matches may be imperfect, aggregating across many households yields a reasonable approximation of neighbourhood-level consumption emissions. For more information see the <a href="/manual/#placebasedcarboncalculator">manual</a>.</p>
+					  <div class="chart-description-tabs">
+							<div class="chart-description-tab-buttons">
+								<button onclick="switchChartTab(event, 'descTab-consumptionTotal-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+								<button onclick="switchChartTab(event, 'descTab-consumptionTotal-chartrow-policy')" class="chart-tab-btn">Policy</button>
+								<button onclick="switchChartTab(event, 'descTab-consumptionTotal-chartrow-methods')" class="chart-tab-btn">Methods</button>
+							</div>
+							<div id="descTab-consumptionTotal-chartrow-overview" class="chart-description-tab-content active">
+								<p>Many household carbon emissions stem not from direct activities like burning gas for heating or cooking, but from embodied emissions—the carbon released during the production, transport, and delivery of goods and services we consume. These emissions, often generated abroad, are attributed to the end user in consumption-based carbon footprint models like the PBCC. Because detailed local data on purchasing habits and product origins is scarce, our estimates rely on modelling: synthetic households are created using demographic data and matched with real spending profiles from the Living Costs and Food Survey. While individual matches may be imperfect, aggregating across many households yields a reasonable approximation of neighbourhood-level consumption emissions. For more information see the <a href="/manual/#placebasedcarboncalculator">manual</a>.</p>
+							</div>
+							<div id="descTab-consumptionTotal-chartrow-policy" class="chart-description-tab-content"></div>
+							<div id="descTab-consumptionTotal-chartrow-methods" class="chart-description-tab-content"></div>
+						</div>
 					</div>
 					<div class="chart-container">
 						<canvas id="consumptionTotal-chart"></canvas>
@@ -595,7 +691,18 @@
 			    <div class="chart-wrapper" id="consumptionFood-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Food and non-alcoholic beverages</h4>
-					  <p class="chart-description">This category includes all edible goods purchased for home consumption—fresh produce, meat, dairy, packaged foods, and drinks like juice, tea, and bottled water. The carbon footprint here is shaped by agricultural practices (e.g. livestock farming, fertiliser use), food processing, packaging, refrigeration, and transport. Imported goods and highly processed items tend to have higher emissions. For example, beef and lamb are particularly carbon-intensive due to methane emissions and land use, while locally grown vegetables typically have a lower footprint.</p>
+					  <div class="chart-description-tabs">
+							<div class="chart-description-tab-buttons">
+								<button onclick="switchChartTab(event, 'descTab-consumptionFood-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+								<button onclick="switchChartTab(event, 'descTab-consumptionFood-chartrow-policy')" class="chart-tab-btn">Policy</button>
+								<button onclick="switchChartTab(event, 'descTab-consumptionFood-chartrow-methods')" class="chart-tab-btn">Methods</button>
+							</div>
+							<div id="descTab-consumptionFood-chartrow-overview" class="chart-description-tab-content active">
+								<p>This category includes all edible goods purchased for home consumption—fresh produce, meat, dairy, packaged foods, and drinks like juice, tea, and bottled water. The carbon footprint here is shaped by agricultural practices (e.g. livestock farming, fertiliser use), food processing, packaging, refrigeration, and transport. Imported goods and highly processed items tend to have higher emissions. For example, beef and lamb are particularly carbon-intensive due to methane emissions and land use, while locally grown vegetables typically have a lower footprint.</p>
+							</div>
+							<div id="descTab-consumptionFood-chartrow-policy" class="chart-description-tab-content"></div>
+							<div id="descTab-consumptionFood-chartrow-methods" class="chart-description-tab-content"></div>
+						</div>
 					</div>
 					<div class="chart-container">
 						<canvas id="consumptionFood-chart"></canvas>
@@ -605,7 +712,18 @@
           <div class="chart-wrapper" id="consumptionAlcohol-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Alcoholic beverages, tobacco and narcotics</h4>
-					  <p class="chart-description">This covers purchases of beer, wine, spirits, cigarettes, and other recreational substances. These products often have high embodied emissions due to intensive farming (e.g. grapes, barley, tobacco), fermentation or chemical processing, and packaging. Transport and refrigeration also play a role, especially for imported alcohol. While not consumed in large quantities by all households, their production and distribution chains can be surprisingly carbon-heavy.</p>
+					  <div class="chart-description-tabs">
+					    <div class="chart-description-tab-buttons">
+					      <button onclick="switchChartTab(event, 'descTab-consumptionAlcohol-overview')" class="chart-tab-btn active">Overview</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionAlcohol-policy')" class="chart-tab-btn">Policy</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionAlcohol-methods')" class="chart-tab-btn">Methods</button>
+					    </div>
+					    <div id="descTab-consumptionAlcohol-overview" class="chart-description-tab-content active">
+					      <p>This covers purchases of beer, wine, spirits, cigarettes, and other recreational substances. These products often have high embodied emissions due to intensive farming (e.g. grapes, barley, tobacco), fermentation or chemical processing, and packaging. Transport and refrigeration also play a role, especially for imported alcohol. While not consumed in large quantities by all households, their production and distribution chains can be surprisingly carbon-heavy.</p>
+					    </div>
+					    <div id="descTab-consumptionAlcohol-policy" class="chart-description-tab-content"></div>
+					    <div id="descTab-consumptionAlcohol-methods" class="chart-description-tab-content"></div>
+					  </div>
 					</div>
 					<div class="chart-container">
 						<canvas id="consumptionAlcohol-chart"></canvas>
@@ -615,7 +733,18 @@
 					<div class="chart-wrapper" id="consumptionFurnishings-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Furnishings, household equipment and routine household maintenance</h4>
-					  <p class="chart-description">This includes furniture, appliances, cleaning products, tools, and materials for home upkeep. Emissions stem from the extraction and processing of raw materials (wood, metals, plastics), manufacturing, and long-distance shipping. Large appliances like fridges or washing machines have significant embodied carbon, and their energy use over time adds to the footprint. Even routine items like detergents or paint contribute through chemical production and packaging.</p>
+					  <div class="chart-description-tabs">
+							<div class="chart-description-tab-buttons">
+								<button onclick="switchChartTab(event, 'descTab-consumptionFurnishings-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+								<button onclick="switchChartTab(event, 'descTab-consumptionFurnishings-chartrow-policy')" class="chart-tab-btn">Policy</button>
+								<button onclick="switchChartTab(event, 'descTab-consumptionFurnishings-chartrow-methods')" class="chart-tab-btn">Methods</button>
+							</div>
+							<div id="descTab-consumptionFurnishings-chartrow-overview" class="chart-description-tab-content active">
+								<p>This includes furniture, appliances, cleaning products, tools, and materials for home upkeep. Emissions stem from the extraction and processing of raw materials (wood, metals, plastics), manufacturing, and long-distance shipping. Large appliances like fridges or washing machines have significant embodied carbon, and their energy use over time adds to the footprint. Even routine items like detergents or paint contribute through chemical production and packaging.</p>
+							</div>
+							<div id="descTab-consumptionFurnishings-chartrow-policy" class="chart-description-tab-content"></div>
+							<div id="descTab-consumptionFurnishings-chartrow-methods" class="chart-description-tab-content"></div>
+						</div>
 					</div>
 					<div class="chart-container">
 						<canvas id="consumptionFurnishings-chart"></canvas>
@@ -625,7 +754,18 @@
 					<div class="chart-wrapper" id="consumptionClothing-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Clothing and footwear</h4>
-					  <p class="chart-description">This category encompasses garments, shoes, and accessories. The fashion industry is a major source of emissions due to textile production (especially synthetics like polyester), dyeing, finishing, and global logistics. Fast fashion accelerates this impact by encouraging frequent purchases and short product lifespans. Natural fibres like cotton can also be carbon-intensive due to water use and fertilisers. Repairing, reusing, or buying second-hand clothing can significantly reduce emissions in this category.</p>
+					  <div class="chart-description-tabs">
+					    <div class="chart-description-tab-buttons">
+					      <button onclick="switchChartTab(event, 'descTab-consumptionClothing-overview')" class="chart-tab-btn active">Overview</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionClothing-policy')" class="chart-tab-btn">Policy</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionClothing-methods')" class="chart-tab-btn">Methods</button>
+					    </div>
+					    <div id="descTab-consumptionClothing-overview" class="chart-description-tab-content active">
+					      <p>This category encompasses garments, shoes, and accessories. The fashion industry is a major source of emissions due to textile production (especially synthetics like polyester), dyeing, finishing, and global logistics. Fast fashion accelerates this impact by encouraging frequent purchases and short product lifespans. Natural fibres like cotton can also be carbon-intensive due to water use and fertilisers. Repairing, reusing, or buying second-hand clothing can significantly reduce emissions in this category.</p>
+					    </div>
+					    <div id="descTab-consumptionClothing-policy" class="chart-description-tab-content"></div>
+					    <div id="descTab-consumptionClothing-methods" class="chart-description-tab-content"></div>
+					  </div>
 					</div>
 					<div class="chart-container">
 						<canvas id="consumptionClothing-chart"></canvas>
@@ -635,7 +775,18 @@
 					<div class="chart-wrapper" id="consumptionCommunication-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Information and communication</h4>
-					  <p class="chart-description">Includes mobile phones, computers, internet subscriptions, and software services. While daily usage emissions are relatively low, the production of electronics involves mining rare earth elements, complex manufacturing, and global distribution. Devices like smartphones and laptops have high embodied carbon, and frequent upgrades amplify the impact. Cloud services and data centres also contribute, though their footprint is often less visible to consumers.</p>
+					  <div class="chart-description-tabs">
+					    <div class="chart-description-tab-buttons">
+					      <button onclick="switchChartTab(event, 'descTab-consumptionCommunication-overview')" class="chart-tab-btn active">Overview</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionCommunication-policy')" class="chart-tab-btn">Policy</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionCommunication-methods')" class="chart-tab-btn">Methods</button>
+					    </div>
+					    <div id="descTab-consumptionCommunication-overview" class="chart-description-tab-content active">
+					      <p>Includes mobile phones, computers, internet subscriptions, and software services. While daily usage emissions are relatively low, the production of electronics involves mining rare earth elements, complex manufacturing, and global distribution. Devices like smartphones and laptops have high embodied carbon, and frequent upgrades amplify the impact. Cloud services and data centres also contribute, though their footprint is often less visible to consumers.</p>
+					    </div>
+					    <div id="descTab-consumptionCommunication-policy" class="chart-description-tab-content"></div>
+					    <div id="descTab-consumptionCommunication-methods" class="chart-description-tab-content"></div>
+					  </div>
 					</div>
 					<div class="chart-container">
 						<canvas id="consumptionCommunication-chart"></canvas>
@@ -645,7 +796,18 @@
 					<div class="chart-wrapper" id="consumptionRecreation-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Recreation, sport and culture</h4>
-					  <p class="chart-description">This broad category covers books, games, sports equipment, musical instruments, event tickets, and holidays. Emissions vary widely depending on the activity—digital entertainment has a modest footprint, while international travel or imported sporting goods can be substantial. Cultural consumption like cinema or concerts involves energy use in venues and transport. Leisure choices, especially travel-based ones, can be among the most carbon-intensive aspects of personal consumption.</p>
+					  <div class="chart-description-tabs">
+					    <div class="chart-description-tab-buttons">
+					      <button onclick="switchChartTab(event, 'descTab-consumptionRecreation-overview')" class="chart-tab-btn active">Overview</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionRecreation-policy')" class="chart-tab-btn">Policy</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionRecreation-methods')" class="chart-tab-btn">Methods</button>
+					    </div>
+					    <div id="descTab-consumptionRecreation-overview" class="chart-description-tab-content active">
+					      <p>This broad category covers books, games, sports equipment, musical instruments, event tickets, and holidays. Emissions vary widely depending on the activity—digital entertainment has a modest footprint, while international travel or imported sporting goods can be substantial. Cultural consumption like cinema or concerts involves energy use in venues and transport. Leisure choices, especially travel-based ones, can be among the most carbon-intensive aspects of personal consumption.</p>
+					    </div>
+					    <div id="descTab-consumptionRecreation-policy" class="chart-description-tab-content"></div>
+					    <div id="descTab-consumptionRecreation-methods" class="chart-description-tab-content"></div>
+					  </div>
 					</div>
 					<div class="chart-container">
 						<canvas id="consumptionRecreation-chart"></canvas>
@@ -655,7 +817,18 @@
 					<div class="chart-wrapper" id="consumptionRestaurants-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Restaurants and accommodation services</h4>
-					  <p class="chart-description">Includes dining out, takeaways, hotels, and short-term stays. The carbon footprint here comes from food sourcing (often meat-heavy menus), energy use in kitchens and buildings, and waste generation. Accommodation adds emissions through heating, laundry, and cleaning services. Travel to and from these venues also contributes, especially for holidays involving flights or long drives. Choosing plant-based meals or eco-certified lodgings can help reduce impact.</p>
+					  <div class="chart-description-tabs">
+					    <div class="chart-description-tab-buttons">
+					      <button onclick="switchChartTab(event, 'descTab-consumptionRestaurants-overview')" class="chart-tab-btn active">Overview</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionRestaurants-policy')" class="chart-tab-btn">Policy</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionRestaurants-methods')" class="chart-tab-btn">Methods</button>
+					    </div>
+					    <div id="descTab-consumptionRestaurants-overview" class="chart-description-tab-content active">
+					      <p>Includes dining out, takeaways, hotels, and short-term stays. The carbon footprint here comes from food sourcing (often meat-heavy menus), energy use in kitchens and buildings, and waste generation. Accommodation adds emissions through heating, laundry, and cleaning services. Travel to and from these venues also contributes, especially for holidays involving flights or long drives. Choosing plant-based meals or eco-certified lodgings can help reduce impact.</p>
+					    </div>
+					    <div id="descTab-consumptionRestaurants-policy" class="chart-description-tab-content"></div>
+					    <div id="descTab-consumptionRestaurants-methods" class="chart-description-tab-content"></div>
+					  </div>
 					</div>
 					<div class="chart-container">
 						<canvas id="consumptionRestaurants-chart"></canvas>
@@ -665,7 +838,18 @@
 					<div class="chart-wrapper" id="consumptionHealth-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Health</h4>
-					  <p class="chart-description">Covers medicines, medical devices, and healthcare services. While essential, the health sector has a notable carbon footprint due to pharmaceutical production, sterilisation processes, and energy-intensive facilities. Personal purchases like over-the-counter drugs or supplements have relatively small emissions, but hospital visits and specialised treatments involve complex supply chains and high energy use. The footprint here is less discretionary but still relevant in aggregate models.</p>
+					  <div class="chart-description-tabs">
+					    <div class="chart-description-tab-buttons">
+					      <button onclick="switchChartTab(event, 'descTab-consumptionHealth-overview')" class="chart-tab-btn active">Overview</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionHealth-policy')" class="chart-tab-btn">Policy</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionHealth-methods')" class="chart-tab-btn">Methods</button>
+					    </div>
+					    <div id="descTab-consumptionHealth-overview" class="chart-description-tab-content active">
+					      <p>Covers medicines, medical devices, and healthcare services. While essential, the health sector has a notable carbon footprint due to pharmaceutical production, sterilisation processes, and energy-intensive facilities. Personal purchases like over-the-counter drugs or supplements have relatively small emissions, but hospital visits and specialised treatments involve complex supply chains and high energy use. The footprint here is less discretionary but still relevant in aggregate models.</p>
+					    </div>
+					    <div id="descTab-consumptionHealth-policy" class="chart-description-tab-content"></div>
+					    <div id="descTab-consumptionHealth-methods" class="chart-description-tab-content"></div>
+					  </div>
 					</div>
 					<div class="chart-container">
 						<canvas id="consumptionHealth-chart"></canvas>
@@ -675,7 +859,18 @@
 					<div class="chart-wrapper" id="consumptionEducation-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Education services</h4>
-											<p class="chart-description">Includes tuition fees, school supplies, books, and digital learning tools. Emissions are generally modest but come from building energy use, printed materials, and IT infrastructure. For households with children or students, this category reflects both direct spending and the broader carbon intensity of educational institutions. However, it can be difficult to measure as most households do not pay for state education directly. Therefore we rely on household demographics (presence of children) and education-related spending as a proxy. Online learning platforms tend to have lower footprints than traditional classroom settings, though device use and server energy use still matter.</p>
+					  <div class="chart-description-tabs">
+					    <div class="chart-description-tab-buttons">
+					      <button onclick="switchChartTab(event, 'descTab-consumptionEducation-overview')" class="chart-tab-btn active">Overview</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionEducation-policy')" class="chart-tab-btn">Policy</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionEducation-methods')" class="chart-tab-btn">Methods</button>
+					    </div>
+					    <div id="descTab-consumptionEducation-overview" class="chart-description-tab-content active">
+					      <p>Includes tuition fees, school supplies, books, and digital learning tools. Emissions are generally modest but come from building energy use, printed materials, and IT infrastructure. For households with children or students, this category reflects both direct spending and the broader carbon intensity of educational institutions. However, it can be difficult to measure as most households do not pay for state education directly. Therefore we rely on household demographics (presence of children) and education-related spending as a proxy. Online learning platforms tend to have lower footprints than traditional classroom settings, though device use and server energy use still matter.</p>
+					    </div>
+					    <div id="descTab-consumptionEducation-policy" class="chart-description-tab-content"></div>
+					    <div id="descTab-consumptionEducation-methods" class="chart-description-tab-content"></div>
+					  </div>
 					</div>
 					<div class="chart-container">
 						<canvas id="consumptionEducation-chart"></canvas>
@@ -685,7 +880,18 @@
 					<div class="chart-wrapper" id="consumptionMiscellaneous-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Miscellaneous</h4>
-					  <p class="chart-description">This includes anything that does not fit into the other categories.</p>
+					  <div class="chart-description-tabs">
+					    <div class="chart-description-tab-buttons">
+					      <button onclick="switchChartTab(event, 'descTab-consumptionMiscellaneous-overview')" class="chart-tab-btn active">Overview</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionMiscellaneous-policy')" class="chart-tab-btn">Policy</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionMiscellaneous-methods')" class="chart-tab-btn">Methods</button>
+					    </div>
+					    <div id="descTab-consumptionMiscellaneous-overview" class="chart-description-tab-content active">
+					      <p>This includes anything that does not fit into the other categories.</p>
+					    </div>
+					    <div id="descTab-consumptionMiscellaneous-policy" class="chart-description-tab-content"></div>
+					    <div id="descTab-consumptionMiscellaneous-methods" class="chart-description-tab-content"></div>
+					  </div>
 					</div>
 					<div class="chart-container">
 						<canvas id="consumptionMiscellaneous-chart"></canvas>
@@ -703,7 +909,14 @@
 			    <div class="chart-wrapper" id="gasEmissions-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Gas</h4>
-					  <p class="chart-description">Most homes in Britain use natural gas for central heating and hot water. 
+					  <div class="chart-description-tabs">
+					    <div class="chart-description-tab-buttons">
+					      <button onclick="switchChartTab(event, 'descTab-gasEmissions-overview')" class="chart-tab-btn active">Overview</button>
+					      <button onclick="switchChartTab(event, 'descTab-gasEmissions-policy')" class="chart-tab-btn">Policy</button>
+					      <button onclick="switchChartTab(event, 'descTab-gasEmissions-methods')" class="chart-tab-btn">Methods</button>
+					    </div>
+					    <div id="descTab-gasEmissions-overview" class="chart-description-tab-content active">
+					      <p>Most homes in Britain use natural gas for central heating and hot water. 
 						Natural gas is a fossil fuel and releases carbon dioxide when burnt. To meet the climate targets, we need to remove all 
 						gas boilers from homes and replace them with low carbon heating solutions. We also need to reduce the amount of heating 
 						homes need by insulating and draft proofing homes. Insulating and draft proofing can be very cost-effective. 
@@ -711,6 +924,10 @@
 						cavity wall and loft insulation. However, uptake of more complex insulation such as solid wall insulation and underfloor 
 						insulation is much lower. Improvements in insulation and gas boilers' efficiency have resulted in a decline in gas consumption 
 						in most areas of Britain.</p>
+					    </div>
+					    <div id="descTab-gasEmissions-policy" class="chart-description-tab-content"></div>
+					    <div id="descTab-gasEmissions-methods" class="chart-description-tab-content"></div>
+					  </div>
 					</div>
 					<div class="chart-container">
 						<canvas id="gasEmissions-chart"></canvas>
@@ -720,7 +937,14 @@
 					<div class="chart-wrapper" id="electricityEmissions-chartrow" style="display: block;">
 					<div class="chart-text"> 
 					  <h4 class="chart-title">Electricity</h4>
-					  <p class="chart-description">Unlike gas, electricity can be a zero-carbon energy source, depending on how it is generated. 
+					  <div class="chart-description-tabs">
+					    <div class="chart-description-tab-buttons">
+					      <button onclick="switchChartTab(event, 'descTab-electricityEmissions-overview')" class="chart-tab-btn active">Overview</button>
+					      <button onclick="switchChartTab(event, 'descTab-electricityEmissions-policy')" class="chart-tab-btn">Policy</button>
+					      <button onclick="switchChartTab(event, 'descTab-electricityEmissions-methods')" class="chart-tab-btn">Methods</button>
+					    </div>
+					    <div id="descTab-electricityEmissions-overview" class="chart-description-tab-content active">
+					      <p>Unlike gas, electricity can be a zero-carbon energy source, depending on how it is generated. 
 						In the past, the UK got most of its electricity from burning coal (a very high carbon fuel). 
 						However, we now get our electricity from a mix of gas, nuclear, and renewables such as wind and solar. 
 						This has meant that the amount of carbon dioxide emitted per unit of electricity has fallen a lot in recent years. 
@@ -729,6 +953,10 @@
 						increase as people replace gas heating with electric heat pumps and switch to electric cars. 
 						This will require the construction of new power stations, such as offshore wind farms, and more homes to generate their 
 						electricity using rooftop solar panels. </p>
+					    </div>
+					    <div id="descTab-electricityEmissions-policy" class="chart-description-tab-content"></div>
+					    <div id="descTab-electricityEmissions-methods" class="chart-description-tab-content"></div>
+					  </div>
 					</div>
 					<div class="chart-container">
 						<canvas id="electricityEmissions-chart"></canvas>

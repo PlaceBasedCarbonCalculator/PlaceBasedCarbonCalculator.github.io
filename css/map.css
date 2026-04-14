@@ -1070,3 +1070,65 @@ input:checked + .slider:before {
     font-size: 0.9em !important;
   }
 }
+
+
+
+/* Chart description tabs */
+.chart-description-tabs {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	max-height: 400px;
+}
+
+.chart-description-tab-buttons {
+	display: flex;
+	border: 1px solid #ccc;
+	background-color: #f1f1f1;
+	border-bottom: none;
+}
+
+.chart-description-tab-buttons button {
+	flex: 1;
+	background-color: inherit;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	padding: 10px 12px;
+	transition: 0.3s;
+	font-family: Raleway, sans-serif;
+	font-size: 0.95em;
+	border-right: 1px solid #ccc;
+}
+
+.chart-description-tab-buttons button:last-child {
+	border-right: none;
+}
+
+.chart-description-tab-buttons button:hover {
+	background-color: #ddd;
+}
+
+.chart-description-tab-buttons button.active {
+	background-color: #ccc;
+}
+
+.chart-description-tab-content {
+	flex: 1;
+	display: none;
+	padding: 12px 16px;
+	border: 1px solid #ccc;
+	border-top: none;
+	overflow-y: auto;
+	background-color: white;
+}
+
+.chart-description-tab-content.active {
+	display: block;
+}
+
+.chart-description-tab-content p {
+	margin: 0;
+	line-height: 1.5;
+	font-size: 0.95em;
+}
