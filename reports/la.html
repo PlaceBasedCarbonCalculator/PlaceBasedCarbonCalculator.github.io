@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="Description" content="Local Authority Report">
+<title>Local Authority Report</title>
+
+
+<!-- Set Up Icon -->
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+<!-- Font Awesome -->
+<link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet">
+<link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet">
+
+<!-- PWA support -->
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/images/icons/192.png">
+<meta name="apple-mobile-web-app-status-bar" content="#ac1a40">
+<meta name="theme-color" content="#ac1a40">
+<script src="/app.js" defer></script>
+
+<!-- Styles -->
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/map.css">
+
+<!-- Charts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1" defer></script>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q11V10CDRV"></script>
+<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag () {dataLayer.push (arguments);}
+	gtag('js', new Date ());
+	gtag('config', 'G-Q11V10CDRV');
+</script>
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TXQZCMJT');</script>
+<!-- End Google Tag Manager -->
+
+</head>
+<body>
+  
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TXQZCMJT"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->  
+
+<!-- Menu -->
+<nav>
+	<a href="/"><img src="/images/ui/logo.webp" alt="Carbon & Place Logo" class="logo" /></a>
+	<a href="/about/">About</a>
+	<a href="/data/">Data</a>
+	<a href="/manual/">Manual</a>
+	<a href="/reports/">Reports</a>
+	<a href="#" id="expandtopnav" class="icon" aria-label="Expand menu"><i class="fa fa-bars"></i></a>
+</nav> 
+
+<!-- Cookies Warning  -->
+<div id="cookiewarning" class="cookiewarning">
+	<p>We use cookies to measure how you use our website so we can understand how you interact with it, which helps us to make improvements. <a href="/privacy">Find out more.</a></p>
+	<p>
+		<button class="button buttonOK" value="1"><strong>OK</strong></button>
+		<button class="button buttonNO" value=""><strong>No</strong></button>
+	</p>
+</div>
+
+<div class="content">
+<h1 id="la-title">Local Authority Report</h1>
+<p id="la-description">This page provides LSOA-level data and insights for the selected local authority, aggregated from the main Carbon & Place tools.</p>
+
+<!-- Modal -->
+		<div id="zones-chartsmodal" >
+			<div class="modal-body">
+			  
+			 <!-- Tab links -->
+        <div class="tab">
+          <button class="tablinks" onclick="modalTab(event, 'overview')" id="defaultOpen">Overview</button>
+          <button class="tablinks" onclick="modalTab(event, 'history')">Historical</button>
+          <button class="tablinks" onclick="modalTab(event, 'housing')">Housing</button>
+          <button class="tablinks" onclick="modalTab(event, 'transport')">Transport</button>
+          <button class="tablinks" onclick="modalTab(event, 'consumption')">Consumption</button>
+          <button class="tablinks" onclick="modalTab(event, 'demographics')">Demographics</button>
+          <button class="tablinks" onclick="modalTab(event, 'future')">Future Scenarios</button>
+        </div>
+			  
+			  
+			  
+			  
+			  <div id="overview" class="tabcontent">
+			    
+			    <h3>Overall Carbon Footprint</h3>
+			    
+			    <div style="min-height:400px">
+			      
+			      <div class="chart-container" style="height:400px">
+          			<canvas id="overview-chart"></canvas>
+          	</div>
+			      
+			      <table>
+          	  <tr>
+          			<td><img src="/legacy/images/grades/undefined.jpg" width = 300 height = 300 id = "data_total_emissions_grade" alt = "Grade Image"></td>
+          		</tr>
+          		<tr>
+          		  <td style="text-align: right;" id="data_total_emissions_percap"> NA kgCO<sub>2</sub>e per person</td>
+          		</tr>
+        		</table>
+        	</div>
+
+			<div>
+		  <p>This report card is customised for each Lower Super Output Area (LSOA) on the map. The title at the top gives the <abbr title="Lower Super Output Area">LSOA</abbr>'s unique ID, the Office for National Statistics area classification, and the ward name. Wards are usually larger than <abbr title="Lower Super Output Area">LSOA</abbr>s, but unlike LSOAs they have recognisable local names. This tab gives an overview of the LSOA's total carbon footprint, while other tabs provide more detail and additional context about different parts of the carbon footprint.</p>
+		  <p>The bar chart shows the total carbon footprint per person in units of kilograms of carbon dioxide equivalent. The first column shows the footprint of the selected <abbr title="Lower Super Output Area">LSOA</abbr>. The second column shows the average footprint of LSOAs in the same local authority. The third column shows the average footprint of all LSOAs in England. The fourth column shows the average footprint of LSOAs with the same area classification. The Office for National Statistics (ONS) produced the area classifications, which group areas into one of 24 categories based on social, economic, geographic, and demographic factors. Thus, this column represents the average of similar areas with similar populations.</p>
+          <p>The horizontal black line represents the UK's target footprint per person set out in the Committee on Climate             Change's <a href="https://www.theccc.org.uk/publication/sixth-carbon-budget/" target="_blank" rel="noopener">6th Carbon Budget</a>, covering 2032 to 2037. It is intended to provide an indication of how far we must go in the next ten years if we are to have any chance of reaching net-zero by 2050.
+          </p>
+		  <h3>Overview Tables</h3>
+		  </div>
+        	
+        	<div class="responsive-tables">
+        	  
+        	  <div>
+        	    <h4>Housing</h4>
+        	  
+        	  <table class="overviewtable">
+        		  <tr>
+        			<th>Name</th>
+        			<th>Grade</th>
+        			<th>kgCO<sub>2</sub>e per person</th>
+        			</tr>
+	        	  <tr>
+	        		<td>Electricity</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_elec_emissions_grade" alt = "Grade Image"></td>
+        			<td style="text-align: right;" id="data_elec_emissions_household">NA</td>
+        		  </tr>
+        		  <tr>
+        			<td>Gas</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_gas_emissions_grade" alt = "Grade Image"></td>
+        			<td style="text-align: right;" id="data_gas_emissions_household">NA</td>
+        		  </tr>
+        		  <tr>
+        			<td>Other Heating</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_other_heating_emissions_grade" alt = "Grade Image"></td>
+        			<td style="text-align: right;" id="data_other_heating_emissions">NA</td>
+        		  </tr>
+        		  <tr>
+        			<td>Other Housing</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_other_housing_emissions_grade" alt = "Grade Image"></td>
+        			<td style="text-align: right;" id="data_other_housing_emissions">NA</td>
+        		  </tr>
+        		</table>
+        	  </div>
+        	  
+        	  <div>
+        	    <h4>Transport</h4>
+        		
+        		<table class="overviewtable">
+        		  <tr>
+        			<th>Name</th>
+        			<th>Grade</th>
+        			<th>kgCO<sub>2</sub>e per person</th>
+        			</tr>
+				  <tr>
+					<td>Car Driving</td>
+					<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_car_emissions_grade" alt = "Grade Image"></td>
+					<td style="text-align: right;" id="data_car_emissions">NA</td>
+				  </tr>
+				  <tr>
+					<td>Public Transport</td>
+					<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_public_transport_emissions_grade" alt = "Grade Image"></td>
+					<td style="text-align: right;" id="data_public_transport_emissions">NA</td>
+				  </tr>
+        		  <tr>
+        			<td>Van Driving</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_van_emissions_grade" alt = "Grade Image"></td>
+        			<td style="text-align: right;" id="data_van_emissions">NA</td>
+        		  </tr>
+        		  <tr>
+        			<td>Motorbikes & Company Car Driving</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_bikes_company_emissions_grade" alt = "Grade Image"></td>
+        			<td style="text-align: right;" id="data_bikes_company_emissions">NA</td>
+        		  </tr>
+        		  <tr>
+        			<td>Flights</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_flights_emissions_grade" alt = "Grade Image"></td>
+        			<td style="text-align: right;" id="data_flights_emissions">NA</td>
+        		  </tr>
+        		  <tr>
+        			<td>Vehicle Purchase</td>
+        			<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_vehicle_purchase_emissions_grade" alt = "Grade Image"></td>
+        			<td style="text-align: right;" id="data_vehicle_purchase_emissions">NA</td>
+        		  </tr>
+			    <tr>
+				    <td>Vehicle maintenance</td>
+				    <td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_vehicle_maintaince_emissions_grade" alt = "Grade Image"></td>
+				    <td style="text-align: right;" id="data_vehicle_maintaince_emissions">NA</td>
+			    </tr>
+        		</table>
+        	  </div>
+        		
+        		<div><h4>Consumption</h4>
+        		
+        		<table class="overviewtable">
+        		  <tr>
+        			<th>Name</th>
+        			<th>Grade</th>
+        			<th>kgCO<sub>2</sub>e per person</th>
+        			</tr>
+				  <tr>
+					<td>Consumption of goods and services</td>
+					<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_consumption_emissions_grade" alt = "Grade Image"></td>
+					<td style="text-align: right;" id="data_consumption_emissions">NA</td>
+				  </tr>
+					  <tr>
+						<td>Furnishings</td>
+						<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_furnishings_emissions_grade" alt = "Grade Image"></td>
+						<td style="text-align: right;" id="data_furnishings_emissions">NA</td>
+					  </tr>
+					  <tr>
+						<td>Food and Drink</td>
+						<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_food_emissions_grade" alt = "Grade Image"></td>
+						<td style="text-align: right;" id="data_food_emissions">NA</td>
+					  </tr>
+					  <tr>
+						<td>Alcohol & Tobacco</td>
+						<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_alcohol_emissions_grade" alt = "Grade Image"></td>
+						<td style="text-align: right;" id="data_alcohol_emissions">NA</td>
+					  </tr>
+					  <tr>
+						<td>Clothing</td>
+						<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_clothing_emissions_grade" alt = "Grade Image"></td>
+						<td style="text-align: right;" id="data_clothing_emissions">NA</td>
+					  </tr>
+					  <tr>
+						<td>Communications</td>
+						<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_communications_emissions_grade" alt = "Grade Image"></td>
+						<td style="text-align: right;" id="data_communications_emissions">NA</td>
+					  </tr>
+					  <tr>
+						<td>Recreation</td>
+						<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_recreation_emissions_grade" alt = "Grade Image"></td>
+						<td style="text-align: right;" id="data_recreation_emissions">NA</td>
+					  </tr>
+					  <tr>
+						<td>Restaurants & Hotels</td>
+						<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_restaurants_emissions_grade" alt = "Grade Image"></td>
+						<td style="text-align: right;" id="data_restaurants_emissions">NA</td>
+					  </tr>
+					  <tr>
+						<td>Health</td>
+						<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_health_emissions_grade" alt = "Grade Image"></td>
+						<td style="text-align: right;" id="data_health_emissions">NA</td>
+					  </tr>
+					  <tr>
+						<td>Education</td>
+						<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_education_emissions_grade" alt = "Grade Image"></td>
+						<td style="text-align: right;" id="data_education_emissions">NA</td>
+					  </tr>
+					  <tr>
+						<td>Miscellaneous</td>
+						<td><img src="/legacy/images/grades/undefined.jpg" width = 25 height = 25 id = "data_miscellaneous_emissions_grade" alt = "Grade Image"></td>
+						<td style="text-align: right;" id="data_miscellaneous_emissions">NA</td>
+					  </tr>
+        		</table></div>
+        		
+        		
+        		
+        	</div>
+        	    	
+              	         
+          <div>
+          <h3>Understanding the grades</h3>
+          <p><img src="/images/ui/grades.webp" style="width:100%; max-width:700px" alt="How grades are calculated" loading="lazy"></p>
+		  <p>Many values have been given a grade from A+ to F- to help you understand how this <abbr title="Lower Super Output Area">LSOA</abbr> compares to others. The grades are relative to the average LSOA, so areas with an A+ to C- grade are better than average, while areas with a D+ to F- grade are worse than average. Most areas are close to the average, so these grade bands are wide, representing around 7% of LSOAs. Towards the extremes, the grade bands narrow, so only the best 1% of LSOAs receive an A+ grade. In some cases, it is not possible to calculate a grade due to missing data, so an NA value will be shown.</p>
+			    
+			    
+			  </div>
+			  
+			  </div>
+			  
+			  <div id="history" class="tabcontent">
+			    
+			    <h3>Historical Emissions</h3>
+			    
+			    	<div class="chart-wrapper" id="overview-chartrow">
+  					  <div class="chart-text">
+			   				<div class="chart-description-tabs">
+								<div class="chart-description-tab-buttons">
+									<button onclick="switchChartTab(event, 'descTab-overview-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+									<button onclick="switchChartTab(event, 'descTab-overview-chartrow-policy')" class="chart-tab-btn">Policy</button>
+									<button onclick="switchChartTab(event, 'descTab-overview-chartrow-methods')" class="chart-tab-btn">Methods</button>
+								</div>
+								<div id="descTab-overview-chartrow-overview" class="chart-description-tab-content active">
+									<p>This chart shows the average per-person carbon footprint in this area for each year since 2010. Total emissions are broken down into categories; more information on individual categories is available in the other tabs. The black horizontal line represents the UK's target footprint per person set out in the Committee on Climate Change's <a href="https://www.theccc.org.uk/publication/sixth-carbon-budget/" target="_blank" rel="noopener">6th Carbon Budget</a>, covering 2032 to 2037. It is intended to provide an indication of how far we must go in the next ten years if we are to have any chance of reaching net-zero by 2050.</p>
+								</div>
+								<div id="descTab-overview-chartrow-policy" class="chart-description-tab-content"><p>Achieving the UK's net-zero 2050 target requires rapid, coordinated emissions reductions across all sectors. The <a href="https://www.theccc.org.uk/publication/sixth-carbon-budget/" target="_blank" rel="noopener">Climate Change Committee's Sixth Carbon Budget</a> (2032-2037) provides a policy framework requiring annual reductions of approximately 2.4% across all sectors. Local authorities can enforce planning policies reducing car dependency, require buildings to exceed energy standards, and mandate renewable energy. National government should accelerate heat pump deployment, phase out fossil fuel heating, and invest in transport infrastructure. Evidence-based policy at neighbourhood level enables targeted interventions.</p></div>
+								<div id="descTab-overview-chartrow-methods" class="chart-description-tab-content"><p>Historical emissions combine multiple sources: direct energy (gas/electricity from BEIS), transport (MOT data and vehicle registration), and consumption-based (Living Costs and Food Survey matched to synthetic populations). Key limitations: data gaps 2020-2022 (COVID-19), consumption relying on demographic proxies, gaps in heating oil/LPG coverage in rural areas, and vehicle usage assumptions from registration addresses. The model uses consumption-based accounting principles improving accuracy but requiring complex modelling with uncertainties. See the <a href="/manual/#placebasedcarboncalculator" class="opentool">manual</a> for detailed methodology.</p></div>
+							</div>
+  						</div>
+  						<div class="chart-container">
+  							<canvas id="historical-chart"></canvas>
+  						</div>
+  					</div>
+			    
+			  </div>
+			  
+			  <div id="transport" class="tabcontent">
+			    
+			    <h3>Transport</h3>
+
+				<p>Find out more about this topic in the <a href="/transport/#/zones/#8/51.482/-0.151" class="opentool">Transport and Accessibility Explorer</a></p>
+			    
+			    <div class="chart-wrapper" id="carEmissions-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Car Emissions</h4>
+						<div class="chart-description-tabs">
+							<div class="chart-description-tab-buttons">
+								<button onclick="switchChartTab(event, 'descTab-carEmissions-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+								<button onclick="switchChartTab(event, 'descTab-carEmissions-chartrow-policy')" class="chart-tab-btn">Policy</button>
+								<button onclick="switchChartTab(event, 'descTab-carEmissions-chartrow-methods')" class="chart-tab-btn">Methods</button>
+							</div>
+							<div id="descTab-carEmissions-chartrow-overview" class="chart-description-tab-content active">
+								<p>Carbon emissions from cars can be reduced in two main ways. First, by reducing emissions per kilometre driven through improved fuel efficiency or switching to electric vehicles. Second, by driving less. The Committee on Climate Change has said that there is no way to meet our climate targets without an overall reduction in the amount we drive. While electric cars reduce tailpipe emissions, substantial emissions occur during manufacturing, and cars still contribute to air pollution (from particulates from tyres and brakes), traffic congestion, and road injuries. It is estimated that at least 10,000 people a year are affected by air pollution in the UK. Towns and cities can become less car dependent, but this requires investment in high-quality public transport and safe walking and cycling infrastructure so that people have attractive alternatives. Cars also harm other travellers: for example, they cause traffic, slowing down buses and making pedestrians and cyclists feel unsafe, which, in turn, can push people from low-carbon modes to driving, worsening the situation. Car and van emissions are based on data from MOT tests. See the manual for more details.</p>
+							</div>
+							<div id="descTab-carEmissions-chartrow-policy" class="chart-description-tab-content"><p>Reducing car emissions requires parallel interventions: accelerating electric vehicle uptake (purchase incentives, charging infrastructure) and reducing overall vehicle miles (land-use planning, transport investment). Councils can implement low-traffic neighbourhoods, bus rapid transit, and land-use planning improving proximity to services (15-minute neighbourhoods). National policies should strengthen fuel efficiency standards, mandate zero-emission vehicles (UK 2030 petrol car ban), and implement congestion charging. Public transport improvements, cycling infrastructure, and workplace parking policies make alternatives attractive in higher-density areas. Evidence shows high-frequency public transport significantly reduces car dependency in dense urban environments.</p></div>
+							<div id="descTab-carEmissions-chartrow-methods" class="chart-description-tab-content"><p>Car emissions derived from <a href="https://www.gov.uk/guidance/mot-history-data" target="_blank" rel="noopener">MOT test data</a>, providing actual fuel consumption and vehicle characteristics. This provides accuracy vs. manufacturer claims, reflecting real-world driving. Limitations: registration addresses may not reflect usage locations; shared vehicles not captured; recent MOT changes mean older data less comparable; model estimates distance by vehicle age/type. Traffic pattern changes (COVID-19, WFH) significantly affected figures. See the <a href="/manual/#transport" class="opentool">manual transport section</a> for methodology.</p></div>
+						</div>
+					</div>
+					<div class="chart-container">
+						<canvas id="carEmissions-chart"></canvas>
+					</div>
+					</div>
+			    
+			    <div class="chart-wrapper" id="vanEmissions-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Van Emissions</h4>
+					  <div class="chart-description-tabs">
+							<div class="chart-description-tab-buttons">
+								<button onclick="switchChartTab(event, 'descTab-vanEmissions-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+								<button onclick="switchChartTab(event, 'descTab-vanEmissions-chartrow-policy')" class="chart-tab-btn">Policy</button>
+								<button onclick="switchChartTab(event, 'descTab-vanEmissions-chartrow-methods')" class="chart-tab-btn">Methods</button>
+							</div>
+							<div id="descTab-vanEmissions-chartrow-overview" class="chart-description-tab-content active">
+								<p>Van use is a bit more complicated than car use as they are more likely to be used for work rather than personal transport. Some LSOAs have exceptionally high numbers of vans. This is because the data we have is based on the registered keeper's address. So, a company that reports all its vans to be at a single address will bias the results for the LSOA as a whole.</p>
+							</div>
+							<div id="descTab-vanEmissions-chartrow-policy" class="chart-description-tab-content"><p>Van emissions reduction requires addressing commercial fleets through fuel efficiency standards and zero-emission mandates. Policy levers: Euro emission standards for new vehicles, congestion charging (exempting zero-emission), supporting last-mile consolidation centres. Fleet incentives should consider total cost of ownership for electric vans. Urban consolidation, cycle couriers, and cargo bikes reduce emissions while improving air quality and reducing congestion. Planning policies requiring loading bays and delivery facilities in city centres reduce circulating empty vans searching for parking.</p></div>
+							<div id="descTab-vanEmissions-chartrow-methods" class="chart-description-tab-content"><p>Van emissions use MOT registration methodology as cars. Limitations more pronounced: data reflects registered address rather than operating location (creating geographic bias around distribution centres); commercial fleet composition changes rapidly; usage patterns differ between courier companies, trades, haulage. Model doesn't distinguish urban delivery from long-haul haulage, which have different profiles. Confidentiality suppression obscures data for smaller neighbourhoods. Recent e-commerce growth increased van traffic not fully captured in historical data. Regional rural van variations poorly represented.</p></div>
+						</div>
+					</div>
+					<div class="chart-container">
+						<canvas id="vanEmissions-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="bikeCompany-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Motorbikes, Company Vehicles, and other types</h4>
+											<div class="chart-description-tabs">
+												<div class="chart-description-tab-buttons">
+													<button onclick="switchChartTab(event, 'descTab-bikeCompany-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+													<button onclick="switchChartTab(event, 'descTab-bikeCompany-chartrow-policy')" class="chart-tab-btn">Policy</button>
+													<button onclick="switchChartTab(event, 'descTab-bikeCompany-chartrow-methods')" class="chart-tab-btn">Methods</button>
+												</div>
+												<div id="descTab-bikeCompany-chartrow-overview" class="chart-description-tab-content active">
+													<p>This chart covers other personal vehicles such as motorbikes and company cars. In a few places there are extremely large numbers of company cars; this is usually due to a leasing company that officially registers all its vehicles to a single address. In those cases we suppress the company car emissions from the total carbon footprint.</p>
+												</div>
+												<div id="descTab-bikeCompany-chartrow-policy" class="chart-description-tab-content"><p>Company cars represent hidden emissions as employees don't bear full costs, reducing incentive to minimize use. Policies should: tax company car benefits based on CO2 emissions (not just value), require fleets to meet zero-emission targets, enable employee choice of lower-carbon alternatives or mobility allowances. Vehicle leasing standards can enforce emission limits. Motorbike emissions reduced by supporting public transport and active travel. Policies must consider impacts on rural workers dependent on company vehicles. Transparent carbon accounting enables employers to benchmark and improve performance.</p></div>
+												<div id="descTab-bikeCompany-chartrow-methods" class="chart-description-tab-content"><p>This combines motorbikes and company vehicles from MOT data (company vehicles identified by commercial registration). Limitations: large leasing companies may register whole fleets at single addresses, creating geographic bias; data doesn't distinguish genuine company cars from vehicles registered to businesses but used privately; confidentiality suppresses data for areas with few vehicles, reducing accuracy in rural regions. Model assumes motorbikes personal use only. Geographic bias substantial—spikes may reflect fleet registrations not local employment patterns. This data less reliable than car/van data for policy.</p></div>
+											</div>
+					</div>
+					<div class="chart-container">
+						<canvas id="bikeCompany-chart"></canvas>
+					</div>
+					</div>
+
+					<div class="chart-wrapper" id="publicTransport-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Public Transport</h4>
+											<div class="chart-description-tabs">
+												<div class="chart-description-tab-buttons">
+													<button onclick="switchChartTab(event, 'descTab-publicTransport-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+													<button onclick="switchChartTab(event, 'descTab-publicTransport-chartrow-policy')" class="chart-tab-btn">Policy</button>
+													<button onclick="switchChartTab(event, 'descTab-publicTransport-chartrow-methods')" class="chart-tab-btn">Methods</button>
+												</div>
+												<div id="descTab-publicTransport-chartrow-overview" class="chart-description-tab-content active">
+													<p>This category includes busses, coaches, train, ferries and other types of public transport in the UK. Public transport is typically much lower carbon than cars and planes.</p>
+												</div>
+												<div id="descTab-publicTransport-chartrow-policy" class="chart-description-tab-content"><p>Public transport is critical for decarbonisation requiring substantial investment. Priorities: transition bus fleets to electric, electrify regional rail, ensure 'turn-up-and-go' service frequency. Integrated ticketing and journey planning reduce barriers. Planning should concentrate development near transit corridors. Fare subsidies improve equity for low-income users. Sustainable funding through regular grants essential as fares don't cover costs. Regional transport authorities coordinate effectively. Evidence shows every £1 invested generates £4-5 in economic benefits, supporting continued funding cases.</p></div>
+												<div id="descTab-publicTransport-chartrow-methods" class="chart-description-tab-content"><p>Public transport emissions account for average carbon intensity weighted by passengers and distance. Estimated from published fleet compositions and grid carbon intensity. Limitations: emission factors average hide variation between peak/off-peak electricity; load factor assumptions may not reflect actual crowding; doesn't capture embodied emissions of vehicles/infrastructure. Regional rail electrification varies significantly. London's low per-capita emissions reflect high load factors not achieved elsewhere. Model doesn't account for induced demand. See <a href="/transport/" class="opentool">Transport Explorer</a> for methodology.</p></div>
+											</div>
+					</div>
+					<div class="chart-container">
+						<canvas id="publicTransport-chart"></canvas>
+					</div>
+					</div>
+					
+					
+					<div class="chart-wrapper" id="consumptionFlights-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Flights Emissions</h4>
+											<div class="chart-description-tabs">
+												<div class="chart-description-tab-buttons">
+													<button onclick="switchChartTab(event, 'descTab-consumptionFlights-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+													<button onclick="switchChartTab(event, 'descTab-consumptionFlights-chartrow-policy')" class="chart-tab-btn">Policy</button>
+													<button onclick="switchChartTab(event, 'descTab-consumptionFlights-chartrow-methods')" class="chart-tab-btn">Methods</button>
+												</div>
+												<div id="descTab-consumptionFlights-chartrow-overview" class="chart-description-tab-content active">
+													<p>Flying is one of the highest carbon-emitting activities people undertake. Reducing flight emissions is therefore an important part of meeting climate targets. There are two main ways to reduce flight emissions: fly less by taking fewer trips to closer locations, and avoid flying entirely by using other means such as trains or boats. On average in Britain a person takes a return flight approximately once every two years, but this varies greatly between individuals. We estimate flight emissions for each LSOA based on our synthetic population and distribute emissions accordingly.</p>
+												</div>
+												<div id="descTab-consumptionFlights-chartrow-policy" class="chart-description-tab-content"><p>Flight emissions require demand-side and supply-side policy. Measures include: tax frequent flyers, restrict business aviation, invest in rail alternatives for European journeys, support remote working. Kerosene is untaxed vs. road fuel—fiscal reform could incentivize alternatives. Sustainable aviation fuels emerging but expensive. Employment patterns influence business flying; flexible remote work significantly reduces necessity. Behaviour change and modal shift essential—technological solutions alone cannot decarbonize aviation at scale. Marketing low-carbon tourism influences cultural norms.</p></div>
+												<div id="descTab-consumptionFlights-chartrow-methods" class="chart-description-tab-content"><p>Flight emissions estimated from synthetic populations based on ONS census matched to UK Civil Aviation Authority's Passenger Survey, capturing social class and flying behaviour correlations. Limitations: survey declining response rates, synthetic matching can't capture individual variation, international tourism patterns fluctuate with costs/income, COVID-19 significantly changed patterns. Model uses radiative forcing multipliers (2-3× CO2 equivalent) for altitude impacts. Stochastic variation in small samples reduces precision. Better understood as population-level indicator than neighbourhood-specific estimate.</p></div>
+											</div>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionFlights-chart"></canvas>
+					</div>
+					</div>
+			    
+			    
+			    <div class="chart-wrapper" id="consumptionVehiclePurchase-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Vehicle Purchase</h4>
+											<div class="chart-description-tabs">
+												<div class="chart-description-tab-buttons">
+													<button onclick="switchChartTab(event, 'descTab-consumptionVehiclePurchase-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+													<button onclick="switchChartTab(event, 'descTab-consumptionVehiclePurchase-chartrow-policy')" class="chart-tab-btn">Policy</button>
+													<button onclick="switchChartTab(event, 'descTab-consumptionVehiclePurchase-chartrow-methods')" class="chart-tab-btn">Methods</button>
+												</div>
+												<div id="descTab-consumptionVehiclePurchase-chartrow-overview" class="chart-description-tab-content active">
+													<p>Manufacturing a car is a high-carbon activity. While most households do not purchase a car every year, across a neighbourhood there are usually sufficient purchases each year to contribute a small amount to the overall carbon footprint.</p>
+												</div>
+												<div id="descTab-consumptionVehiclePurchase-chartrow-policy" class="chart-description-tab-content"><p>Vehicle manufacturing emissions represent embodied carbon upfront. Policy should: enforce manufacturing standards, incentivize electric vehicle purchase including lower-income households, extend vehicle lifetimes through durability standards. Circular economy supporting refurbishment and remanufacturing reduces production. Most effective is reducing overall demand through car-sharing and public transport in dense areas. Supply chains must address battery production impacts. Supporting affordable electric vehicles improves equity. Total vehicle production should decrease alongside decarbonisation.</p></div>
+												<div id="descTab-consumptionVehiclePurchase-chartrow-methods" class="chart-description-tab-content"><p>Vehicle purchase emissions estimated from registration data and manufacturing carbon factors, amortized over 15-year lifespans. Limitations: uncertainty in factors (±30% by size/chemistry), doesn't account for refurbished/used markets, battery emissions declining as grid decarbonises (not reflected in historical data), disposal/recycling excluded. Doesn't differentiate fuel types. Recent trend toward larger vehicles increases impacts unpredictably. Second-hand market data limited, affecting precision.</p></div>
+											</div>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionVehiclePurchase-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="consumptionVehicleOther-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Vehicle maintenance & other</h4>
+					  <div class="chart-description-tabs">
+							<div class="chart-description-tab-buttons">
+								<button onclick="switchChartTab(event, 'descTab-consumptionVehicleOther-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+								<button onclick="switchChartTab(event, 'descTab-consumptionVehicleOther-chartrow-policy')" class="chart-tab-btn">Policy</button>
+								<button onclick="switchChartTab(event, 'descTab-consumptionVehicleOther-chartrow-methods')" class="chart-tab-btn">Methods</button>
+							</div>
+							<div id="descTab-consumptionVehicleOther-chartrow-overview" class="chart-description-tab-content active">
+								<p>This category covers indirect emissions from vehicles that don't come from travel, such as repair and maintenance.</p>
+							</div>
+							<div id="descTab-consumptionVehicleOther-chartrow-policy" class="chart-description-tab-content"><p>Vehicle maintenance emissions include parts manufacturing. Policy can encourage longer lifespans through durability standards and right-to-repair regulations. Supporting independent repair shops and DIY repairs extends products beyond rapid replacement cycles. Parts standardization reduces manufacturing overhead. Government fleet policy should mandate durability ratings. This represents <5% of transport emissions—policy should prioritize manufacturing and operational emissions. Supporting circular economy through remanufactured parts reduces new manufacturing impacts.</p></div>
+							<div id="descTab-consumptionVehicleOther-chartrow-methods" class="chart-description-tab-content"><p>This aggregates indirect vehicle consumption from spending survey data matched to synthetic populations using average costs (£500-800 annually) and carbon factors (20-40 kg CO2e per £100 spent). Limitations: patterns vary by vehicle age; allocation reflects registered address not service location; commercial fleets have different patterns; assumes average factors without remanufactured vs. new distinction. Essentially a proxy based on ownership patterns not actual activity. Captures <3-4% of transport emissions so errors have minor overall impact.</p></div>
+						</div>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionVehicleOther-chart"></canvas>
+					</div>
+					</div>
+					
+					
+			    
+			    
+			    
+			    
+			  </div>
+			  
+			  <div id="consumption" class="tabcontent">
+			    
+			    <h3>Consumption of Goods and Services</h3>
+			    
+			    <div class="chart-wrapper" id="consumptionTotal-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Total Consumption of Goods and Services</h4>
+					  <div class="chart-description-tabs">
+							<div class="chart-description-tab-buttons">
+								<button onclick="switchChartTab(event, 'descTab-consumptionTotal-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+								<button onclick="switchChartTab(event, 'descTab-consumptionTotal-chartrow-policy')" class="chart-tab-btn">Policy</button>
+								<button onclick="switchChartTab(event, 'descTab-consumptionTotal-chartrow-methods')" class="chart-tab-btn">Methods</button>
+							</div>
+							<div id="descTab-consumptionTotal-chartrow-overview" class="chart-description-tab-content active">
+								<p>Many household carbon emissions stem not from direct activities like burning gas for heating or cooking, but from embodied emissions—the carbon released during the production, transport, and delivery of goods and services we consume. These emissions, often generated abroad, are attributed to the end user in consumption-based carbon footprint models like the PBCC. Because detailed local data on purchasing habits and product origins is scarce, our estimates rely on modelling: synthetic households are created using demographic data and matched with real spending profiles from the Living Costs and Food Survey. While individual matches may be imperfect, aggregating across many households yields a reasonable approximation of neighbourhood-level consumption emissions. For more information see the <a href="/manual/#placebasedcarboncalculator">manual</a>.</p>
+							</div>
+							<div id="descTab-consumptionTotal-chartrow-policy" class="chart-description-tab-content"><p>Consumption emissions require circular economy policies and supply-chain transformation. Priorities: extended producer responsibility (EPR) schemes ensuring manufacturers internalize environmental costs, design-for-longevity standards, and circular procurement for government. Support for repair services, product-as-service models, and second-hand markets extends lifespans. Regulation of embodied emissions in supply chains incentivizes manufacturing to shift to lower-carbon production. Pricing mechanisms like border carbon adjustments make imported goods' emissions visible. Wealthier neighbourhoods typically have higher consumption footprints; progressive policies must address equity alongside climate goals.</p></div>
+							<div id="descTab-consumptionTotal-chartrow-methods" class="chart-description-tab-content"><p>Consumption emissions use consumption-based accounting: emissions from goods consumed by residents attributed to residence, regardless of production location. Methodology relies on matching synthetic households to the <a href="https://www.ons.gov.uk/peoplepopulationandcommunity/personalandhouseholdfinances/incomeandwealth" target="_blank" rel="noopener">Living Costs and Food Survey</a> and applying input-output carbon factors. Limitations: sample size means matching not one-to-one; consumption correlated with income (poorly captured by proxies); supply chain emissions use UK tables updated every 2-3 years; and international data use global averages masking country-specific practices. Modelled estimate with ±30-40% uncertainty. COVID-19 behavioural changes not fully captured. Provides area-level trends not household estimates.</p></div>
+						</div>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionTotal-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="extratext-chartrow" style="display: block;">
+					  <h3>Detailed Consumption of Goods and Services</h3>
+			      <p>The sections below provide more detail on the types of good and services that make up the consumption footprint. Note that within individual categories consumption can fluctuate between years, due to the use of different households in the Living Costs and Food Survey. This can result in some unusually high/low years of consumption.</p>
+					</div>
+			    
+			    
+			    
+			    <div class="chart-wrapper" id="consumptionFood-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Food and non-alcoholic beverages</h4>
+					  <div class="chart-description-tabs">
+							<div class="chart-description-tab-buttons">
+								<button onclick="switchChartTab(event, 'descTab-consumptionFood-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+								<button onclick="switchChartTab(event, 'descTab-consumptionFood-chartrow-policy')" class="chart-tab-btn">Policy</button>
+								<button onclick="switchChartTab(event, 'descTab-consumptionFood-chartrow-methods')" class="chart-tab-btn">Methods</button>
+							</div>
+							<div id="descTab-consumptionFood-chartrow-overview" class="chart-description-tab-content active">
+								<p>This category includes all edible goods purchased for home consumption—fresh produce, meat, dairy, packaged foods, and drinks like juice, tea, and bottled water. The carbon footprint here is shaped by agricultural practices (e.g. livestock farming, fertiliser use), food processing, packaging, refrigeration, and transport. Imported goods and highly processed items tend to have higher emissions. For example, beef and lamb are particularly carbon-intensive due to methane emissions and land use, while locally grown vegetables typically have a lower footprint.</p>
+							</div>
+							<div id="descTab-consumptionFood-chartrow-policy" class="chart-description-tab-content"><p>Food policy focuses on reducing agricultural emissions and promoting sustainable diets. The UK's Food Strategy emphasizes improving soil health to increase carbon sequestration whilst supporting local farming systems that avoid high-transport-footprint imported goods. Public procurement policies—particularly schools' and hospitals' food sourcing—can incentivize low-carbon suppliers and plant-based proteins. Dietary guidance promoting reduction in meat consumption (particularly ruminants like beef and lamb) offers immediate household carbon reductions. Support for organic farming and agroforestry builds long-term resilience. Planning policy should protect farmland from development to maintain local production capacity. Food waste reduction through household education and product redesign is a high-impact, no-cost measure.</p></div>
+							<div id="descTab-consumptionFood-chartrow-methods" class="chart-description-tab-content"><p>Food carbon footprints derive from <a href="https://www.ons.gov.uk/peoplepopulationandcommunity/personalandhouseholdfinances/incomeandwealth/bulletins/familyspendingoncovidandbeyond/2024" target="_blank" rel="noopener">Living Costs dietary spending profiles</a> matched via post-code demographics. Carbon factors applied using UK input-output analysis calibrated against Life Cycle Assessment studies. Key limitations: production method variation (organic vs. conventional, grass-fed vs. grain-fed livestock) not captured by post-code; embodied emissions in packaging and food processing masked by aggregate food category factors; imported goods use global average factors; refrigeration and cooking emissions typically underestimated in LCA data. Transport footprint small unless air-freighted (flowers, berries out-of-season). Spending-based approach can't distinguish between meat and vegetable purchases within the food budget.</p></div>
+						</div>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionFood-chart"></canvas>
+					</div>
+					</div>
+			    
+          <div class="chart-wrapper" id="consumptionAlcohol-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Alcoholic beverages, tobacco and narcotics</h4>
+					  <div class="chart-description-tabs">
+					    <div class="chart-description-tab-buttons">
+					      <button onclick="switchChartTab(event, 'descTab-consumptionAlcohol-overview')" class="chart-tab-btn active">Overview</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionAlcohol-policy')" class="chart-tab-btn">Policy</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionAlcohol-methods')" class="chart-tab-btn">Methods</button>
+					    </div>
+					    <div id="descTab-consumptionAlcohol-overview" class="chart-description-tab-content active">
+					      <p>This covers purchases of beer, wine, spirits, cigarettes, and other recreational substances. These products often have high embodied emissions due to intensive farming (e.g. grapes, barley, tobacco), fermentation or chemical processing, and packaging. Transport and refrigeration also play a role, especially for imported alcohol. While not consumed in large quantities by all households, their production and distribution chains can be surprisingly carbon-heavy.</p>
+					    </div>
+					    <div id="descTab-consumptionAlcohol-policy" class="chart-description-tab-content"><p>Alcohol and tobacco policy operates at multiple scales. Excise duties on alcohol and tobacco reflect carbon intensity indirectly, but could be reformed to explicitly price environmental costs. Support for local production—particularly English vineyards and UK craft breweries—reduces transport emissions and builds regional economies. Tobacco reduction is both a climate and public health priority. Import regulations could incentivize producers in major exporting nations to adopt lower-carbon farming and fermentation methods. However, tobacco elimination remains health-focused; climate policies should avoid subsidizing alternative crops without clear environmental benefit. Circular economy approaches—refillable containers, glass reuse schemes—can significantly reduce packaging emissions in beverages.</p></div>
+					    <div id="descTab-consumptionAlcohol-methods" class="chart-description-tab-content"><p>Alcohol and tobacco emissions derive from spending profiles matched to <a href="https://www.ons.gov.uk/peoplepopulationandcommunity/personalandhouseholdfinances/incomeandwealth" target="_blank" rel="noopener">Living Costs dietary data</a> with input-output carbon factors. Limitations are substantial: global production methods vary dramatically (wine from New Zealand vs. France; spirits from rum to whisky; tobacco from Morocco to India); typical LCA databases treat these as single categories masking 50-100% variation. Production geography not captured by spending data; imported goods use global factors. Fermentation conditions and aged storage not well-documented in carbon factors. Glass and packaging determine 20-40% of footprint; recycling assumptions vary by region. Category combines very different products (high-emission spirits vs. low-emission beer); cannot disaggregate spending by product type. Affluent areas consume more; correlation with income stronger than consumption-based accounting typically assumes.</p></div>
+					  </div>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionAlcohol-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="consumptionFurnishings-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Furnishings, household equipment and routine household maintenance</h4>
+					  <div class="chart-description-tabs">
+							<div class="chart-description-tab-buttons">
+								<button onclick="switchChartTab(event, 'descTab-consumptionFurnishings-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+								<button onclick="switchChartTab(event, 'descTab-consumptionFurnishings-chartrow-policy')" class="chart-tab-btn">Policy</button>
+								<button onclick="switchChartTab(event, 'descTab-consumptionFurnishings-chartrow-methods')" class="chart-tab-btn">Methods</button>
+							</div>
+							<div id="descTab-consumptionFurnishings-chartrow-overview" class="chart-description-tab-content active">
+								<p>This includes furniture, appliances, cleaning products, tools, and materials for home upkeep. Emissions stem from the extraction and processing of raw materials (wood, metals, plastics), manufacturing, and long-distance shipping. Large appliances like fridges or washing machines have significant embodied carbon, and their energy use over time adds to the footprint. Even routine items like detergents or paint contribute through chemical production and packaging.</p>
+							</div>
+							<div id="descTab-consumptionFurnishings-chartrow-policy" class="chart-description-tab-content"><p>Furnishings and appliances policy should emphasize durability standards and extended producer responsibility (EPR). Right-to-repair legislation allows consumers to obtain parts and repair services at reasonable cost, extending product lifespans from 5-7 to 10-15 years and dramatically reducing embodied carbon per year of use. Energy labelling for appliances drives efficiency improvements (especially refrigeration and heating). Building regulations should require durable, non-toxic finishes and materials that permit future disassembly and recycling. Public procurement—for schools, hospitals, and offices—can prioritize sustainably sourced materials and refurbished furniture. Support for second-hand furniture markets and rental schemes (sofas, tools) reduces manufacturing demand. Chemical regulation of cleaning products and paints reduces toxic synthesis emissions.</p></div>
+							<div id="descTab-consumptionFurnishings-chartrow-methods" class="chart-description-tab-content"><p>Furnishings emissions match spending profiles to <a href="https://www.ons.gov.uk/peoplepopulationandcommunity/personalandhouseholdfinances/incomeandwealth" target="_blank" rel="noopener">Living Costs household inventory data</a> via input-output carbon factors. Key limitations: product lifespan not captured; embodied carbon divided by 10-year service life can produce 60% lower annual emissions than undiscounted factors. Material composition variation (solid wood vs. particleboard, steel vs. plastic) creates 30-100% factor uncertainty. Manufacturing location dramatically affects emissions (EU vs. China appliances can differ 2×); factors often use UK-weighted averages. Recycled content and end-of-life recovery assumptions underestimated in many LCA studies. Appliance efficiency gains not captured in static carbon factors (factors updated every 3+ years). Furniture durability and care patterns not reflected in spending-based approach. Affluent households purchase more durable, lower-carbon items but also consume more overall.</p></div>
+						</div>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionFurnishings-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="consumptionClothing-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Clothing and footwear</h4>
+					  <div class="chart-description-tabs">
+					    <div class="chart-description-tab-buttons">
+					      <button onclick="switchChartTab(event, 'descTab-consumptionClothing-overview')" class="chart-tab-btn active">Overview</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionClothing-policy')" class="chart-tab-btn">Policy</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionClothing-methods')" class="chart-tab-btn">Methods</button>
+					    </div>
+					    <div id="descTab-consumptionClothing-overview" class="chart-description-tab-content active">
+					      <p>This category encompasses garments, shoes, and accessories. The fashion industry is a major source of emissions due to textile production (especially synthetics like polyester), dyeing, finishing, and global logistics. Fast fashion accelerates this impact by encouraging frequent purchases and short product lifespans. Natural fibres like cotton can also be carbon-intensive due to water use and fertilisers. Repairing, reusing, or buying second-hand clothing can significantly reduce emissions in this category.</p>
+					    </div>
+					    <div id="descTab-consumptionClothing-policy" class="chart-description-tab-content"><p>Fashion supply chain reform requires circular economy investment and durability standards. Right-to-repair policies for clothing ensure access to replacement buttons, zippers, and fabric patches extending garment lifespans. Design standards promoting durability over trend-driven fast fashion reduce purchase frequency. Regulation of microfibre shedding—polyester releases carbon-equivalent emissions via biodegradation over decades. Tax incentives for second-hand and rental platforms (fashion libraries, clothing subscription services) shift consumption away from new production. Labelling requirements showing manufacturing location and carbon footprint help consumers choose lower-impact options. Support for UK textile manufacturing, particularly organic or regenerative cotton growing and low-impact dyeing, builds domestic supply chains. Extended producer responsibility makes manufacturers responsible for end-of-life collection and recycling, incentivizing durable design.</p></div>
+					    <div id="descTab-consumptionClothing-methods" class="chart-description-tab-content"><p>Clothing emissions match spending to <a href="https://www.ons.gov.uk/peoplepopulationandcommunity/personalandhouseholdfinances/incomeandwealth" target="_blank" rel="noopener">Living Costs apparel data</a> using input-output carbon factors. Limitations: fibre composition variation (organic vs. conventional cotton: 2-3× difference; polyester vs. wool: 1-2× difference) not captured by spending alone. Manufacturing location critical (UK vs. Bangladesh production can differ 1.5×); factors use global averages. Garment lifespan not captured; annual emissions impact depends on wear-frequency (wearing something 50× vs. 200× changes per-wear footprint by 4×). Dyeing and finishing conditions—water use, chemical toxicity, waste treatment—vary by facility but not by country income classification. Retail supply chain, warehousing, and transport to consumer largely unmeasured. Caring for clothing (washing, drying) adds operational emissions not included in this category. Second-hand purchases have minimal embodied emissions (amortized across prior owners) but registered as full-price consumption in spending data. Affluent areas consume significantly more clothing; correlation with income stronger than average consumption categories.</p></div>
+					  </div>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionClothing-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="consumptionCommunication-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Information and communication</h4>
+					  <div class="chart-description-tabs">
+					    <div class="chart-description-tab-buttons">
+					      <button onclick="switchChartTab(event, 'descTab-consumptionCommunication-overview')" class="chart-tab-btn active">Overview</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionCommunication-policy')" class="chart-tab-btn">Policy</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionCommunication-methods')" class="chart-tab-btn">Methods</button>
+					    </div>
+					    <div id="descTab-consumptionCommunication-overview" class="chart-description-tab-content active">
+					      <p>Includes mobile phones, computers, internet subscriptions, and software services. While daily usage emissions are relatively low, the production of electronics involves mining rare earth elements, complex manufacturing, and global distribution. Devices like smartphones and laptops have high embodied carbon, and frequent upgrades amplify the impact. Cloud services and data centres also contribute, though their footprint is often less visible to consumers.</p>
+					    </div>
+					    <div id="descTab-consumptionCommunication-policy" class="chart-description-tab-content"><p>Electronics policy focuses on reducing device manufacturing impact through right-to-repair legislation and extended product lifespans. Regulation should require spare parts availability for 7-10 years post-sale, allowing consumers to repair rather than replace devices. Design standards promoting modularity (replaceable batteries, upgradeable memory) extend usable lifespans. Planned obsolescence restrictions prevent manufacturers from intentionally shortening device lifespan through incompatible updates. Extended producer responsibility ensures manufacturers internalize end-of-life recycling costs, incentivizing longevity and recyclable design. Trade agreements should prevent dumping of e-waste in the Global South; local recycling capacity must be built. Support for refurbished device markets and trade-in programmes enables second-hand circulation. Transparency in device carbon footprinting helps consumers choose efficient models. Data centre policy should require renewable energy procurement and publication of facility-specific emission factors.</p></div>
+					    <div id="descTab-consumptionCommunication-methods" class="chart-description-tab-content"><p>Communication spending matched to <a href="https://www.ons.gov.uk/peoplepopulationandcommunity/personalandhouseholdfinances/incomeandwealth" target="_blank" rel="noopener">Living Costs equipment purchases</a> with input-output carbon factors. Major limitations: manufacturing location variation (Asia vs. Europe: can differ 1.5×); aggregate factors mask 50-100% variation depending on technology node (modern vs. legacy chips). Device lifespan critical but not captured; 3-year replacement cycles produce 2-3× higher annual emissions than 7-year use. Carbon factors updated every 2-3 years but electronics change rapidly (efficiency gain 20-30% per generation). Data centre emissions allocation highly uncertain (how much to assign to individual user vs. infrastructure); factors range widely. Embodied carbon of rare earth mining not uniformly documented. Operational emissions from device use (smartphone charging, laptop power) minimal (£5 electricity cost) but routine home broadband/WiFi router not tracked separately. Cloud services carbon footprinting immature; major providers differ >2× in reported intensity. Affluent areas have higher device-replacement rates; correlation with income strong. Second-hand electronics have zero manufacturing emissions but spending data counts them at retail price.</p></div>
+					  </div>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionCommunication-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="consumptionRecreation-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Recreation, sport and culture</h4>
+					  <div class="chart-description-tabs">
+					    <div class="chart-description-tab-buttons">
+					      <button onclick="switchChartTab(event, 'descTab-consumptionRecreation-overview')" class="chart-tab-btn active">Overview</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionRecreation-policy')" class="chart-tab-btn">Policy</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionRecreation-methods')" class="chart-tab-btn">Methods</button>
+					    </div>
+					    <div id="descTab-consumptionRecreation-overview" class="chart-description-tab-content active">
+					      <p>This broad category covers books, games, sports equipment, musical instruments, event tickets, and holidays. Emissions vary widely depending on the activity—digital entertainment has a modest footprint, while international travel or imported sporting goods can be substantial. Cultural consumption like cinema or concerts involves energy use in venues and transport. Leisure choices, especially travel-based ones, can be among the most carbon-intensive aspects of personal consumption.</p>
+					    </div>
+					    <div id="descTab-consumptionRecreation-policy" class="chart-description-tab-content"><p>Recreation policy emphasizes low-carbon leisure and sustainable tourism. Domestic staycations and regional attractions should be promoted over long-distance international travel; public investment in parks, local museums, and cultural venues makes car-free recreation accessible. Sports infrastructure investment in cycling, swimming, and open-air activities reduces facility embodied-carbon per user. Tax incentives for visiting national cultural institutions and public museums support low-carbon engagement. Sports equipment regulation should promote durability and repair (particularly for bicycles and water sports gear). Digital streaming licence relief and broadband universal service obligations support in-home entertainment. Tourism marketing should highlight UK heritage sites and coastal recreation over aviation-dependent destinations. Active travel infrastructure—greenways, walking routes, cycle paths—doubles as recreation whilst reducing car dependence. Support for volunteer and community-based recreation (cricket clubs, ramblers associations) creates high-engagement, zero-carbon gatherings.</p></div>
+					    <div id="descTab-consumptionRecreation-methods" class="chart-description-tab-content"><p>Recreation category matches spending to <a href="https://www.ons.gov.uk/peoplepopulationandcommunity/personalandhouseholdfinances/incomeandwealth" target="_blank" rel="noopener">Living Costs leisure data</a> using input-output factors. This category has extreme heterogeneity: reading a book (near-zero emissions) vs. international skiing holiday (5+ tonnes CO₂) within single budget item. Spending-based approach cannot disaggregate. Air travel for holidays likely constitutes 50-70% of category emissions but invisible to regional spending data—methodologically treats £100 spent on books same as £100 flight booking. Sports equipment factors vary 2-3× by material (carbon gear vs. metal/rubber hybrid). Venue infrastructure emissions (stadium, gymnasium) divided by attendance; occupancy variation masks 20-40%. Digital vs. physical goods (ebook vs. printed book: 1/20th embodied carbon) indistinguishable. Package holiday services (tour operator, venue, transport) have separate supply chains; factors use tourism aggregate approximations. Affluent areas show 2-3× higher spending; culture and leisure highly income-correlated. Hobby-grade equipment (racing bicycles, SCUBA equipment) has higher embedded materials per user than mass-market products. Seasonal variation significant (winter sports, summer holidays) but annual data masks this.</p></div>
+					  </div>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionRecreation-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="consumptionRestaurants-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Restaurants and accommodation services</h4>
+					  <div class="chart-description-tabs">
+					    <div class="chart-description-tab-buttons">
+					      <button onclick="switchChartTab(event, 'descTab-consumptionRestaurants-overview')" class="chart-tab-btn active">Overview</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionRestaurants-policy')" class="chart-tab-btn">Policy</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionRestaurants-methods')" class="chart-tab-btn">Methods</button>
+					    </div>
+					    <div id="descTab-consumptionRestaurants-overview" class="chart-description-tab-content active">
+					      <p>Includes dining out, takeaways, hotels, and short-term stays. The carbon footprint here comes from food sourcing (often meat-heavy menus), energy use in kitchens and buildings, and waste generation. Accommodation adds emissions through heating, laundry, and cleaning services. Travel to and from these venues also contributes, especially for holidays involving flights or long drives. Choosing plant-based meals or eco-certified lodgings can help reduce impact.</p>
+					    </div>
+					    <div id="descTab-consumptionRestaurants-policy" class="chart-description-tab-content"><p>Hospitality decarbonization requires sustainable food procurement and building efficiency standards. Public sector catering (schools, hospitals, armed forces, prisons) should mandate plant-based and UK-sourced meal availability, leveraging bulk purchasing power to transform supply chains. Menu labelling showing carbon footprint of dishes encourages plant-based choice; vegetarian/vegan option availability expands rapidly when normalized. Accommodation building standards should mandate heat pumps, renewable heating, and insulation; green building certification (EPC A) incentivized through planning and tax relief. Laundry operations can shift to water-efficient, low-temperature processes. Hospitality sector engagement through industry associations facilitates peer-learning on waste reduction and energy efficiency. Food waste reduction via surplus redistribution to food banks or animal feed creates social co-benefits. Tourism marketing should emphasize UK domestic staycations and local cuisine quality over international resort consumption. Public transport connectivity to attractions reduces visitor transport emissions.</p></div>
+					    <div id="descTab-consumptionRestaurants-methods" class="chart-description-tab-content"><p>Restaurants category matches spending to <a href="https://www.ons.gov.uk/peoplepopulationandcommunity/personalandhouseholdfinances/incomeandwealth" target="_blank" rel="noopener">Living Costs dining data</a> via input-output carbon factors. Key limitations: food content of meals not disaggregated—£15 vegan curry vs. £15 beef steak within single budget item treated identically despite 3× emissions difference. Venue location and transport mode (walking vs. driving) not captured. Accommodation spending includes widely heterogeneous products (budget hotel: 5 tonnes CO₂e annually; luxury resort: 50+ tonnes annually); factors use industry average obscuring 5-10× variation. Occupancy assumptions critical (hotel at 70% vs. 40% occupancy produces 40% emissions variation); annual factors don't capture seasonal swings. Building age and efficiency not known; new LEED-certified hotel vs. Victorian conversion can differ 2-3×. Meal waste at venue level not tracked; food preparation emissions vary by kitchen technology. Supply chain carbon intensity varies by ingredient sourcing (local vs. imported: 1.5-2× difference) but spending-based approach uses commodity factors. Staff catering at venues creates shared facility emissions difficult to allocate per customer. Travel to/from venues (often by car for restaurants; flights for holidays) should be in transport category but may be partially captured here as service provisioning.</p></div>
+					  </div>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionRestaurants-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="consumptionHealth-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Health</h4>
+					  <div class="chart-description-tabs">
+					    <div class="chart-description-tab-buttons">
+					      <button onclick="switchChartTab(event, 'descTab-consumptionHealth-overview')" class="chart-tab-btn active">Overview</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionHealth-policy')" class="chart-tab-btn">Policy</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionHealth-methods')" class="chart-tab-btn">Methods</button>
+					    </div>
+					    <div id="descTab-consumptionHealth-overview" class="chart-description-tab-content active">
+					      <p>Covers medicines, medical devices, and healthcare services. While essential, the health sector has a notable carbon footprint due to pharmaceutical production, sterilisation processes, and energy-intensive facilities. Personal purchases like over-the-counter drugs or supplements have relatively small emissions, but hospital visits and specialised treatments involve complex supply chains and high energy use. The footprint here is less discretionary but still relevant in aggregate models.</p>
+					    </div>
+					    <div id="descTab-consumptionHealth-policy" class="chart-description-tab-content"><p>Healthcare decarbonization requires pharmaceutical supply chain transparency and energy efficiency standards. The NHS, as a major purchaser, should set carbon procurement requirements incentivizing suppliers to reduce manufacturing emissions and switch to renewable energy. Pharmaceutical sterilization via ethylene oxide (high-emission) should transition to steam sterilization where feasible. Preventive medicine—vaccinations, health promotion, early intervention—reduces overall system emissions by preventing costly acute care and hospitalization. Telemedicine expansion reduces patient travel emissions significantly (especially for rural populations). Waste reduction in healthcare—disposal of single-use gowns, sterile packaging—requires circular design standards for medical devices. Facility electrification and heat-pump retrofits for hospital HVAC and hot water systems offer 40-60% emissions reduction. Support for generic medication manufacturing in the UK reduces global supply chain emissions and strengthens domestic capacity. Mental health services, often lower-carbon than acute care, should be resourced accordingly under carbon budgeting.</p></div>
+					    <div id="descTab-consumptionHealth-methods" class="chart-description-tab-content"><p>Health spending matched to <a href="https://www.ons.gov.uk/peoplepopulationandcommunity/personalandhouseholdfinances/incomeandwealth" target="_blank" rel="noopener">Living Costs medical purchases</a> via input-output carbon factors. Major limitations: this category includes private healthcare spending only; NHS treatment (the majority of UK healthcare) is free and tracked in state finances (not household consumption). Spending data underrepresents actual healthcare consumed per capita by 5-10×. Pharmaceutical supply chains are extremely complex and poorly documented; LCA factors vary >2× between manufacturers and geographies. Tablets use similar packaging and supply chains but cardiology medications vs. pain relief have vastly different manufacturing intensity—factors use aggregate commodity approach. Medical devices (orthopedic implants, pacemakers, diagnostic equipment) have high embodied carbon in specialized manufacturing; factors treat these same as over-the-counter medicines. Healthcare facility operational emissions (hospital heating, lighting, sterilization) not captured in consumption factors—allocated in energy categories instead, creating double-counting risk. Telehealth vs. in-person visit emissions depend on facility travel impacts (not in this category). Age-related health spending variation substantial (elderly higher consumption) not disaggregated by age in synthetic population matching.</p></div>
+					  </div>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionHealth-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="consumptionEducation-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Education services</h4>
+					  <div class="chart-description-tabs">
+					    <div class="chart-description-tab-buttons">
+					      <button onclick="switchChartTab(event, 'descTab-consumptionEducation-overview')" class="chart-tab-btn active">Overview</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionEducation-policy')" class="chart-tab-btn">Policy</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionEducation-methods')" class="chart-tab-btn">Methods</button>
+					    </div>
+					    <div id="descTab-consumptionEducation-overview" class="chart-description-tab-content active">
+					      <p>Includes tuition fees, school supplies, books, and digital learning tools. Emissions are generally modest but come from building energy use, printed materials, and IT infrastructure. For households with children or students, this category reflects both direct spending and the broader carbon intensity of educational institutions. However, it can be difficult to measure as most households do not pay for state education directly. Therefore we rely on household demographics (presence of children) and education-related spending as a proxy. Online learning platforms tend to have lower footprints than traditional classroom settings, though device use and server energy use still matter.</p>
+					    </div>
+					    <div id="descTab-consumptionEducation-policy" class="chart-description-tab-content"><p>Education sector decarbonization requires building retrofits and active travel infrastructure. School and university buildings should meet minimum EPC energy standards (B or better) through heat pump retrofit, insulation, and renewable-ready electrification. Transport to educational institutions is a major emissions source; planning policy should enforce car-free school zones, cycle routes, and safe walking infrastructure. School procurement policies should prioritize digital over printed materials (reducing paper/packaging emissions and transport weight). Curriculum integration of climate science and sustainable behaviour helps students internalize low-carbon norms. Further education catering should match hospitality sector standards (plant-based options, local sourcing). Campus sustainability standards (food sourcing, waste reduction, renewable energy procurement) set exemplars. Student accommodation efficiency standards and transition support for student travel (bus pass subsidies, cycle scheme) reduce transport emissions for this high-mobility demographic. Support for community education/lifelong learning can reduce demand for commuting to centralized institutions.</p></div>
+					    <div id="descTab-consumptionEducation-methods" class="chart-description-tab-content"><p>Education spending matches to <a href="https://www.ons.gov.uk/peoplepopulationandcommunity/personalandhouseholdfinances/incomeandwealth" target="_blank" rel="noopener">Living Costs education expenditure</a> via demographic matching (presence of children) and input-output factors. Critical methodological notes: state education (primary/secondary) is free; consumption data captures only private tuition fees, tutoring, and supplies—representing <5% of actual education footprint. Institutional footprint (buildings, infrastructure) not captured in household consumption category; allocated in energy/construction sectors instead. Further/higher education fees captured where households pay; many students supported by parents don't contribute spending data. Materials consumption (books, uniforms, school supplies) minimal compared to facility operations. Digital vs. traditional learning materials differ 10-50× (ebook vs. printed textbook; online course vs. in-person class); spending-based approach can't disaggregate. University campus operational emissions (heating, research equipment) massive but attributed to institution finances, not student spending. Transport to educational institutions should be in transport category but partial allocation possible here. Private school fees inflate consumption category relative to state-school equivalents; affluent areas show higher education spending but not higher actual consumption. Geographic variation in school type (private vs. state) and transportation mode (car vs. bus) masks heterogeneity within affluence categories.</p></div>
+					  </div>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionEducation-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="consumptionMiscellaneous-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Miscellaneous</h4>
+					  <div class="chart-description-tabs">
+					    <div class="chart-description-tab-buttons">
+					      <button onclick="switchChartTab(event, 'descTab-consumptionMiscellaneous-overview')" class="chart-tab-btn active">Overview</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionMiscellaneous-policy')" class="chart-tab-btn">Policy</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionMiscellaneous-methods')" class="chart-tab-btn">Methods</button>
+					    </div>
+					    <div id="descTab-consumptionMiscellaneous-overview" class="chart-description-tab-content active">
+					      <p>This includes anything that does not fit into the other categories.</p>
+					    </div>
+					    <div id="descTab-consumptionMiscellaneous-policy" class="chart-description-tab-content"><p>Miscellaneous spending includes financial services, personal care, insurance, and other services not categorized above. Financial sector emissions from investment and lending activities remain poorly regulated and underestimated. Policymakers should require financial institutions to align with net-zero targets through fossil fuel divestment mandates and TCFD climate-risk disclosure requirements. Insurance products should incorporate climate risk pricing to discourage high-carbon activities (aviation, multiple-property ownership). Banking systems should condition lending rates on climate performance metrics. Personal care products (cosmetics, perfumes, hygiene items) should be regulated for sustainable sourcing (palm oil restrictions, water conservation). Support for small businesses and community services (hairdressing, laundry, repairs) maintains local, low-transport alternatives to branded personal care goods. Funeral services and crematoriums should transition to carbon-neutral operations (woodland burial, electric crematoria). Charity sector support and volunteering reduce consumption-based emissions by substituting services.</p></div>
+					    <div id="descTab-consumptionMiscellaneous-methods" class="chart-description-tab-content"><p>Miscellaneous category includes financial services, personal care, insurance, and residual spending; matched to <a href="https://www.ons.gov.uk/peoplepopulationandcommunity/personalandhouseholdfinances/incomeandwealth" target="_blank" rel="noopener">Living Costs final category</a> via input-output analysis. Severe methodological limitations: financial services emissions (investment portfolios, lending, insurance underwriting) represent indirect financed emissions—allocation to retail consumer extremely contentious and poorly standardized. Inclusion here counts household banking as direct consumption emissions when economic wisdom suggests separation. Personal care products (toiletries, perfumes, cosmetics) have modest embodied carbon but spending highly variable by income. Insurance cost allocation arbitrary; unclear whether premiums should be attributed to underlying insured goods (car insurance → transport) or here. Residual category masks extreme heterogeneity; a £50 haircut vs. £200 personal trainer vs. £1,000 life insurance premium all aggregated. Services (hairdressing, laundry, repairs) have operational emissions (energy, water, transport) but typically underestimated in factor databases. Voluntary/charity spending and financial donations sometimes classified here; creates double-counting risk if donation funds also appear in other consumption categories. Affluent areas show 2-3× higher spending; strong income correlation but no good theoretical basis for relative emissions intensity. Regional variation in service availability (rural shops vs. supermarkets; availability of repair services) substantially misallocated by postal code averages.</p></div>
+					  </div>
+					</div>
+					<div class="chart-container">
+						<canvas id="consumptionMiscellaneous-chart"></canvas>
+					</div>
+					</div>
+			    
+			  </div>
+			  
+			  <div id="housing" class="tabcontent">
+			    
+			    <h3>Housing</h3>
+			    
+			    <p>Find out more about this topic in the <a href="/retrofit/#/zones/#8/51.482/-0.151" class="opentool">Retrofit Explorer</a></p>
+			    
+			    <div class="chart-wrapper" id="gasEmissions-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Gas</h4>
+					  <div class="chart-description-tabs">
+					    <div class="chart-description-tab-buttons">
+					      <button onclick="switchChartTab(event, 'descTab-gasEmissions-overview')" class="chart-tab-btn active">Overview</button>
+					      <button onclick="switchChartTab(event, 'descTab-gasEmissions-policy')" class="chart-tab-btn">Policy</button>
+					      <button onclick="switchChartTab(event, 'descTab-gasEmissions-methods')" class="chart-tab-btn">Methods</button>
+					    </div>
+					    <div id="descTab-gasEmissions-overview" class="chart-description-tab-content active">
+					      <p>Most homes in Britain use natural gas for central heating and hot water. 
+						Natural gas is a fossil fuel and releases carbon dioxide when burnt. To meet the climate targets, we need to remove all 
+						gas boilers from homes and replace them with low carbon heating solutions. We also need to reduce the amount of heating 
+						homes need by insulating and draft proofing homes. Insulating and draft proofing can be very cost-effective. 
+						It lowers energy bills and creates local jobs for installers. Many homes now have basic insulation such as 
+						cavity wall and loft insulation. However, uptake of more complex insulation such as solid wall insulation and underfloor 
+						insulation is much lower. Improvements in insulation and gas boilers' efficiency have resulted in a decline in gas consumption 
+						in most areas of Britain.</p>
+					    </div>
+					    <div id="descTab-gasEmissions-policy" class="chart-description-tab-content"><p>Gas boiler phaseout requires accelerated heat pump deployment and building insulation. Gas grid connection should no longer be assumed for new developments or extensions (Future Homes Standard requires all-electric new builds). Public funding through ECO and Boiler Upgrade Scheme subsidies should prioritize retrofits in deprived areas (fuel-poverty alleviation with decarbonization co-benefits). Heat pump costs declining rapidly; grant structures should shift from fixed amounts to income-linked support ensuring regressive cost burden doesn't delay uptake. District heating infrastructure in dense urban areas offers scale benefits; local authorities should plan heat networks from gas-grid decommissioning. Building insulation standards (walls, loft, windows) should be regulatory minimums for rental and public buildings; grant support for owner-occupiers. Gas price regulation should reflect carbon costs and match electricity price declines (currently gas cheaper than equivalent heat from electricity). Methane leakage from gas infrastructure (typically 1-3% unburned) should be regulated and transparent. Workforce development for heat pump engineers and installers essential to avoid installation bottlenecks; apprenticeship and upskilling funding critical.</p></div>
+					    <div id="descTab-gasEmissions-methods" class="chart-description-tab-content"><p>Gas emissions combine regional consumption data (BEIS/DBEIS gas meter readings by postcode) with carbon factor for natural gas (2.04 kg CO₂e per cubic metre at 2024). Limitations: postcode aggregation masks 30-50% variation based on building age, insulation standard, heating system efficiency, and occupancy patterns. New-build efficiency standards not apparent from postcode; historical consumption persists in models. Consumption data 2-3 month lag; seasonal variation extreme (summer near-zero, winter peak; annual average obscures vulnerability patterns). Carbon factor fixed (though natural gas composition varies slightly by geological source); doesn't account for methane leakage in supply chain (1-3% of delivered energy). Building energy surveys (EPC) exist but not systematically linked to gas consumption data at postcode level; model relies on consumption proxies. Efficiency of boiler systems not known (older boilers: 80-85% efficient; modern ones: 90-95%); age profile of building stock not captured. Shared heating (multi-unit buildings) creates allocation challenges. Weather-adjusted models could improve accuracy but typically use national averages masking regional climate variation. Future projections based on current consumption patterns don't account for heat pump transition rates or building retrofit rates which remain highly uncertain.</p></div>
+					  </div>
+					</div>
+					<div class="chart-container">
+						<canvas id="gasEmissions-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="electricityEmissions-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Electricity</h4>
+					  <div class="chart-description-tabs">
+					    <div class="chart-description-tab-buttons">
+					      <button onclick="switchChartTab(event, 'descTab-electricityEmissions-overview')" class="chart-tab-btn active">Overview</button>
+					      <button onclick="switchChartTab(event, 'descTab-electricityEmissions-policy')" class="chart-tab-btn">Policy</button>
+					      <button onclick="switchChartTab(event, 'descTab-electricityEmissions-methods')" class="chart-tab-btn">Methods</button>
+					    </div>
+					    <div id="descTab-electricityEmissions-overview" class="chart-description-tab-content active">
+					      <p>Unlike gas, electricity can be a zero-carbon energy source, depending on how it is generated. 
+						In the past, the UK got most of its electricity from burning coal (a very high carbon fuel). 
+						However, we now get our electricity from a mix of gas, nuclear, and renewables such as wind and solar. 
+						This has meant that the amount of carbon dioxide emitted per unit of electricity has fallen a lot in recent years. 
+						Electricity demand has also decreased due to EU legislation requiring appliances to be more energy-efficient and replacing 
+						incandescent light bulbs with more efficient CFL and LED light bulbs. In the future, we expect electricity demand to 
+						increase as people replace gas heating with electric heat pumps and switch to electric cars. 
+						This will require the construction of new power stations, such as offshore wind farms, and more homes to generate their 
+						electricity using rooftop solar panels. </p>
+					    </div>
+					    <div id="descTab-electricityEmissions-policy" class="chart-description-tab-content"><p>Grid decarbonization via renewable energy deployment is the foundation for economy-wide electrification. Policy must accelerate deployment of offshore and onshore wind, solar, and emerging technologies (tidal, geothermal) through investment targets and contract-for-difference mechanisms. Building-mounted solar should be incentivized through planning reform (permitted development rights for retrofits) and VAT reduction. Storage infrastructure (batteries, hydrogen electrolysis, heat storage) essential to manage intermittency; regulation should require grid operators to contract storage capacity. Electricity pricing should reflect decarbonization trajectory; carbon price applied to gas incentivizes electric heating economics. Nuclear power expansion provides low-carbon baseload capacity; licensing and construction timelines must accelerate. Demand-side management (smart meters, time-of-use pricing, demand-response programs) enables customers to benefit from renewable surpluses. Export of excess renewable capacity to connected European grids through interconnectors recovers infrastructure costs. Industrial electrification (cement, steel, chemicals) requires sub-zero-carbon electricity supply; heavy industry must prioritize areas with renewable surplus or hydrogen co-location.</p></div>
+					    <div id="descTab-electricityEmissions-methods" class="chart-description-tab-content"><p>Electricity emissions combine postcode-level consumption data (BEIS/DBEIS electricity meter readings) with annual GB grid carbon intensity factor (2024: ~100-120 g CO₂e/kWh, declining 5-8% annually). Limitations: grid decarbonization rapid but uneven—renewable availability varies hourly; annual average masks 2-3× variation between peak (winter evening: high gas) and off-peak (windy night: near-zero). Postcode consumption doesn't indicate demand type (heating vs. lighting); future heat pump adoption will increase electricity demand 50-100% per household but consumption models assume static baseline. Solar generation on building rooftops not netted from consumption (only recorded if exported to grid via smart meters); self-consumption underestimated. Electric vehicle charging patterns not distinguished from household loads; growing without separate metering. Business use sometimes bundled with residential; industrial/commercial disaggregation uncertain. Network losses (7-10% of generated electricity) allocated uniformly; doesn't account for transmission distance or geographic efficiency variation. Future emissions depend on grid-mix trajectory which highly uncertain (renewable deployment, nuclear timelines, demand growth all uncertain). Behavioral shifts (peak-shifting to windy/sunny periods) not captured. Embedded emissions in grid infrastructure (cables, transformers, substations) not included; lifecycle basis could add 10-15% to operational intensity.</p></div>
+					  </div>
+					</div>
+					<div class="chart-container">
+						<canvas id="electricityEmissions-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="heatingOther-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Other Heating</h4>
+											<p class="chart-description">A small proportion of homes in Britain use other forms of heating such as bottled gas, oil, wood and coal. These fuels tend to be more carbon intensive than natural gas and are often used in rural areas not connected to the gas grid. We have limited data on the use of these fuels at a local level, so estimates of emissions from these sources are uncertain.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="heatingOther-chart"></canvas>
+					</div>
+					</div>
+					
+					<div class="chart-wrapper" id="housingOther-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Housing Other</h4>
+											<p class="chart-description">This category includes items such as maintenance and upgrades to houses. For most households these purchases are infrequent but sometimes large, so when averaged over a neighbourhood they contribute a moderate amount to the overall carbon footprint.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="housingOther-chart"></canvas>
+					</div>
+					</div>
+			    
+			  </div>
+			  <div id="demographics" class="tabcontent">
+			    
+			    <h3>Demographics</h3>
+			    <h4>Community Photo</h4>
+				<div class="community_photos">
+				  <img class="family_photo" id="ff0" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff1" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff2" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff3" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff4" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff5" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff6" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff7" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff8" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff9" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff10" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff11" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff12" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff13" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff14" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff15" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff16" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff17" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff18" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff19" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff20" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff21" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff22" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff23" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff24" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff25" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff26" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff27" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff28" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff29" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff30" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff31" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff32" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff33" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff34" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff35" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff36" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff37" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff38" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff39" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff40" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff41" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff42" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff43" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff44" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff45" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff46" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  <img class="family_photo" id="ff47" src="images/ui/family_photos/unknown.png" alt="Household demographic representation" loading="lazy">
+				  
+				</div>
+			    
+				<p>The community photo gives an at-a-glance overview of the demographics of each neighbourhood based on the 2021/22 Census. Each image represents households based on household composition, socio-economic classification (NS-SEC), and ethnicity. For more details see the <a href="/manual/#communityphoto">manual</a>.</p>
+			    
+			    
+			    <div class="chart-wrapper" id="population-chartrow" style="display: block;">
+					<div class="chart-text"> 
+					  <h4 class="chart-title">Population estimates and number of dwellings</h4>
+					  <p class="chart-description">This chart shows estimates of the population, number of dwellings, and number of households for each year since 2010. The number of people living within an area is a fundamental variable for many of the calculations within the PBCC. Unfortunately, we only know this with certainty in 2011 and 2021/22 when the censuses were conducted. Between those dates we use the ONS mid-year population estimates. The stacked bar chart shows the distribution of residents' ages.</p>
+					  
+					  <p>Council Tax data provides a reasonably accurate record of the number of dwellings (red line) and can be used to track house building and demolition. Unfortunately, the ONS does not estimate the number of households each year, so we have estimated this number based on the known figures for the 2011 and 2021/22 censuses and changes in the number of adults and dwellings each year.</p>
+					  
+<p>Getting the number of households estimated accurately is important as many parts of the carbon footprint calculations are done on a per-household basis and only converted to a per-person basis at the final stage.</p>
+
+<p>This chart also contains adjustments for changes in the boundaries of LSOAs which occurred with each census, providing historical estimates of population within the 2021 boundaries.</p>
+					</div>
+					<div class="chart-container">
+						<canvas id="population-chart"></canvas>
+					</div>
+					
+					
+				</div>
+
+				<div class="chart-wrapper">
+					<h4>LSOA Characteristics</h4>
+					<table>
+						<tr>
+							<th>Name</th>
+							<th>Value</th>
+						</tr>
+						<tr>
+							<td>Local Authority Code</td>
+							<td id="data_LAD25CD">NA</td>
+						</tr>
+						<tr>
+							<td>Local Authority Name</td>
+							<td id="data_LAD25NM">NA</td>
+						</tr>
+						<tr>
+							<td>Ward Name</td>
+							<td id="data_WD25NM">NA</td>
+						</tr>
+						<tr>
+							<td>Parish Name</td>
+							<td id="data_PAR23NM">NA</td>
+						</tr>
+						<tr>
+							<td>Parlimentary Constituency</td>
+							<td id="data_PCON24NM">NA</td>
+						</tr>
+						<tr>
+							<td>LSOA Classification (2011)</td>
+							<td id="data_SOAC11NM">NA</td>
+						</tr>
+					</table>
+				</div>
+
+				<div class="chart-wrapper">
+					<h4>ONS pen portrait</h4>
+					<p>The Office for National Statistics Area Classifications 2011 group <abbr title="Lower Super Output Area">LSOAs</abbr> based on sociodemographic characteristics. Each <abbr title="Lower Super Output Area">LSOA</abbr> is grouped into a supergroup and some supergroups are further split into subgroups.</p>
+					<p><b id="data_supergroup_name">Supergroup Description</b></p>
+					<div id="penportsup"></div>
+					<p><b id="data_lsoa_class_name">Subgroup Description</b></p>
+					<div id="penportsub"></div>
+				</div>
+			    
+			    
+			  </div>
+			  
+			    <div id="future" class="tabcontent">
+					<h3>Future Scenarios: Coming Soon</h3>
+					<p>As part of the <a target="_blank" aria-label="EDRC Futures theme" href="https://www.edrc.ac.uk/research/futures/">Energy Demand Research Centre Futures theme</a> we are working on downscaling the <a target="_blank" aria-label="PLEF homepage" href="https://low-energy.creds.ac.uk/">Positive Low Energy Futures Scenarios</a> to provide each neighbourhood with a local decarbonisation pathway. This work is ongoing and will be added to the tool in the future.</p>
+			    </div>
+		</div>
+
+
+
+
+
+</div>
+
+<script type="text/javascript" src="/js/common-nonmap.js"></script>
+<script type="text/javascript" src="/js/ui-common.js"></script>
+<script type="text/javascript" src="/pbcc/ui.js"></script>
+<script type="text/javascript" src="/reports/la-report.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="Description" content="Reports index">
+	<title>Reports</title>
+
+	<link rel="stylesheet" href="/css/main.css">
+	<!-- Set Up Icon -->
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+	<!-- Font Awesome -->
+	<link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet">
+	<link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet">
+
+	<!-- PWA support -->
+	<link rel="manifest" href="/manifest.webmanifest">
+	<link rel="apple-touch-icon" href="/images/icons/192.png">
+	<meta name="apple-mobile-web-app-status-bar" content="#ac1a40">
+	<meta name="theme-color" content="#ac1a40">
+	<script src="/app.js" defer></script>
+
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q11V10CDRV"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag () {dataLayer.push (arguments);}
+		gtag('js', new Date());
+		gtag('config', 'G-Q11V10CDRV');
+	</script>
+
+	<!-- Google Tag Manager -->
+	<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+	new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+	j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+	'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+	})(window,document,'script','dataLayer','GTM-TXQZCMJT');</script>
+	<!-- End Google Tag Manager -->
+
+</head>
+<body>
+  
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TXQZCMJT"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->  
+
+<!-- Menu -->
+<nav>
+	<a href="/"><img src="/images/ui/logo.webp" alt="Carbon & Place Logo" class="logo" /></a>
+	<a href="/about/">About</a>
+	<a href="/data/">Data</a>
+	<a href="/manual/">Manual</a>
+	<a href="/reports/">Reports</a>
+	<a href="#" id="expandtopnav" class="icon" aria-label="Expand menu"><i class="fa fa-bars"></i></a>
+</nav> 
+
+<!-- Cookies Warning  -->
+<div id="cookiewarning" class="cookiewarning">
+	<p>We use cookies to measure how you use our website so we can understand how you interact with it, which helps us to make improvements. <a href="/privacy">Find out more.</a></p>
+	<p>
+		<button class="button buttonOK" value="1"><strong>OK</strong></button>
+		<button class="button buttonNO" value=""><strong>No</strong></button>
+	</p>
+</div>
+
+<div class="content">
+<h1>Reports</h1>
+<p>This page provides links to various reports from Carbon & Place.</p>
+<!-- Add more content here as needed -->
+
+<h2>Local Authorities</h2>
+
+<div class="location-selector" data-json-file="/reports/la.json" data-report-page="/reports/la.html">
+	<div class="location-input-group">
+		<input 
+			type="text" 
+			class="location-search-input"
+			placeholder="Search for a location..."
+			aria-label="Search local authorities"
+		>
+		<button class="location-nav-button button" style="display: none;">
+			View LA Report
+		</button>
+	</div>
+	<ul class="location-dropdown" style="display: none;"></ul>
+</div>
+
+<h2>Wards</h2>
+
+<div class="location-selector" data-json-file="/reports/wards.json" data-report-page="/reports/wards.html">
+	<div class="location-input-group">
+		<input 
+			type="text" 
+			class="location-search-input"
+			placeholder="Search for a ward..."
+			aria-label="Search wards"
+		>
+		<button class="location-nav-button button" style="display: none;">
+			View Ward Report
+		</button>
+	</div>
+	<ul class="location-dropdown" style="display: none;"></ul>
+</div>
+
+<h2>Parish</h2>
+
+<div class="location-selector" data-json-file="/reports/parish.json" data-report-page="/reports/parishes.html">
+	<div class="location-input-group">
+		<input 
+			type="text" 
+			class="location-search-input"
+			placeholder="Search for a parish..."
+			aria-label="Search parishes"
+		>
+		<button class="location-nav-button button" style="display: none;">
+			View Parish Report
+		</button>
+	</div>
+	<ul class="location-dropdown" style="display: none;"></ul>
+</div>
+
+<h2>Westminster Parliamentary Constituencies</h2>
+
+<div class="location-selector" data-json-file="/reports/westminster.json" data-report-page="/reports/constituencies.html">
+	<div class="location-input-group">
+		<input 
+			type="text" 
+			class="location-search-input"
+			placeholder="Search for a constituency..."
+			aria-label="Search constituencies"
+		>
+		<button class="location-nav-button button" style="display: none;">
+			View Constituency Report
+		</button>
+	</div>
+	<ul class="location-dropdown" style="display: none;"></ul>
+</div>
+
+</div>
+
+<script type="text/javascript" src="/js/common-nonmap.js"></script>
+
+<script>
+// Searchable Location Dropdown
+class LocationDropdown {
+	constructor(selectorElement) {
+		this.selectorElement = selectorElement;
+		this.locations = [];
+		this.selectedLocation = null;
+		this.jsonFile = selectorElement.dataset.jsonFile;
+		this.reportPage = selectorElement.dataset.reportPage;
+		this.searchInput = selectorElement.querySelector('.location-search-input');
+		this.dropdown = selectorElement.querySelector('.location-dropdown');
+		this.navigateButton = selectorElement.querySelector('.location-nav-button');
+		
+		this.init();
+	}
+	
+	async init() {
+		try {
+			// Load JSON file
+			const response = await fetch(this.jsonFile);
+			if (!response.ok) throw new Error(`Failed to load ${this.jsonFile}`);
+			this.locations = await response.json();
+			
+			// Set up event listeners
+			this.searchInput.addEventListener('input', () => this.filterLocations());
+			this.searchInput.addEventListener('focus', () => this.filterLocations());
+			this.navigateButton.addEventListener('click', () => this.navigate());
+			
+			// Close dropdown when clicking outside
+			document.addEventListener('click', (e) => {
+				if (!e.target.closest('.location-selector')) {
+					this.dropdown.style.display = 'none';
+				}
+			});
+		} catch (error) {
+			console.error('Error initializing location dropdown:', error);
+		}
+	}
+	
+	filterLocations() {
+		const searchTerm = this.searchInput.value.toLowerCase().trim();
+		this.dropdown.innerHTML = '';
+		
+		const filtered = this.locations.filter(loc => 
+			loc.name.toLowerCase().includes(searchTerm)
+		);
+		
+		if (filtered.length === 0) {
+			this.dropdown.innerHTML = '<li class="no-results">No locations found</li>';
+			this.dropdown.style.display = 'block';
+			return;
+		}
+		
+		filtered.forEach(location => {
+			const li = document.createElement('li');
+			li.className = 'location-item';
+			li.textContent = location.name;
+			li.addEventListener('click', () => this.selectLocation(location));
+			this.dropdown.appendChild(li);
+		});
+		
+		this.dropdown.style.display = 'block';
+	}
+	
+	selectLocation(location) {
+		this.selectedLocation = location;
+		this.searchInput.value = location.name;
+		this.dropdown.style.display = 'none';
+		this.navigateButton.style.display = 'inline-block';
+	}
+	
+	navigate() {
+		if (this.selectedLocation) {
+			// Navigate to report page with id as query parameter
+			window.location.href = `${this.reportPage}?id=${this.selectedLocation.id}`;
+		}
+	}
+}
+
+// Initialize all location selectors when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+	document.querySelectorAll('.location-selector').forEach(selector => {
+		new LocationDropdown(selector);
+	});
+});
+</script>
+</body>
+</html>
