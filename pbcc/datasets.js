@@ -1,5 +1,20 @@
 // Data definitions, i.e. layers, charts, etc.
 // For PBCC tool
+
+// Single-binary datasets used by this tool (see js/databin.js). Record the
+// current index file name for each; the matching data_*.bin is named inside
+// the index (meta.bin_file). Bump a file name when that dataset is rebuilt and
+// re-uploaded - datasets are rebuilt independently, so the dates will diverge.
+if (typeof capBin !== 'undefined') {
+	capBin.register({
+		community_pics: 'index_community_pics_2026-07-14.json.gz',
+		historical_emission: 'index_historical_emission_2026-07-13.json.gz',
+		population: 'index_population_2026-07-12.json.gz',
+		lsoa_overview: 'index_lsoa_overview_2026-07-12.json.gz',
+		oac_emissions: 'index_oac_emissions_2026-07-13.json.gz'
+	});
+}
+
 const datasets_extra = {
 	
 	// Data layers

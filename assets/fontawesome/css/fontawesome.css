@@ -26,6 +26,39 @@
     content: "\f00d";
 }
 
+/* NOTE: the bundled fa-solid-900-min font is subsetted; only add classes here
+   after confirming the glyph exists in the font (e.g. eye/link/envelope do NOT). */
+
+.fa-binoculars:before {
+    content: "\f1e5";
+}
+
+.fa-building-columns:before,
+.fa-university:before {
+    content: "\f19c";
+}
+
+.fa-flask:before {
+    content: "\f0c3";
+}
+
+.fa-share-nodes:before,
+.fa-share-alt:before {
+    content: "\f1e0";
+}
+
+.fa-copy:before {
+    content: "\f0c5";
+}
+
+.fa-inbox:before {
+    content: "\f01c";
+}
+
+.fa-compass:before {
+    content: "\f14e";
+}
+
 .fa {
     font-family: var(--fa-style-family, "Font Awesome 6 Free");
     font-weight: var(--fa-style, 900);

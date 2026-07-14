@@ -64,6 +64,17 @@ const datasets_common = {
 		
 		
 	},
+	// Name-label properties for the administrative boundary layers. Each entry
+	// creates a companion '<layerId>-labels' symbol layer whose visibility is
+	// controlled by an optional checkbox: <input class="showlabels" data-layer="...">
+	// (labels only show while the boundary layer itself is visible).
+	boundaryLabels: {
+		wards: 'WD25NM',
+		la: 'LAD25NM',
+		parish: 'PAR23NM',
+		westminster: 'PCON24NM'
+	},
+
 	// Layer styling callbacks functions, each defined below
 	layerStyling: {
 	},

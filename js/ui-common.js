@@ -44,6 +44,9 @@ const capUi = (function () {
 	let _datasets = {};		// Will be populated by constructor
 	let _map;
 	let _hashComponents = {layers: '/', map: ''};
+	let _reportModals = {};			// Registry of report (chart) modal handles by map layer id, for programmatic opening
+	let _lsoaCentroids = null;		// Lazily-loaded LSOA/Data Zone centroid lookup {code: [lng, lat]}
+	let _reportDeepLinkHandled = false;	// Ensures a ?report= deep link is only auto-opened once
 	
 	// Functions
 	return {
@@ -104,6 +107,13 @@ const capUi = (function () {
 			capUi.initPrintButtons ();
 		},
 		
+		// Accessor for the MapLibre map handle, so tool-specific code (e.g. the
+		// transport isochrones) can attach its own sources, layers and handlers
+		getMap: function ()
+		{
+			return _map;
+		},
+
 		// Welcome screen
 		welcomeScreen: function ()
 		{
@@ -113,8 +123,14 @@ const capUi = (function () {
 			
 			// Create modal
 			const welcomeModal = capUi.newModal ('welcome-modal');
-			welcomeModal.show ();
-			
+			// Do not show the welcome splash when the page is opened directly to a
+			// report (?report=...), so the report is not hidden behind the modal.
+			// Tools without popup reports never carry this parameter, so they are
+			// unaffected.
+			if (!capUi.parseReportParam ()) {
+				welcomeModal.show ();
+			}
+
 			// Set OSM and update dates in the text, if present
 			/*
 			if (document.getElementById ('osmupdatedate')) {
@@ -123,6 +139,25 @@ const capUi = (function () {
 			*/
 			if (document.getElementById ('updatedate')) {
 				document.getElementById ('updatedate').innerText = capUi.formatAsUKDate (document.lastModified);
+			}
+
+			// Offer the optional guided tour from the welcome screen, if available
+			const modalBody = document.querySelector ('#welcome-modal .modal-body');
+			if (typeof capTour !== 'undefined' && modalBody && !modalBody.querySelector ('.welcome-tour-button')) {
+				const tourButton = document.createElement ('button');
+				tourButton.type = 'button';
+				tourButton.className = 'welcome-tour-button';
+				tourButton.innerHTML = '<i class="fa fa-compass" aria-hidden="true"></i> New here? Take a quick tour';
+				tourButton.addEventListener ('click', function () {
+					welcomeModal.hide ();
+					capTour.start ();
+				});
+				const firstPara = modalBody.querySelector ('h1');
+				if (firstPara && firstPara.nextSibling) {
+					firstPara.parentNode.insertBefore (tourButton, firstPara.nextSibling);
+				} else {
+					modalBody.appendChild (tourButton);
+				}
 			}
 			
 			// Set cookie
@@ -618,6 +653,10 @@ const capUi = (function () {
 				
 				// Initialise the layer
 				if (!map.getLayer('buildings')) {
+					// Insert 3D buildings just below the road layers where that anchor
+					// exists; otherwise append on top so historic/other basemap styles
+					// without that layer do not throw
+					const buildingsBeforeId = (map.getLayer('roads 0 Guided Busway Casing') ? 'roads 0 Guided Busway Casing' : undefined);
 					map.addLayer({
 						'id': 'buildings',
 						'type': 'fill-extrusion',
@@ -639,7 +678,7 @@ const capUi = (function () {
                     ],
                 'fill-extrusion-opacity': 0.9
 						}
-					}, 'roads 0 Guided Busway Casing');  
+					}, buildingsBeforeId);
 				}
 			});
 		},
@@ -774,8 +813,9 @@ const capUi = (function () {
 				// can immediately see which layers were loaded from the URL
 				capUi.expandAccordionsForCheckedLayers();
 	
-				// Handle layer change controls, each marked with .showlayer or .updatelayer
-				document.querySelectorAll ('.showlayer, .updatelayer').forEach ((input) => {
+				// Handle layer change controls, each marked with .showlayer, .updatelayer
+				// or .showlabels (boundary name labels)
+				document.querySelectorAll ('.showlayer, .updatelayer, .showlabels').forEach ((input) => {
 					input.addEventListener ('change', function () {
 						const layerId = input.dataset.layer;
 						//console.log ('Layer change for ' + layerId);
@@ -789,7 +829,8 @@ const capUi = (function () {
 					capUi.toggleLayer(layerId);
 				});
 
-								
+				// If the page was opened with a ?report=<code> deep link, pan to and open that report (once)
+				capUi.handleReportDeepLink();
 
 			});
 		},
@@ -806,13 +847,47 @@ const capUi = (function () {
 				_datasets.layers[layerId].source.url = layer.source.url.replace ('%tileserverUrl', tileserverUrl)
 			});
 			
-			// Add layers, and their sources, initially not visible when initialised
+			// Add layers, and their sources, initially not visible when initialised.
+			// Insertion order is controlled explicitly: a layer's anchor (the layer
+			// it is inserted *below*) is taken from the optional _datasets.layerBeforeId
+			// map, falling back to the global default. This keeps data fills below the
+			// basemap's label/placename layers (the 'placeholder_name' anchor sits at
+			// the top of every basemap style, just under the labels).
+			const defaultBeforeId = (_settings.defaultLayerBeforeId || 'placeholder_name');
+			const layerBeforeIds = (_datasets.layerBeforeId || {});
 			Object.keys(_datasets.layers).forEach(layerId => {
-				const beforeId = (layerId == 'data_zones' ? 'roads 0 Guided Busway Casing' : 'placeholder_name'); // #!# Needs to be moved to definitions
+				let beforeId = (layerBeforeIds[layerId] || defaultBeforeId);
+				// Gracefully append on top if the anchor layer is absent in the active
+				// basemap style (e.g. historic OS styles), rather than throwing
+				if (beforeId && !_map.getLayer(beforeId)) { beforeId = undefined; }
 				_datasets.layers[layerId].layout = {
 					visibility: 'none'
 				};
 				_map.addLayer(_datasets.layers[layerId], beforeId);
+
+				// Add a companion name-label layer for administrative boundaries, on
+				// top of everything so the names remain readable at all zoom levels
+				const labelField = (_datasets.boundaryLabels || {})[layerId];
+				if (labelField && !_map.getLayer(layerId + '-labels')) {
+					const lineColour = (_datasets.layers[layerId].paint && _datasets.layers[layerId].paint['line-color']) || '#333333';
+					_map.addLayer({
+						'id': layerId + '-labels',
+						'type': 'symbol',
+						'source': layerId,	// Inline sources are registered under the layer id
+						'source-layer': _datasets.layers[layerId]['source-layer'],
+						'layout': {
+							'visibility': 'none',
+							'symbol-placement': 'line',
+							'text-field': ['get', labelField],
+							'text-size': 12
+						},
+						'paint': {
+							'text-color': lineColour,
+							'text-halo-color': '#ffffff',
+							'text-halo-width': 1.5
+						}
+					});
+				}
 			});
 		},
 		
@@ -832,6 +907,15 @@ const capUi = (function () {
 			const isVisible = document.querySelector ('input.showlayer[data-layer="' + layerId + '"]').checked;
 			_map.setLayoutProperty(layerId, 'visibility', (isVisible ? 'visible' : 'none'));
 			console.log ('Toggling layer ' + layerId + ' visability ' + isVisible);
+			capUi.trackEvent('layer_toggle', {'layer': layerId, 'visible': isVisible});
+
+			// Sync the companion name-label layer, if present: labels show only when
+			// the boundary itself is visible AND its names checkbox is ticked
+			if (_map.getLayer (layerId + '-labels')) {
+				const labelsCheckbox = document.querySelector ('input.showlabels[data-layer="' + layerId + '"]');
+				const labelsVisible = (isVisible && labelsCheckbox && labelsCheckbox.checked);
+				_map.setLayoutProperty (layerId + '-labels', 'visibility', (labelsVisible ? 'visible' : 'none'));
+			}
 			
 			// Update the layer state for the URL
 			capUi.layerStateUrl ();
@@ -1013,7 +1097,7 @@ const capUi = (function () {
     
 		manageLSOAOverview : function(mapLayerId, locationId)
 		{
-      
+
 			capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/lsoa_overview/v1/' + locationId + '.json')
 				.then(function (lsoaData) {
 					// Make the fetched data globally available for other scripts
@@ -1024,6 +1108,10 @@ const capUi = (function () {
 					const title = locationId + ' a "' + lsoaData[0].lsoa_class_name + '" '+ label + ' in ' + lsoaData[0].WD25NM;
 					document.querySelector(`#${mapLayerId}-chartsmodal .modal-title`).innerHTML = title;
 					//console.log(lsoaData);
+
+					// Colour the modal header by the LSOA's area classification, using
+					// the same palette as the PBCC Area Classification map layer
+					capUi.colourModalHeader (mapLayerId, lsoaData[0].lsoa_class_code);
           
           // Hide all warning boxes
           const allWarnings = document.getElementsByClassName("warning");
@@ -1049,120 +1137,380 @@ const capUi = (function () {
 		  
 		},
 		
+		// Colour a report modal's header bar by LSOA area classification. The
+		// palette matches the PBCC Area Classification map layer exactly
+		// (pbcc/datasets.js lineColours.zones.lsoa_class_code). Text colour is
+		// switched between black and white based on the background's luminance,
+		// so titles remain readable on both light and dark classification colours.
+		colourModalHeader: function (mapLayerId, classCode)
+		{
+			const palette = {
+				'1a': '#955123',
+				'2a': '#007f42', '2b': '#3ea456', '2c': '#8aca8e', '2d': '#cfe8d1',
+				'3a': '#00498d', '3b': '#2967ad', '3c': '#7b99c7', '3d': '#b9c8e1',
+				'4a': '#e3ac20', '4b': '#edca1a', '4c': '#f6e896', '4d': '#fcf5d8',
+				'5a': '#e64c2b', '5b': '#ec773c', '5c': '#faa460', '5d': '#fcc9a0', '5e': '#fee4ce',
+				'6a': '#f79ff0',
+				'7a': '#6a339a', '7b': '#9f84bd',
+				'8a': '#576362', '8b': '#a1a2a1', '8c': '#e5e4e3'
+			};
+			const header = document.querySelector ('#' + mapLayerId + '-chartsmodal .modal-header');
+			if (!header) { return; }
+			const background = palette[classCode];
+			if (!background) { return; }	// Unknown code: leave the default styling
+
+			// Relative luminance (sRGB) decides black vs white foreground
+			const r = parseInt (background.substr (1, 2), 16) / 255;
+			const g = parseInt (background.substr (3, 2), 16) / 255;
+			const b = parseInt (background.substr (5, 2), 16) / 255;
+			const lin = function (c) { return (c <= 0.03928 ? c / 12.92 : Math.pow ((c + 0.055) / 1.055, 2.4)); };
+			const luminance = (0.2126 * lin (r)) + (0.7152 * lin (g)) + (0.0722 * lin (b));
+			const foreground = (luminance > 0.4 ? '#000000' : '#ffffff');
+
+			header.style.backgroundColor = background;
+			const titleEl = header.querySelector ('.modal-title');
+			if (titleEl) { titleEl.style.color = foreground; }
+			const closeEl = header.querySelector ('.modal-close');
+			if (closeEl) { closeEl.style.color = foreground; }
+		},
+
 		// Function to handle chart creation
 		// Pulling out of common file as too different between tools
 		
 		charts: function ()
 		{
-		  
-		  // Handles to charts
-			const chartHandles = {};
-		  
-		  // Function to create a chart modal
+			// Function to create a chart modal
 			const chartsModal = function (mapLayerId, chartDefinition) {
-				
-				console.log("Making chartsModal for: " + mapLayerId)
-				
-				// Initialise the HTML structure for this modal
-				//initialiseChartsModalHtml (mapLayerId);
-				
-				// Create the modal
+
+				console.log("Making chartsModal for: " + mapLayerId);
+
+				// Create the modal (once per layer) and register the handle plus its
+				// chart definition so a report can also be opened programmatically
+				// (e.g. from a ?report= deep link), not only from a map click
 				const location_modal = capUi.newModal (mapLayerId + '-chartsmodal');
-				
-				// Initialise the HTML structure for the set of chart boxes, writing in the titles and descriptions, and setting the canvas ID
+				_reportModals[mapLayerId] = {modal: location_modal, definition: chartDefinition};
+
+				// Add a Share button beside the Print button, copying the current URL
+				// (which includes the ?report= deep link) to the clipboard
+				capUi.addShareButton (mapLayerId);
+
+				// Clear the ?report= param when this report modal is closed
+				capUi.watchReportModalClose (mapLayerId);
+
 				// Open modal on clicking the supported map layer
 				_map.on ('click', mapLayerId, function (e) {
-				  
+
 					// Ensure the source matches
 					let clickedFeatures = _map.queryRenderedFeatures(e.point);
 					clickedFeatures = clickedFeatures.filter(function (el) {
 						const layersToExclude = ['composite', 'buildings', 'placenames']; // #!# Hard-coded list - need to clarify purpose
 						return !layersToExclude.includes(el.source);
-						//return el.source != 'composite';
 					});
+					// Guard against no eligible features (e.g. click landed only on excluded layers)
+					if (!clickedFeatures.length) { return; }
 					if (clickedFeatures[0].sourceLayer != mapLayerId) {
 						console.log("click blocked: " + clickedFeatures[0].sourceLayer + " != " + mapLayerId);
 						return;
 					}
-					
-					// Assemble the JSON data file URL
-					const featureProperties = e.features[0].properties;
-					const locationId = featureProperties[chartDefinition.propertiesField];
-					
-					// Set the title (may be async)
-					if(mapLayerId === 'zones') {
-						capUi.manageLSOAOverview(mapLayerId, locationId);
+
+					// Determine the location ID from the clicked feature and open the report
+					const props = e.features[0].properties;
+					const locationId = props[chartDefinition.propertiesField];
+
+					// Some datasets are too large for a monolithic index (e.g. postcode),
+					// so the record's byte range travels in the pmtiles feature itself.
+					// Prime it here so the tool's fetchRecord() serves this ID directly
+					// without downloading an index (see js/databin.js).
+					if (chartDefinition.binDataset && typeof capBin !== 'undefined') {
+						capBin.primeRange (chartDefinition.binDataset, locationId,
+							props[chartDefinition.binOffsetField], props[chartDefinition.binLengthField]);
 					}
-										
-					// Show global spinner while charts are built
-					const spinner = document.querySelector('.spinner');
-					if (spinner) { spinner.style.display = 'block'; }
-					
-					// Call tool-specific manageCharts. If it returns a Promise, wait on it.
-					try {
-						const result = manageCharts(locationId, mapLayerId);
-						if (result && typeof result.then === 'function') {
-							result.then(() => {
-								if (spinner) { spinner.style.display = 'none'; }
-								location_modal.show();
-							}).catch(() => {
-								// On error still hide spinner and show modal so user can see message
-								if (spinner) { spinner.style.display = 'none'; }
-								location_modal.show();
-							});
-						return;
-						}
-					} catch (err) {
-						console.error('manageCharts threw error:', err);
-					}
-					
-					// If manageCharts did not return a Promise, poll for Chart.js instances inside the modal canvases.
-					const maxWaitMs = 8000; // total wait time
-					const intervalMs = 200;
-					let waited = 0;
-					const canvases = Array.from(document.querySelectorAll('#' + mapLayerId + '-chartsmodal canvas'));
-					const checkCharts = function () {
-						// If no canvases found, treat as immediate completion
-						if (canvases.length === 0) {
-							if (spinner) { spinner.style.display = 'none'; }
-							location_modal.show();
-							return;
-						}
-						// If Chart.js is available, check for an associated chart instance for any canvas
-						let ready = false;
-						if (window.Chart && typeof window.Chart.getChart === 'function') {
-							for (const c of canvases) {
-								if (window.Chart.getChart(c)) { ready = true; break; }
-							}
-						} else {
-							// Fallback: check if any canvas has non-zero width/height after rendering (heuristic)
-							for (const c of canvases) {
-								if (c.width > 0 && c.height > 0) { ready = true; break; }
-							}
-						}
-						if (ready || waited >= maxWaitMs) {
-							if (spinner) { spinner.style.display = 'none'; }
-							location_modal.show();
-							return;
-						}
-						waited += intervalMs;
-						setTimeout(checkCharts, intervalMs);
-					};
-					setTimeout(checkCharts, intervalMs);
-					
-					
+
+					capUi.openReport (mapLayerId, locationId);
 				});
-			}
-			
+			};
+
 			// Create each set of charts
-			
 			Object.entries (_datasets.charts).forEach(([mapLayerId, chartDefinition]) => {
-			    Object.entries (chartDefinition).forEach(([dataLayerId, dataDefinition]) => {
-  			   chartsModal (mapLayerId, dataDefinition);
-  			 });
-			   
+				Object.entries (chartDefinition).forEach(([dataLayerId, dataDefinition]) => {
+					chartsModal (mapLayerId, dataDefinition);
+				});
 			});
-			
+		},
+
+
+		// Open a location report modal for a given layer/location, building its
+		// charts first. Shared by map clicks and by ?report= deep links.
+		openReport: function (mapLayerId, locationId)
+		{
+			const entry = _reportModals[mapLayerId];
+			if (!entry) { console.warn ('No report modal registered for layer ' + mapLayerId); return; }
+			const location_modal = entry.modal;
+
+			// Reflect the open report in the URL so it can be shared/deep-linked
+			capUi.setReportParam (locationId);
+			capUi.trackEvent('report_open', {'layer': mapLayerId, 'location': locationId});
+
+			// Set the title (may be async)
+			if (mapLayerId === 'zones') {
+				capUi.manageLSOAOverview (mapLayerId, locationId);
+			}
+
+			// Show global spinner while charts are built
+			const spinner = document.querySelector('.spinner');
+			if (spinner) { spinner.style.display = 'block'; }
+
+			const finish = function () {
+				if (spinner) { spinner.style.display = 'none'; }
+				location_modal.show();
+			};
+
+			// Call tool-specific manageCharts. If it returns a Promise, wait on it.
+			try {
+				const result = manageCharts(locationId, mapLayerId);
+				if (result && typeof result.then === 'function') {
+					result.then(finish).catch(finish);
+					return;
+				}
+			} catch (err) {
+				console.error('manageCharts threw error:', err);
+			}
+
+			// If manageCharts did not return a Promise, poll for Chart.js instances inside the modal canvases.
+			const maxWaitMs = 8000; // total wait time
+			const intervalMs = 200;
+			let waited = 0;
+			const canvases = Array.from(document.querySelectorAll('#' + mapLayerId + '-chartsmodal canvas'));
+			const checkCharts = function () {
+				if (canvases.length === 0) { finish(); return; }
+				let ready = false;
+				if (window.Chart && typeof window.Chart.getChart === 'function') {
+					for (const c of canvases) {
+						if (window.Chart.getChart(c)) { ready = true; break; }
+					}
+				} else {
+					for (const c of canvases) {
+						if (c.width > 0 && c.height > 0) { ready = true; break; }
+					}
+				}
+				if (ready || waited >= maxWaitMs) { finish(); return; }
+				waited += intervalMs;
+				setTimeout(checkCharts, intervalMs);
+			};
+			setTimeout(checkCharts, intervalMs);
+		},
+
+
+		// ---- Shareable report deep-linking (?report=<code>) --------------------
+
+		// Read the report code from the query string, if any
+		parseReportParam: function ()
+		{
+			return new URLSearchParams(window.location.search).get('report');
+		},
+
+		// Write ?report=<code> into the URL without reloading, preserving the hash
+		setReportParam: function (locationId)
+		{
+			if (!locationId) { return; }
+			const url = new URL(window.location.href);
+			if (url.searchParams.get('report') === String(locationId)) { return; }
+			url.searchParams.set('report', locationId);
+			window.history.replaceState(window.history.state, '', url.toString());
+		},
+
+		// Remove ?report= from the URL without reloading
+		clearReportParam: function ()
+		{
+			const url = new URL(window.location.href);
+			if (!url.searchParams.has('report')) { return; }
+			url.searchParams.delete('report');
+			window.history.replaceState(window.history.state, '', url.toString());
+		},
+
+		// Add a Share button to a report modal's header (next to Print). Clicking
+		// opens a small dependency-free share menu: copy link, email, and the
+		// standard social share-intent URLs (no third-party scripts involved).
+		// The shared URL includes the ?report= deep link, so the exact report opens.
+		addShareButton: function (mapLayerId)
+		{
+			const header = document.querySelector ('#' + mapLayerId + '-chartsmodal .modal-header');
+			if (!header || header.querySelector ('.share-button')) { return; }
+			const printButton = header.querySelector ('.print-button');
+
+			// Wrapper provides the positioning context for the dropdown menu
+			const wrap = document.createElement ('span');
+			wrap.className = 'share-wrap';
+
+			const btn = document.createElement ('button');
+			btn.className = 'share-button';	// Deliberately NOT print-button, which has a print handler bound to it
+			btn.setAttribute ('aria-label', 'Share this report');
+			btn.setAttribute ('title', 'Share this report');
+			btn.setAttribute ('aria-haspopup', 'true');
+			btn.setAttribute ('aria-expanded', 'false');
+			btn.innerHTML = '<i class="fa fa-share-nodes" aria-hidden="true"></i> Share';
+
+			const menu = document.createElement ('div');
+			menu.className = 'share-menu';
+			menu.setAttribute ('role', 'menu');
+			menu.style.display = 'none';
+
+			const pageTitle = document.title;
+
+			// Menu entries: [label, icon class, hrefBuilder]; all plain share-intent
+			// URLs opened in a new tab - no SDKs or third-party scripts
+			const entries = [
+				['Email', 'fa-envelope', function (url) { return 'mailto:?subject=' + encodeURIComponent (pageTitle) + '&body=' + encodeURIComponent (url); }],
+				['Facebook', null, function (url) { return 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent (url); }],
+				['X (Twitter)', null, function (url) { return 'https://twitter.com/intent/tweet?url=' + encodeURIComponent (url) + '&text=' + encodeURIComponent (pageTitle); }],
+				['LinkedIn', null, function (url) { return 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent (url); }],
+				['WhatsApp', null, function (url) { return 'https://wa.me/?text=' + encodeURIComponent (pageTitle + ' ' + url); }],
+				['Bluesky', null, function (url) { return 'https://bsky.app/intent/compose?text=' + encodeURIComponent (pageTitle + ' ' + url); }]
+			];
+
+			// Copy link (first item)
+			const copyItem = document.createElement ('button');
+			copyItem.type = 'button';
+			copyItem.className = 'share-menu-item';
+			copyItem.setAttribute ('role', 'menuitem');
+			copyItem.innerHTML = '<i class="fa fa-copy" aria-hidden="true"></i> Copy link';
+			copyItem.addEventListener ('click', function () {
+				const url = window.location.href;
+				const confirmCopied = function () {
+					copyItem.innerHTML = '<i class="fa fa-copy" aria-hidden="true"></i> Link copied!';
+					setTimeout (function () {
+						copyItem.innerHTML = '<i class="fa fa-copy" aria-hidden="true"></i> Copy link';
+						hideMenu ();
+					}, 1200);
+				};
+				if (navigator.clipboard && navigator.clipboard.writeText) {
+					navigator.clipboard.writeText (url).then (confirmCopied).catch (function () {
+						window.prompt ('Copy this link to share the report:', url);
+						hideMenu ();
+					});
+				} else {
+					window.prompt ('Copy this link to share the report:', url);
+					hideMenu ();
+				}
+				capUi.trackEvent ('report_share', {'layer': mapLayerId, 'method': 'copy'});
+			});
+			menu.appendChild (copyItem);
+
+			entries.forEach (function (entry) {
+				const item = document.createElement ('button');
+				item.type = 'button';
+				item.className = 'share-menu-item';
+				item.setAttribute ('role', 'menuitem');
+				item.innerHTML = (entry[1] ? '<i class="fa ' + entry[1] + '" aria-hidden="true"></i> ' : '') + entry[0];
+				item.addEventListener ('click', function () {
+					window.open (entry[2] (window.location.href), '_blank', 'noopener');
+					capUi.trackEvent ('report_share', {'layer': mapLayerId, 'method': entry[0]});
+					hideMenu ();
+				});
+				menu.appendChild (item);
+			});
+
+			// Native device share sheet where supported (mobile), as a final option
+			if (navigator.share) {
+				const nativeItem = document.createElement ('button');
+				nativeItem.type = 'button';
+				nativeItem.className = 'share-menu-item';
+				nativeItem.setAttribute ('role', 'menuitem');
+				nativeItem.textContent = 'More…';
+				nativeItem.addEventListener ('click', function () {
+					navigator.share ({title: pageTitle, url: window.location.href}).catch (function () {});
+					capUi.trackEvent ('report_share', {'layer': mapLayerId, 'method': 'native'});
+					hideMenu ();
+				});
+				menu.appendChild (nativeItem);
+			}
+
+			function hideMenu ()
+			{
+				menu.style.display = 'none';
+				btn.setAttribute ('aria-expanded', 'false');
+			}
+
+			btn.addEventListener ('click', function (e) {
+				e.preventDefault ();
+				e.stopPropagation ();
+				const isOpen = (menu.style.display === 'block');
+				menu.style.display = (isOpen ? 'none' : 'block');
+				btn.setAttribute ('aria-expanded', (isOpen ? 'false' : 'true'));
+			});
+
+			// Close the menu when clicking elsewhere or pressing Escape
+			document.addEventListener ('click', function (e) {
+				if (!wrap.contains (e.target)) { hideMenu (); }
+			});
+			document.addEventListener ('keyup', function (e) {
+				if (e.key === 'Escape') { hideMenu (); }
+			});
+
+			wrap.appendChild (btn);
+			wrap.appendChild (menu);
+			if (printButton) {
+				printButton.insertAdjacentElement ('afterend', wrap);
+			} else {
+				header.insertBefore (wrap, header.firstChild);
+			}
+		},
+
+		// Observe a report modal and clear the ?report= param once it is closed
+		watchReportModalClose: function (mapLayerId)
+		{
+			const modalEl = document.getElementById(mapLayerId + '-chartsmodal');
+			if (!modalEl || typeof MutationObserver === 'undefined') { return; }
+			const observer = new MutationObserver(function () {
+				if (window.getComputedStyle(modalEl).display === 'none') {
+					capUi.clearReportParam();
+				}
+			});
+			observer.observe(modalEl, {attributes: true, attributeFilter: ['style']});
+		},
+
+		// Lazily load the combined LSOA/Data Zone centroid lookup (only fetched
+		// when a report needs to be located, e.g. a deep link or postcode search)
+		loadCentroids: function ()
+		{
+			if (_lsoaCentroids) { return Promise.resolve(_lsoaCentroids); }
+			return capUi.fetchJSON('/data/lsoa_centroids.json').then(function (data) {
+				_lsoaCentroids = data;
+				return data;
+			});
+		},
+
+		// On initial load, if ?report=<code> is present, pan to the target and open its report
+		handleReportDeepLink: function ()
+		{
+			if (_reportDeepLinkHandled) { return; }
+			const reportId = capUi.parseReportParam();
+			if (!reportId) { return; }
+			_reportDeepLinkHandled = true;
+
+			// Choose the target layer: prefer 'zones', else the first charts layer
+			const layerIds = Object.keys(_datasets.charts || {});
+			const mapLayerId = (layerIds.includes('zones') ? 'zones' : layerIds[0]);
+			if (!mapLayerId) { return; }
+
+			// Enable the layer if its checkbox is currently off, so the area is shown behind the report
+			const checkbox = document.querySelector('input.showlayer[data-layer="' + mapLayerId + '"]');
+			if (checkbox && !checkbox.checked) {
+				checkbox.checked = true;
+				checkbox.dispatchEvent(new CustomEvent('change'));
+			}
+
+			// Pan to the target centroid (if known) then open the report
+			capUi.loadCentroids().then(function (centroids) {
+				const centre = centroids[reportId];
+				if (centre && _map) {
+					_map.flyTo({center: centre, zoom: Math.max(_map.getZoom(), 12)});
+				}
+				capUi.openReport(mapLayerId, reportId);
+			}).catch(function () {
+				// Even if the centroid lookup fails, still open the report
+				capUi.openReport(mapLayerId, reportId);
+			});
 		},
 		
 		// Popup handler
@@ -1219,6 +1567,8 @@ const capUi = (function () {
 					.setLngLat (coordinates)
 					.setHTML (popupHtml)
 					.addTo (_map);
+
+				capUi.trackEvent('popup_open', {'layer': layerId});
 					
 				// #!# Need to close popup when layer visibility changed - currently a popup is left hanging if the layer is toggled on/off (e.g. due to simplification or field change)
 			});
@@ -1266,6 +1616,7 @@ const capUi = (function () {
 			document.querySelectorAll ('.helpbutton').forEach (function (button) {
 				if (button.dataset.help) { // E.g. data-help="scenario" refers to the scenario section
 					button.addEventListener ('click', function () {
+						capUi.trackEvent('help_open', {'section': button.dataset.help});
 						capUi.showHelp (button.dataset.help);
 					});
 				}
@@ -1284,8 +1635,14 @@ const capUi = (function () {
 					// Extract the Markdown text between comments
 					const regex = new RegExp (`<!-- #${sectionId} -->(.+)<!-- /#${sectionId} -->`, 's'); // s flag is for 'match newlines'
 					const result = regex.exec (text);
+					// Guard against a missing/mismatched manual section so a help button
+					// never throws; show a friendly message pointing to the full manual
+					if (!result) {
+						document.getElementById ('helpcontent').innerHTML = '<p><strong>Help for this item is not available yet.</strong></p><p>See the <a href="/manual/">manual</a> for more information.</p>';
+						return;
+					}
 					const extract = result[1];
-					
+
 					// Convert to HTML
 					const html = capUi.mdToHtml (extract);
 					
@@ -1294,12 +1651,9 @@ const capUi = (function () {
 					const otherPage = parser.parseFromString (html, 'text/html');
 					const contentHtml = otherPage.querySelector ('body');
 					//console.log(otherDiv.innerHTML);
-					if (!contentHtml) {
-						contentHtml = '<p><strong>Help missing!</strong></p>';
-					}
-					
-					// Add the HTML
-					document.getElementById ('helpcontent').innerHTML = contentHtml.innerHTML;
+
+					// Add the HTML (fall back to a message if the body could not be parsed)
+					document.getElementById ('helpcontent').innerHTML = (contentHtml ? contentHtml.innerHTML : '<p><strong>Help missing!</strong></p>');
 				});
 			
 			// Show in modal
@@ -1489,6 +1843,19 @@ const capUi = (function () {
 		},
 		
 		
+		// Send a custom analytics event, but only once the user has explicitly
+		// accepted analytics cookies (the 'analyticstrack' cookie is set to 'true'
+		// by the "OK" button in the cookie banner). This ensures no interaction
+		// events are sent before the user has opted in.
+		trackEvent: function (action, params)
+		{
+			if (capUi.getCookie('analyticstrack') !== 'true') { return; }
+			if (typeof window.gtag === 'function') {
+				window.gtag('event', action, params || {});
+			}
+		},
+
+
 		// Function to adjust opentool links to use current map state
 		// When a user clicks a link with class 'opentool' that contains map coordinates,
 		// this function dynamically updates the coordinates to match the current map view

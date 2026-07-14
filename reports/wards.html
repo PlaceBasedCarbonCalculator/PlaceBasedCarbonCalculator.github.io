@@ -1,262 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
-	
-	<head>
-		
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="Description" content="Explore neighbourhood carbon footprints across Great Britain, visualise emissions by sector, compare areas and support local decarbonisation planning.">
-		
-		<!-- Google tag (gtag.js) -->
-  	<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q11V10CDRV"></script>
-  	<script>
-  		window.dataLayer = window.dataLayer || [];
-  		function gtag () {dataLayer.push (arguments);}
-  		gtag('js', new Date ());
-  		gtag('config', 'G-Q11V10CDRV');
-  	</script>
-  	
-  	<!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-TXQZCMJT');</script>
-    <!-- End Google Tag Manager -->
-  		
-		<!-- Favicon -->
-		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-		<link rel="icon" href="/favicon.ico" type="image/x-icon">
-		
-		<!-- Social media -->
-		<meta property="og:title" content="Carbon & Place">
-		<meta property="og:description" content="An interactive map of carbon footprints">
-		<meta property="og:image" content="/images/thumbnail.jpg">
-		<meta property="twitter:image" content="/images/thumbnail.jpg">
-		<meta property="og:url" content="https://www.carbon.place">
-		<meta name="twitter:card" content="summary_large_image">
-		<meta property="og:site_name" content="Carbon & Place">
-		<meta name="twitter:image:alt" content="Carbon & Place thumbnail">
-		<title>Place-Based Carbon Calculator - Neighbourhood Emissions Explorer</title>
-		
-		<!-- PWA support -->
-		<link rel="manifest" href="/manifest.webmanifest">
-		<link rel="apple-touch-icon" href="/images/icons/192.png">
-		<meta name="mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-title" content="Carbon & Place">
-		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-		<meta name="theme-color" content="#ac1a40">
-		<script src="/app.js" defer></script>
-		
-		<!-- Map dependencies -->
-		<script src="https://unpkg.com/pmtiles@3.0.6/dist/pmtiles.js"></script>
-		<script src="/js/lib/geocoder/maplibre-gl-geocoder.min.js"></script>
-		<link rel="stylesheet" href="/js/lib/geocoder/maplibre-gl-geocoder-small.css" type="text/css">
-		<script src="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.js"></script>
-		<link href="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.css" rel="stylesheet" >
-		
-		<!-- Styles -->
-		<link rel="stylesheet" href="/css/main.css">
-		<link rel="stylesheet" href="/css/map.css">
-		<link rel="stylesheet" href="style.css">
-		
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="Description" content="Ward Report">
+<title>Ward Report</title>
 
-		<!-- Carbon & Place application -->
-		<script src="/js/settings-common.js"></script>
-		<script src="/js/databin.js"></script>
-		<script src="/js/datasets-common.js"></script>
-		<script src="datasets.js"></script>
-		<script src="settings.js"></script>
-		<script src="/js/ui-common.js"></script>
-		<script src="/js/tour.js" defer></script>
-		<script src="ui.js" defer></script>
-		<script>
-			document.addEventListener ('DOMContentLoaded', function () {
-			  capUi.initialise (settings, datasets);
-			});
-		</script>
-		
-		<!-- Font Awesome -->
-		<link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet">
-		<link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet">
-		
-		<!-- Markdown conversion -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js" defer></script>
-		
-		<!-- Tooltips -->
-		<script src="https://unpkg.com/@popperjs/core@2" defer></script>
-		<script src="https://unpkg.com/tippy.js@6" defer></script>
-		
-		<!-- Charts -->
-		<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1" defer></script>
-		
-	  <link rel="canonical" href="https://www.carbon.place/pbcc/">
-  <script type="application/ld+json">
-  {"@context": "https://schema.org", "@type": "WebApplication", "name": "Place-Based Carbon Calculator", "url": "https://www.carbon.place/pbcc/", "description": "Explore the carbon footprint of every neighbourhood in Great Britain and how it has changed over time.", "isPartOf": {"@type": "WebSite", "name": "Carbon & Place", "url": "https://www.carbon.place/"}, "publisher": {"@type": "Organization", "name": "Carbon & Place", "url": "https://www.carbon.place/", "logo": "https://www.carbon.place/images/ui/logo.webp"}, "applicationCategory": "EducationalApplication", "operatingSystem": "Any (web browser)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "GBP"}}
-  </script>
-  <script type="application/ld+json">
-  {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.carbon.place/"}, {"@type": "ListItem", "position": 2, "name": "Place-Based Carbon Calculator", "item": "https://www.carbon.place/pbcc/"}]}
-  </script>
+
+<!-- Set Up Icon -->
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+<!-- Font Awesome -->
+<link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet">
+<link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet">
+
+<!-- PWA support -->
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/images/icons/192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Carbon & Place">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#ac1a40">
+<script src="/app.js" defer></script>
+
+<!-- Styles -->
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/map.css">
+
+<!-- Charts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1" defer></script>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q11V10CDRV"></script>
+<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag () {dataLayer.push (arguments);}
+	gtag('js', new Date ());
+	gtag('config', 'G-Q11V10CDRV');
+</script>
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TXQZCMJT');</script>
+<!-- End Google Tag Manager -->
+
 </head>
-	
-	<body>
-		<!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TXQZCMJT"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->  
-    
-		<!-- Menu -->
-		<nav>
-			<a href="/"><img src="/images/ui/logo.webp" alt="Carbon & Place Logo" class="logo"></a>
-			<a href="/pbcc/">Place-Based Carbon Calculator</a>
-			<a href="/about/">About</a>
-			<a href="/data/">Data</a>
-			<a href="/manual/">Manual</a>
-			<a href="/reports/">Reports</a>
-			<a href="#" id="expandtopnav" class="icon" aria-label="Expand menu"><i class="fa fa-bars"></i></a>
-		</nav>
-		
-		<!-- Welcome Splash -->
-		<div id="welcome-modal" class="welcome-modal">
-			<span class="modal-close">&times;</span>
-			<div class="modal-body">
-				<h1>Place-Based Carbon Calculator v2</h1>
-				<p style="background-color: #f58291"><b>Beta Tool</b>: This tool is still in development and may contain preliminary analysis, bugs, or incomplete features. Beta tools are intended to provide an early look at upcoming features and so results should be treated with care. The tool may change at any time without warning. We are interested in your feedback and you can report issues or bugs on <a href="https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/issues" target="_blank" rel="noopener noreferrer">GitHub</a></p>
-				
-				<p>The Place-Based Carbon Calculator estimates the carbon footprint of every neighbourhood in Great Britain, breaks it down into housing, transport, and consumption, and tracks how it has changed since 2010. For a full explanation of the tool please see the <a href="/manual/#placebasedcarboncalculator">manual</a>. You can also access sections of the manual via the help buttons (<i class="fa fa-question-circle" aria-hidden="true"></i>)</p>
-				
-				<div class="feedbackbox">
-					<div class="feedback-text">
-						<h2>How can we improve this tool?</h2>
-						<p>We would love to hear how you are using Carbon & Place and how we can make our tools more useful.</p>
-						<p><a href="/about/feedback" class="opentool">Submit Feedback</a></p>
-					</div>
-					<img src="/images/ui/feedback.webp" alt="Feedback" loading="lazy" class="feedback-image">
-				</div>
-				
-				<p>Last updated: <span id="updatedate"></span>. You may need to <a href="https://www.minitool.com/news/f5-vs-ctrl-f5.html">clear your browser cache</a> to see the latest updates.</p>
-				</div>
-		</div>
-		
-		<!-- Cookies Warning  -->
-		<div id="cookiewarning" class="cookiewarning">
-			<p>We use cookies to measure how you use our website so we can understand how you interact with it, which helps us to make improvements. <a href="/privacy">Find out more.</a></p>
-			<p>
-				<button class="button buttonOK" value="1"><strong>OK</strong></button>
-				<button class="button buttonNO" value=""><strong>No</strong></button>
-			</p>
-		</div>
-		
-		<!-- Main Content -->
-		<div class="mapcontent">
-			<div id="map"></div>
-		</div>
+<body>
+  
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TXQZCMJT"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->  
 
-			<!-- Loading Spinner -->
-			<div class="spinner">
-				<img src="/images/ui/spinner.svg" alt="Loading..." loading="lazy">
-			</div>
-		
-		<!-- Basemap control box -->
-		<div id="basemapcontrol" style="display: none;">
-			<h3>Basemap</h3>
-			<form id="basemapform">
-				<!-- Values will be populated -->
-			</form>
-			<p><label class="switch"><input type="checkbox" id="placenamescheckbox" checked="checked"><span class="slider round"></span></label> Place names</p>
-			<p title="Makes the map look smoother and clearer (not suitable for lower-powered devices)"><label class="switch"><input type="checkbox" id="antialiascheckbox"><span class="slider round"></span></label> Anti-alias</p>
-		</div>
-		
-		<!-- Show Layer Selection Panel  Button-->
-		<div id="showrightbox" class="showrightbox">
-			<button class="float_button" aria-label="Show layers"><i class="fa fa-bars"></i></button>
-		</div>
-		
-		<!-- Layer Selection Panel -->
-		<div id="rightbox" class="rightbox">
-			<button class="close-button" aria-label="Hide layers"><i class="fas fa-times"></i></button>
-			<b> Layer Controls</b>
-			
-			<button class="accordion">Neighbourhoods</button>
-			<div class="panel">
-				<p><label><input type="checkbox" class="showlayer" data-layer="zones" value="false" checked="checked">Show layer</label></p>
-				<p>
-					<select name="field" class="updatelayer" data-layer="zones" aria-label="Neighbourhood layer">
-						<option value="total_grade" selected>Total Emissions</option>
-						<option value="reduction_grade" >Decarbonisation progress</option>
-						<option value="dom_gas_grade" >Gas</option>
-						<option value="dom_elec_grade">Electricity</option>
-						<option value="car_grade" >Car</option>
-						<option value="van_grade">Van</option>
-						<option value="goods_services_combined_grade">Goods & Services</option>
-						<option value="flights_grade">Flights</option>
-						<option value="lsoa_class_code">Area Classification</option>
-					</select>
-					<button aria-label="Help Neighbourhoods" class="helpbutton" data-help="pbcc-zones"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
-				</p>
-				<div id="zoneslegend" class="legendContextual">
-					<div class="l_rHorizontal">
-						<div class="lb"><span style="background-color: #ffffff"></span>&nbsp;</div>
-					</div>
-				</div>
-				
-				<p><label class="switch"><input type="checkbox" name="daysymetricmode" class="updatelayer" data-layer="zones" checked><span class="slider round"></span></label> Dasymetric
-				<button aria-label="Help daysymetric mode" class="helpbutton" data-help="dasymetric"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
-				
-			
-			</div>
-			
-			<button class="accordion">Boundaries</button>
-			<div class="panel">
-				<p><label><input type="checkbox" data-layer="wards" class="showlayer" value="false">Wards</label> <label class="switch"><input type="checkbox" class="showlabels" data-layer="wards"><span class="slider round"></span></label> names
-				<button aria-label="Help Wards" class="helpbutton" data-help="boundaries-wards"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
-				<div class="legendContextual legendHorizontal">
-					<div class="l_rHorizontal">
-						<div class="lbHorizontal"><span style="background-color: #206b07"></span></div>
-					</div>
-				</div>
-				<p><label><input type="checkbox" data-layer="la" class="showlayer" value="false">Local Authorities</label> <label class="switch"><input type="checkbox" class="showlabels" data-layer="la"><span class="slider round"></span></label> names
-				<button aria-label="Help Local Authorities" class="helpbutton" data-help="boundaries-la"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
-				<div class="legendContextual legendHorizontal">
-					<div class="l_rHorizontal">
-						<div class="lbHorizontal"><span style="background-color: #6b0707"></span></div>
-					</div>
-				</div>
-				<p><label><input type="checkbox" data-layer="parish" class="showlayer" value="false">Parish</label> <label class="switch"><input type="checkbox" class="showlabels" data-layer="parish"><span class="slider round"></span></label> names
-				<button aria-label="Help Parish" class="helpbutton" data-help="boundaries-parish"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
-				<div class="legendContextual legendHorizontal">
-					<div class="l_rHorizontal">
-						<div class="lbHorizontal"><span style="background-color: #6b0763"></span></div>
-					</div>
-				</div>
-				<p><label><input type="checkbox" data-layer="westminster" class="showlayer" value="false">Westminster Constituency</label> <label class="switch"><input type="checkbox" class="showlabels" data-layer="westminster"><span class="slider round"></span></label> names
-				<button aria-label="Help Westminster Constituency" class="helpbutton" data-help="boundaries-westminster"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
-				<div class="legendContextual legendHorizontal">
-					<div class="l_rHorizontal">
-						<div class="lbHorizontal"><span style="background-color: #07366b"></span></div>
-					</div>
-				</div>
-			</div>
-		</div>
-		
-		<div id="overlay"></div>
-		
-		<!-- Help box -->
-		<div id="help_modal" class="modal">
-			<span class="modal-close">&times;</span>
-			<div id="helpcontent">
-				<p><em>Help content loading&hellip;</em></p>
-			</div>
-		</div>
-		
-		<!-- Modal -->
-		<div class="modal" id="zones-chartsmodal" >
-			<div class="modal-header">
-				<span class="modal-close">×</span>
-				<button class="print-button" aria-label="Print this modal" title="Print this page">Print</button>
-				<h2 class="modal-title">Zone Summary: XXXXX</h2>
-			</div>
+<!-- Menu -->
+<nav>
+	<a href="/"><img src="/images/ui/logo.webp" alt="Carbon & Place Logo" class="logo" /></a>
+	<a href="/about/">About</a>
+	<a href="/data/">Data</a>
+	<a href="/manual/">Manual</a>
+	<a href="/reports/">Reports</a>
+	<a href="#" id="expandtopnav" class="icon" aria-label="Expand menu"><i class="fa fa-bars"></i></a>
+</nav> 
+
+<!-- Cookies Warning  -->
+<div id="cookiewarning" class="cookiewarning">
+	<p>We use cookies to measure how you use our website so we can understand how you interact with it, which helps us to make improvements. <a href="/privacy">Find out more.</a></p>
+	<p>
+		<button class="button buttonOK" value="1"><strong>OK</strong></button>
+		<button class="button buttonNO" value=""><strong>No</strong></button>
+	</p>
+</div>
+
+<div class="content">
+<h1 id="la-title">Ward Report</h1>
+<p id="la-description">This page provides LSOA-level data and insights for the selected local authority, aggregated from the main Carbon & Place tools.</p>
+
+<!-- Modal -->
+		<div id="zones-chartsmodal" >
 			<div class="modal-body">
 			  
 			 <!-- Tab links -->
@@ -270,27 +94,8 @@
           <button class="tablinks" onclick="modalTab(event, 'future')">Future Scenarios</button>
         </div>
 			  
-			  <!-- Data Warning -->
-			  <div class="warningbox">
-			    <div class="warning" id="warning_1">
-			      The 2022 Census in Scotland significantly changed Data Zone boundaries, historic data has been adjusted to the new boundaries
-			    </div>
-			    <div class="warning" id="warning_2">
-			      This LSOA had a complex border change between 2011 and 2021, historical data uses closest matching LSOA
-			    </div>
-			    <div class="warning" id="warning_3">
-			      This LSOA was formed in 2021 by merging two LSOAs, historical data has been merged
-			    </div>
-			    <div class="warning" id="warning_4">
-			      This LSOA was formed in 2021 by splitting two LSOAs, historical data has been split
-			    </div>
-			    <div class="warning" id="warning_5">
-			      At some point this LSOA has had zero residents
-			    </div>
-				<div class="warning" id="warning_6">
-			      In some years this LSOA has an unusually large number of company cars
-			    </div>
-			  </div>
+			  
+			  
 			  
 			  <div id="overview" class="tabcontent">
 			    
@@ -489,9 +294,9 @@
   					  <div class="chart-text">
 			   				<div class="chart-description-tabs">
 								<div class="chart-description-tab-buttons">
-									<button onclick="switchChartTab(event, 'descTab-overview-chartrow-overview')" class="chart-tab-btn active"><i class="fa fa-binoculars" aria-hidden="true"></i> Overview</button>
-									<button onclick="switchChartTab(event, 'descTab-overview-chartrow-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
-									<button onclick="switchChartTab(event, 'descTab-overview-chartrow-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
+									<button onclick="switchChartTab(event, 'descTab-overview-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+									<button onclick="switchChartTab(event, 'descTab-overview-chartrow-policy')" class="chart-tab-btn">Policy</button>
+									<button onclick="switchChartTab(event, 'descTab-overview-chartrow-methods')" class="chart-tab-btn">Methods</button>
 								</div>
 								<div id="descTab-overview-chartrow-overview" class="chart-description-tab-content active"><p>This chart shows the average per-person carbon footprint in this area for each year since 2010, broken down into categories; the other tabs explain each category in more detail. The black horizontal line marks the UK's target footprint per person set out in the Climate Change Committee's <a href="https://www.theccc.org.uk/publication/sixth-carbon-budget/" target="_blank" rel="noopener">Sixth Carbon Budget</a>, which covers 2032 to 2037. It shows how far this neighbourhood, like almost every neighbourhood, still has to go to stay on track for net zero by 2050.</p></div>
 								<div id="descTab-overview-chartrow-policy" class="chart-description-tab-content"><p>The <a href="https://www.legislation.gov.uk/ukpga/2008/27/contents" target="_blank" rel="noopener">Climate Change Act</a> commits the UK to net zero by 2050, and the <a href="https://www.theccc.org.uk/publication/sixth-carbon-budget/" target="_blank" rel="noopener">Sixth Carbon Budget</a> requires a 78% cut on 1990 levels by 2035. National totals hide the local variation this chart reveals: the right priorities differ from place to place, which is why the Climate Change Committee argues for a bigger local role, estimating that councils have influence over roughly a third of emissions in their areas (<a href="https://www.theccc.org.uk/publication/local-authorities-and-the-sixth-carbon-budget/" target="_blank" rel="noopener">Local Authorities and the Sixth Carbon Budget</a>). Neighbourhood evidence like this helps target retrofit schemes, transport investment, and planning decisions where they will do the most good.</p></div>
@@ -516,9 +321,9 @@
 					  <h4 class="chart-title">Car Emissions</h4>
 						<div class="chart-description-tabs">
 							<div class="chart-description-tab-buttons">
-								<button onclick="switchChartTab(event, 'descTab-carEmissions-chartrow-overview')" class="chart-tab-btn active"><i class="fa fa-binoculars" aria-hidden="true"></i> Overview</button>
-								<button onclick="switchChartTab(event, 'descTab-carEmissions-chartrow-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
-								<button onclick="switchChartTab(event, 'descTab-carEmissions-chartrow-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
+								<button onclick="switchChartTab(event, 'descTab-carEmissions-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+								<button onclick="switchChartTab(event, 'descTab-carEmissions-chartrow-policy')" class="chart-tab-btn">Policy</button>
+								<button onclick="switchChartTab(event, 'descTab-carEmissions-chartrow-methods')" class="chart-tab-btn">Methods</button>
 							</div>
 							<div id="descTab-carEmissions-chartrow-overview" class="chart-description-tab-content active"><p>Carbon emissions from cars can be reduced in two main ways: lowering the emissions per mile driven, by improving fuel efficiency or switching to electric vehicles, and driving less. The Climate Change Committee has been clear that cleaner cars alone are not enough, and that meeting the UK's climate targets also requires some reduction in traffic. Electric cars remove exhaust emissions, but manufacturing them still produces substantial emissions, and all cars contribute to congestion, road danger, and particulate pollution from tyres and brakes; air pollution as a whole is estimated to contribute to a mortality equivalent of 28,000 to 36,000 deaths a year in the UK (<a href="https://www.gov.uk/government/publications/health-matters-air-pollution" target="_blank" rel="noopener">UK Health Security Agency</a>). Places become less car dependent when good public transport, safe walking, and cycling give people attractive alternatives.</p></div>
 							<div id="descTab-carEmissions-chartrow-policy" class="chart-description-tab-content"><p>Cutting car emissions needs action on both vehicles and traffic. On vehicles, the UK's zero emission vehicle mandate and the planned phase-out of new petrol and diesel car sales drive the switch to electric, supported by charging infrastructure (<a href="https://www.gov.uk/government/publications/transport-decarbonisation-plan" target="_blank" rel="noopener">Transport Decarbonisation Plan</a>). On traffic, local authorities hold many of the levers: planning that puts homes near shops, schools, and jobs; bus priority; parking policy; and safe walking and cycling networks (<a href="https://www.gov.uk/government/publications/cycling-and-walking-plan-for-england" target="_blank" rel="noopener">Gear Change</a>). Neighbourhoods with high car emissions on this chart are usually places where daily life currently depends on driving, so improving the alternatives matters as much as promoting cleaner cars.</p></div>
@@ -535,9 +340,9 @@
 					  <h4 class="chart-title">Van Emissions</h4>
 					  <div class="chart-description-tabs">
 							<div class="chart-description-tab-buttons">
-								<button onclick="switchChartTab(event, 'descTab-vanEmissions-chartrow-overview')" class="chart-tab-btn active"><i class="fa fa-binoculars" aria-hidden="true"></i> Overview</button>
-								<button onclick="switchChartTab(event, 'descTab-vanEmissions-chartrow-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
-								<button onclick="switchChartTab(event, 'descTab-vanEmissions-chartrow-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
+								<button onclick="switchChartTab(event, 'descTab-vanEmissions-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+								<button onclick="switchChartTab(event, 'descTab-vanEmissions-chartrow-policy')" class="chart-tab-btn">Policy</button>
+								<button onclick="switchChartTab(event, 'descTab-vanEmissions-chartrow-methods')" class="chart-tab-btn">Methods</button>
 							</div>
 							<div id="descTab-vanEmissions-chartrow-overview" class="chart-description-tab-content active"><p>Vans are more complicated than cars because they are more often used for work rather than personal travel. Some neighbourhoods show exceptionally high van emissions because the data is based on the registered keeper's address: a company that registers its whole fleet at one address will inflate the result for that neighbourhood, even though the vans operate over a much wider area.</p></div>
 							<div id="descTab-vanEmissions-chartrow-policy" class="chart-description-tab-content"><p>Van traffic has grown faster than car traffic for two decades, driven partly by online deliveries (<a href="https://www.gov.uk/government/collections/road-traffic-statistics" target="_blank" rel="noopener">DfT road traffic statistics</a>), and electric vans have been slower to arrive than electric cars. The zero emission vehicle mandate covers vans, and the <a href="https://www.gov.uk/government/publications/transport-decarbonisation-plan" target="_blank" rel="noopener">Transport Decarbonisation Plan</a> sets phase-out dates for new diesel vans. Local measures can also reduce van mileage: consolidation centres that bundle deliveries, cargo bikes for last-mile work in dense areas, and planning that provides loading space so vans spend less time circulating.</p></div>
@@ -554,9 +359,9 @@
 					  <h4 class="chart-title">Motorbikes, Company Vehicles, and other types</h4>
 											<div class="chart-description-tabs">
 												<div class="chart-description-tab-buttons">
-													<button onclick="switchChartTab(event, 'descTab-bikeCompany-chartrow-overview')" class="chart-tab-btn active"><i class="fa fa-binoculars" aria-hidden="true"></i> Overview</button>
-													<button onclick="switchChartTab(event, 'descTab-bikeCompany-chartrow-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
-													<button onclick="switchChartTab(event, 'descTab-bikeCompany-chartrow-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
+													<button onclick="switchChartTab(event, 'descTab-bikeCompany-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+													<button onclick="switchChartTab(event, 'descTab-bikeCompany-chartrow-policy')" class="chart-tab-btn">Policy</button>
+													<button onclick="switchChartTab(event, 'descTab-bikeCompany-chartrow-methods')" class="chart-tab-btn">Methods</button>
 												</div>
 												<div id="descTab-bikeCompany-chartrow-overview" class="chart-description-tab-content active"><p>This chart covers other personal vehicles, such as motorbikes and company cars. A few places show extremely large numbers of company cars, usually because a leasing company registers all its vehicles to a single address. In those cases we suppress the company car emissions from the total carbon footprint, since they clearly do not belong to local residents.</p></div>
 												<div id="descTab-bikeCompany-chartrow-policy" class="chart-description-tab-content"><p>Company cars matter for decarbonisation because fleets buy around half of new cars in the UK, and those vehicles reach the second-hand market within a few years, shaping what everyone else drives. Company car tax is currently structured to favour electric vehicles (<a href="https://www.gov.uk/tax-company-benefits/tax-on-company-cars" target="_blank" rel="noopener">benefit-in-kind rules</a>), which has made fleets the fastest-electrifying part of the market. Motorbikes are a small share of emissions; the more consequential policy questions concern how quickly fleet incentives convert into an affordable used electric car market.</p></div>
@@ -573,9 +378,9 @@
 					  <h4 class="chart-title">Public Transport</h4>
 											<div class="chart-description-tabs">
 												<div class="chart-description-tab-buttons">
-													<button onclick="switchChartTab(event, 'descTab-publicTransport-chartrow-overview')" class="chart-tab-btn active"><i class="fa fa-binoculars" aria-hidden="true"></i> Overview</button>
-													<button onclick="switchChartTab(event, 'descTab-publicTransport-chartrow-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
-													<button onclick="switchChartTab(event, 'descTab-publicTransport-chartrow-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
+													<button onclick="switchChartTab(event, 'descTab-publicTransport-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+													<button onclick="switchChartTab(event, 'descTab-publicTransport-chartrow-policy')" class="chart-tab-btn">Policy</button>
+													<button onclick="switchChartTab(event, 'descTab-publicTransport-chartrow-methods')" class="chart-tab-btn">Methods</button>
 												</div>
 												<div id="descTab-publicTransport-chartrow-overview" class="chart-description-tab-content active"><p>This category covers buses, coaches, trains, ferries, and other public transport. Per passenger mile, public transport is typically far lower carbon than driving or flying (<a href="https://www.gov.uk/government/collections/government-conversion-factors-for-company-reporting" target="_blank" rel="noopener">UK government conversion factors</a>), so areas where people travel mainly by bus and train tend to have lower transport footprints overall, even though their public transport emissions appear higher on this chart.</p></div>
 												<div id="descTab-publicTransport-chartrow-policy" class="chart-description-tab-content"><p>Shifting journeys from car to public transport cuts emissions, congestion, and pollution at the same time, but it depends on services being frequent, reliable, and affordable. Outside London, bus use has declined for decades alongside service cuts (<a href="https://www.gov.uk/government/collections/bus-statistics" target="_blank" rel="noopener">DfT bus statistics</a>); the <a href="https://www.gov.uk/government/publications/bus-back-better" target="_blank" rel="noopener">national bus strategy</a> and new franchising powers give local authorities more control over networks and fares. The Transport and Accessibility Explorer in Carbon & Place shows how service frequency in this neighbourhood has changed since 2008, which is useful context for this chart.</p></div>
@@ -593,9 +398,9 @@
 					  <h4 class="chart-title">Flights Emissions</h4>
 											<div class="chart-description-tabs">
 												<div class="chart-description-tab-buttons">
-													<button onclick="switchChartTab(event, 'descTab-consumptionFlights-chartrow-overview')" class="chart-tab-btn active"><i class="fa fa-binoculars" aria-hidden="true"></i> Overview</button>
-													<button onclick="switchChartTab(event, 'descTab-consumptionFlights-chartrow-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
-													<button onclick="switchChartTab(event, 'descTab-consumptionFlights-chartrow-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
+													<button onclick="switchChartTab(event, 'descTab-consumptionFlights-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+													<button onclick="switchChartTab(event, 'descTab-consumptionFlights-chartrow-policy')" class="chart-tab-btn">Policy</button>
+													<button onclick="switchChartTab(event, 'descTab-consumptionFlights-chartrow-methods')" class="chart-tab-btn">Methods</button>
 												</div>
 												<div id="descTab-consumptionFlights-chartrow-overview" class="chart-description-tab-content active"><p>Flying is one of the most carbon-intensive activities a person can undertake, so flight emissions matter to any climate target. There are two main ways to reduce them: flying less, by taking fewer or closer trips, and substituting other modes such as rail for shorter journeys. On average a person in Britain takes roughly one return flight every two years, but this average conceals huge variation: many people do not fly at all in a given year, while a small group flies frequently. We estimate flight emissions for each neighbourhood using the synthetic population model.</p></div>
 												<div id="descTab-consumptionFlights-chartrow-policy" class="chart-description-tab-content"><p>Aviation is one of the hardest sectors to decarbonise: sustainable aviation fuels and new aircraft technology are developing, but the Climate Change Committee's advice is that technology alone cannot deliver aviation's share of net zero without limiting demand growth (<a href="https://www.theccc.org.uk/publication/sixth-carbon-budget/" target="_blank" rel="noopener">Sixth Carbon Budget</a>). The government's <a href="https://www.gov.uk/government/publications/jet-zero-strategy-delivering-net-zero-aviation-by-2050" target="_blank" rel="noopener">Jet Zero Strategy</a> relies mainly on technological change. Because flying is concentrated among frequent flyers and higher-income households, proposals such as reformed air passenger duty or a frequent flyer levy aim to reduce demand while protecting the occasional holiday.</p></div>
@@ -613,9 +418,9 @@
 					  <h4 class="chart-title">Vehicle Purchase</h4>
 											<div class="chart-description-tabs">
 												<div class="chart-description-tab-buttons">
-													<button onclick="switchChartTab(event, 'descTab-consumptionVehiclePurchase-chartrow-overview')" class="chart-tab-btn active"><i class="fa fa-binoculars" aria-hidden="true"></i> Overview</button>
-													<button onclick="switchChartTab(event, 'descTab-consumptionVehiclePurchase-chartrow-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
-													<button onclick="switchChartTab(event, 'descTab-consumptionVehiclePurchase-chartrow-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
+													<button onclick="switchChartTab(event, 'descTab-consumptionVehiclePurchase-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+													<button onclick="switchChartTab(event, 'descTab-consumptionVehiclePurchase-chartrow-policy')" class="chart-tab-btn">Policy</button>
+													<button onclick="switchChartTab(event, 'descTab-consumptionVehiclePurchase-chartrow-methods')" class="chart-tab-btn">Methods</button>
 												</div>
 												<div id="descTab-consumptionVehiclePurchase-chartrow-overview" class="chart-description-tab-content active"><p>Manufacturing a car is a high-carbon activity: producing the steel, aluminium, plastics, and (for electric vehicles) the battery releases several tonnes of CO<sub>2</sub>e before the car is driven a mile. Most households do not buy a car every year, but across a whole neighbourhood there are enough purchases annually to add a noticeable slice to the carbon footprint.</p></div>
 												<div id="descTab-consumptionVehiclePurchase-chartrow-policy" class="chart-description-tab-content"><p>As exhaust emissions fall, the emissions embodied in making vehicles become a larger share of motoring's footprint, and battery supply chains add new pressures on materials. The most effective responses are keeping vehicles in use for longer, right-sizing them (the trend towards heavier SUVs works against efficiency gains), and reducing how many vehicles each household needs through car clubs and better alternatives to driving (<a href="https://www.theccc.org.uk/publication/sixth-carbon-budget/" target="_blank" rel="noopener">Climate Change Committee</a>). Electrifying the fleet remains essential; making it with less carbon is the parallel challenge.</p></div>
@@ -632,9 +437,9 @@
 					  <h4 class="chart-title">Vehicle maintenance & other</h4>
 					  <div class="chart-description-tabs">
 							<div class="chart-description-tab-buttons">
-								<button onclick="switchChartTab(event, 'descTab-consumptionVehicleOther-chartrow-overview')" class="chart-tab-btn active"><i class="fa fa-binoculars" aria-hidden="true"></i> Overview</button>
-								<button onclick="switchChartTab(event, 'descTab-consumptionVehicleOther-chartrow-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
-								<button onclick="switchChartTab(event, 'descTab-consumptionVehicleOther-chartrow-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
+								<button onclick="switchChartTab(event, 'descTab-consumptionVehicleOther-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+								<button onclick="switchChartTab(event, 'descTab-consumptionVehicleOther-chartrow-policy')" class="chart-tab-btn">Policy</button>
+								<button onclick="switchChartTab(event, 'descTab-consumptionVehicleOther-chartrow-methods')" class="chart-tab-btn">Methods</button>
 							</div>
 							<div id="descTab-consumptionVehicleOther-chartrow-overview" class="chart-description-tab-content active"><p>This category covers the indirect emissions of running vehicles that do not come from fuel: manufacturing spare parts, servicing, repairs, tyres, and similar costs. It is a small but persistent part of the transport footprint that exists wherever vehicles are owned.</p></div>
 							<div id="descTab-consumptionVehicleOther-chartrow-policy" class="chart-description-tab-content"><p>This is one of the smaller transport categories, and policy attention rightly focuses on fuel and manufacturing emissions first. That said, keeping vehicles well maintained and in service for longer spreads their embodied manufacturing emissions over more years of use, and a healthy repair sector supports that. The same circular economy logic that applies to appliances and electronics (durability, repairability, remanufactured parts) applies to vehicles.</p></div>
@@ -662,9 +467,9 @@
 					  <h4 class="chart-title">Total Consumption of Goods and Services</h4>
 					  <div class="chart-description-tabs">
 							<div class="chart-description-tab-buttons">
-								<button onclick="switchChartTab(event, 'descTab-consumptionTotal-chartrow-overview')" class="chart-tab-btn active"><i class="fa fa-binoculars" aria-hidden="true"></i> Overview</button>
-								<button onclick="switchChartTab(event, 'descTab-consumptionTotal-chartrow-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
-								<button onclick="switchChartTab(event, 'descTab-consumptionTotal-chartrow-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
+								<button onclick="switchChartTab(event, 'descTab-consumptionTotal-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+								<button onclick="switchChartTab(event, 'descTab-consumptionTotal-chartrow-policy')" class="chart-tab-btn">Policy</button>
+								<button onclick="switchChartTab(event, 'descTab-consumptionTotal-chartrow-methods')" class="chart-tab-btn">Methods</button>
 							</div>
 							<div id="descTab-consumptionTotal-chartrow-overview" class="chart-description-tab-content active"><p>Many household emissions come not from burning fuel at home or in the car, but from embodied emissions: the carbon released in producing, transporting, and delivering the goods and services we buy. These emissions often occur abroad, but in a consumption-based footprint such as the PBCC they are attributed to the end user, consistent with the UK's official <a href="https://www.gov.uk/government/statistics/uks-carbon-footprint" target="_blank" rel="noopener">carbon footprint statistics</a>. Because no dataset records what every household buys, these estimates are modelled: synthetic households built from census data are matched with real spending records from the Living Costs and Food Survey. Individual matches are imperfect, but aggregated across a neighbourhood they give a reasonable approximation. See the <a href="/manual/#placebasedcarboncalculator" class="opentool">manual</a> for details.</p></div>
 							<div id="descTab-consumptionTotal-chartrow-policy" class="chart-description-tab-content"><p>Consumption emissions are shaped less by local infrastructure and more by incomes, prices, and product supply chains, which makes them harder for any one council to influence. National levers include product standards and ecodesign rules, extended producer responsibility, support for repair and reuse, and carbon border adjustments that make the emissions in imports visible. Because spending rises with income, wealthier neighbourhoods generally show higher consumption footprints (<a href="https://doi.org/10.1088/1748-9326/ab8589" target="_blank" rel="noopener">Ivanova et al. 2020</a>), so fair policy needs to distinguish luxury consumption from necessities. The UK's consumption footprint has fallen since 2007, but more slowly than territorial emissions (<a href="https://www.gov.uk/government/statistics/uks-carbon-footprint" target="_blank" rel="noopener">Defra statistics</a>).</p></div>
@@ -688,9 +493,9 @@
 					  <h4 class="chart-title">Food and non-alcoholic beverages</h4>
 					  <div class="chart-description-tabs">
 							<div class="chart-description-tab-buttons">
-								<button onclick="switchChartTab(event, 'descTab-consumptionFood-chartrow-overview')" class="chart-tab-btn active"><i class="fa fa-binoculars" aria-hidden="true"></i> Overview</button>
-								<button onclick="switchChartTab(event, 'descTab-consumptionFood-chartrow-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
-								<button onclick="switchChartTab(event, 'descTab-consumptionFood-chartrow-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
+								<button onclick="switchChartTab(event, 'descTab-consumptionFood-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+								<button onclick="switchChartTab(event, 'descTab-consumptionFood-chartrow-policy')" class="chart-tab-btn">Policy</button>
+								<button onclick="switchChartTab(event, 'descTab-consumptionFood-chartrow-methods')" class="chart-tab-btn">Methods</button>
 							</div>
 							<div id="descTab-consumptionFood-chartrow-overview" class="chart-description-tab-content active"><p>This category includes all food and drink bought for home consumption: fresh produce, meat, dairy, packaged foods, and drinks such as juice and tea. The footprint is shaped by farming practices, processing, packaging, refrigeration, and transport. What is eaten matters far more than where it comes from: beef and lamb are particularly carbon-intensive because of methane from ruminants and the land they need, while most vegetables, grains, and pulses have much lower footprints, a pattern documented across thousands of farms worldwide (<a href="https://doi.org/10.1126/science.aaq0216" target="_blank" rel="noopener">Poore &amp; Nemecek 2018</a>).</p></div>
 							<div id="descTab-consumptionFood-chartrow-policy" class="chart-description-tab-content"><p>Agriculture produces around a tenth of the UK's territorial emissions (<a href="https://www.gov.uk/government/collections/final-uk-greenhouse-gas-emissions-national-statistics" target="_blank" rel="noopener">UK greenhouse gas statistics</a>), and imported food adds more. The Climate Change Committee's net zero pathway includes a gradual shift away from meat and dairy alongside low-carbon farming (<a href="https://www.theccc.org.uk/publication/sixth-carbon-budget/" target="_blank" rel="noopener">Sixth Carbon Budget</a>), and the independent <a href="https://www.nationalfoodstrategy.org/" target="_blank" rel="noopener">National Food Strategy review</a> reached similar conclusions. Practical levers include public sector food procurement, reducing the roughly quarter of food emissions associated with waste (<a href="https://wrap.org.uk/" target="_blank" rel="noopener">WRAP</a>), and making lower-carbon diets affordable and appealing rather than mandatory.</p></div>
@@ -707,9 +512,9 @@
 					  <h4 class="chart-title">Alcoholic beverages, tobacco and narcotics</h4>
 					  <div class="chart-description-tabs">
 					    <div class="chart-description-tab-buttons">
-					      <button onclick="switchChartTab(event, 'descTab-consumptionAlcohol-overview')" class="chart-tab-btn active"><i class="fa fa-binoculars" aria-hidden="true"></i> Overview</button>
-					      <button onclick="switchChartTab(event, 'descTab-consumptionAlcohol-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
-					      <button onclick="switchChartTab(event, 'descTab-consumptionAlcohol-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionAlcohol-overview')" class="chart-tab-btn active">Overview</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionAlcohol-policy')" class="chart-tab-btn">Policy</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionAlcohol-methods')" class="chart-tab-btn">Methods</button>
 					    </div>
 					    <div id="descTab-consumptionAlcohol-overview" class="chart-description-tab-content active"><p>This covers purchases of beer, wine, spirits, and tobacco. These products carry higher embodied emissions than their size suggests, through the farming of crops such as grapes, barley, and tobacco, energy used in fermentation, distilling, and processing, and packaging, especially glass. Transport and refrigeration add more, particularly for imported drinks. Not every household buys them, but their supply chains make the average footprint per pound spent relatively high.</p></div>
 					    <div id="descTab-consumptionAlcohol-policy" class="chart-description-tab-content"><p>This is a modest slice of most footprints, and policy for alcohol and tobacco is driven primarily by health rather than climate. The clearest carbon opportunities are in packaging and distribution: glass is energy-intensive to make, so lightweighting, reuse schemes, and higher recycled content cut emissions meaningfully (<a href="https://wrap.org.uk/" target="_blank" rel="noopener">WRAP</a>). Since health policy already aims to reduce consumption of both products, climate and health objectives point in the same direction here.</p></div>
@@ -726,9 +531,9 @@
 					  <h4 class="chart-title">Furnishings, household equipment and routine household maintenance</h4>
 					  <div class="chart-description-tabs">
 							<div class="chart-description-tab-buttons">
-								<button onclick="switchChartTab(event, 'descTab-consumptionFurnishings-chartrow-overview')" class="chart-tab-btn active"><i class="fa fa-binoculars" aria-hidden="true"></i> Overview</button>
-								<button onclick="switchChartTab(event, 'descTab-consumptionFurnishings-chartrow-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
-								<button onclick="switchChartTab(event, 'descTab-consumptionFurnishings-chartrow-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
+								<button onclick="switchChartTab(event, 'descTab-consumptionFurnishings-chartrow-overview')" class="chart-tab-btn active">Overview</button>
+								<button onclick="switchChartTab(event, 'descTab-consumptionFurnishings-chartrow-policy')" class="chart-tab-btn">Policy</button>
+								<button onclick="switchChartTab(event, 'descTab-consumptionFurnishings-chartrow-methods')" class="chart-tab-btn">Methods</button>
 							</div>
 							<div id="descTab-consumptionFurnishings-chartrow-overview" class="chart-description-tab-content active"><p>This includes furniture, appliances, cleaning products, tools, and materials for home maintenance. Emissions come from extracting and processing raw materials (wood, metals, plastics), manufacturing, and shipping. Large appliances such as fridges and washing machines carry significant embodied carbon, and their electricity use over time adds more. Even routine items such as detergents and paint contribute through chemical production and packaging.</p></div>
 							<div id="descTab-consumptionFurnishings-chartrow-policy" class="chart-description-tab-content"><p>The biggest lever in this category is product lifetime: a sofa or washing machine kept for fifteen years carries roughly half the annual embodied emissions of one replaced after seven. UK ecodesign rules now require manufacturers to make spare parts available for certain appliances (<a href="https://www.legislation.gov.uk/uksi/2021/745/contents/made" target="_blank" rel="noopener">Ecodesign Regulations 2021</a>), and energy labelling steers buyers towards efficient models. Reuse also works at local scale: furniture reuse organisations divert usable items from disposal while providing affordable furnishing, a rare case where climate, cost of living, and waste policy align neatly.</p></div>
@@ -745,9 +550,9 @@
 					  <h4 class="chart-title">Clothing and footwear</h4>
 					  <div class="chart-description-tabs">
 					    <div class="chart-description-tab-buttons">
-					      <button onclick="switchChartTab(event, 'descTab-consumptionClothing-overview')" class="chart-tab-btn active"><i class="fa fa-binoculars" aria-hidden="true"></i> Overview</button>
-					      <button onclick="switchChartTab(event, 'descTab-consumptionClothing-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
-					      <button onclick="switchChartTab(event, 'descTab-consumptionClothing-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionClothing-overview')" class="chart-tab-btn active">Overview</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionClothing-policy')" class="chart-tab-btn">Policy</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionClothing-methods')" class="chart-tab-btn">Methods</button>
 					    </div>
 					    <div id="descTab-consumptionClothing-overview" class="chart-description-tab-content active"><p>This category covers garments, shoes, and accessories. The fashion industry is a major emitter through textile production (especially synthetics such as polyester), dyeing and finishing, and global logistics. Fast fashion amplifies the impact by encouraging frequent purchases and short garment lives, and natural fibres are not automatically low carbon: conventional cotton is intensive in water and fertiliser. Wearing clothes for longer, repairing them, and buying second-hand all reduce emissions in this category.</p></div>
 					    <div id="descTab-consumptionClothing-policy" class="chart-description-tab-content"><p>Most clothing sold in the UK is made overseas, so the emissions appear in other countries' territorial accounts but belong to UK consumers in footprint terms. The most effective interventions extend garment life: durability standards, repair services, resale markets, and design that survives more than a season. The industry-led <a href="https://wrap.org.uk/taking-action/textiles" target="_blank" rel="noopener">Textiles 2030</a> agreement targets cuts in the carbon and water footprint of UK fashion, and Parliament's <a href="https://publications.parliament.uk/pa/cm201719/cmselect/cmenvaud/1952/full-report.html" target="_blank" rel="noopener">Fixing Fashion</a> inquiry set out the policy options, from producer responsibility to better labelling.</p></div>
@@ -764,9 +569,9 @@
 					  <h4 class="chart-title">Information and communication</h4>
 					  <div class="chart-description-tabs">
 					    <div class="chart-description-tab-buttons">
-					      <button onclick="switchChartTab(event, 'descTab-consumptionCommunication-overview')" class="chart-tab-btn active"><i class="fa fa-binoculars" aria-hidden="true"></i> Overview</button>
-					      <button onclick="switchChartTab(event, 'descTab-consumptionCommunication-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
-					      <button onclick="switchChartTab(event, 'descTab-consumptionCommunication-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionCommunication-overview')" class="chart-tab-btn active">Overview</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionCommunication-policy')" class="chart-tab-btn">Policy</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionCommunication-methods')" class="chart-tab-btn">Methods</button>
 					    </div>
 					    <div id="descTab-consumptionCommunication-overview" class="chart-description-tab-content active"><p>This includes mobile phones, computers, internet subscriptions, and communication services. Day-to-day usage emissions are modest, but manufacturing electronics is carbon-intensive, involving mined and refined materials and energy-hungry chip fabrication, so devices such as smartphones and laptops carry high embodied carbon relative to their size. Frequent upgrades multiply that impact, and the data centres behind online services add a further, less visible contribution.</p></div>
 					    <div id="descTab-consumptionCommunication-policy" class="chart-description-tab-content"><p>For most devices, the majority of lifetime emissions are already embedded when the box is opened, so the most effective policies lengthen device life: rights to repair, spare parts availability (<a href="https://www.legislation.gov.uk/uksi/2021/745/contents/made" target="_blank" rel="noopener">Ecodesign Regulations 2021</a>), software support that outlasts the hardware warranty, and healthy refurbished markets. E-waste is among the fastest growing waste streams, and collecting it properly recovers scarce materials. Data centre operators increasingly contract renewable electricity, but transparency about the footprint of digital services remains patchy.</p></div>
@@ -783,9 +588,9 @@
 					  <h4 class="chart-title">Recreation, sport and culture</h4>
 					  <div class="chart-description-tabs">
 					    <div class="chart-description-tab-buttons">
-					      <button onclick="switchChartTab(event, 'descTab-consumptionRecreation-overview')" class="chart-tab-btn active"><i class="fa fa-binoculars" aria-hidden="true"></i> Overview</button>
-					      <button onclick="switchChartTab(event, 'descTab-consumptionRecreation-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
-					      <button onclick="switchChartTab(event, 'descTab-consumptionRecreation-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionRecreation-overview')" class="chart-tab-btn active">Overview</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionRecreation-policy')" class="chart-tab-btn">Policy</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionRecreation-methods')" class="chart-tab-btn">Methods</button>
 					    </div>
 					    <div id="descTab-consumptionRecreation-overview" class="chart-description-tab-content active"><p>This broad category covers books, games, sports equipment, hobbies, event tickets, and package holidays. Emissions vary enormously within it: digital entertainment and a library book have tiny footprints, while imported equipment and travel-heavy leisure can be substantial. Venue-based culture such as cinema, concerts, and sport involves building energy and travel. Leisure choices, especially those involving travel, can be among the most carbon-intensive parts of personal consumption.</p></div>
 					    <div id="descTab-consumptionRecreation-policy" class="chart-description-tab-content"><p>Recreation is where quality of life and carbon most visibly meet, and the policy aim is not less leisure but lower-carbon leisure. Good local provision (parks, pools, pitches, libraries, and cultural venues reachable without a car) lets people enjoy free time with a small footprint, and access to green space carries measurable health benefits (<a href="https://www.gov.uk/government/publications/nature-and-wellbeing-evidence-briefing" target="_blank" rel="noopener">Natural England</a>). The high-carbon end of this category is dominated by travel, particularly flights within package holidays, which is where demand-side aviation policy (see the Flights chart) has the most effect.</p></div>
@@ -802,9 +607,9 @@
 					  <h4 class="chart-title">Restaurants and accommodation services</h4>
 					  <div class="chart-description-tabs">
 					    <div class="chart-description-tab-buttons">
-					      <button onclick="switchChartTab(event, 'descTab-consumptionRestaurants-overview')" class="chart-tab-btn active"><i class="fa fa-binoculars" aria-hidden="true"></i> Overview</button>
-					      <button onclick="switchChartTab(event, 'descTab-consumptionRestaurants-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
-					      <button onclick="switchChartTab(event, 'descTab-consumptionRestaurants-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionRestaurants-overview')" class="chart-tab-btn active">Overview</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionRestaurants-policy')" class="chart-tab-btn">Policy</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionRestaurants-methods')" class="chart-tab-btn">Methods</button>
 					    </div>
 					    <div id="descTab-consumptionRestaurants-overview" class="chart-description-tab-content active"><p>This includes dining out, takeaways, hotels, and short-term stays. The footprint comes from the food served (menus are often meat-heavy), energy used in commercial kitchens and buildings, and waste. Accommodation adds heating, laundry, and cleaning. Because eating out is discretionary and rises with income, this category varies widely between neighbourhoods.</p></div>
 					    <div id="descTab-consumptionRestaurants-policy" class="chart-description-tab-content"><p>Hospitality emissions concentrate in kitchens, buildings, and menus. Commercial kitchens are intense energy users where electrification and efficiency pay back quickly, and food waste is a large, measurable cost that programmes such as <a href="https://wrap.org.uk/taking-action/food-drink" target="_blank" rel="noopener">WRAP's Guardians of Grub</a> target directly. The public sector buys catering at scale, and the <a href="https://www.gov.uk/government/publications/sustainable-procurement-the-gbs-for-food-and-catering-services" target="_blank" rel="noopener">Government Buying Standards for food</a> show how procurement can shift supply chains. Menu composition matters most of all, since the footprint of a meal is dominated by its ingredients.</p></div>
@@ -821,9 +626,9 @@
 					  <h4 class="chart-title">Health</h4>
 					  <div class="chart-description-tabs">
 					    <div class="chart-description-tab-buttons">
-					      <button onclick="switchChartTab(event, 'descTab-consumptionHealth-overview')" class="chart-tab-btn active"><i class="fa fa-binoculars" aria-hidden="true"></i> Overview</button>
-					      <button onclick="switchChartTab(event, 'descTab-consumptionHealth-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
-					      <button onclick="switchChartTab(event, 'descTab-consumptionHealth-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionHealth-overview')" class="chart-tab-btn active">Overview</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionHealth-policy')" class="chart-tab-btn">Policy</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionHealth-methods')" class="chart-tab-btn">Methods</button>
 					    </div>
 					    <div id="descTab-consumptionHealth-overview" class="chart-description-tab-content active"><p>This covers private spending on medicines, medical devices, and healthcare services. Healthcare has a notable carbon footprint through pharmaceutical manufacturing, single-use equipment, and energy-intensive facilities. Note that this category reflects only what households buy directly; NHS care, which makes up most UK healthcare, is funded through taxation and so does not appear in household spending data.</p></div>
 					    <div id="descTab-consumptionHealth-policy" class="chart-description-tab-content"><p>Most healthcare emissions sit with the NHS rather than household spending, and the NHS was the first health system in the world to commit to net zero, targeting 2040 for the emissions it controls and 2045 for its supply chain (<a href="https://www.england.nhs.uk/greenernhs/a-net-zero-nhs/" target="_blank" rel="noopener">Delivering a Net Zero NHS</a>). The largest opportunities are in procurement and pharmaceuticals, particularly switching anaesthetic gases and inhaler propellants with high warming potential, alongside building energy and reduced single-use plastics. Prevention is the quietest climate policy in health: illness avoided is care, travel, and emissions avoided.</p></div>
@@ -840,9 +645,9 @@
 					  <h4 class="chart-title">Education services</h4>
 					  <div class="chart-description-tabs">
 					    <div class="chart-description-tab-buttons">
-					      <button onclick="switchChartTab(event, 'descTab-consumptionEducation-overview')" class="chart-tab-btn active"><i class="fa fa-binoculars" aria-hidden="true"></i> Overview</button>
-					      <button onclick="switchChartTab(event, 'descTab-consumptionEducation-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
-					      <button onclick="switchChartTab(event, 'descTab-consumptionEducation-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionEducation-overview')" class="chart-tab-btn active">Overview</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionEducation-policy')" class="chart-tab-btn">Policy</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionEducation-methods')" class="chart-tab-btn">Methods</button>
 					    </div>
 					    <div id="descTab-consumptionEducation-overview" class="chart-description-tab-content active"><p>This includes tuition fees, school supplies, books, and learning materials. Emissions are generally modest, arising from building energy, printed materials, and IT. The category is hard to measure because most households do not pay directly for state education, so it mainly reflects private tuition and fees, informed by household demographics such as the presence of children. The footprint of state schools themselves is funded through taxation and does not appear in household spending.</p></div>
 					    <div id="descTab-consumptionEducation-policy" class="chart-description-tab-content"><p>Education's footprint sits mostly in buildings and travel rather than household spending. The Department for Education's <a href="https://www.gov.uk/government/publications/sustainability-and-climate-change-strategy" target="_blank" rel="noopener">sustainability and climate change strategy</a> covers upgrading school buildings, many of which are old and poorly insulated, and climate education itself. The school run is a significant source of local traffic and morning congestion, so safe walking and cycling routes and school streets cut emissions while improving air quality at the school gate, where children are most exposed.</p></div>
@@ -859,9 +664,9 @@
 					  <h4 class="chart-title">Miscellaneous</h4>
 					  <div class="chart-description-tabs">
 					    <div class="chart-description-tab-buttons">
-					      <button onclick="switchChartTab(event, 'descTab-consumptionMiscellaneous-overview')" class="chart-tab-btn active"><i class="fa fa-binoculars" aria-hidden="true"></i> Overview</button>
-					      <button onclick="switchChartTab(event, 'descTab-consumptionMiscellaneous-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
-					      <button onclick="switchChartTab(event, 'descTab-consumptionMiscellaneous-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionMiscellaneous-overview')" class="chart-tab-btn active">Overview</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionMiscellaneous-policy')" class="chart-tab-btn">Policy</button>
+					      <button onclick="switchChartTab(event, 'descTab-consumptionMiscellaneous-methods')" class="chart-tab-btn">Methods</button>
 					    </div>
 					    <div id="descTab-consumptionMiscellaneous-overview" class="chart-description-tab-content active"><p>This category collects the spending that does not fit elsewhere: financial services and insurance, personal care products and services, and other miscellaneous goods and services. Individually small, these purchases add up to a persistent slice of the consumption footprint in every neighbourhood.</p></div>
 					    <div id="descTab-consumptionMiscellaneous-policy" class="chart-description-tab-content"><p>This residual category spans very different things, and its most policy-relevant element is finance. The emissions financed by banking and investment choices vastly exceed the operational footprint of the financial sector, which is why climate-related disclosure requirements now apply to large UK firms (<a href="https://www.fca.org.uk/firms/climate-change-sustainable-finance" target="_blank" rel="noopener">FCA climate rules</a>). For personal care and other services, footprints are modest and the general consumption policies (product standards, packaging, honest labelling) are the relevant levers.</p></div>
@@ -886,9 +691,9 @@
 					  <h4 class="chart-title">Gas</h4>
 					  <div class="chart-description-tabs">
 					    <div class="chart-description-tab-buttons">
-					      <button onclick="switchChartTab(event, 'descTab-gasEmissions-overview')" class="chart-tab-btn active"><i class="fa fa-binoculars" aria-hidden="true"></i> Overview</button>
-					      <button onclick="switchChartTab(event, 'descTab-gasEmissions-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
-					      <button onclick="switchChartTab(event, 'descTab-gasEmissions-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
+					      <button onclick="switchChartTab(event, 'descTab-gasEmissions-overview')" class="chart-tab-btn active">Overview</button>
+					      <button onclick="switchChartTab(event, 'descTab-gasEmissions-policy')" class="chart-tab-btn">Policy</button>
+					      <button onclick="switchChartTab(event, 'descTab-gasEmissions-methods')" class="chart-tab-btn">Methods</button>
 					    </div>
 					    <div id="descTab-gasEmissions-overview" class="chart-description-tab-content active"><p>Most homes in Britain use natural gas for central heating and hot water. Natural gas is a fossil fuel and releases carbon dioxide when burnt, so meeting climate targets means replacing gas boilers with low carbon heating and reducing how much heating homes need through insulation and draught proofing. Insulation is often highly cost-effective: it lowers bills and creates local installation jobs. Most homes now have basic measures such as loft and cavity wall insulation, but uptake of more complex measures such as solid wall and underfloor insulation remains low. Better insulation and more efficient boilers have steadily reduced gas consumption in most parts of Britain.</p></div>
 					    <div id="descTab-gasEmissions-policy" class="chart-description-tab-content"><p>Decarbonising heat is one of the UK's hardest net zero challenges because it means physical change in millions of homes. The <a href="https://www.gov.uk/government/publications/heat-and-buildings-strategy" target="_blank" rel="noopener">Heat and Buildings Strategy</a> sets the direction: heat pumps as the main replacement for gas boilers, supported by the <a href="https://www.gov.uk/apply-boiler-upgrade-scheme" target="_blank" rel="noopener">Boiler Upgrade Scheme</a>, energy efficiency programmes targeted at low-income households (<a href="https://www.ofgem.gov.uk/environmental-and-social-schemes/energy-company-obligation-eco" target="_blank" rel="noopener">ECO</a>), and heat networks in dense areas. Neighbourhood data helps target this work: the age, type, and tenure of local homes determine which measures make sense street by street, which is what the Retrofit Explorer is designed to show.</p></div>
@@ -905,9 +710,9 @@
 					  <h4 class="chart-title">Electricity</h4>
 					  <div class="chart-description-tabs">
 					    <div class="chart-description-tab-buttons">
-					      <button onclick="switchChartTab(event, 'descTab-electricityEmissions-overview')" class="chart-tab-btn active"><i class="fa fa-binoculars" aria-hidden="true"></i> Overview</button>
-					      <button onclick="switchChartTab(event, 'descTab-electricityEmissions-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
-					      <button onclick="switchChartTab(event, 'descTab-electricityEmissions-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
+					      <button onclick="switchChartTab(event, 'descTab-electricityEmissions-overview')" class="chart-tab-btn active">Overview</button>
+					      <button onclick="switchChartTab(event, 'descTab-electricityEmissions-policy')" class="chart-tab-btn">Policy</button>
+					      <button onclick="switchChartTab(event, 'descTab-electricityEmissions-methods')" class="chart-tab-btn">Methods</button>
 					    </div>
 					    <div id="descTab-electricityEmissions-overview" class="chart-description-tab-content active"><p>Unlike gas, electricity can be a zero carbon energy source, depending on how it is generated. The UK once got most of its electricity from coal, but the mix is now dominated by gas, nuclear, and renewables such as wind and solar, so the carbon emitted per unit of electricity has fallen dramatically. Demand has also fallen as lighting and appliances became more efficient. In future, electricity demand is expected to rise again as heating and driving electrify, which will require substantial new generation, from offshore wind farms to rooftop solar.</p></div>
 					    <div id="descTab-electricityEmissions-policy" class="chart-description-tab-content"><p>A clean power grid is the foundation of net zero, because heat pumps and electric vehicles are only as clean as the electricity behind them. Britain's grid carbon intensity has fallen faster than almost any other country's since 2012, driven by the collapse of coal and growth of offshore wind, procured largely through <a href="https://www.gov.uk/government/collections/contracts-for-difference" target="_blank" rel="noopener">Contracts for Difference</a> auctions. The next challenges are flexibility (storage and smart tariffs to match demand to windy and sunny periods), grid connections, and continuing deployment (<a href="https://www.theccc.org.uk/publications/" target="_blank" rel="noopener">Climate Change Committee progress reports</a>). Falling electricity emissions benefit every neighbourhood on this chart automatically; local action can add rooftop solar and flexible demand.</p></div>
@@ -1068,8 +873,21 @@
 					<p>As part of the <a target="_blank" aria-label="EDRC Futures theme" href="https://www.edrc.ac.uk/research/futures/">Energy Demand Research Centre Futures theme</a> we are working on downscaling the <a target="_blank" aria-label="PLEF homepage" href="https://low-energy.creds.ac.uk/">Positive Low Energy Futures Scenarios</a> to provide each neighbourhood with a local decarbonisation pathway. This work is ongoing and will be added to the tool in the future.</p>
 			    </div>
 		</div>
-	  </div>
-		
-	</body>
-	
+
+
+
+
+
+</div>
+
+<script type="text/javascript" src="/js/common-nonmap.js"></script>
+<script type="text/javascript" src="/js/databin.js"></script>
+<script type="text/javascript" src="/js/ui-common.js"></script>
+<script type="text/javascript" src="/pbcc/ui.js"></script>
+<script>window.REPORT_CONFIG = {cardLevel: "ward", dataPath: "ward_emissions/v1/", level: "Ward", nameJson: "/reports/wards.json"};</script>
+<script type="text/javascript" src="/reports/la-report.js"></script>
+<script type="text/javascript" src="/reports/area-map.js"></script>
+<script type="text/javascript" src="/reports/area-cards.js"></script>
+
+</body>
 </html>

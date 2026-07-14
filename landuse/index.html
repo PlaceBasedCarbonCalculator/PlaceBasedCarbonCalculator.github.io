@@ -5,7 +5,7 @@
 		
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="Description" content="Visualise land use and planning designations across Great Britain, explore green spaces, development constraints and how land use influences local carbon footprints and resilience.">
+		<meta name="Description" content="Visualise land use and planning designations across Great Britain: green spaces, development constraints and how land use shapes local carbon footprints.">
 		
 		<!-- Google tag (gtag.js) -->
   	<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q11V10CDRV"></script>
@@ -38,12 +38,15 @@
 		<meta name="twitter:card" content="summary_large_image">
 		<meta property="og:site_name" content="Carbon & Place">
 		<meta name="twitter:image:alt" content="Carbon & Place thumbnail">
-		<title>Land Use Explorer — Planning, Land Cover &amp; Emissions</title>
+		<title>Land Use Explorer - Planning, Land Cover &amp; Emissions</title>
 		
 		<!-- PWA support -->
 		<link rel="manifest" href="/manifest.webmanifest">
 		<link rel="apple-touch-icon" href="/images/icons/192.png">
-		<meta name="apple-mobile-web-app-status-bar" content="#ac1a40">
+		<meta name="mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-title" content="Carbon & Place">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 		<meta name="theme-color" content="#ac1a40">
 		<script src="/app.js" defer></script>
 		
@@ -64,6 +67,7 @@
 		<script src="datasets.js"></script>
 		<script src="settings.js"></script>
 		<script src="/js/ui-common.js"></script>
+		<script src="/js/tour.js" defer></script>
 		<script src="ui.js" defer></script>
 		<script>
 			document.addEventListener ('DOMContentLoaded', function () {
@@ -85,7 +89,14 @@
 		<!-- Charts -->
 		<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1" defer></script>
 		
-	</head>
+	  <link rel="canonical" href="https://www.carbon.place/landuse/">
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "WebApplication", "name": "Land Use & Planning Explorer", "url": "https://www.carbon.place/landuse/", "description": "Explore how land is used across Great Britain, including planning, land cover and environmental designations.", "isPartOf": {"@type": "WebSite", "name": "Carbon & Place", "url": "https://www.carbon.place/"}, "publisher": {"@type": "Organization", "name": "Carbon & Place", "url": "https://www.carbon.place/", "logo": "https://www.carbon.place/images/ui/logo.webp"}, "applicationCategory": "EducationalApplication", "operatingSystem": "Any (web browser)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "GBP"}}
+  </script>
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.carbon.place/"}, {"@type": "ListItem", "position": 2, "name": "Land Use & Planning Explorer", "item": "https://www.carbon.place/landuse/"}]}
+  </script>
+</head>
 	
 	<body>
 		<!-- Google Tag Manager (noscript) -->
@@ -100,6 +111,7 @@
 			<a href="/about/">About</a>
 			<a href="/data/">Data</a>
 			<a href="/manual/">Manual</a>
+			<a href="/reports/">Reports</a>
 			<a href="#" id="expandtopnav" class="icon" aria-label="Expand menu"><i class="fa fa-bars"></i></a>
 		</nav>
 		
@@ -110,7 +122,7 @@
 				<h1>Land Use and Planning Explorer</h1>
 				<p style="background-color: #f58291"><b>Beta Tool</b>: This tool is still in development and may contain preliminary analysis, bugs, or incomplete features. Beta tools are intended to provide an early look at upcoming features and so results should be treated with care. The tool may change at any time without warning. We are interested in your feedback and you can report issues or bugs on <a href="https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/issues" target="_blank" rel="noopener noreferrer">GitHub</a></p>
 				
-				<p>The Land Use and Planning Explorer provides more detail on how land is used in the UK. For a full explination of the tool please see the <a href="/manual/#landuseandplanningexplorer">manual</a>. You can also access sections of the manual via the help buttons (<i class="fa fa-question-circle" aria-hidden="true"></i>)</p>
+				<p>The Land Use and Planning Explorer maps the designations that shape what can be built where: flood zones, green belt, protected landscapes and habitats, heritage sites, and environmental hazards. For a full explanation of the tool please see the <a href="/manual/#landuseandplanningexplorer">manual</a>. You can also access sections of the manual via the help buttons (<i class="fa fa-question-circle" aria-hidden="true"></i>)</p>
 				
 				<div class="feedbackbox">
 					<div class="feedback-text">
@@ -352,28 +364,28 @@
 			<button class="accordion">Boundaries</button>
 			
 			<div class="panel">
-				<p><label><input type="checkbox" data-layer="wards" class="showlayer" value="false">Wards</label>
+				<p><label><input type="checkbox" data-layer="wards" class="showlayer" value="false">Wards</label> <label class="switch"><input type="checkbox" class="showlabels" data-layer="wards"><span class="slider round"></span></label> names
 				<button aria-label="Help Wards" class="helpbutton" data-help="boundaries-wards"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 				<div class="legendContextual legendHorizontal">
 					<div class="l_rHorizontal">
 						<div class="lbHorizontal"><span style="background-color: #206b07"></span></div>
 					</div>
 				</div>
-				<p><label><input type="checkbox" data-layer="la" class="showlayer" value="false">Local Authorities</label>
+				<p><label><input type="checkbox" data-layer="la" class="showlayer" value="false">Local Authorities</label> <label class="switch"><input type="checkbox" class="showlabels" data-layer="la"><span class="slider round"></span></label> names
 				<button aria-label="Help Local Authorities" class="helpbutton" data-help="boundaries-la"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 				<div class="legendContextual legendHorizontal">
 					<div class="l_rHorizontal">
 						<div class="lbHorizontal"><span style="background-color: #6b0707"></span></div>
 					</div>
 				</div>
-				<p><label><input type="checkbox" data-layer="parish" class="showlayer" value="false">Parish</label>
+				<p><label><input type="checkbox" data-layer="parish" class="showlayer" value="false">Parish</label> <label class="switch"><input type="checkbox" class="showlabels" data-layer="parish"><span class="slider round"></span></label> names
 				<button aria-label="Help Parish" class="helpbutton" data-help="boundaries-parish"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 				<div class="legendContextual legendHorizontal">
 					<div class="l_rHorizontal">
 						<div class="lbHorizontal"><span style="background-color: #6b0763"></span></div>
 					</div>
 				</div>
-				<p><label><input type="checkbox" data-layer="westminster" class="showlayer" value="false">Westminster Constituency</label>
+				<p><label><input type="checkbox" data-layer="westminster" class="showlayer" value="false">Westminster Constituency</label> <label class="switch"><input type="checkbox" class="showlabels" data-layer="westminster"><span class="slider round"></span></label> names
 				<button aria-label="Help Westminster Constituency" class="helpbutton" data-help="boundaries-westminster"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 				<div class="legendContextual legendHorizontal">
 					<div class="l_rHorizontal">

@@ -1,5 +1,26 @@
 // Data definitions, i.e. layers, charts, etc.
 // For Retrofit Tool
+
+// Single-binary datasets used by this tool (see js/databin.js). Record the
+// current index file name for each; the matching data_*.bin is named inside
+// the index (meta.bin_file). Bump a file name when that dataset is rebuilt and
+// re-uploaded - datasets are rebuilt independently, so the dates will diverge.
+//
+// postcode is the exception: its ~1.5M-record index would be a huge download,
+// so it has no index here - each postcode's byte range travels in the
+// postcodes.pmtiles feature (bin_offset/bin_clen) and is primed at click time
+// (see charts.postcodes below). Only the .bin file name is recorded. IMPORTANT:
+// the .bin and postcodes.pmtiles are built in lockstep, so bump this .bin name
+// and redeploy postcodes.pmtiles together whenever postcode data is rebuilt.
+if (typeof capBin !== 'undefined') {
+	capBin.register({
+		epc_dom: 'index_epc_dom_2026-07-14.json.gz',
+		historical_domestic_gas_elec: 'index_historical_domestic_gas_elec_2026-07-13.json.gz',
+		prices: 'index_prices_2026-07-14.json.gz',
+		postcode: { bin: 'data_postcode_2026-07-13.bin' }
+	});
+}
+
 const datasets_extra = {
 	
 	// Data layers
@@ -26,7 +47,7 @@ const datasets_extra = {
 			'type': 'fill',
 			'source': {
 			'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/postcodes.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/postcodes_20260713.pmtiles',
 				},
 			'source-layer': 'postcodes',
 			'paint': {
@@ -994,6 +1015,14 @@ const datasets_extra = {
   			dataUrl: 'https://pbcc.blob.core.windows.net/pbcc-data/Postcode/%id.json',
   			propertiesField: 'postcode',
   			titleField: 'postcode',
+
+  			// Postcode energy data is read straight from the postcode .bin by
+  			// range request; the range for the clicked postcode is carried in the
+  			// pmtiles feature (bin_offset + bin_clen). The generic click handler
+  			// (js/ui-common.js) primes it via capBin.primeRange before opening.
+  			binDataset: 'postcode',
+  			binOffsetField: 'bin_offset',
+  			binLengthField: 'bin_clen',
   			
   			// Title
   			titlePrefix: 'Postcode Summary: ',

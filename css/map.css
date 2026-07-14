@@ -1132,3 +1132,121 @@ input:checked + .slider:before {
 	line-height: 1.5;
 	font-size: 0.95em;
 }
+
+/* Guided tour (js/tour.js) */
+.tour-overlay {
+	display: none;
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.45);
+	z-index: 5000;
+}
+.tour-spotlight {
+	display: none;
+	position: fixed;
+	border: 2px solid #ffffff;
+	border-radius: 8px;
+	box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.45);
+	z-index: 5001;
+	pointer-events: none;
+}
+.tour-popover {
+	display: none;
+	position: fixed;
+	z-index: 5002;
+	max-width: 340px;
+	background: #ffffff;
+	border-radius: 10px;
+	padding: 16px 18px;
+	box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+}
+.tour-popover h3 { margin: 0 0 8px; }
+.tour-popover p { margin: 0 0 12px; font-size: 14px; line-height: 1.5; }
+.tour-controls { display: flex; align-items: center; gap: 8px; }
+.tour-count { font-size: 12px; color: #888; margin-right: auto; }
+.tour-controls button {
+	border: 1px solid #ac1a40;
+	background: none;
+	color: #ac1a40;
+	border-radius: 6px;
+	padding: 6px 12px;
+	cursor: pointer;
+	font-size: 13px;
+}
+.tour-controls button.tour-next { background: #ac1a40; color: #fff; }
+.tour-controls button:disabled { opacity: 0.4; cursor: default; }
+.tour-controls button.tour-skip { border-color: #999; color: #666; }
+.welcome-tour-button {
+	display: inline-block;
+	background: #ac1a40;
+	color: #fff !important;
+	border: none;
+	border-radius: 6px;
+	padding: 10px 18px;
+	font-size: 15px;
+	cursor: pointer;
+	margin: 4px 0 10px;
+}
+.welcome-tour-button:hover { background: #8f1535; }
+.tour-restart { font-size: 13px; }
+
+/* Share button + dependency-free share menu (report modals) */
+.share-wrap {
+	float: right;
+	position: relative;
+}
+.share-button {
+	background-color: #717e82;
+	color: white;
+	border: 1px solid #ffffff;
+	padding: 8px 16px;
+	margin-left: 12px;
+	cursor: pointer;
+	font-size: 0.95em;
+	border-radius: 3px;
+}
+.share-button:hover {
+	background-color: #5a6469;
+}
+.share-button i {
+	margin-right: 6px;
+}
+.share-menu {
+	position: absolute;
+	right: 0;
+	top: calc(100% + 4px);
+	min-width: 170px;
+	background: #ffffff;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+	z-index: 1200;
+	padding: 4px 0;
+}
+.share-menu-item {
+	display: block;
+	width: 100%;
+	text-align: left;
+	background: none;
+	border: none;
+	padding: 8px 14px;
+	font-size: 0.9em;
+	cursor: pointer;
+	color: #333;
+}
+.share-menu-item:hover {
+	background: #f1f1f1;
+}
+.share-menu-item i {
+	margin-right: 8px;
+	color: #717e82;
+}
+
+/* Fix the Overview/Policy/Methods box height so it aligns with the fixed-height
+   charts on desktop; content scrolls internally when the text is longer */
+@media screen and (min-width: 56.25rem) {
+	.chart-description-tabs {
+		height: 400px;
+		max-height: 400px;
+	}
+}

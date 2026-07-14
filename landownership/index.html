@@ -5,7 +5,7 @@
 		
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="Description" content="Interactive map of land ownership across England and Wales, showing owner types, geocoding accuracy, and links to local carbon data to support planning and stewardship decisions.">
+		<meta name="Description" content="Interactive map of land ownership across England and Wales, showing owner types and links to local carbon data to support planning and stewardship.">
 		
 		<!-- Google tag (gtag.js) -->
   	<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q11V10CDRV"></script>
@@ -38,12 +38,15 @@
 		<meta name="twitter:card" content="summary_large_image">
 		<meta property="og:site_name" content="Carbon & Place">
 		<meta name="twitter:image:alt" content="Carbon & Place thumbnail">
-		<title>Land Ownership Explorer — England & Wales Property Data</title>
+		<title>Land Ownership Explorer - England & Wales Property Data</title>
 		
 		<!-- PWA support -->
 		<link rel="manifest" href="/manifest.webmanifest">
 		<link rel="apple-touch-icon" href="/images/icons/192.png">
-		<meta name="apple-mobile-web-app-status-bar" content="#ac1a40">
+		<meta name="mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-title" content="Carbon & Place">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 		<meta name="theme-color" content="#ac1a40">
 		<script src="/app.js" defer></script>
 		
@@ -64,6 +67,7 @@
 		<script src="datasets.js"></script>
 		<script src="settings.js"></script>
 		<script src="/js/ui-common.js"></script>
+		<script src="/js/tour.js" defer></script>
 		<script src="ui.js"></script>
 		<script>
 			document.addEventListener ('DOMContentLoaded', function () {
@@ -86,7 +90,14 @@
 		<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1" defer></script>
 		
 		
-	</head>
+	  <link rel="canonical" href="https://www.carbon.place/landownership/">
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "WebApplication", "name": "Land Ownership Explorer", "url": "https://www.carbon.place/landownership/", "description": "Explore Land Registry data on UK and overseas companies that own land across England and Wales.", "isPartOf": {"@type": "WebSite", "name": "Carbon & Place", "url": "https://www.carbon.place/"}, "publisher": {"@type": "Organization", "name": "Carbon & Place", "url": "https://www.carbon.place/", "logo": "https://www.carbon.place/images/ui/logo.webp"}, "applicationCategory": "EducationalApplication", "operatingSystem": "Any (web browser)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "GBP"}}
+  </script>
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.carbon.place/"}, {"@type": "ListItem", "position": 2, "name": "Land Ownership Explorer", "item": "https://www.carbon.place/landownership/"}]}
+  </script>
+</head>
 	
 	<body>
 		<!-- Google Tag Manager (noscript) -->
@@ -101,6 +112,7 @@
 			<a href="/about/">About</a>
 			<a href="/data/">Data</a>
 			<a href="/manual/">Manual</a>
+			<a href="/reports/">Reports</a>
 			<a href="#" id="expandtopnav" class="icon" aria-label="Expand menu"><i class="fa fa-bars"></i></a>
 		</nav>
 		
@@ -228,28 +240,28 @@
 			</div>
 			<button class="accordion">Boundaries</button>
 			<div class="panel">
-				<p><label><input type="checkbox" data-layer="wards" class="showlayer" value="false">Wards</label>
+				<p><label><input type="checkbox" data-layer="wards" class="showlayer" value="false">Wards</label> <label class="switch"><input type="checkbox" class="showlabels" data-layer="wards"><span class="slider round"></span></label> names
 				<button aria-label="Help Wards" class="helpbutton" data-help="boundaries-wards"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 				<div class="legendContextual legendHorizontal">
 					<div class="l_rHorizontal">
 						<div class="lbHorizontal"><span style="background-color: #206b07"></span></div>
 					</div>
 				</div>
-				<p><label><input type="checkbox" data-layer="la" class="showlayer" value="false">Local Authorities</label>
+				<p><label><input type="checkbox" data-layer="la" class="showlayer" value="false">Local Authorities</label> <label class="switch"><input type="checkbox" class="showlabels" data-layer="la"><span class="slider round"></span></label> names
 				<button aria-label="Help Local Authorities" class="helpbutton" data-help="boundaries-la"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 				<div class="legendContextual legendHorizontal">
 					<div class="l_rHorizontal">
 						<div class="lbHorizontal"><span style="background-color: #6b0707"></span></div>
 					</div>
 				</div>
-				<p><label><input type="checkbox" data-layer="parish" class="showlayer" value="false">Parish</label>
+				<p><label><input type="checkbox" data-layer="parish" class="showlayer" value="false">Parish</label> <label class="switch"><input type="checkbox" class="showlabels" data-layer="parish"><span class="slider round"></span></label> names
 				<button aria-label="Help Parish" class="helpbutton" data-help="boundaries-parish"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 				<div class="legendContextual legendHorizontal">
 					<div class="l_rHorizontal">
 						<div class="lbHorizontal"><span style="background-color: #6b0763"></span></div>
 					</div>
 				</div>
-				<p><label><input type="checkbox" data-layer="westminster" class="showlayer" value="false">Westminster Constituency</label>
+				<p><label><input type="checkbox" data-layer="westminster" class="showlayer" value="false">Westminster Constituency</label> <label class="switch"><input type="checkbox" class="showlabels" data-layer="westminster"><span class="slider round"></span></label> names
 				<button aria-label="Help Westminster Constituency" class="helpbutton" data-help="boundaries-westminster"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 				<div class="legendContextual legendHorizontal">
 					<div class="l_rHorizontal">

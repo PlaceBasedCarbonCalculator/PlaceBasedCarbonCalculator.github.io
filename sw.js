@@ -1,106 +1,166 @@
-const CACHE_NAME = 'CAP-cache';
+// Bump CACHE_VERSION whenever the precache list or caching strategy changes.
+// This is used to derive a single, versioned cache name so old caches are
+// purged on activation and offline behaviour stays consistent.
+const CACHE_VERSION = 'v3';
+const CACHE_NAME = `CAP-cache-${CACHE_VERSION}`;
 
-// Add whichever assets you want to pre-cache here:
+const OFFLINE_FALLBACK_PAGE = '/offline.html';
+
+// Assets pre-cached on install so core pages work offline. Only list files that
+// actually exist — a single 404 in addAll() would otherwise reject the whole
+// precache, so we add each entry individually and tolerate failures.
 const PRECACHE_ASSETS = [
-    '/about/index.html',
-    '/about/faq/index.html',
-    '/data/index.html',
+    OFFLINE_FALLBACK_PAGE,
+    '/',
+    '/index.html',
+    '/manifest.webmanifest',
+    '/app.js',
+    // Shared styles
     '/css/homepage.css',
     '/css/main.css',
     '/css/manual.css',
     '/css/map.css',
+    '/css/modal.css',
+    // Shared scripts
     '/js/common-nonmap.js',
+    '/js/databin.js',
     '/js/datasets-common.js',
     '/js/manual.js',
     '/js/parallax.js',
     '/js/settings-common.js',
     '/js/ui-common.js',
-    '/landownership/index.html',
-    '/landownership/datsets.js',
-    '/landownership/settings.js',
-    '/landownership/ui.js',
-    '/landuse/index.html',
-    '/landuse/datsets.js',
-    '/landuse/ui.js',
-    '/legacy/index.html',
+    '/js/postcode-search.js',
+    '/js/tour.js',
+    // Content pages
+    '/about/index.html',
+    '/about/faq/index.html',
+    '/about/feedback/index.html',
+    '/data/index.html',
     '/manual/index.html',
     '/manual/index.md',
     '/privacy/index.html',
+    '/reports/index.html',
+    '/reports/lsoa.html',
+    '/reports/cards/pbcc-card.html',
+    '/reports/cards/pbcc-card.js',
+    '/reports/cards/transport-card.html',
+    '/reports/cards/transport-card.js',
+    '/reports/cards/retrofit-card.html',
+    '/reports/cards/retrofit-card.js',
+    '/reports/area-cards.js',
+    '/reports/area-map.js',
+    // Feature tools
+    '/pbcc/index.html',
+    '/pbcc/datasets.js',
+    '/pbcc/settings.js',
+    '/pbcc/ui.js',
+    '/pbcc/style.css',
+    '/transport/index.html',
+    '/transport/datasets.js',
+    '/transport/settings.js',
+    '/transport/ui.js',
+    '/transport/style.css',
+    '/retrofit/index.html',
+    '/retrofit/datasets.js',
+    '/retrofit/settings.js',
+    '/retrofit/ui.js',
+    '/landownership/index.html',
+    '/landownership/datasets.js',
+    '/landownership/settings.js',
+    '/landownership/ui.js',
+    '/landuse/index.html',
+    '/landuse/datasets.js',
+    '/landuse/settings.js',
+    '/landuse/ui.js',
+    // Basemap styles
     '/tiles/partial-style_oszoom_names.json',
     '/tiles/style_dark_nobuild.json',
     '/tiles/style_google_nobuild.json',
     '/tiles/style_greyscale_nobuild.json',
     '/tiles/style_opencyclemap.json',
-    '/tiles/style_satellite.json',
-    '/transport/index.html',
-    '/transport/datsets.js',
-    '/transport/settings.js',
-    '/transport/ui.js',
-    '/transport/style.css'
-]
+    '/tiles/style_satellite.json'
+];
 
-// Listener for the install event - pre-caches our assets list on service worker install.
+// Large binary assets (map tiles, terrain) should never be runtime-cached: they
+// are huge, use range requests, and would quickly exhaust the storage quota.
+function isUncacheableAsset(url) {
+    return /\.pmtiles$/i.test(url.pathname) ||
+           /\.(mbtiles|pbf)$/i.test(url.pathname);
+}
+
+// --- Install: pre-cache the app shell --------------------------------------
 self.addEventListener('install', event => {
     event.waitUntil((async () => {
         const cache = await caches.open(CACHE_NAME);
-        cache.addAll(PRECACHE_ASSETS);
+        // Add entries individually so one missing file doesn't fail the rest.
+        await Promise.allSettled(
+            PRECACHE_ASSETS.map(asset => cache.add(asset))
+        );
+        self.skipWaiting();
     })());
 });
 
+// --- Activate: take control and purge old caches ---------------------------
 self.addEventListener('activate', event => {
-  event.waitUntil(self.clients.claim());
-});
-
-// This is the service worker with the combined offline experience (Offline page + Offline copy of pages)
-const CACHE = "pwabuilder-offline-page";
-
-importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js');
-
-const offlineFallbackPage = "offline.html";
-
-self.addEventListener("message", (event) => {
-  if (event.data && event.data.type === "SKIP_WAITING") {
-    self.skipWaiting();
-  }
-});
-
-self.addEventListener('install', async (event) => {
-  event.waitUntil(
-    caches.open(CACHE)
-      .then((cache) => cache.add(offlineFallbackPage))
-  );
-});
-
-if (workbox.navigationPreload.isSupported()) {
-  workbox.navigationPreload.enable();
-}
-
-workbox.routing.registerRoute(
-  new RegExp('/*'),
-  new workbox.strategies.StaleWhileRevalidate({
-    cacheName: CACHE
-  })
-);
-
-self.addEventListener('fetch', (event) => {
-  if (event.request.mode === 'navigate') {
-    event.respondWith((async () => {
-      try {
-        const preloadResp = await event.preloadResponse;
-
-        if (preloadResp) {
-          return preloadResp;
+    event.waitUntil((async () => {
+        const keys = await caches.keys();
+        await Promise.all(
+            keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
+        );
+        if (self.registration.navigationPreload) {
+            await self.registration.navigationPreload.enable();
         }
-
-        const networkResp = await fetch(event.request);
-        return networkResp;
-      } catch (error) {
-
-        const cache = await caches.open(CACHE);
-        const cachedResp = await cache.match(offlineFallbackPage);
-        return cachedResp;
-      }
+        await self.clients.claim();
     })());
-  }
 });
 
+// Allow the page to trigger an immediate update.
+self.addEventListener('message', event => {
+    if (event.data && event.data.type === 'SKIP_WAITING') {
+        self.skipWaiting();
+    }
+});
+
+// --- Fetch -----------------------------------------------------------------
+self.addEventListener('fetch', event => {
+    const request = event.request;
+
+    // Only handle same-origin GET requests.
+    if (request.method !== 'GET') return;
+    const url = new URL(request.url);
+    if (url.origin !== self.location.origin) return;
+
+    // Never intercept large tile/terrain assets — go straight to the network.
+    if (isUncacheableAsset(url)) return;
+
+    // Navigations: network-first, falling back to the cached page then the
+    // offline fallback so the user always sees something.
+    if (request.mode === 'navigate') {
+        event.respondWith((async () => {
+            try {
+                const preload = await event.preloadResponse;
+                if (preload) return preload;
+                const networkResp = await fetch(request);
+                const cache = await caches.open(CACHE_NAME);
+                cache.put(request, networkResp.clone());
+                return networkResp;
+            } catch (err) {
+                const cache = await caches.open(CACHE_NAME);
+                return (await cache.match(request)) ||
+                       (await cache.match(OFFLINE_FALLBACK_PAGE));
+            }
+        })());
+        return;
+    }
+
+    // Other assets: stale-while-revalidate.
+    event.respondWith((async () => {
+        const cache = await caches.open(CACHE_NAME);
+        const cached = await cache.match(request);
+        const network = fetch(request).then(resp => {
+            if (resp && resp.ok) cache.put(request, resp.clone());
+            return resp;
+        }).catch(() => cached);
+        return cached || network;
+    })());
+});

@@ -28,7 +28,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- PWA support -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/images/icons/192.png">
-<meta name="apple-mobile-web-app-status-bar" content="#ac1a40">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Carbon & Place">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#ac1a40">
 <script src="/app.js" defer></script>
 
@@ -56,6 +59,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 	<a href="/about/">About</a>
 	<a href="/data/">Data</a>
 	<a href="/manual/">Manual</a>
+	<a href="/reports/">Reports</a>
 	<a href="#" id="expandtopnav" class="icon" aria-label="Expand menu"><i class="fa fa-bars"></i></a>
 </nav> 
 
@@ -79,7 +83,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <h2>Funding</h2> 
 
 <p><b>Who funded this work?</b></p>
-<p>The PBCC was produced with funding from UK Research and Innovation through the Centre for Research into Energy Demand Solutions, grant reference number EP/R 035288/1.</p>
+<p>The PBCC was produced with funding from UK Research and Innovation through the Centre for Research into Energy Demand Solutions, grant reference number EP/R035288/1.</p>
 
 
 <h2>About the data</h2> 
@@ -91,15 +95,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <p>We use a wide range of different data sources to build up a complete carbon footprint. We try to use the most locally detailed data available, but when such data is unavailable, we use surveys and modelling to fill in the gaps.</p>  
 
 <p><b>Does the historical transport data include past decades?</b></p>
-<p>Currently, all historical data in the tool covers the period 2010 – 2018</p>
+<p>The historical data starts in 2010. The exact end year varies between datasets, and we extend the series as new data is published.</p>
 
 <p><b>Is the data based on 2011 census? And what is the estimated accuracy of the emissions data?</b></p>
-<p>No, most of the data is more recent and is from 2018. Some of the data provided for context is from the 2011 census, such as the travel to work data and the ONS area classifications.</p>
+<p>No, most of the data is more recent. The current version of the tools uses the 2021 Census (2022 in Scotland) where available, although some contextual datasets, such as the ONS area classifications, are still based on the 2011 census.</p>
 
 <p><b>What are the limitations of using the 2011 travel to work Census data?</b></p>
 <p>It is currently a big open question about how commuting patterns will change in the long term after Covid. We hope to update the tool with the 2021 travel to work data once it is published.</p>
 
-<p><b>How do the data relate to the BEIS Local and Regional CO2 database?</b></p>
+<p><b>How do the data relate to the official (DESNZ, formerly BEIS) local and regional CO2 statistics?</b></p>
 <p>While there is some overlap, these are separate datasets produced by different methods. Significant differences include: PBCC is a consumption-based footprint and so accounts for emissions related to imports from other parts of the UK and abroad. The PBCC also allocated car emissions based on the location of a car’s registered keeper rather than traffic on the roads. This benefits areas that have a lot of pass-through traffic.</p>
 
 <p><b>How are business-related emissions shown?</b></p>
@@ -112,7 +116,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <p>It is true that some of the largest sources of emissions, such as flights, lack high-quality local data. This is one of the reasons we use wide grade bands rather than precise carbon footprints. So that users focus on the big differences rather than small differences that may be due to limitations in the data.</p>
 
 <p><b>Is data for flights based on flights taken by the residents, or does it relate to the airport in the area?</b></p>
-<p>The flight emissions are distributed based on household income and research showing how much people with different incomes fly. Emissions are based on England’s share of total UK flights. Our estimate of emissions is significantly higher than the Department for Transport’s official estimate for several reasons. Firstly the DfT only considers departing flights to contribute to UK emissions. In contrast, we believe flights with UK residents in any direction contribute to UK emissions. Secondly, the DfT only counts commercial flights and so excludes private flights, which we include. Thirdly the DfT only considers carbon dioxide emissions directly and does not include other greenhouse gasses, and the radiative forcing caused emissions being produced at high altitudes.</p> 
+<p>The flight emissions are distributed based on household income and research showing how much people with different incomes fly. Emissions are based on Great Britain’s share of total UK flights. Our estimate of emissions is significantly higher than the Department for Transport’s official estimate for several reasons. Firstly the DfT only considers departing flights to contribute to UK emissions. In contrast, we believe flights with UK residents in any direction contribute to UK emissions. Secondly, the DfT only counts commercial flights and so excludes private flights, which we include. Thirdly the DfT only considers carbon dioxide emissions directly and does not include other greenhouse gasses, and the radiative forcing caused emissions being produced at high altitudes.</p> 
 
 <p><b>Could you include the Index of Multiple Deprivation? What about Mosaic or Acorn?</b></p>
 <p>We could include many different datasets; however, some, such as Mosaic, are commercial and cannot be included in a free open source tool. We decided to mainly focus on the new datasets that the PBCC can provide rather than remapping existing data.</p>

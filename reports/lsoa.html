@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="Description" content="A combined local carbon and place report for your neighbourhood, with links into the Carbon & Place tools.">
+	<!-- Per-neighbourhood report is generated from a query parameter; do not index the thin templated variants -->
+	<meta name="robots" content="noindex, follow">
+	<title>Local Report - Carbon &amp; Place</title>
+
+	<link rel="stylesheet" href="/css/main.css">
+	<link rel="stylesheet" href="/css/map.css"><!-- chart card styles shared with the map tools -->
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+	<link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet">
+	<link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet">
+
+	<!-- PWA support -->
+	<link rel="manifest" href="/manifest.webmanifest">
+	<link rel="apple-touch-icon" href="/images/icons/192.png">
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-title" content="Carbon & Place">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<meta name="theme-color" content="#ac1a40">
+	<script src="/app.js" defer></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
+
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q11V10CDRV"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag () {dataLayer.push (arguments);}
+		gtag('js', new Date());
+		gtag('config', 'G-Q11V10CDRV');
+	</script>
+
+	<style>
+		.local-report { max-width: 900px; margin: 0 auto; padding: 20px; }
+		.local-report .report-lede { color: #555; }
+		.context-list { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+		.context-list li { background: #f7f3f4; border: 1px solid #e6d9dd; border-radius: 8px; padding: 12px 14px; }
+		.context-list .context-label { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: #8a7d81; }
+		.context-list .context-value { font-size: 16px; font-weight: bold; color: #222; }
+		.context-list a.context-link { display: block; text-decoration: none; }
+		.context-list a.context-link:hover .context-value { color: #ac1a40; }
+		.context-list .context-cta { display: block; font-size: 12px; color: #ac1a40; margin-top: 4px; }
+		#area-map { height: 300px; border: 1px solid #e2e2e2; border-radius: 10px; margin: 8px 0 16px; }
+		.card-grid { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+		.card-grid a { display: block; padding: 16px; border-radius: 10px; text-decoration: none; color: #fff; background: #ac1a40; font-weight: bold; }
+		.card-grid a:hover { background: #8f1535; }
+		.card-grid a span { display: block; font-weight: normal; font-size: 13px; opacity: .9; margin-top: 4px; }
+		.report-links { list-style: none; padding: 0; }
+		.report-links li { margin: 8px 0; }
+		#report-error { color: #ac1a40; font-weight: bold; }
+		.report-warnings { background: #fff6e0; border: 1px solid #f0d78a; border-radius: 8px; padding: 12px 14px; }
+		.tool-section { border: 1px solid #e2e2e2; border-radius: 10px; padding: 14px 16px 18px; margin-bottom: 18px; }
+		.tool-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+		.tool-head h3 { margin: 0; }
+		.tool-head .card-tool-link { font-size: 13px; white-space: nowrap; }
+		.card-note { color: #666; font-size: 13px; margin: 2px 0 10px; }
+		.chart-box { position: relative; height: 260px; }
+		.chart-box.small { height: 220px; }
+		.card-missing { color: #888; font-style: italic; padding: 24px 0; }
+		.chart-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 14px; }
+		.chart-grid figure { margin: 0; }
+		.chart-grid figcaption { font-size: 13px; color: #444; margin-bottom: 4px; font-weight: bold; }
+		.expand-toggle { margin-top: 12px; background: none; border: 1px solid #ac1a40; color: #ac1a40; border-radius: 6px; padding: 7px 14px; cursor: pointer; font-size: 14px; }
+		.expand-toggle:hover { background: #ac1a40; color: #fff; }
+		.tool-more[hidden] { display: none; }
+		.community-photo { display: flex; flex-wrap: wrap; gap: 2px; margin-top: 6px; }
+		.community-photo img { width: 40px; height: 40px; object-fit: cover; border-radius: 3px; }
+	</style>
+</head>
+<body>
+
+<!-- Menu -->
+<nav>
+	<a href="/"><img src="/images/ui/logo.webp" alt="Carbon & Place Logo" class="logo"></a>
+	<a href="/about/">About</a>
+	<a href="/data/">Data</a>
+	<a href="/manual/">Manual</a>
+	<a href="/reports/">Reports</a>
+	<a href="#" id="expandtopnav" class="icon" aria-label="Expand menu"><i class="fa fa-bars"></i></a>
+</nav>
+
+<!-- Cookies Warning -->
+<div id="cookiewarning" class="cookiewarning">
+	<p>We use cookies to measure how you use our website so we can understand how you interact with it, which helps us to make improvements. <a href="/privacy">Find out more.</a></p>
+	<p>
+		<button class="button buttonOK" value="1"><strong>OK</strong></button>
+		<button class="button buttonNO" value=""><strong>No</strong></button>
+	</p>
+</div>
+
+<div class="content local-report">
+	<p><a href="/reports/">&larr; All reports</a></p>
+	<h1 id="report-title">Local Report</h1>
+	<p id="report-lede" class="report-lede"></p>
+	<p id="report-error" style="display:none"></p>
+
+	<div id="report-body" style="display:none">
+		<h2>Where is this?</h2>
+		<ul class="context-list" id="context-list"></ul>
+		<div id="area-map" aria-label="Map showing the boundary of this neighbourhood"></div>
+
+		<div id="report-warnings-wrap" style="display:none">
+			<h2>Data notes</h2>
+			<div class="report-warnings" id="report-warnings"></div>
+		</div>
+
+		<h2>Neighbourhood at a glance</h2>
+		<p>Headline figures drawn together from across our tools. Expand any section for more detail, or open the full interactive tool.</p>
+
+		<!-- PBCC / carbon footprint -->
+		<section class="tool-section">
+			<div class="tool-head"><h3>Carbon footprint</h3><a class="card-tool-link" id="link-pbcc" href="/pbcc/">Open in PBCC &rarr;</a></div>
+			<p class="card-note">Tonnes of CO<sub>2</sub>e per person per year, by category.</p>
+			<div class="chart-box"><canvas id="chart-footprint"></canvas></div>
+			<button type="button" class="expand-toggle" data-target="pbcc-more" data-tool="pbcc">Show all carbon charts</button>
+			<div id="pbcc-more" class="tool-more" hidden>
+				<div class="fullcard-host" id="pbcc-fullcard-host"><p class="card-missing">Loading all charts&hellip;</p></div>
+			</div>
+		</section>
+
+		<!-- Transport -->
+		<section class="tool-section">
+			<div class="tool-head"><h3>Transport</h3><a class="card-tool-link" id="link-transport" href="/transport/">Open in Transport &rarr;</a></div>
+			<p class="card-note">Private vehicles per person, adult and household.</p>
+			<div class="chart-box"><canvas id="chart-vehicles"></canvas></div>
+			<button type="button" class="expand-toggle" data-target="transport-more" data-tool="transport">Show all transport charts</button>
+			<div id="transport-more" class="tool-more" hidden>
+				<div class="fullcard-host" id="transport-fullcard-host"><p class="card-missing">Loading all charts&hellip;</p></div>
+			</div>
+		</section>
+
+		<!-- Retrofit / home energy -->
+		<section class="tool-section">
+			<div class="tool-head"><h3>Home energy &amp; buildings</h3><a class="card-tool-link" id="link-retrofit" href="/retrofit/">Open in Retrofit &rarr;</a></div>
+			<p class="card-note">Average household gas and electricity use (kWh per meter).</p>
+			<div class="chart-box"><canvas id="chart-energy"></canvas></div>
+			<button type="button" class="expand-toggle" data-target="retrofit-more" data-tool="retrofit">Show all building charts</button>
+			<div id="retrofit-more" class="tool-more" hidden>
+				<div class="fullcard-host" id="retrofit-fullcard-host"><p class="card-missing">Loading all charts&hellip;</p></div>
+			</div>
+		</section>
+
+		<h2>Explore this neighbourhood in our tools</h2>
+		<p>Each tool opens focused on this neighbourhood.</p>
+		<ul class="card-grid" id="tool-links"></ul>
+
+		<h2>Area summary reports</h2>
+		<p>See how this neighbourhood sits within larger areas.</p>
+		<ul class="report-links" id="area-report-links"></ul>
+	</div>
+</div>
+
+<script type="text/javascript" src="/js/common-nonmap.js"></script>
+<script type="text/javascript" src="/js/databin.js"></script>
+<script type="text/javascript" src="/reports/area-map.js"></script>
+<script>
+(function () {
+	'use strict';
+
+	var params = new URLSearchParams(window.location.search);
+	var lsoa = params.get('lsoa') || params.get('id');
+	var postcode = params.get('postcode');
+
+	var titleEl = document.getElementById('report-title');
+	var ledeEl = document.getElementById('report-lede');
+	var errorEl = document.getElementById('report-error');
+	var bodyEl = document.getElementById('report-body');
+
+	function showError(msg) {
+		errorEl.textContent = msg;
+		errorEl.style.display = 'block';
+	}
+
+	function esc(s) {
+		return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+			return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c];
+		});
+	}
+
+	if (!lsoa) {
+		showError('No neighbourhood was specified. Please search for a postcode on the home page.');
+		return;
+	}
+
+	var isScotland = /^S/.test(lsoa);
+	var areaWord = isScotland ? 'Data Zone' : 'LSOA';
+
+	// Fetch the neighbourhood overview (admin areas, classification) and the
+	// centroid (to centre the map tools that do not yet support ?report=)
+	var overviewUrl = 'https://pbcc.blob.core.windows.net/pbcc-data/lsoa_overview/v1/' + encodeURIComponent(lsoa) + '.json';
+
+	Promise.all([
+		fetch(overviewUrl).then(function (r) { if (!r.ok) { throw new Error('overview'); } return r.json(); }),
+		fetch('/data/lsoa_centroids.json').then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; })
+	]).then(function (results) {
+		var raw = results[0];
+		var d = Array.isArray(raw) ? raw[0] : raw;
+		var centroids = results[1] || {};
+		var centre = centroids[lsoa];
+
+		render(d, centre);
+	}).catch(function () {
+		showError('Sorry, we could not load a report for this neighbourhood (' + esc(lsoa) + '). Please try again later.');
+	});
+
+	function render(d, centre) {
+		var className = d.lsoa_class_name || '';
+		var heading = (postcode ? esc(postcode) + ' - ' : '') + areaWord + ' ' + esc(lsoa);
+		titleEl.textContent = heading;
+		document.title = heading + ' - Carbon & Place';
+		ledeEl.textContent = className ? ('This is a "' + className + '" neighbourhood.') : '';
+
+		// Context cards. Each links to the corresponding area report where the
+		// area's code is available in the overview data.
+		var context = [
+			['Local authority', d.LAD25NM, d.LAD25CD, '/reports/la.html'],
+			['Ward', d.WD25NM, d.WD25CD, '/reports/wards.html'],
+			['Constituency', d.PCON24NM, d.PCON24CD, '/reports/constituencies.html'],
+			['Parish', (d.PAR23NM && d.PAR23NM !== 'Unparished' ? d.PAR23NM : null),
+				(d.PAR23CD && d.PAR23CD !== 'Unparished' ? d.PAR23CD : null), '/reports/parishes.html'],
+			['Neighbourhood type', className, null, null]
+		];
+		var ctxHtml = '';
+		context.forEach(function (row) {
+			if (!row[1]) { return; }
+			var inner = '<span class="context-label">' + esc(row[0]) + '</span><span class="context-value">' + esc(row[1]) + '</span>';
+			if (row[2] && row[3]) {
+				ctxHtml += '<li><a class="context-link" href="' + row[3] + '?id=' + encodeURIComponent(row[2]) + '" title="Open the ' + esc(row[0]).toLowerCase() + ' report">' + inner + '<span class="context-cta">View report &rarr;</span></a></li>';
+			} else {
+				ctxHtml += '<li>' + inner + '</li>';
+			}
+		});
+		document.getElementById('context-list').innerHTML = ctxHtml;
+
+		// Locator map showing this neighbourhood's boundary (hidden if unavailable).
+		// Boundary comes from the bounds_lsoa bin (single binary + range request).
+		if (typeof capAreaMap !== 'undefined' && typeof capBin !== 'undefined') {
+			capAreaMap.initWithGeojson('area-map', capBin.fetchRecord('bounds_lsoa', lsoa));
+		}
+
+		// Data notes / warnings
+		if (Array.isArray(d.warnings) && d.warnings.length) {
+			document.getElementById('report-warnings').textContent =
+				'This neighbourhood has ' + d.warnings.length + ' data note(s) affecting some figures; see the relevant tool for details.';
+			document.getElementById('report-warnings-wrap').style.display = 'block';
+		}
+
+		// Tool links. PBCC and Transport support ?report= (open the report and pan);
+		// the others are centred on the neighbourhood via the map hash where a
+		// centroid is available.
+		var lng = centre ? centre[0] : null;
+		var lat = centre ? centre[1] : null;
+		var centreHash = (centre ? '#13/' + lat + '/' + lng : '');
+		var tools = [
+			['Place-Based Carbon Calculator', 'Carbon footprint and how it has changed', '/pbcc/?report=' + encodeURIComponent(lsoa)],
+			['Transport & Accessibility', 'Public transport, accessibility and vehicles', '/transport/?report=' + encodeURIComponent(lsoa)],
+			['Retrofit Explorer', 'Building energy performance and retrofit', centre ? '/retrofit/#/zones/' + centreHash : '/retrofit/'],
+			['Land Use & Planning', 'How land is used around here', centre ? '/landuse/#/' + centreHash : '/landuse/'],
+			['Land Ownership', 'Who owns land in this area', centre ? '/landownership/#/landowners/' + centreHash : '/landownership/']
+		];
+		var toolHtml = '';
+		tools.forEach(function (t) {
+			toolHtml += '<li><a href="' + t[2] + '">' + esc(t[0]) + '<span>' + esc(t[1]) + '</span></a></li>';
+		});
+		document.getElementById('tool-links').innerHTML = toolHtml;
+
+		// Area summary reports (only where we have the code for that area)
+		var areaReports = [
+			[d.LAD25CD, d.LAD25NM, '/reports/la.html', 'Local authority'],
+			[d.WD25CD, d.WD25NM, '/reports/wards.html', 'Ward'],
+			[d.PAR23CD && d.PAR23CD !== 'Unparished' ? d.PAR23CD : null, d.PAR23NM, '/reports/parishes.html', 'Parish'],
+			[d.PCON24CD, d.PCON24NM, '/reports/constituencies.html', 'Constituency']
+		];
+		var arHtml = '';
+		areaReports.forEach(function (a) {
+			if (!a[0]) { return; }
+			arHtml += '<li><a href="' + a[2] + '?id=' + encodeURIComponent(a[0]) + '">' +
+				esc(a[3]) + ' report: <strong>' + esc(a[1] || a[0]) + '</strong></a></li>';
+		});
+		if (!arHtml) { arHtml = '<li>No area summary reports are available for this neighbourhood yet.</li>'; }
+		document.getElementById('area-report-links').innerHTML = arHtml;
+
+		bodyEl.style.display = 'block';
+
+		if (typeof getCookie === 'function' && getCookie('analyticstrack') === 'true' && typeof gtag === 'function') {
+			gtag('event', 'view_local_report', { 'lsoa': lsoa });
+		}
+	}
+})();
+</script>
+
+<!-- Curated "at a glance" charts, combining every tool's report card, highlight-first with expandable detail -->
+<script>
+(function () {
+	'use strict';
+
+	var params = new URLSearchParams(window.location.search);
+	var lsoa = params.get('lsoa') || params.get('id');
+	if (!lsoa) { return; }
+
+	var BLOB = 'https://pbcc.blob.core.windows.net/pbcc-data/';
+	var enc = encodeURIComponent(lsoa);
+
+	// Point each section's "Open in …" link at the deep-linked tool report
+	[['link-pbcc', '/pbcc/'], ['link-transport', '/transport/'], ['link-retrofit', '/retrofit/']].forEach(function (p) {
+		var el = document.getElementById(p[0]);
+		if (el) { el.href = p[1] + '?report=' + enc; }
+	});
+
+	function getJSON(url) {
+		return fetch(url).then(function (r) { if (!r.ok) { throw new Error(String(r.status)); } return r.json(); });
+	}
+	function ctx(id) { var c = document.getElementById(id); return c ? c.getContext('2d') : null; }
+	function markMissing(canvasId, message) {
+		var canvas = document.getElementById(canvasId);
+		if (!canvas) { return; }
+		var note = document.createElement('p');
+		note.className = 'card-missing';
+		note.textContent = message || 'No data available for this neighbourhood.';
+		canvas.parentNode.replaceChild(note, canvas);
+	}
+	function lineOpts(yTitle) {
+		return {
+			responsive: true, maintainAspectRatio: false,
+			plugins: { legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } } },
+			scales: { y: { beginAtZero: true, title: { display: true, text: yTitle } } }
+		};
+	}
+	function stackedBarOpts(yTitle) {
+		return {
+			responsive: true, maintainAspectRatio: false,
+			plugins: { legend: { position: 'top', labels: { boxWidth: 12, font: { size: 10 } } } },
+			scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, title: { display: true, text: yTitle } } }
+		};
+	}
+	// Fetch the highlight datasets (the full cards fetch their own data on expand)
+	var P = {
+		hist: getJSON(BLOB + 'historical_emissions/v2/' + enc + '.json'),
+		veh: getJSON(BLOB + 'vehicle_summary/v1/' + enc + '.json'),
+		energy: getJSON(BLOB + 'lsoa_gas_electric/v2/' + enc + '.json')
+	};
+
+	// ---------- Highlights ----------
+	P.hist.then(renderFootprint).catch(function () { markMissing('chart-footprint'); });
+	P.veh.then(renderVehicles).catch(function () { markMissing('chart-vehicles'); });
+	P.energy.then(renderEnergy).catch(function () { markMissing('chart-energy'); });
+
+	function renderFootprint(d) {
+		if (!d || !d.year) { throw new Error('shape'); }
+		var groups = {
+			'Home energy': ['dom_gas_kgco2e_percap', 'dom_elec_kgco2e_percap', 'heating_other_kgco2e_percap'],
+			'Travel': ['car_kgco2e_percap', 'van_kgco2e_percap', 'company_bike_kgco2e_percap', 'transport_pt_kgco2e_percap', 'transport_vehiclepurchase_kgco2e_percap', 'transport_optranequip_other_kgco2e_percap'],
+			'Flights': ['flights_kgco2e_percap'],
+			'Food & drink': ['food_kgco2e_percap', 'alcohol_kgco2e_percap', 'restaurant_kgco2e_percap'],
+			'Other goods & services': ['housing_other_kgco2e_percap', 'furnish_kgco2e_percap', 'clothing_kgco2e_percap', 'communication_kgco2e_percap', 'recreation_kgco2e_percap', 'health_kgco2e_percap', 'education_kgco2e_percap', 'misc_kgco2e_percap']
+		};
+		var colours = { 'Home energy': '#e6550d', 'Travel': '#3182bd', 'Flights': '#756bb1', 'Food & drink': '#31a354', 'Other goods & services': '#969696' };
+		var years = d.year;
+		var datasets = Object.keys(groups).map(function (g) {
+			var data = years.map(function (_, i) {
+				var sum = 0;
+				groups[g].forEach(function (f) { var a = d[f]; if (a && typeof a[i] === 'number') { sum += a[i]; } });
+				return Math.round(sum / 1000 * 100) / 100;
+			});
+			return { label: g, data: data, backgroundColor: colours[g] };
+		});
+		new Chart(ctx('chart-footprint'), { type: 'bar', data: { labels: years, datasets: datasets }, options: stackedBarOpts('tCO2e per person') });
+	}
+
+	function renderVehicles(d) {
+		if (!d || !d.year) { throw new Error('shape'); }
+		new Chart(ctx('chart-vehicles'), {
+			type: 'line',
+			data: { labels: d.year, datasets: [
+				{ label: 'Per person', data: d.vehiclesPPers, borderColor: '#07c220', backgroundColor: '#07c220' },
+				{ label: 'Per adult', data: d.vehiclesPAdult, borderColor: '#0042f7', backgroundColor: '#0042f7' },
+				{ label: 'Per household', data: d.vehiclesPHousehold, borderColor: '#f50c0c', backgroundColor: '#f50c0c' }
+			] },
+			options: lineOpts('Vehicles')
+		});
+	}
+
+	function renderEnergy(d) {
+		if (!d || !d.year) { throw new Error('shape'); }
+		new Chart(ctx('chart-energy'), {
+			type: 'line',
+			data: { labels: d.year, datasets: [
+				{ label: 'Gas (mean kWh)', data: d.mean_gas_kwh, borderColor: '#e6550d', backgroundColor: '#e6550d' },
+				{ label: 'Electricity (mean kWh)', data: d.mean_elec_kwh, borderColor: '#3182bd', backgroundColor: '#3182bd' }
+			] },
+			options: lineOpts('kWh per meter')
+		});
+	}
+
+	// ---------- Expandable detail: the tool's real report card ----------
+	// On first expand, fetch the tool's report-card fragment (every chart from the
+	// tool's popup modal) plus its generated chart module, then load the data.
+	document.querySelectorAll('.expand-toggle').forEach(function (btn) {
+		btn.addEventListener('click', function () {
+			var target = document.getElementById(btn.dataset.target);
+			if (!target) { return; }
+			if (target.hasAttribute('hidden')) {
+				if (!btn.dataset.orig) { btn.dataset.orig = btn.textContent; }
+				target.removeAttribute('hidden');
+				btn.textContent = 'Hide charts';
+				loadFullCard(btn.dataset.tool);
+			} else {
+				target.setAttribute('hidden', '');
+				btn.textContent = btn.dataset.orig || 'Show all charts';
+			}
+		});
+	});
+
+	var loadedCards = {};
+	function loadFullCard(tool) {
+		if (loadedCards[tool]) { return; }
+		loadedCards[tool] = true;
+		var host = document.getElementById(tool + '-fullcard-host');
+		if (!host) { return; }
+		fetch('/reports/cards/' + tool + '-card.html')
+			.then(function (r) { if (!r.ok) { throw new Error('fragment'); } return r.text(); })
+			.then(function (html) {
+				host.innerHTML = html;
+				return new Promise(function (resolve, reject) {
+					var s = document.createElement('script');
+					s.src = '/reports/cards/' + tool + '-card.js';
+					s.onload = resolve;
+					s.onerror = reject;
+					document.body.appendChild(s);
+				});
+			})
+			.then(function () {
+				var card = window.reportCards && window.reportCards[tool];
+				if (!card) { throw new Error('module'); }
+				// Open the card's default tab, then load the data and build all charts
+				var defaultBtn = document.getElementById(card.defaultOpen);
+				if (defaultBtn) { defaultBtn.click(); }
+				return card.load(lsoa);
+			})
+			.catch(function (err) {
+				console.warn('Full card failed for ' + tool + ':', err);
+				host.innerHTML = '<p class="card-missing">Sorry, the full chart set could not be loaded. <a href="/' + tool + '/?report=' + enc + '">Open the ' + tool + ' tool instead</a>.</p>';
+				loadedCards[tool] = false; // allow retry on next expand
+			});
+	}
+})();
+</script>
+</body>
+</html>

@@ -48,10 +48,17 @@ var dwellingsageChart;
 manageChartsLA = function (locationId) {
 	console.log('Managing Charts LA');
 
-	// Primary chained requests that feed multiple charts
+	// Primary chained requests that feed multiple charts.
+	// The area-level data path is configurable per report page via
+	// window.REPORT_CONFIG.dataPath (e.g. 'ward_emissions/v1/'); it defaults to
+	// the local authority path so the existing LA report keeps working unchanged.
+	// The GB comparison row is always taken from la_emissions (national per-capita
+	// figures are identical regardless of the area type being reported).
+	const reportBase = 'https://pbcc.blob.core.windows.net/pbcc-data/';
+	const levelPath = (window.REPORT_CONFIG && window.REPORT_CONFIG.dataPath) || 'la_emissions/v2/';
 	const urlsPrimary = [
-		'https://pbcc.blob.core.windows.net/pbcc-data/la_emissions/v2/' + locationId + '.json',
-        'https://pbcc.blob.core.windows.net/pbcc-data/la_emissions/v2/GB.json'
+		reportBase + levelPath + locationId + '.json',
+        reportBase + 'la_emissions/v2/GB.json'
 	];
 
 	const primary = Promise.all(urlsPrimary.map(capUi.fetchJSON))
@@ -589,27 +596,27 @@ makeChartPopulation = function(){
 
   // Create an object to store data for each category
   var component = [
-		    // Label, field (e.g. Gas => dgkp2020), background colour, border colour
-				['0-4'  , 'a'  , 'rgb(255, 0, 0)', 'rgb(0,0,0)'],
-				['5-9'  , 'Ba' , 'rgb(255, 64, 0)'   , 'rgb(0,0,0)'],
-				['10-14', 'Ca' , 'rgb(255, 128, 0)'     , 'rgb(0,0,0)'],
-				['15-19', 'Da' , 'rgb(255, 192, 0)'    , 'rgb(0,0,0)'],
-				['20-24', 'Ea' , 'rgb(255, 255, 0)'  , 'rgb(0,0,0)'],
-				['25-29', 'Fa' , 'rgb(192, 255, 0)', 'rgb(0,0,0)'],
-				['30-34', 'Ga' , 'rgb(128, 255, 0)', 'rgb(0,0,0)'],
-				['35-39', 'Ha' , 'rgb(64, 255, 0)'   , 'rgb(0,0,0)'],
-				['40-44', 'Ia' , 'rgb(0, 255, 0)'  , 'rgb(0,0,0)'],
-				['45-49', 'Ja' , 'rgb(0, 255, 64)', 'rgb(0,0,0)'],
-				['50-54', 'Ka' , 'rgb(0, 255, 128)' , 'rgb(0,0,0)'],
-				['55-59', 'La' , 'rgb(0, 255, 192)'  , 'rgb(0,0,0)'],
-				['60-64', 'Ma' , 'rgb(0, 255, 255)'  , 'rgb(0,0,0)'],
-				['65-69', 'Na' , 'rgb(0, 192, 255)'     , 'rgb(0,0,0)'],
-				['70-74', 'Oa' , 'rgb(0, 128, 255)'    , 'rgb(0,0,0)'],
-				['75-79', 'Pa' , 'rgb(0, 64, 255)'     , 'rgb(0,0,0)'],
-				['80-84', 'Qa' , 'rgb(0, 0, 255)'     , 'rgb(0,0,0)'],
-				['85+'  , '8'  , 'rgb(128, 0, 255)'    , 'rgb(0,0,0)'],
-				['Households'  , 'he'  , 'rgb(0, 0, 0)'    , 'rgb(0,0,0)'],
-				['Dwellings'  , 'ap'  , 'rgb(255, 0, 0)'    , 'rgb(255,0,0)']
+		    // Label, field (matches columns in the population bin dataset), background colour, border colour
+				['0-4'  , 'a04'  , 'rgb(255, 0, 0)', 'rgb(0,0,0)'],
+				['5-9'  , 'a59' , 'rgb(255, 64, 0)'   , 'rgb(0,0,0)'],
+				['10-14', 'a1014' , 'rgb(255, 128, 0)'     , 'rgb(0,0,0)'],
+				['15-19', 'a1519' , 'rgb(255, 192, 0)'    , 'rgb(0,0,0)'],
+				['20-24', 'a2024' , 'rgb(255, 255, 0)'  , 'rgb(0,0,0)'],
+				['25-29', 'a2529' , 'rgb(192, 255, 0)', 'rgb(0,0,0)'],
+				['30-34', 'a3034' , 'rgb(128, 255, 0)', 'rgb(0,0,0)'],
+				['35-39', 'a3539' , 'rgb(64, 255, 0)'   , 'rgb(0,0,0)'],
+				['40-44', 'a4044' , 'rgb(0, 255, 0)'  , 'rgb(0,0,0)'],
+				['45-49', 'a4549' , 'rgb(0, 255, 64)', 'rgb(0,0,0)'],
+				['50-54', 'a5054' , 'rgb(0, 255, 128)' , 'rgb(0,0,0)'],
+				['55-59', 'a5559' , 'rgb(0, 255, 192)'  , 'rgb(0,0,0)'],
+				['60-64', 'a6064' , 'rgb(0, 255, 255)'  , 'rgb(0,0,0)'],
+				['65-69', 'a6569' , 'rgb(0, 192, 255)'     , 'rgb(0,0,0)'],
+				['70-74', 'a7074' , 'rgb(0, 128, 255)'    , 'rgb(0,0,0)'],
+				['75-79', 'a7579' , 'rgb(0, 64, 255)'     , 'rgb(0,0,0)'],
+				['80-84', 'a8084' , 'rgb(0, 0, 255)'     , 'rgb(0,0,0)'],
+				['85+'  , '85+'  , 'rgb(128, 0, 255)'    , 'rgb(0,0,0)'],
+				['Households'  , 'households_est'  , 'rgb(0, 0, 0)'    , 'rgb(0,0,0)'],
+				['Dwellings'  , 'all_properties'  , 'rgb(255, 0, 0)'    , 'rgb(255,0,0)']
 		  ]
   
   
@@ -762,12 +769,34 @@ if (document.readyState === 'loading') {
   initPrintButtons();
 }
 
+// Set the report heading/title to the named area (looked up from the level's
+// name JSON), so the page shows which area is being reported. Configurable via
+// window.REPORT_CONFIG.{level, nameJson}; defaults to the local authority set.
+function setReportTitle(locationId) {
+  const cfg = window.REPORT_CONFIG || {};
+  const level = cfg.level || 'Local Authority';
+  const nameJson = cfg.nameJson || '/reports/la.json';
+  const titleEl = document.getElementById('la-title');
+  fetch(nameJson)
+    .then(function (r) { return r.json(); })
+    .then(function (list) {
+      const match = (Array.isArray(list) ? list.find(function (x) { return x.id === locationId; }) : null);
+      const heading = (match ? match.name + ' - ' + level + ' Report' : level + ' Report');
+      if (titleEl) { titleEl.textContent = heading; }
+      document.title = heading;
+    })
+    .catch(function () {
+      if (titleEl) { titleEl.textContent = level + ' Report'; }
+    });
+}
+
 // Initialize page with location ID from URL parameter
 function initPageWithLocation() {
   const urlParams = new URLSearchParams(window.location.search);
   const locationId = urlParams.get('id');
-  
+
   if (locationId) {
+    setReportTitle(locationId);
     manageChartsLA(locationId);
   } else {
     console.warn('No location ID provided in URL parameter (?id=locationId)');

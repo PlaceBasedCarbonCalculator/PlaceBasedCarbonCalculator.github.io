@@ -3,6 +3,19 @@ var accessChart;
 
 
 // Data definitions, i.e. layers, charts, etc.
+
+// Single-binary datasets used by this tool (see js/databin.js). Record the
+// current index file name for each; the matching data_*.bin is named inside
+// the index (meta.bin_file). Bump a file name when that dataset is rebuilt and
+// re-uploaded - datasets are rebuilt independently, so the dates will diverge.
+if (typeof capBin !== 'undefined') {
+	capBin.register({
+		pt_frequency: 'index_pt_frequency_2026-07-13.json.gz',
+		access: 'index_access_2026-07-12.json.gz',
+		vehicle_summary: 'index_vehicle_summary_2026-07-12.json.gz'
+	});
+}
+
 const datasets_extra = {
 	
 	// Data layers
@@ -373,11 +386,15 @@ function zonesStyling (layerId, map, settings, datasets, createLegend /* callbac
 	// Get UI state
 	const daysymetricMode = document.querySelector ('input.updatelayer[data-layer="zones"][name="daysymetricmode"]').checked;
 	
-	// Set paint properties
-	//map.setPaintProperty (layerId, 'fill-color', ['step', ['get', field], getStyleColumn (field, datasets)]);
-	// map.setPaintProperty (layerId, 'fill-color', ['interpolate', ['linear'], ['get', field], ...getStyleColumn (field, datasets)]);
-	//console.log({'fill-color' : ['interpolate', ['linear'], ['get', field], ...getStyleColumn (field, datasets)]});
-	map.setPaintProperty (layerId, 'fill-color', ['interpolate', ['linear'], ['get', field], ...getStyleColumn (field, datasets)]);
+	// Set paint properties. Features with a null/missing value (e.g. no timetabled
+	// services) are shown in near-black to match the 'NA' legend entry, and are
+	// excluded from the interpolate ramp to avoid "expected number, found null"
+	// evaluation warnings from MapLibre.
+	map.setPaintProperty (layerId, 'fill-color', ['case',
+		['==', ['typeof', ['get', field]], 'number'],
+		['interpolate', ['linear'], ['get', field], ...getStyleColumn (field, datasets)],
+		'#111111'
+	]);
 	map.setPaintProperty (layerId, 'fill-opacity', (daysymetricMode ? 0.1 : 0.8)); // Very faded-out in daysymetric mode, as the buildings are coloured
 	map.setPaintProperty (layerId, 'fill-outline-color', 'rgba(0, 0, 0, 0.2)'); 
 	
@@ -400,10 +417,15 @@ function getBuildingsColour (settings)
 		return settings.basemapStyles[styleName].buildingColour;
 	}
 	
-	// If dasymetric mode, use a colour set based on the layer
+	// If dasymetric mode, use a colour set based on the layer (guarding null values
+	// so buildings in areas without data render near-black rather than erroring)
 	if (document.querySelector ('input.updatelayer[data-layer="zones"][name="daysymetricmode"]').checked) {
 		const field = document.querySelector ('select.updatelayer[data-layer="zones"][name="field"]').value;
-		return ['interpolate', ['linear'], ['get', field], ...getStyleColumn (field, datasets)];
+		return ['case',
+			['==', ['typeof', ['get', field]], 'number'],
+			['interpolate', ['linear'], ['get', field], ...getStyleColumn (field, datasets)],
+			'#111111'
+		];
 	}
 	
 	// Default to gray

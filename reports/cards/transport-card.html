@@ -1,308 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-	
-	<head>
-		
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="Description" content="Explore neighbourhood transport and accessibility across Great Britain: public transport frequency, travel patterns and mobility emissions for low-carbon planning.">
-		
-		<!-- Google tag (gtag.js) -->
-  	<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q11V10CDRV"></script>
-  	<script>
-  		window.dataLayer = window.dataLayer || [];
-  		function gtag () {dataLayer.push (arguments);}
-  		gtag('js', new Date ());
-  		gtag('config', 'G-Q11V10CDRV');
-  	</script>
-  	
-  	<!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-TXQZCMJT');</script>
-    <!-- End Google Tag Manager -->
-		
-		
-		<!-- Favicon -->
-		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-		<link rel="icon" href="/favicon.ico" type="image/x-icon">
-		
-		<!-- Social media -->
-		<meta property="og:title" content="Carbon & Place">
-		<meta property="og:description" content="An interactive map of Transport and Accessibility">
-		<meta property="og:image" content="/images/thumbnail.jpg">
-		<meta property="twitter:image" content="/images/thumbnail.jpg">
-		<meta property="og:url" content="https://www.carbon.place">
-		<meta name="twitter:card" content="summary_large_image">
-		<meta property="og:site_name" content="Carbon & Place">
-		<meta name="twitter:image:alt" content="Carbon & Place thumbnail">
-		<title>Transport & Accessibility Explorer - Local Mobility Emissions</title>
-		
-		<!-- PWA support -->
-		<link rel="manifest" href="/manifest.webmanifest">
-		<link rel="apple-touch-icon" href="/images/icons/192.png">
-		<meta name="mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-title" content="Carbon & Place">
-		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-		<meta name="theme-color" content="#ac1a40">
-		<script src="/app.js" defer></script>
-		
-		<!-- Map dependencies -->
-		<script src="https://unpkg.com/pmtiles@3.0.6/dist/pmtiles.js"></script>
-		<script src="/js/lib/geocoder/maplibre-gl-geocoder.min.js"></script>
-		<link rel="stylesheet" href="/js/lib/geocoder/maplibre-gl-geocoder-small.css" type="text/css"/>
-		<script src="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.js"></script>
-		<link href="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.css" rel="stylesheet" />
-		
-		<!-- Styles -->
-		<link rel="stylesheet" href="/css/main.css">
-		<link rel="stylesheet" href="/css/map.css">
-		<link rel="stylesheet" href="style.css">
+<div class="report-fullcard" id="transport-fullcard">
 
-		<!-- Carbon & Place application -->
-		<script src="/js/settings-common.js"></script>
-		<script src="/js/databin.js"></script>
-		<script src="/js/datasets-common.js"></script>
-		<script src="datasets.js"></script>
-		<script src="settings.js"></script>
-		<script src="/js/ui-common.js"></script>
-		<script src="/js/tour.js" defer></script>
-		<script src="ui.js" defer></script>
-		<script>
-			document.addEventListener ('DOMContentLoaded', function () {
-			  capUi.initialise (settings, datasets);
-			});
-		</script>
-		
-		<!-- Font Awesome -->
-		<link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet" defer>
-		<link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet" defer>
-		
-		<!-- Markdown conversion -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js" defer></script>
-		
-		<!-- Tooltips -->
-		<script src="https://unpkg.com/@popperjs/core@2" defer></script>
-		<script src="https://unpkg.com/tippy.js@6" defer></script>
-		
-		<!-- Charts -->
-		<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1" defer></script>
-
-	  <link rel="canonical" href="https://www.carbon.place/transport/">
-  <script type="application/ld+json">
-  {"@context": "https://schema.org", "@type": "WebApplication", "name": "Transport & Accessibility Explorer", "url": "https://www.carbon.place/transport/", "description": "Map public transport frequency, accessibility and vehicle data for neighbourhoods across Great Britain.", "isPartOf": {"@type": "WebSite", "name": "Carbon & Place", "url": "https://www.carbon.place/"}, "publisher": {"@type": "Organization", "name": "Carbon & Place", "url": "https://www.carbon.place/", "logo": "https://www.carbon.place/images/ui/logo.webp"}, "applicationCategory": "EducationalApplication", "operatingSystem": "Any (web browser)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "GBP"}}
-  </script>
-  <script type="application/ld+json">
-  {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.carbon.place/"}, {"@type": "ListItem", "position": 2, "name": "Transport & Accessibility Explorer", "item": "https://www.carbon.place/transport/"}]}
-  </script>
-</head>
-	<body>
-		<!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TXQZCMJT"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->  
-		
-		<!-- Menu -->
-		<nav>
-			<a href="/"><img src="/images/ui/logo.webp" alt="Carbon & Place Logo" class="logo" /></a>
-			<a href="/transport/">Transport and Accessibility Explorer</a>
-			<a href="/about/">About</a>
-			<a href="/data/">Data</a>
-			<a href="/manual/">Manual</a>
-			<a href="/reports/">Reports</a>
-			<a href="#" id="expandtopnav" class="icon" aria-label="Expand menu"><i class="fa fa-bars"></i></a>
-		</nav>
-		
-		<!-- Welcome Splash -->
-		<div id="welcome-modal" class="welcome-modal">
-			<span class="modal-close">&times;</span>
-			<div class="modal-body">
-				<h1>Transport and Accessibility Explorer</h1>
-				<p style="background-color: #f58291"><b>Beta Tool</b>: This tool is still in development and may contain preliminary analysis, bugs, or incomplete features. Beta tools are intended to provide an early look at upcoming features and so results should be treated with care. The tool may change at any time without warning. We are interested in your feedback and you can report issues or bugs on <a href="https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/issues" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
-				
-				<p>The Transport and Accessibility Explorer maps how travel options vary across Great Britain: public transport frequency back to 2004, vehicle ownership and electric vehicle uptake, and how easily residents can reach shops and services. For a full explanation of the tool please see the <a href="/manual/#transportandaccessibilityexplorer">manual</a>. You can also access sections of the manual via the help buttons (<i class="fa fa-question-circle" aria-hidden="true"></i>).</p>
-				
-				<div class="feedbackbox">
-					<div class="feedback-text">
-						<h2>How can we improve this tool?</h2>
-						<p>We would love to hear how you are using Carbon & Place and how we can make our tools more useful.</p>
-						<p><a href="/about/feedback" class="opentool">Submit Feedback</a></p>
-					</div>
-					<img src="/images/ui/feedback.webp" alt="Feedback" loading="lazy" class="feedback-image">
-				</div>
-				
-				<p>Last updated: <span id="updatedate"></span>. You may need to <a href="https://www.minitool.com/news/f5-vs-ctrl-f5.html" target="_blank" rel="noopener noreferrer">clear your browser cache</a> to see the latest updates.</p>
-				<!-- <div id="osmupdatedate"></div> -->
-			</div>
-		</div>
-		
-		<!-- Cookies Warning  -->
-		<div id="cookiewarning" class="cookiewarning">
-			<p>We use cookies to measure how you use our website so we can understand how you interact with it, which helps us to make improvements. <a href="/privacy">Find out more.</a></p>
-			<p>
-				<button class="button buttonOK" value="1"><strong>OK</strong></button>
-				<button class="button buttonNO" value=""><strong>No</strong></button>
-			</p>
-		</div>
-
-			<!-- Loading Spinner -->
-			<div class="spinner">
-				<img src="/images/ui/spinner.svg" alt="Loading..." loading="lazy" />
-			</div>
-		
-		<!-- Main Content -->
-		<div class="mapcontent">
-			<div id="map"></div>
-		</div>
-		
-		<!-- Basemap control box -->
-		<div id="basemapcontrol" style="display: none;">
-			<h3>Basemap</h3>
-			<form id="basemapform">
-				<!-- Values will be populated -->
-			</form>
-			<p><label class="switch"><input type="checkbox" id="placenamescheckbox" checked="checked" /><span class="slider round"></span></label> Place names</p>
-			<p title="Makes the map look smoother and clearer (not suitable for lower-powered devices)"><label class="switch"><input type="checkbox" id="antialiascheckbox" /><span class="slider round"></span></label> Anti-alias</p>
-		</div>
-		
-		<!-- Show Layer Selection Panel  Button-->
-		<div id="showrightbox" class="showrightbox">
-			<button class="float_button" aria-label="Show layers"><i class="fa fa-bars"></i></button>
-		</div>
-		
-		<!-- Layer Selection Panel -->
-		<div id="rightbox" class="rightbox">
-			<button class="close-button" aria-label="Hide layers"><i class="fas fa-times"></i></button>
-			<b> Layer Controls</b>
-			
-			<button id="autoopen" class="accordion">Neighbourhoods</button>
-			<div class="panel">
-				<p><label><input type="checkbox" class="showlayer" data-layer="zones" value="false">Show layer</label></p>
-				<p>
-					<select name="field" class="updatelayer" data-layer="zones" aria-label="Neighbourhood  layer">
-						<option value="change_bus_2008_2023" selected>Change in buses/hour (2008-2023)</option>
-						<option value="tph_daytime_avg_2023_3">Buses/hour (daytime average)</option>
-						<option value="tph_daytime_avg_2023_2">Trains/hour (daytime average)</option>
-						<option value="tph_daytime_avg_2023_0">Trams/hour (daytime average)</option>
-						<option value="tph_daytime_avg_2023_1">Subway/hour (daytime average)</option>
-						<option value="tph_daytime_avg_2023_4">Ferries/hour (daytime average)</option>
-						<option value="pBEV_PRIVATE">% Vehicles BEV (Private)</option>
-						<option value="pULEV_PRIVATE">% Vehicles ULEV (Private)</option>
-						<option value="pBEV_COMPANY">% Vehicles BEV (Company)</option>
-						<option value="pULEV_COMPANY">% Vehicles ULEV (Company)</option>
-						<option value="vehiclesPHousehold">Private vehicles per household</option>
-					</select>
-					<button aria-label="Help Neighbourhoods" class="helpbutton" data-help="transport-zones"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
-				</p>
-				<div id="zoneslegend" class="legendContextual">
-					<div class="l_rHorizontal">
-						<div class="lb"><span style="background-color: #ffffff"></span>&nbsp;</div>
-					</div>
-				</div>
-				
-				
-				<p><label class="switch"><input type="checkbox" name="daysymetricmode" class="updatelayer" data-layer="zones" checked><span class="slider round"></span></label> Dasymetric <button aria-label="Help daysymetric mode" class="helpbutton" data-help="dasymetric"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
-
-			</div>
-
-			<button class="accordion">15-minute neighbourhoods</button>
-			<div class="panel">
-				<p><label><input type="checkbox" id="centroidscheckbox"> Show centroids</label>
-				<button aria-label="Help travel-time isochrones" class="helpbutton" data-help="isochrones"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
-				<p><button id="clearisochrones" type="button">Clear isochrones</button></p>
-				<p>Click on the population-weighted centroid of an <abbr title="Lower Super Output Area">LSOA</abbr> to show 15-minute isochrones for different modes of travel</p>
-				<div>
-					<div><span style="background-color: #4daf4a;" class="legenddot"></span>Walking</div>
-					<div><span style="background-color: #377eb8;" class="legenddot"></span>Bicycle</div>
-					<div><span style="background-color: #984ea3;" class="legenddot"></span>Walk + Transit</div>
-					<div><span style="background-color: #e41a1c;" class="legenddot"></span>Bike + Transit</div>
-				</div>
-				<p>Travel time isochrones have been calculated based on Weekday AM peak-time timetables.
-				Bike + Transit assumes you can board the transit service with your bike and then use it
-				at the other end of your journey.</p>
-			</div>
-
-			<button class="accordion">Boundaries</button>
-			<div class="panel">
-				<p><label><input type="checkbox" data-layer="wards" class="showlayer" value="false">Wards</label> <label class="switch"><input type="checkbox" class="showlabels" data-layer="wards"><span class="slider round"></span></label> names
-				<button aria-label="Help Wards" class="helpbutton" data-help="boundaries-wards"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
-				<div class="legendContextual legendHorizontal">
-					<div class="l_rHorizontal">
-						<div class="lbHorizontal"><span style="background-color: #206b07"></span></div>
-					</div>
-				</div>
-				<p><label><input type="checkbox" data-layer="la" class="showlayer" value="false">Local Authorities</label> <label class="switch"><input type="checkbox" class="showlabels" data-layer="la"><span class="slider round"></span></label> names
-				<button aria-label="Help Local Authorities" class="helpbutton" data-help="boundaries-la"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
-				<div class="legendContextual legendHorizontal">
-					<div class="l_rHorizontal">
-						<div class="lbHorizontal"><span style="background-color: #6b0707"></span></div>
-					</div>
-				</div>
-				<p><label><input type="checkbox" data-layer="parish" class="showlayer" value="false">Parish</label> <label class="switch"><input type="checkbox" class="showlabels" data-layer="parish"><span class="slider round"></span></label> names
-				<button aria-label="Help Parish" class="helpbutton" data-help="boundaries-parish"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
-				<div class="legendContextual legendHorizontal">
-					<div class="l_rHorizontal">
-						<div class="lbHorizontal"><span style="background-color: #6b0763"></span></div>
-					</div>
-				</div>
-				<p><label><input type="checkbox" data-layer="westminster" class="showlayer" value="false">Westminster Constituency</label> <label class="switch"><input type="checkbox" class="showlabels" data-layer="westminster"><span class="slider round"></span></label> names
-				<button aria-label="Help Westminster Constituency" class="helpbutton" data-help="boundaries-westminster"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
-				<div class="legendContextual legendHorizontal">
-					<div class="l_rHorizontal">
-						<div class="lbHorizontal"><span style="background-color: #07366b"></span></div>
-					</div>
-				</div>
-			</div>
-		</div>
-		
-		<!-- Help box -->
-		<div id="help_modal" class="modal">
-			<span class="modal-close">&times;</span>
-			<div id="helpcontent">
-				<p><em>Help content loading&hellip;</em></p>
-			</div>
-		</div>
-		
-		
-		<!-- Modal -->
-		<div class="modal" id="zones-chartsmodal" style="display: none;">
-			<div class="modal-header">
-				<span class="modal-close">×</span>
-				<button class="print-button" aria-label="Print this modal" title="Print this page">Print</button>
-				<h2 class="modal-title">Zone Summary: XXXXX</h2>
-			</div>
-			<div class="modal-body">
 			  
 				<!-- Data Warning -->
-				<div class="warningbox">
-					<div class="warning" id="warning_1">
-					The 2022 Census in Scotland significantly changed Data Zone boundaries, historic data has been adjusted to the new boundaries
-					</div>
-					<div class="warning" id="warning_2">
-					This LSOA had a complex border change between 2011 and 2021, historical data uses closest matching LSOA
-					</div>
-					<div class="warning" id="warning_3">
-					This LSOA was formed in 2021 by merging two LSOAs, historical data has been merged
-					</div>
-					<div class="warning" id="warning_4">
-					This LSOA was formed in 2021 by splitting two LSOAs, historical data has been split
-					</div>
-					<div class="warning" id="warning_5">
-					At some point this LSOA has had zero residents
-					</div>
-					<div class="warning" id="warning_6">
-					In some years this LSOA has an unusually large number of company cars
-					</div>
-				</div>
+				
 
 				<!-- Tab links -->
 				<div class="tab">
-					<button class="tablinks" onclick="modalTab(event, 'vehicles')" id="defaultOpen">Vehicle Ownership</button>
-					<button class="tablinks" onclick="modalTab(event, 'ptfreq')">Public Transport Frequency</button>
-					<button class="tablinks" onclick="modalTab(event, 'pna')" >Accessibility & Proximity</button>
+					<button class="tablinks" onclick="transportCard_modalTab(event, 'vehicles')" id="transport-defaultOpen">Vehicle Ownership</button>
+					<button class="tablinks" onclick="transportCard_modalTab(event, 'ptfreq')">Public Transport Frequency</button>
+					<button class="tablinks" onclick="transportCard_modalTab(event, 'pna')" >Accessibility & Proximity</button>
 				</div>
 				
 				<div id="vehicles" class="tabcontent">
@@ -466,7 +172,7 @@
 	
 						
 						<p>Chart Options</p>
-						<select id="select_mode" name="select_mode" onchange="makeChartFrequency()">
+						<select id="select_mode" name="select_mode" onchange="transportCard_makeChartFrequency()">
 							<option value="3" selected>Bus</option>
 							<option value="2">Rail</option>
 							<option value="0">Tram/Light Rail</option>
@@ -474,7 +180,7 @@
 							<option value="4">Ferry</option>
 						</select>
 						
-						<select id="select_day" name="select_day" onchange="makeChartFrequency()">
+						<select id="select_day" name="select_day" onchange="transportCard_makeChartFrequency()">
 							<option value="weekday" selected>Weekday Average</option>
 							<option value="Sat" >Saturday</option>
 							<option value="Sun" >Sunday</option>
@@ -490,14 +196,5 @@
 					
 				</div>
 				
-			</div>
-		</div>
-		
-		
-		<div id="overlay"></div>
-		
-		
-		
-	</body>
-	
-</html>
+			
+</div>

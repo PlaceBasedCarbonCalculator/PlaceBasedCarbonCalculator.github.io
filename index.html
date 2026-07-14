@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="Description" content="Carbon & Place maps neighbourhood carbon footprints across Great Britain, offering interactive tools to explore sector emissions, compare places, and support local climate action.">
+  <meta name="Description" content="Carbon & Place maps neighbourhood carbon footprints across Great Britain, with interactive tools to explore emissions, compare places and support local action.">
   
   <link rel="stylesheet" href="/css/homepage.css">
   <link rel="stylesheet" href="/css/main.css">
@@ -51,11 +51,14 @@
   }
   </script>
   
-  <title>Carbon &amp; Place — Neighbourhood Carbon Mapping &amp; Tools</title>
+  <title>Carbon &amp; Place - Neighbourhood Carbon Mapping &amp; Tools</title>
   <!-- PWA support -->
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="apple-touch-icon" href="/images/icons/192.png">
-  <meta name="apple-mobile-web-app-status-bar" content="#ac1a40">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Carbon & Place">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#ac1a40">
   <script src="/app.js" defer></script>
 
@@ -90,10 +93,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- Menu -->
 <nav>
 	<a href="/"><img src="/images/ui/logo.webp" alt="Carbon & Place Logo" class="logo"></a>
-	<a href="#main">Tools</a>
+	<a href="#explore">Tools</a>
 	<a href="/about/">About</a>
 	<a href="/data/">Data</a>
 	<a href="/manual/">Manual</a>
+	<a href="/reports/">Reports</a>
 	<a href="#" id="expandtopnav" class="icon" aria-label="Expand menu"><i class="fa fa-bars"></i></a>
 </nav> 
 
@@ -120,6 +124,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 		<div class="parapic_layer parallax" id="parapic-6" data-speed="80"></div>
 		<div class="parapic_layer parallax" id="parapic-7" data-speed="90"></div>
 		<div class="parapic_layer" id="parapic-8" data-speed="100"></div>
+
+		<!-- Overlaid title + postcode search -->
+		<div class="hero-overlay">
+			<span class="hero-kicker">Great Britain &middot; neighbourhood by neighbourhood</span>
+			<h1 class="hero-title">Understand your local carbon footprint</h1>
+			<p class="hero-sub">Free, research-based tools for communities, planners and policymakers exploring the path to net zero.</p>
+			<div class="hero-search">
+				<h2>Find your neighbourhood</h2>
+				<p>Enter a UK postcode for a combined local report with links into every tool.</p>
+				<form id="postcode-search-form" class="postcode-search-form" role="search" aria-label="Postcode search">
+					<label for="postcode-search-input" class="visually-hidden">UK postcode</label>
+					<input type="text" id="postcode-search-input" name="postcode" placeholder="e.g. LS2 9JT" autocomplete="postal-code" autocapitalize="characters" spellcheck="false" aria-describedby="postcode-search-error" maxlength="9">
+					<button type="submit" class="button"><strong>Search</strong></button>
+				</form>
+				<p id="postcode-search-error" class="postcode-search-error" role="alert" style="display:none"></p>
+			</div>
+		</div>
 	</div>
 
 	<div id="main">
@@ -128,96 +149,141 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <p style="float: left"><b>Install the Carbon & Place App</b></p>
         <button  class="buttonInstall" ><b>Install</b></button>
       </div>
-	    
-      <div class="titlestrip">
-      <h1>Welcome to Carbon & Place</h1>
-      <p><b>We provide free tools to allow communities, planners, and policymakers in the UK to understand their local carbon footprint.</b></p>
-      <p>Based on the latest research and the best available data, we explore how carbon footprints change between neighbourhoods and how the path to net-zero will vary between places.</p>
-      
-      <h2>Beta Tools</h2>
-        <p>Get a sneak peek at some of the tools we have under development. Beta tools are intended to provide an early look at upcoming features and so results should be treated with care. The tools may change at any time without warning. We are interested in your feedback and you can report issues or bugs on <a href="https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/issues" target="_blank" rel="noopener noreferrer">GitHub</a></p>
-      
-      </div>
-      
-      
-      
-      <div class="toolstrip" style="background: rgb(36,0,0); background: linear-gradient(307deg, rgba(36,0,0,1) 0%, rgba(199,13,13,1) 10%, rgba(255,98,98,1) 50%, rgba(255,255,255,1) 100%);">  
-        <h3>Place-Based Carbon Calculator (Version 2)</h3>
-        <a href="/pbcc"><img src="/images/ui/pbcc.webp" alt="Place-Based Carbon Calculator Thumbnail" class="tool_thumbnail" loading="lazy"></a>
-        <p>A new version of the Place-Based Carbon Calculator with updated data, expanded coverage, and much more is now available.</p>
-        <p><a href="/pbcc/" class="opentool">Place-Based Carbon Calculator (v2)</a></p>
-      </div>
-      
-      <div class="toolstrip" style="background: rgb(11,36,0); background: linear-gradient(307deg, rgba(11,36,0,1) 0%, rgba(41,199,13,1) 10%, rgba(119,255,98,1) 50%, rgba(255,255,255,1) 100%);">
-        <h3>Transport and Accessibility Explorer</h3>
-        <a href="/transport/#/zones/#8/51.482/-0.151"><img src="/images/ui/transport.webp" alt="Transport and Accessibility Thumbnail" class="tool_thumbnail" loading="lazy"></a>
-        <p>Transport is the largest source of emissions in the UK. This tool examines how travel options vary across the country.</p>
-        <p><a href="/transport/#/zones/#8/51.482/-0.151" class="opentool">Transport and Accessibility Explorer</a></p>
-      </div>  
-      
-      <div class="toolstrip" style="background: rgb(36,29,0); background: linear-gradient(307deg, rgba(36,29,0,1) 0%, rgba(199,180,13,1) 10%, rgba(255,234,98,1) 50%, rgba(255,255,255,1) 100%);">
-        <h3>Land Use and Planning Explorer</h3>
-        <a href="/landuse"><img src="/images/ui/landuse.webp" alt="Land Use and Planning Thumbnail" class="tool_thumbnail" loading="lazy"></a>
-        <p>How we use land and what we put in different places matters, explore how land is used across Great Britain.</p>
-        <p><a href="/landuse" class="opentool">Land Use and Planning Explorer</a></p>
-      </div>  
-      
-      <div class="toolstrip" style="background: rgb(20,0,36); background: linear-gradient(307deg, rgba(20,0,36,1) 0%, rgba(121,13,199,1) 10%, rgba(179,98,255,1) 50%, rgba(255,255,255,1) 100%);">
-        <h3>Land Ownership Explorer</h3>
-        <a href="/landownership/#/landowners/#8/51.482/-0.151"><img src="/images/ui/landownership.webp" alt="Land Ownership Thumbnail" class="tool_thumbnail" loading="lazy"></a>
-        <p>Land owners have the power to define and redefine places. Explore Land Registry data about UK and foreign companies that own land in England and Wales.</p>
-        <p><a href="/landownership/#/landowners/#8/51.482/-0.151" class="opentool">Land Ownership Explorer</a></p>
-      </div>
-      
 
-      
-      <div class="toolstrip" style="background: rgb(0,8,36); background: linear-gradient(307deg, rgba(0,8,36,1) 0%, rgba(13,60,199,1) 10%, rgba(98,137,255,1) 50%, rgba(255,255,255,1) 100%);"> 
-        <h3>Retrofit Explorer</h3>
-        <a href="/retrofit"><img src="/images/ui/retrofit.webp" alt="Retrofit Thumbnail" class="tool_thumbnail" loading="lazy"></a>
-        <p>Britain has some of the coldest and leakiest buildings in Europe, what can be done to fix them? This tool lets you explore data about buildings and their energy consumption.</p>
-        <p><a href="/retrofit/#/zones/#8/51.482/-0.151" class="opentool">Retrofit Explorer</a></p>
-      </div>
-      
-      <div class="titlestrip">
-        <h2>Learn More</h2>
-        <p>The manual explains how to use the tools and provides background context.</p>
-        <p><a href="/manual" class="opentool">Manual</a></p>
-        <p>Much of our data is free to download and reuse.</p>
-        <p><a href="/data" class="opentool">Data Downloads</a></p>
-        
-        <p> </p>
-      </div> 
-      
-      <div class="toolstrip" style="background: rgb(36,0,0); background: linear-gradient(307deg, rgba(36,0,0,1) 0%, rgba(199,13,13,1) 10%, rgba(255,98,98,1) 50%, rgba(255,255,255,1) 100%);">
-        <h3>Place-Based Carbon Calculator (legacy)</h3>
-        <a href="/legacy"><img src="/images/ui/legacy.webp" alt="Place-Based Carbon Calculator Thumbnail" class="tool_thumbnail"></a>
-        <p>Launched in 2020 by the Centre for Research in Energy Demand Solutions (CREDS). The PBCC allows you to view how neighbourhood carbon footprints vary across England. This version of the PBCC is now being archived in preparation for the launch of a new version (see above).</p>
-        <p><a href="/legacy" class="opentool">Place-Based Carbon Calculator</a></p>
-      </div>
-      
-      
-      <!-- Footer -->
-      <div class="titlestrip">
-        <h3>Carbon & Place is funded and developed with the help of:</h3>
-        <div>
-          <a href="https://www.edrc.ac.uk/" target="_blank" rel="noopener noreferrer" aria-label="EDRC homepage"><img class="logos" alt="EDRC Logo" src="/images/ui/edrc-logo.webp" loading="lazy"></a>
-          <a href="https://www.creds.ac.uk/" target="_blank" rel="noopener noreferrer" aria-label="CREDS homepage"><img class="logos" alt="CREDS Logo" src="/images/ui/CREDS-logo.svg" loading="lazy"></a>
-          <a href="https://www.ukri.org/councils/epsrc/" target="_blank" rel="noopener noreferrer" aria-label="EPSRC homepage"><img class="logos" alt="EPSRC Logo" src="/images/ui/EPSRC.webp" loading="lazy"></a>
-          <a href="https://www.ukri.org/councils/esrc/" target="_blank" rel="noopener noreferrer" aria-label="ESRC homepage"><img class="logos" alt="ESRC Logo" src="/images/ui/esrc-logo.webp" loading="lazy"></a>
-          <a href="https://www.ukri.org/" target="_blank" rel="noopener noreferrer" aria-label="UKRI homepage"><img class="logos" alt="EPSRC Logo" src="/images/ui/UKRI-logo.webp" loading="lazy"></a>
-          <a href="https://www.leeds.ac.uk/" target="_blank" rel="noopener noreferrer" aria-label="University of Leeds homepage"><img class="logos" alt="University of Leeds Logo" src="/images/ui/leeds.webp" loading="lazy"></a>
-          <a href="https://friendsoftheearth.uk/" target="_blank" rel="noopener noreferrer" aria-label="Friends of the Earth UK homepage"><img class="logos" alt="Friends of the Earth Logo" src="/images/ui/FOE_logo.webp" loading="lazy"></a>
-          <a href="https://www.manchester.ac.uk/" target="_blank" rel="noopener noreferrer" aria-label="University of Manchester homepage"><img class="logos" alt="University of Manchester Logo" src="/images/ui/manchester.webp" loading="lazy"></a>
-          <a href="https://transportforthesoutheast.org.uk/" target="_blank" rel="noopener noreferrer" aria-label="TFSE homepage"><img class="logos" alt="TFSE Logo" src="/images/ui/tfse.webp" loading="lazy"></a>
-          <a href="https://uk.steergroup.com/" target="_blank" rel="noopener noreferrer"><img class="logos" aria-label="Steer homepage" alt="Steer Logo" src="/images/ui/steer.webp" loading="lazy"></a>
+      <!-- Start here -->
+      <section class="section soft">
+        <div class="section-head">
+          <span class="eyebrow">Start here</span>
+          <h2>Three steps to get the most from the site</h2>
+          <p>New to Carbon &amp; Place? Here is the quickest route in.</p>
         </div>
-      </div>
+        <div class="steps">
+          <div class="step"><div class="num">1</div><h3>Find your area</h3><p>Enter a postcode above for a combined local report, or open a tool and click any neighbourhood on the map.</p></div>
+          <div class="step"><div class="num">2</div><h3>Explore the tools</h3><p>Each tool maps a different part of the picture. Colour the map by different measures and open detailed reports.</p></div>
+          <div class="step"><div class="num">3</div><h3>Compare and share</h3><p>Compare your neighbourhood with its authority, ward and constituency, then share any view by copying the web address.</p></div>
+        </div>
+      </section>
+
+      <!-- Tools -->
+      <section class="section" id="explore">
+        <div class="section-head">
+          <span class="eyebrow">Explore the tools</span>
+          <h2>Five ways to explore place and carbon</h2>
+          <p>Every tool has <i class="fa fa-question-circle" aria-hidden="true"></i> help buttons that explain each map and chart, and the <a href="/manual/" class="opentool">manual</a> covers everything in more depth. Beta tools give an early look at upcoming features, so treat results with care and report any bugs on <a href="https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/issues" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
+        </div>
+
+        <div class="tool-grid">
+          <article class="tool-card t-pbcc">
+            <div class="shot"><img src="/images/ui/pbcc.webp" alt="Place-Based Carbon Calculator map" loading="lazy"></div>
+            <div class="accent"></div>
+            <div class="content">
+              <span class="badge">Carbon footprints</span>
+              <h3>Place-Based Carbon Calculator <span class="beta-flag">v2</span></h3>
+              <p>The new version with updated data, expanded coverage and much more. See how neighbourhood carbon footprints vary across Great Britain.</p>
+              <a class="cta" href="/pbcc/">Open tool</a>
+            </div>
+          </article>
+
+          <article class="tool-card t-transport">
+            <div class="shot"><img src="/images/ui/transport.webp" alt="Transport and accessibility map" loading="lazy"></div>
+            <div class="accent"></div>
+            <div class="content">
+              <span class="badge">Travel &amp; access</span>
+              <h3>Transport &amp; Accessibility Explorer</h3>
+              <p>Transport is the largest source of emissions in the UK. Examine how travel options and accessibility vary across the country.</p>
+              <a class="cta" href="/transport/#/zones/#8/51.482/-0.151">Open tool</a>
+            </div>
+          </article>
+
+          <article class="tool-card t-landuse">
+            <div class="shot"><img src="/images/ui/landuse.webp" alt="Land use and planning map" loading="lazy"></div>
+            <div class="accent"></div>
+            <div class="content">
+              <span class="badge">Land &amp; planning</span>
+              <h3>Land Use &amp; Planning Explorer</h3>
+              <p>How we use land shapes everything from housing to nature. Explore planning designations, environmental constraints and protected places.</p>
+              <a class="cta" href="/landuse">Open tool</a>
+            </div>
+          </article>
+
+          <article class="tool-card t-landown">
+            <div class="shot"><img src="/images/ui/landownership.webp" alt="Land ownership map" loading="lazy"></div>
+            <div class="accent"></div>
+            <div class="content">
+              <span class="badge">Ownership</span>
+              <h3>Land Ownership Explorer</h3>
+              <p>Landowners have the power to define and redefine places. Explore Land Registry data on company and overseas ownership in England and Wales.</p>
+              <a class="cta" href="/landownership/#/landowners/#8/51.482/-0.151">Open tool</a>
+            </div>
+          </article>
+
+          <article class="tool-card t-retrofit">
+            <div class="shot"><img src="/images/ui/retrofit.webp" alt="Retrofit explorer map" loading="lazy"></div>
+            <div class="accent"></div>
+            <div class="content">
+              <span class="badge">Buildings &amp; energy</span>
+              <h3>Retrofit Explorer</h3>
+              <p>Britain has some of the coldest, leakiest homes in Europe. Explore detailed data on buildings, their energy use and running costs.</p>
+              <a class="cta" href="/retrofit/#/zones/#8/51.482/-0.151">Open tool</a>
+            </div>
+          </article>
+
+          <article class="tool-card t-legacy">
+            <div class="shot"><img src="/images/ui/legacy.webp" alt="Legacy Place-Based Carbon Calculator" loading="lazy"></div>
+            <div class="accent"></div>
+            <div class="content">
+              <span class="badge">Archive</span>
+              <h3>Place-Based Carbon Calculator (legacy)</h3>
+              <p>The original 2020 tool from CREDS, covering England. Now being archived ahead of the new version above.</p>
+              <a class="cta" href="/legacy">Open tool</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Learn more -->
+      <section class="section soft">
+        <div class="section-head">
+          <span class="eyebrow">Go deeper</span>
+          <h2>Learn more and reuse the data</h2>
+        </div>
+        <div class="split">
+          <div class="panel">
+            <h3>The manual</h3>
+            <p>Explains how to use each tool and provides the background context and methods behind the maps.</p>
+            <a class="btn-outline" href="/manual">Read the manual</a>
+          </div>
+          <div class="panel">
+            <h3>Data downloads</h3>
+            <p>Much of our data is free to download and reuse under an open licence for your own analysis.</p>
+            <a class="btn-outline" href="/data">Browse data</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Funders -->
+      <section class="section funders">
+        <h3>Funded and developed with the help of:</h3>
+        <div class="logo-row">
+          <a href="https://www.edrc.ac.uk/" target="_blank" rel="noopener noreferrer" aria-label="EDRC homepage"><img alt="EDRC Logo" src="/images/ui/edrc-logo.webp" loading="lazy"></a>
+          <a href="https://www.creds.ac.uk/" target="_blank" rel="noopener noreferrer" aria-label="CREDS homepage"><img alt="CREDS Logo" src="/images/ui/CREDS-logo.svg" loading="lazy"></a>
+          <a href="https://www.ukri.org/councils/epsrc/" target="_blank" rel="noopener noreferrer" aria-label="EPSRC homepage"><img alt="EPSRC Logo" src="/images/ui/EPSRC.webp" loading="lazy"></a>
+          <a href="https://www.ukri.org/councils/esrc/" target="_blank" rel="noopener noreferrer" aria-label="ESRC homepage"><img alt="ESRC Logo" src="/images/ui/esrc-logo.webp" loading="lazy"></a>
+          <a href="https://www.ukri.org/" target="_blank" rel="noopener noreferrer" aria-label="UKRI homepage"><img alt="UKRI Logo" src="/images/ui/UKRI-logo.webp" loading="lazy"></a>
+          <a href="https://www.leeds.ac.uk/" target="_blank" rel="noopener noreferrer" aria-label="University of Leeds homepage"><img alt="University of Leeds Logo" src="/images/ui/leeds.webp" loading="lazy"></a>
+          <a href="https://friendsoftheearth.uk/" target="_blank" rel="noopener noreferrer" aria-label="Friends of the Earth UK homepage"><img alt="Friends of the Earth Logo" src="/images/ui/FOE_logo.webp" loading="lazy"></a>
+          <a href="https://www.manchester.ac.uk/" target="_blank" rel="noopener noreferrer" aria-label="University of Manchester homepage"><img alt="University of Manchester Logo" src="/images/ui/manchester.webp" loading="lazy"></a>
+          <a href="https://transportforthesoutheast.org.uk/" target="_blank" rel="noopener noreferrer" aria-label="TFSE homepage"><img alt="TFSE Logo" src="/images/ui/tfse.webp" loading="lazy"></a>
+          <a href="https://uk.steergroup.com/" target="_blank" rel="noopener noreferrer" aria-label="Steer homepage"><img alt="Steer Logo" src="/images/ui/steer.webp" loading="lazy"></a>
+        </div>
+      </section>
 	  </div>
 
 </div>
 
 <script type="text/javascript" src="/js/parallax.js"></script>
 <script type="text/javascript" src="/js/common-nonmap.js"></script>
+<script type="text/javascript" src="/js/postcode-search.js"></script>
 
 <!-- Map dependencies not needed on homepage but cached for other pages-->
 <link rel="prefetch" as="script" href="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.js">

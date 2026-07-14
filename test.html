@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PBCC Data Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 24px;
+      max-width: 900px;
+    }
+    label, button {
+      display: block;
+      margin: 12px 0 6px;
+    }
+    select, button {
+      padding: 8px 10px;
+      font-size: 1rem;
+    }
+    pre {
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      padding: 12px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .status {
+      margin-top: 12px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>PBCC Data Test</h1>
+  <p>Loads the gzipped index, builds a dropdown from the record IDs, then fetches the selected record using an HTTP range request.</p>
+
+  <label for="recordSelect">Select record ID</label>
+  <select id="recordSelect" disabled>
+    <option>Loading index...</option>
+  </select>
+
+  <button id="getDataBtn" disabled>Get data</button>
+  <div class="status" id="status"></div>
+  <pre id="output"></pre>
+
+  <script>
+    const indexUrl = 'https://pbcc.blob.core.windows.net/pbcc-datagzip/index_test.json.gz';
+    const dataUrl = 'https://pbcc.blob.core.windows.net/pbcc-jsonbin/data_test.bin';
+
+    const selectElement = document.getElementById('recordSelect');
+    const getDataBtn = document.getElementById('getDataBtn');
+    const statusEl = document.getElementById('status');
+    const outputEl = document.getElementById('output');
+
+    let indexData = null;
+
+    async function gunzipBuffer(arrayBuffer) {
+      if (!('DecompressionStream' in window)) {
+        throw new Error('DecompressionStream is not supported in this browser.');
+      }
+      const compressed = new Blob([arrayBuffer]);
+      const ds = new DecompressionStream('gzip');
+      const decompressedStream = compressed.stream().pipeThrough(ds);
+      const decompressedResponse = new Response(decompressedStream);
+      return decompressedResponse.arrayBuffer();
+    }
+
+    async function brotliBuffer(arrayBuffer) {
+      if (!('DecompressionStream' in window)) {
+        throw new Error('DecompressionStream is not supported in this browser.');
+      }
+      const compressed = new Blob([arrayBuffer]);
+      const ds = new DecompressionStream('brotli');
+      const decompressedStream = compressed.stream().pipeThrough(ds);
+      const decompressedResponse = new Response(decompressedStream);
+      return decompressedResponse.arrayBuffer();
+    }
+
+    async function loadIndex() {
+      try {
+        statusEl.textContent = 'Loading index...';
+        const response = await fetch(indexUrl);
+        if (!response.ok) {
+          throw new Error('Failed to load index: ' + response.statusText);
+        }
+        const compressedBuffer = await response.arrayBuffer();
+        const uncompressedBuffer = await gunzipBuffer(compressedBuffer);
+        const text = new TextDecoder().decode(uncompressedBuffer);
+        indexData = JSON.parse(text);
+
+        const ids = Object.keys(indexData).sort();
+        selectElement.innerHTML = ids.length
+          ? ids.map(id => `<option value="${id}">${id}</option>`).join('')
+          : '<option>No records found</option>';
+        selectElement.disabled = ids.length === 0;
+        getDataBtn.disabled = ids.length === 0;
+        statusEl.textContent = ids.length ? 'Index loaded. Select an ID and click Get data.' : 'No records available in index.';
+      } catch (error) {
+        statusEl.textContent = 'Error loading index: ' + error.message;
+        selectElement.innerHTML = '<option>Failed to load index</option>';
+        selectElement.disabled = true;
+        getDataBtn.disabled = true;
+      }
+    }
+
+    async function fetchRecord() {
+      if (!indexData) {
+        return;
+      }
+      const id = selectElement.value;
+      const record = indexData[id];
+      if (!record) {
+        statusEl.textContent = 'Selected record not found in index.';
+        return;
+      }
+
+      const start = record.offset;
+      const end = record.offset + record.compressed_length - 1;
+      statusEl.textContent = `Fetching bytes ${start}-${end} for ${id}...`;
+      outputEl.textContent = '';
+      getDataBtn.disabled = true;
+
+      try {
+        const response = await fetch(dataUrl, {
+          headers: {
+            Range: `bytes=${start}-${end}`
+          }
+        });
+        if (!response.ok && response.status !== 206) {
+          throw new Error('Range request failed: ' + response.status + ' ' + response.statusText);
+        }
+        const compressedBuffer = await response.arrayBuffer();
+        const uncompressedBuffer = await brotliBuffer(compressedBuffer);
+        const jsonText = new TextDecoder().decode(uncompressedBuffer);
+        const jsonData = JSON.parse(jsonText);
+
+        outputEl.textContent = JSON.stringify(jsonData, null, 2);
+        statusEl.textContent = `Loaded record ${id}.`;
+      } catch (error) {
+        statusEl.textContent = 'Error loading record: ' + error.message;
+        outputEl.textContent = '';
+      } finally {
+        getDataBtn.disabled = false;
+      }
+    }
+
+    getDataBtn.addEventListener('click', fetchRecord);
+    loadIndex();
+  </script>
+</body>
+</html>
