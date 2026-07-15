@@ -1,0 +1,439 @@
+/* ==========================================================================
+   New design language for the map tools. Loaded after /css/map.css (and any
+   per-tool style.css), overriding their look while keeping every class and
+   ID contract that the shared JS (ui-common.js, tour.js) depends on.
+   ========================================================================== */
+
+:root {
+	--brand: #ac1a40;
+	--brand-dark: #8f1535;
+	--ink: #1b1b21;
+	--muted: #5c5c68;
+	--line: #e7e2e4;
+	--bg: #ffffff;
+	--bg-soft: #f7f4f5;
+	--radius: 16px;
+	--radius-sm: 10px;
+	--shadow-card: 0 4px 24px rgba(0,0,0,.13);
+	--shadow-pop: 0 24px 70px rgba(0,0,0,.30);
+}
+
+body { color: var(--ink); }
+
+/* Shared bits */
+.eyebrow {
+	display: block; font-size: 12px; font-weight: 700; letter-spacing: .06em;
+	text-transform: uppercase; color: var(--brand); margin-bottom: 6px;
+}
+.beta-note {
+	background: #fdf6e7; border: 1px solid #f0dfae; border-left: 4px solid #cf8f0e;
+	border-radius: var(--radius-sm); padding: 12px 14px; color: #6a5518;
+}
+.fa-question-circle { color: var(--brand); }
+
+/* ---------- Map controls ---------- */
+.maplibregl-ctrl-group {
+	border-radius: 12px; overflow: hidden;
+	border: 1px solid var(--line); box-shadow: var(--shadow-card);
+	background-color: rgba(255,255,255,.92);
+}
+.maplibregl-ctrl-geocoder {
+	border-radius: 12px;
+	border: 1px solid var(--line); box-shadow: var(--shadow-card);
+	background-color: rgba(255,255,255,.92);
+}
+
+/* ---------- Layer panel (rightbox) ---------- */
+.rightbox {
+	background-color: var(--bg);
+	backdrop-filter: none;
+	-webkit-backdrop-filter: none;
+	border: 1px solid var(--line);
+	border-radius: var(--radius);
+	box-shadow: var(--shadow-card);
+	width: 330px;
+	max-width: calc(100vw - 24px);
+	top: 70px;
+	right: 12px;
+	padding: 0 0 8px;
+	overflow: hidden auto;
+}
+.rightbox > b {
+	display: block;
+	padding: 14px 16px 10px;
+	font-size: 16px;
+}
+.rightbox > b::before {
+	content: "Map layers";
+	display: block;
+	font-size: 12px; font-weight: 700; letter-spacing: .06em;
+	text-transform: uppercase; color: var(--brand); margin-bottom: 2px;
+}
+.rightbox button.close-button {
+	color: var(--muted);
+	border-radius: 8px;
+	margin: 8px 8px 0 0;
+}
+.rightbox button.close-button:hover { background: var(--bg-soft); color: var(--ink); }
+
+.rightbox .accordion {
+	backdrop-filter: none;
+	background-color: var(--bg);
+	color: var(--ink);
+	border: none;
+	border-top: 1px solid var(--line);
+	box-shadow: none;
+	font-weight: 700;
+	font-size: 14px;
+	padding: 13px 16px 13px 34px;
+	position: relative;
+}
+.rightbox .accordion::before {
+	content: "";
+	position: absolute; left: 16px; top: 50%; margin-top: -5px;
+	width: 10px; height: 10px; border-radius: 50%;
+	background: var(--brand);
+}
+.rightbox .accordion:after {
+	color: var(--muted);
+	font-size: 22px;
+	line-height: 0.7;
+}
+.rightbox .accordion.active,
+.rightbox .accordion:hover {
+	background: var(--bg-soft);
+	border: none;
+	border-top: 1px solid var(--line);
+}
+.rightbox .panel {
+	padding: 2px 16px 14px;
+	font-size: 14px;
+}
+.rightbox .panel select,
+.rightbox > p > select,
+.rightbox select {
+	max-width: 100%;
+	padding: 9px 12px;
+	font-size: 14px;
+	font-family: inherit;
+	border: 1px solid #c3bcbe;
+	border-radius: 9px;
+	background: #fff;
+	color: var(--ink);
+	margin: 2px 0;
+}
+.rightbox .panel select { width: 100%; }
+.rightbox select:focus { outline: 2px solid var(--brand); outline-offset: 1px; }
+
+/* Boundary layers: the show-names switch sits on its own line under the name */
+.rightbox .names-row {
+	display: block;
+	margin-top: 8px;
+	padding-left: 22px;
+	font-size: 13px;
+	color: var(--muted);
+}
+
+/* "Take a quick tour" button (injected by tour.js): centred, tighter spacing */
+.rightbox > p:has(> .tour-restart) {
+	margin: 6px 12px 10px;
+	text-align: center;
+}
+.rightbox .welcome-tour-button.tour-restart { margin: 0; }
+
+/* ---------- Floating buttons ---------- */
+.showrightbox { width: 44px; height: 44px; right: 12px; top: 70px; }
+.float_button {
+	height: 44px; width: 44px;
+	border: 1px solid var(--line);
+	border-radius: 12px;
+	background-color: var(--bg);
+	backdrop-filter: none;
+	box-shadow: var(--shadow-card);
+	font-size: 16px;
+	color: var(--ink);
+	cursor: pointer;
+}
+.float_button:hover { background-color: var(--bg-soft); }
+
+/* ---------- Basemap control ---------- */
+#basemapcontrol {
+	backdrop-filter: none;
+	background-color: var(--bg);
+	border: 1px solid var(--line);
+	border-radius: var(--radius);
+	box-shadow: var(--shadow-card);
+	padding: 14px 16px;
+}
+#basemapcontrol h3 { margin-top: 0; font-size: 15px; }
+
+/* ---------- Welcome splash ---------- */
+.welcome-modal {
+	/* Hidden until capUi shows it. It is skipped entirely when the page opens
+	   straight onto a report (?report= deep link), fixing the splash sitting
+	   on top of a deep-linked report. */
+	display: none;
+	border: none;
+	border-radius: var(--radius);
+	box-shadow: var(--shadow-pop);
+	padding: 30px 34px;
+}
+.welcome-modal h1 { font-size: clamp(22px, 4vw, 30px); line-height: 1.15; margin-top: 0; }
+.welcome-modal .modal-close { font-size: 26px; color: var(--muted); }
+.welcome-modal .modal-close:hover { color: var(--ink); }
+
+/* ---------- Help modal ---------- */
+#help_modal {
+	border: none;
+	border-radius: var(--radius);
+	box-shadow: var(--shadow-pop);
+	padding: 26px 30px;
+}
+
+/* ---------- Report modal ---------- */
+.modal {
+	background-color: var(--bg-soft);
+	border-radius: var(--radius);
+	box-shadow: var(--shadow-pop);
+}
+.modal-header {
+	/* background-color is set inline by capUi.colourModalHeader to match the
+	   area classification; #717e82 from map.css remains the fallback */
+	padding: 16px 24px;
+}
+.modal-header .modal-title {
+	font-size: clamp(17px, 2.6vw, 22px);
+	line-height: 1.2;
+	margin: 6px 0;
+	padding-left: 0;
+}
+.modal-header .modal-close {
+	font-size: 26px;
+	padding: 2px 4px 0 12px;
+}
+
+/* Print + Share buttons in the coloured header: dark translucent pills keep
+   white text readable on both light and dark classification colours */
+.print-button,
+.share-button {
+	background-color: rgba(0,0,0,.28);
+	border: none;
+	border-radius: 100px;
+	padding: 8px 16px;
+	font-weight: 700;
+}
+.print-button:hover,
+.share-button:hover { background-color: rgba(0,0,0,.45); }
+.share-menu {
+	border: 1px solid var(--line);
+	border-radius: var(--radius-sm);
+	box-shadow: var(--shadow-card);
+}
+.share-menu-item { font-family: inherit; }
+.share-menu-item:hover { background: var(--bg-soft); }
+
+.modal-body { padding: 18px 24px 28px; }
+
+/* ---------- Report tabs as pills ---------- */
+.modal .tab {
+	border: none;
+	background-color: transparent;
+	display: flex;
+	gap: 6px;
+	overflow-x: auto;
+	padding: 2px 0 12px;
+	margin-top: 4px;
+}
+.modal .tab button {
+	float: none;
+	flex: 0 0 auto;
+	font-family: Arial, sans-serif;
+	font-size: 13px;
+	font-weight: 700;
+	color: var(--muted);
+	background-color: var(--bg);
+	border: 1px solid var(--line);
+	border-radius: 100px;
+	padding: 8px 14px;
+	white-space: nowrap;
+}
+.modal .tab button:hover {
+	background-color: var(--bg);
+	color: var(--ink);
+	border-color: #cfc7ca;
+}
+.modal .tab button.active {
+	background-color: var(--brand);
+	border-color: var(--brand);
+	color: #fff;
+}
+.modal .tabcontent {
+	border: none;
+	padding: 0 2px 8px;
+}
+.modal .tabcontent > h3 { padding-left: 0; }
+
+/* ---------- Chart rows as cards ---------- */
+.chart-wrapper {
+	background: var(--bg);
+	border: 1px solid var(--line);
+	border-radius: 14px;
+	border-top: 1px solid var(--line);
+	padding: 20px 22px;
+	margin: 18px 0;
+	box-sizing: border-box;
+}
+/* The text and chart inside each card are floated; clear them so the card
+   grows to the full height of its chart */
+.chart-wrapper::after {
+	content: "";
+	display: table;
+	clear: both;
+}
+.chart-wrapper h4.chart-title { font-size: 17px; margin-bottom: 8px; }
+
+/* Overview / Policy / Methods sub-tabs inside chart cards */
+.chart-description-tab-buttons {
+	border: none;
+	background-color: transparent;
+	gap: 6px;
+	padding-bottom: 8px;
+}
+.chart-description-tab-buttons button {
+	font-family: Arial, sans-serif;
+	font-size: 12px;
+	font-weight: 700;
+	color: var(--muted);
+	background-color: var(--bg-soft);
+	border: 1px solid var(--line) !important;
+	border-radius: 100px;
+	padding: 6px 10px;
+	flex: 0 1 auto;
+}
+.chart-description-tab-buttons button:hover { background-color: var(--bg-soft); color: var(--ink); }
+.chart-description-tab-buttons button.active {
+	background-color: var(--ink);
+	border-color: var(--ink) !important;
+	color: #fff;
+}
+.chart-description-tab-content {
+	border: none;
+	background-color: var(--bg-soft);
+	border-radius: var(--radius-sm);
+	padding: 12px 14px;
+	font-size: 14px;
+}
+
+/* ---------- PBCC overview tab ---------- */
+/* The heading and the simplified-categories toggle share one row, keeping the
+   toggle clear of the chart below (which floats right at its original 400px) */
+.overview-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 4px 16px;
+	margin: 14px 0 6px;
+}
+.overview-head h3 { margin: 0; padding-left: 0; }
+.overview-mode-toggle { font-size: 14px; margin: 0; }
+
+.grades-explain-button {
+	display: inline-block;
+	font-family: inherit;
+	font-size: 13px;
+	font-weight: 700;
+	color: var(--brand);
+	background: transparent;
+	border: 2px solid var(--brand);
+	border-radius: 9px;
+	padding: 7px 12px;
+	cursor: pointer;
+}
+.grades-explain-button:hover { background: var(--brand); color: #fff; }
+.grades-explain-button:hover .fa-question-circle { color: #fff; }
+
+/* Overview tables */
+.overviewtable th,
+.overviewtable td {
+	border: none;
+	border-bottom: 1px solid var(--line);
+	padding: 6px 8px;
+}
+.overviewtable th {
+	font-size: 12px;
+	color: var(--muted);
+	text-align: left;
+}
+.overviewtable td { text-align: left; }
+.overviewtable td:last-child { text-align: right; color: var(--muted); }
+.responsive-tables > div {
+	background: var(--bg);
+	border: 1px solid var(--line);
+	border-radius: 14px;
+	padding: 16px 18px;
+}
+.responsive-tables h4 { margin-top: 0; }
+
+/* Data warnings */
+.warning {
+	background-color: #fdf6e7;
+	border: 1px solid #f0dfae;
+	border-left: 4px solid #cf8f0e;
+	border-radius: var(--radius-sm);
+	color: #6a5518;
+	padding: 8px 12px;
+	margin: 6px 0;
+	font-size: 14px;
+}
+
+/* Demographics */
+.community_photos {
+	background: var(--bg);
+	border: 1px solid var(--line);
+	border-radius: 14px;
+	padding: 14px;
+}
+
+/* ---------- Grade explainer popup ---------- */
+.grades-popup {
+	display: none;
+	position: fixed;
+	inset: 0;
+	z-index: 1500;
+	background: rgba(27,27,33,.55);
+	backdrop-filter: blur(3px);
+	align-items: center;
+	justify-content: center;
+	padding: 16px;
+}
+.grades-popup-card {
+	position: relative;
+	background: var(--bg);
+	border-radius: var(--radius);
+	box-shadow: var(--shadow-pop);
+	max-width: 760px;
+	max-height: calc(100vh - 48px);
+	overflow-y: auto;
+	padding: 26px 30px;
+}
+.grades-popup-card h3 { margin: 0 0 12px; padding-left: 0; }
+.grades-popup-card img { width: 100%; max-width: 700px; height: auto; }
+.grades-popup-card p { font-size: 14px; color: var(--muted); line-height: 1.55; }
+.grades-popup-close {
+	position: absolute;
+	top: 12px; right: 12px;
+	width: 36px; height: 36px;
+	background: none;
+	border: 1px solid var(--line);
+	border-radius: 10px;
+	color: var(--muted);
+	font-size: 14px;
+	cursor: pointer;
+}
+.grades-popup-close:hover { background: var(--bg-soft); color: var(--ink); }
+
+/* Keep the popup out of printed reports */
+@media print {
+	.grades-popup { display: none !important; }
+}

@@ -60,6 +60,7 @@
 		<link rel="stylesheet" href="/css/main.css">
 		<link rel="stylesheet" href="/css/map.css">
 		<link rel="stylesheet" href="style.css">
+		<link rel="stylesheet" href="/css/map-new.css">
 		
 
 		<!-- Carbon & Place application -->
@@ -122,7 +123,7 @@
 			<span class="modal-close">&times;</span>
 			<div class="modal-body">
 				<h1>Place-Based Carbon Calculator v2</h1>
-				<p style="background-color: #f58291"><b>Beta Tool</b>: This tool is still in development and may contain preliminary analysis, bugs, or incomplete features. Beta tools are intended to provide an early look at upcoming features and so results should be treated with care. The tool may change at any time without warning. We are interested in your feedback and you can report issues or bugs on <a href="https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/issues" target="_blank" rel="noopener noreferrer">GitHub</a></p>
+				<p class="beta-note"><b>Beta Tool</b>: This tool is still in development and may contain preliminary analysis, bugs, or incomplete features. Beta tools are intended to provide an early look at upcoming features and so results should be treated with care. The tool may change at any time without warning. We are interested in your feedback and you can report issues or bugs on <a href="https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/issues" target="_blank" rel="noopener noreferrer">GitHub</a></p>
 				
 				<p>The Place-Based Carbon Calculator estimates the carbon footprint of every neighbourhood in Great Britain, breaks it down into housing, transport, and consumption, and tracks how it has changed since 2010. For a full explanation of the tool please see the <a href="/manual/#placebasedcarboncalculator">manual</a>. You can also access sections of the manual via the help buttons (<i class="fa fa-question-circle" aria-hidden="true"></i>)</p>
 				
@@ -209,29 +210,33 @@
 			
 			<button class="accordion">Boundaries</button>
 			<div class="panel">
-				<p><label><input type="checkbox" data-layer="wards" class="showlayer" value="false">Wards</label> <label class="switch"><input type="checkbox" class="showlabels" data-layer="wards"><span class="slider round"></span></label> names
-				<button aria-label="Help Wards" class="helpbutton" data-help="boundaries-wards"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<p><label><input type="checkbox" data-layer="wards" class="showlayer" value="false">Wards</label>
+				<button aria-label="Help Wards" class="helpbutton" data-help="boundaries-wards"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+				<span class="names-row"><label class="switch"><input type="checkbox" class="showlabels" data-layer="wards"><span class="slider round"></span></label> show names</span></p>
 				<div class="legendContextual legendHorizontal">
 					<div class="l_rHorizontal">
 						<div class="lbHorizontal"><span style="background-color: #206b07"></span></div>
 					</div>
 				</div>
-				<p><label><input type="checkbox" data-layer="la" class="showlayer" value="false">Local Authorities</label> <label class="switch"><input type="checkbox" class="showlabels" data-layer="la"><span class="slider round"></span></label> names
-				<button aria-label="Help Local Authorities" class="helpbutton" data-help="boundaries-la"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<p><label><input type="checkbox" data-layer="la" class="showlayer" value="false">Local Authorities</label>
+				<button aria-label="Help Local Authorities" class="helpbutton" data-help="boundaries-la"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+				<span class="names-row"><label class="switch"><input type="checkbox" class="showlabels" data-layer="la"><span class="slider round"></span></label> show names</span></p>
 				<div class="legendContextual legendHorizontal">
 					<div class="l_rHorizontal">
 						<div class="lbHorizontal"><span style="background-color: #6b0707"></span></div>
 					</div>
 				</div>
-				<p><label><input type="checkbox" data-layer="parish" class="showlayer" value="false">Parish</label> <label class="switch"><input type="checkbox" class="showlabels" data-layer="parish"><span class="slider round"></span></label> names
-				<button aria-label="Help Parish" class="helpbutton" data-help="boundaries-parish"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<p><label><input type="checkbox" data-layer="parish" class="showlayer" value="false">Parish</label>
+				<button aria-label="Help Parish" class="helpbutton" data-help="boundaries-parish"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+				<span class="names-row"><label class="switch"><input type="checkbox" class="showlabels" data-layer="parish"><span class="slider round"></span></label> show names</span></p>
 				<div class="legendContextual legendHorizontal">
 					<div class="l_rHorizontal">
 						<div class="lbHorizontal"><span style="background-color: #6b0763"></span></div>
 					</div>
 				</div>
-				<p><label><input type="checkbox" data-layer="westminster" class="showlayer" value="false">Westminster Constituency</label> <label class="switch"><input type="checkbox" class="showlabels" data-layer="westminster"><span class="slider round"></span></label> names
-				<button aria-label="Help Westminster Constituency" class="helpbutton" data-help="boundaries-westminster"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<p><label><input type="checkbox" data-layer="westminster" class="showlayer" value="false">Westminster Constituency</label>
+				<button aria-label="Help Westminster Constituency" class="helpbutton" data-help="boundaries-westminster"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+				<span class="names-row"><label class="switch"><input type="checkbox" class="showlabels" data-layer="westminster"><span class="slider round"></span></label> show names</span></p>
 				<div class="legendContextual legendHorizontal">
 					<div class="l_rHorizontal">
 						<div class="lbHorizontal"><span style="background-color: #07366b"></span></div>
@@ -247,6 +252,17 @@
 			<span class="modal-close">&times;</span>
 			<div id="helpcontent">
 				<p><em>Help content loading&hellip;</em></p>
+			</div>
+		</div>
+
+		<!-- Grade explainer popup (opened from the report's headline grade) -->
+		<div id="grades-popup" class="grades-popup" role="dialog" aria-modal="true" aria-labelledby="grades-popup-title">
+			<div class="grades-popup-card">
+				<button class="grades-popup-close" aria-label="Close"><i class="fas fa-times"></i></button>
+				<span class="eyebrow">Understanding the grades</span>
+				<h3 id="grades-popup-title">What does this grade mean?</h3>
+				<p><img src="/images/ui/grades.webp" alt="How grades are calculated" loading="lazy"></p>
+				<p>Many values have been given a grade from A+ to F- to help you understand how this <abbr title="Lower Super Output Area">LSOA</abbr> compares to others. The grades are relative to the average LSOA, so areas with an A+ to C- grade are better than average, while areas with a D+ to F- grade are worse than average. Most areas are close to the average, so these grade bands are wide, representing around 7% of LSOAs. Towards the extremes, the grade bands narrow, so only the best 1% of LSOAs receive an A+ grade. In some cases, it is not possible to calculate a grade due to missing data, so an NA value will be shown.</p>
 			</div>
 		</div>
 		
@@ -294,20 +310,30 @@
 			  
 			  <div id="overview" class="tabcontent">
 			    
-			    <h3>Overall Carbon Footprint</h3>
-			    
+			    <div class="overview-head">
+			      <h3>Overall Carbon Footprint</h3>
+			      <p class="overview-mode-toggle">
+			        <label class="switch"><input type="checkbox" id="overview-simplified" checked><span class="slider round"></span></label>
+			        Simplified categories
+			        <button aria-label="Help simplified categories" class="helpbutton" title="Groups the footprint into Housing, Transport and Consumption. Turn off to see every individual category."><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+			      </p>
+			    </div>
+
 			    <div style="min-height:400px">
-			      
+
 			      <div class="chart-container" style="height:400px">
           			<canvas id="overview-chart"></canvas>
           	</div>
-			      
-			      <table>
+
+			      <table class="headline-grade">
           	  <tr>
           			<td><img src="/legacy/images/grades/undefined.jpg" width = 300 height = 300 id = "data_total_emissions_grade" alt = "Grade Image"></td>
           		</tr>
           		<tr>
           		  <td style="text-align: right;" id="data_total_emissions_percap"> NA kgCO<sub>2</sub>e per person</td>
+          		</tr>
+          		<tr>
+          		  <td style="text-align: right;"><button id="grades-explain-button" class="grades-explain-button"><i class="fa fa-question-circle" aria-hidden="true"></i> What does this grade mean?</button></td>
           		</tr>
         		</table>
         	</div>
@@ -471,16 +497,8 @@
         	</div>
         	    	
               	         
-          <div>
-          <h3>Understanding the grades</h3>
-          <p><img src="/images/ui/grades.webp" style="width:100%; max-width:700px" alt="How grades are calculated" loading="lazy"></p>
-		  <p>Many values have been given a grade from A+ to F- to help you understand how this <abbr title="Lower Super Output Area">LSOA</abbr> compares to others. The grades are relative to the average LSOA, so areas with an A+ to C- grade are better than average, while areas with a D+ to F- grade are worse than average. Most areas are close to the average, so these grade bands are wide, representing around 7% of LSOAs. Towards the extremes, the grade bands narrow, so only the best 1% of LSOAs receive an A+ grade. In some cases, it is not possible to calculate a grade due to missing data, so an NA value will be shown.</p>
-			    
-			    
 			  </div>
-			  
-			  </div>
-			  
+
 			  <div id="history" class="tabcontent">
 			    
 			    <h3>Historical Emissions</h3>

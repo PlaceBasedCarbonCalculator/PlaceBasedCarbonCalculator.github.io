@@ -50,6 +50,57 @@ var dwellingstypeChart;
 var dwellingsbedroomsChart;
 var dwellingsageChart;
 
+// Draws the CCC target line on top of a chart without creating a legend entry.
+// Defined at file level so both the historical chart and the rebuildable
+// overview comparison chart can share it.
+const thresholdLinePlugin = {
+	id: 'thresholdLinePlugin',
+	afterDatasetsDraw(chart, args, options) {
+		const pluginOpts = (chart.options && chart.options.plugins && chart.options.plugins.thresholdLinePlugin) || options || {};
+		const value = pluginOpts.value;
+		if (typeof value !== 'number') return;
+		const ctx = chart.ctx;
+		const yScale = chart.scales['y'];
+		if (!yScale) return;
+		const y = yScale.getPixelForValue(value);
+		ctx.save();
+		ctx.strokeStyle = pluginOpts.color || 'black';
+		ctx.lineWidth = pluginOpts.width || 2;
+		if (Array.isArray(pluginOpts.dash) && pluginOpts.dash.length) ctx.setLineDash(pluginOpts.dash);
+		ctx.beginPath();
+		ctx.moveTo(chart.chartArea.left, y);
+		ctx.lineTo(chart.chartArea.right, y);
+		ctx.stroke();
+		ctx.restore();
+	}
+};
+
+// Simplified grouping for the overview comparison chart. Member names must
+// match the labels in makeChartHistorical's component array ('Goods &
+// Services' is excluded there as it duplicates the consumption categories).
+// Colours are a colourblind-safe trio checked against white.
+const OVERVIEW_SIMPLIFIED_GROUPS = [
+	{
+		label: 'Housing',
+		colour: '#2456d6',
+		members: ['Gas', 'Electricity', 'Other Heating', 'Other Housing']
+	},
+	{
+		label: 'Transport',
+		colour: '#0f6b28',
+		members: ['Cars', 'Vans', 'Bikes & Company Vehicles', 'Vehicle Purchase', 'Vehicle Maintenance', 'Public Transport', 'Flights']
+	},
+	{
+		label: 'Consumption',
+		colour: '#cf8f0e',
+		members: ['Furnishings', 'Food & Drink', 'Alcohol & Tobacco', 'Clothing', 'Communications', 'Recreation', 'Restaurants & Hotels', 'Health', 'Education', 'Miscellaneous']
+	}
+];
+
+// Latest per-category comparison data (This Area / LA / Similar / GB), stored
+// so the overview chart can be rebuilt when the simplified toggle changes
+var _overviewComparison = null;
+
 manageCharts = function (locationId) {
 	console.log('Managing Charts');
 
@@ -468,32 +519,9 @@ makeChartHistorical = function(){
     gradeImg.alt = `Grade ${grade}`;
   });
 
-		// We draw the horizontal threshold line via a plugin so it always appears on top
-		// and does not create a legend entry. (No dataset is pushed here.)
-		//console.log(data.datasets);
-
-		// Define the threshold plugin here so we can attach it to the historical chart as well.
-		const thresholdLinePlugin = {
-			id: 'thresholdLinePlugin',
-			afterDatasetsDraw(chart, args, options) {
-				const pluginOpts = (chart.options && chart.options.plugins && chart.options.plugins.thresholdLinePlugin) || options || {};
-				const value = pluginOpts.value;
-				if (typeof value !== 'number') return;
-				const ctx = chart.ctx;
-				const yScale = chart.scales['y'];
-				if (!yScale) return;
-				const y = yScale.getPixelForValue(value);
-				ctx.save();
-				ctx.strokeStyle = pluginOpts.color || 'black';
-				ctx.lineWidth = pluginOpts.width || 2;
-				if (Array.isArray(pluginOpts.dash) && pluginOpts.dash.length) ctx.setLineDash(pluginOpts.dash);
-				ctx.beginPath();
-				ctx.moveTo(chart.chartArea.left, y);
-				ctx.lineTo(chart.chartArea.right, y);
-				ctx.stroke();
-				ctx.restore();
-			}
-		};
+		// The CCC target line is drawn by the shared thresholdLinePlugin (defined
+		// at the top of this file) so it always appears on top and does not
+		// create a legend entry.
 
 	historicalChart = new Chart(document.getElementById('historical-chart').getContext('2d'), {
     type: 'bar',
@@ -569,49 +597,10 @@ makeChartHistorical = function(){
 
 
 
-overviewChart = new Chart(document.getElementById('overview-chart').getContext('2d'), {
-    type: 'bar',
-		data: data_overview,
-		plugins: [thresholdLinePlugin],
-		options: {
-			scales: {
-				y: {
-					stacked: true,
-						title: {
-									display: true,
-									text: 'kgCO₂e per person'
-								},
-					ticks: {
-						beginAtZero: true,
-					}
-				},
-				x: {
-					stacked: true
-				},
-			},
-			plugins: {
-				// plugin options for thresholdLinePlugin
-				thresholdLinePlugin: {
-					value: 2849,
-					color: 'black',
-					width: 3,
-					dash: []
-				},
-				legend: {
-					position: 'right',
-					reverse: true,
-					labels: {
-						font: { size: 11 },
-						// Reduce spacing between legend items and tighten rows
-						padding: 4,
-						boxWidth: 10
-					}
-				}
-			},
-			responsive: true,
-			maintainAspectRatio: false
-		}
-  });
+	// Store the per-category comparison data, then build the overview chart in
+	// whichever mode the simplified-categories toggle is currently in
+	_overviewComparison = data_overview;
+	buildOverviewComparisonChart();
   
  
   var barChartOptions = {
@@ -2014,3 +2003,101 @@ if (document.readyState === 'loading') {
 } else {
   initPrintButtons();
 }
+
+
+// (Re)build the overview comparison chart from the stored per-category data.
+// In simplified mode the categories are aggregated into Housing, Transport
+// and Consumption; otherwise every category is shown, as in the original tool.
+buildOverviewComparisonChart = function () {
+
+	if (!_overviewComparison) { return; }
+
+	if (overviewChart) { overviewChart.destroy(); }
+
+	const toggle = document.getElementById('overview-simplified');
+	const simplified = (toggle ? toggle.checked : false);
+
+	let datasets;
+	if (simplified) {
+		datasets = OVERVIEW_SIMPLIFIED_GROUPS.map(group => ({
+			label: group.label,
+			data: [0, 1, 2, 3].map(col =>
+				_overviewComparison.datasets
+					.filter(d => group.members.includes(d.label))
+					.reduce((sum, d) => sum + (Number(d.data[col]) || 0), 0)
+			),
+			backgroundColor: group.colour,
+			borderColor: 'rgb(0,0,0)',
+			borderWidth: 1,
+			stack: 'Stack 0'
+		}));
+	} else {
+		datasets = _overviewComparison.datasets;
+	}
+
+	overviewChart = new Chart(document.getElementById('overview-chart').getContext('2d'), {
+		type: 'bar',
+		data: {
+			labels: _overviewComparison.labels,
+			datasets: datasets
+		},
+		plugins: [thresholdLinePlugin],
+		options: {
+			scales: {
+				y: {
+					stacked: true,
+					title: {
+						display: true,
+						text: 'kgCO₂e per person'
+					},
+					ticks: {
+						beginAtZero: true,
+					}
+				},
+				x: {
+					stacked: true
+				},
+			},
+			plugins: {
+				// plugin options for thresholdLinePlugin
+				thresholdLinePlugin: {
+					value: 2849,
+					color: 'black',
+					width: 3,
+					dash: []
+				},
+				legend: {
+					position: 'right',
+					reverse: true,
+					labels: {
+						font: { size: 11 },
+						padding: 4,
+						boxWidth: 10
+					}
+				}
+			},
+			responsive: true,
+			maintainAspectRatio: false
+		}
+	});
+};
+
+// Rebuild the overview chart when the simplified-categories toggle changes
+(function initOverviewToggle() {
+	const toggle = document.getElementById('overview-simplified');
+	if (toggle) {
+		toggle.addEventListener('change', function () { buildOverviewComparisonChart(); });
+	}
+})();
+
+// Grade explainer popup ("What does this grade mean?" under the headline grade)
+(function initGradesPopup() {
+	const button = document.getElementById('grades-explain-button');
+	const popup = document.getElementById('grades-popup');
+	if (!button || !popup) { return; }
+	const closePopup = function () { popup.style.display = 'none'; };
+	button.addEventListener('click', function () { popup.style.display = 'flex'; });
+	popup.addEventListener('click', function (e) { if (e.target === popup) { closePopup(); } });
+	popup.querySelector('.grades-popup-close').addEventListener('click', closePopup);
+	document.addEventListener('keyup', function (e) { if (e.key === 'Escape') { closePopup(); } });
+})();

@@ -877,8 +877,16 @@ const capUi = (function () {
 						'source-layer': _datasets.layers[layerId]['source-layer'],
 						'layout': {
 							'visibility': 'none',
-							'symbol-placement': 'line',
+							// 'point' places one label at each polygon's centre (pole of
+							// inaccessibility) rather than repeating it along the boundary
+							'symbol-placement': 'point',
 							'text-field': ['get', labelField],
+							// Must name a font the style's glyphs server actually serves;
+							// the MapLibre default ('Open Sans Regular') is not hosted, so
+							// omitting this 404s the glyphs and, because this symbol layer
+							// shares its source with the boundary line layer, that failure
+							// also stops the boundary lines rendering
+							'text-font': ['Source Sans Pro Regular'],
 							'text-size': 12
 						},
 						'paint': {

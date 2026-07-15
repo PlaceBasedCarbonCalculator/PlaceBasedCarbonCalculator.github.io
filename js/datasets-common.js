@@ -11,7 +11,7 @@ const datasets_common = {
 			'type': 'line',
 			'source': {
 				'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/wards.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/wards_20260706.pmtiles',
 			},
 			'source-layer': 'wards',
 			'paint': {
@@ -25,7 +25,7 @@ const datasets_common = {
 			'type': 'line',
 			'source': {
 				'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/la.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/la_20260706.pmtiles',
 			},
 			'source-layer': 'la',
 			'paint': {
@@ -39,7 +39,7 @@ const datasets_common = {
 			'type': 'line',
 			'source': {
 				'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/parish.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/parish_20260706.pmtiles',
 			},
 			'source-layer': 'parish',
 			'paint': {
@@ -53,7 +53,7 @@ const datasets_common = {
 			'type': 'line',
 			'source': {
 				'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/westminster.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/westminster_20260706.pmtiles',
 			},
 			'source-layer': 'westminster',
 			'paint': {
