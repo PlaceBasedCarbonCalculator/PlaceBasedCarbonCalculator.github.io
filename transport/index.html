@@ -184,19 +184,33 @@
 				<p><label><input type="checkbox" class="showlayer" data-layer="zones" value="false">Show layer</label></p>
 				<p>
 					<select name="field" class="updatelayer" data-layer="zones" aria-label="Neighbourhood  layer">
-						<option value="change_bus_2008_2023" selected>Change in buses/hour (2008-2023)</option>
-						<option value="tph_daytime_avg_2023_3">Buses/hour (daytime average)</option>
-						<option value="tph_daytime_avg_2023_2">Trains/hour (daytime average)</option>
-						<option value="tph_daytime_avg_2023_0">Trams/hour (daytime average)</option>
-						<option value="tph_daytime_avg_2023_1">Subway/hour (daytime average)</option>
-						<option value="tph_daytime_avg_2023_4">Ferries/hour (daytime average)</option>
-						<option value="pBEV_PRIVATE">% Vehicles BEV (Private)</option>
-						<option value="pULEV_PRIVATE">% Vehicles ULEV (Private)</option>
-						<option value="pBEV_COMPANY">% Vehicles BEV (Company)</option>
-						<option value="pULEV_COMPANY">% Vehicles ULEV (Company)</option>
-						<option value="vehiclesPHousehold">Private vehicles per household</option>
+						<optgroup label="Change over time">
+							<option value="change_bus_2008_2025" selected>Change in buses/hour (2008-2025)</option>
+							<option value="change_bus_2008_2023">Change in buses/hour (2008-2023)</option>
+						</optgroup>
+						<optgroup label="Services per hour (daytime average)">
+							<option value="tph_daytime_avg_3">Buses/hour</option>
+							<option value="tph_daytime_avg_2">Trains/hour</option>
+							<option value="tph_daytime_avg_0">Trams/hour</option>
+							<option value="tph_daytime_avg_1">Subway/hour</option>
+							<option value="tph_daytime_avg_4">Ferries/hour</option>
+						</optgroup>
+						<optgroup label="Vehicles">
+							<option value="pBEV_PRIVATE">% Vehicles BEV (Private)</option>
+							<option value="pULEV_PRIVATE">% Vehicles ULEV (Private)</option>
+							<option value="pBEV_COMPANY">% Vehicles BEV (Company)</option>
+							<option value="pULEV_COMPANY">% Vehicles ULEV (Company)</option>
+							<option value="vehiclesPHousehold">Private vehicles per household</option>
+						</optgroup>
 					</select>
 					<button aria-label="Help Neighbourhoods" class="helpbutton" data-help="transport-zones"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+				</p>
+				<p><label for="zonesyear">Year</label>
+					<select id="zonesyear" name="year" class="updatelayer" data-layer="zones" aria-label="Year of service frequency" disabled>
+						<option value="2025" selected>2025</option>
+						<option value="2024">2024</option>
+						<option value="2023">2023</option>
+					</select>
 				</p>
 				<div id="zoneslegend" class="legendContextual">
 					<div class="l_rHorizontal">

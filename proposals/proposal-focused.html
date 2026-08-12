@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Proposal 3: Postcode-first dashboard - Carbon &amp; Place</title>
+  <link rel="stylesheet" href="/css/homepage.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet">
+  <link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet">
+  <style>
+    :root{
+      --brand:#ac1a40; --brand-dark:#8f1535;
+      --ink:#17171c; --muted:#5a5a64; --line:#e6e1e3; --bg:#ffffff; --bg-soft:#f6f3f4; --card:#ffffff;
+      --pbcc:#c70d0d; --transport:#1f9e12; --landuse:#b98f0d; --landown:#7a0dc7; --retrofit:#0d3cc7;
+    }
+    @media (prefers-color-scheme:dark){
+      :root{ --ink:#f0eef0; --muted:#a7a2ab; --line:#33303a; --bg:#141319; --bg-soft:#1c1b23; --card:#20202a; }
+    }
+    body{ color:var(--ink); background:var(--bg); }
+    #main{ background:var(--bg); }
+
+    /* ---------- Hero: postcode search as the star ---------- */
+    .hero-overlay{
+      position:absolute; inset:0; z-index:200; display:flex; flex-direction:column;
+      align-items:center; justify-content:center; text-align:center; padding:80px 24px 40px;
+    }
+    .hero-overlay h1{
+      color:#fff; font-size:clamp(30px,5.6vw,56px); line-height:1.03; margin:0 0 12px; max-width:18ch;
+      text-shadow:0 2px 26px rgba(0,0,0,.55);
+    }
+    .hero-overlay .tagline{
+      color:#fff; font-size:clamp(15px,2.4vw,20px); margin:0 0 30px; max-width:52ch;
+      text-shadow:0 1px 14px rgba(0,0,0,.6);
+    }
+    .searchcard{
+      width:min(620px,100%); background:rgba(20,18,22,.42); backdrop-filter:blur(14px);
+      border:1px solid rgba(255,255,255,.28); border-radius:18px; padding:26px;
+      box-shadow:0 22px 60px rgba(0,0,0,.4);
+    }
+    .searchcard label.big{ display:block; color:#fff; font-weight:700; font-size:18px; margin-bottom:12px; }
+    .searchrow{ display:flex; gap:10px; flex-wrap:wrap; }
+    .searchrow input{ flex:1 1 240px; min-width:0; padding:16px 18px; font-size:17px;
+      border:none; border-radius:11px; text-transform:uppercase; }
+    .searchrow input:focus{ outline:3px solid rgba(255,255,255,.7); outline-offset:1px; }
+    .searchrow button{ flex:0 0 auto; padding:16px 28px; font-size:17px; font-weight:700; color:#fff;
+      background:var(--brand); border:none; border-radius:11px; cursor:pointer; }
+    .searchrow button:hover{ background:var(--brand-dark); }
+    .hero-quick{ margin:18px 0 0; display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
+    .hero-quick span{ color:#fff; opacity:.85; font-size:13px; align-self:center; }
+    .hero-quick a{ color:#fff; font-size:13px; font-weight:600; border:1px solid rgba(255,255,255,.5);
+      padding:5px 12px; border-radius:100px; text-decoration:none; }
+    .hero-quick a:hover{ background:rgba(255,255,255,.15); text-decoration:none; }
+    .scrollhint{ position:absolute; bottom:14px; left:50%; transform:translateX(-50%); color:#fff; opacity:.8;
+      font-size:22px; animation:bob 1.8s ease-in-out infinite; }
+    @keyframes bob{ 0%,100%{ transform:translate(-50%,0);} 50%{ transform:translate(-50%,7px);} }
+
+    /* ---------- Section shell ---------- */
+    .section{ padding:56px max(20px,calc(50% - 580px)); }
+    .section.soft{ background:var(--bg-soft); }
+    .section-head{ text-align:center; max-width:56ch; margin:0 auto 34px; }
+    .section-head h2{ font-size:clamp(24px,3.6vw,34px); margin:0 0 10px; padding-left:0; color:var(--ink); }
+    .section-head p{ font-size:16px; color:var(--muted); margin:0; }
+    .eyebrow{ display:block; font-size:13px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--brand); margin-bottom:8px; }
+
+    /* ---------- Compact tool tiles ---------- */
+    .tiles{ display:grid; gap:18px; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); }
+    .tile{
+      position:relative; display:flex; flex-direction:column; text-decoration:none; color:var(--ink);
+      background:var(--card); border:1px solid var(--line); border-radius:16px; padding:22px 20px 20px;
+      overflow:hidden; transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+    }
+    .tile:hover{ transform:translateY(-4px); box-shadow:0 16px 36px rgba(0,0,0,.16); text-decoration:none; color:var(--ink); }
+    .tile::before{ content:""; position:absolute; top:0; left:0; right:0; height:4px; background:var(--tc,#999); }
+    .tile .icon{ width:46px; height:46px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+      font-size:20px; color:#fff; background:var(--tc,#999); margin-bottom:16px; }
+    .tile h3{ font-size:18px; margin:0 0 6px; line-height:1.2; }
+    .tile p{ font-size:14px; color:var(--muted); margin:0 0 16px; line-height:1.5; flex:1; }
+    .tile .go{ font-weight:700; font-size:14px; color:var(--tc,#999); display:inline-flex; align-items:center; gap:7px; }
+    .tile .beta{ position:absolute; top:16px; right:16px; font-size:10px; font-weight:700; text-transform:uppercase;
+      background:var(--tc); color:#fff; padding:3px 8px; border-radius:100px; letter-spacing:.04em; }
+
+    .tile.pbcc{ --tc:var(--pbcc);} .tile.transport{ --tc:var(--transport);}
+    .tile.landuse{ --tc:var(--landuse);} .tile.landown{ --tc:var(--landown);}
+    .tile.retrofit{ --tc:var(--retrofit);} .tile.legacy{ --tc:#8a6b71;}
+
+    /* ---------- Steps ---------- */
+    .steps{ display:grid; gap:16px; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); }
+    .step{ display:flex; gap:14px; align-items:flex-start; background:var(--card); border:1px solid var(--line);
+      border-radius:14px; padding:20px; }
+    .step .n{ flex:0 0 auto; width:32px; height:32px; border-radius:50%; background:var(--brand); color:#fff;
+      display:flex; align-items:center; justify-content:center; font-weight:700; }
+    .step h3{ margin:0 0 5px; font-size:16px; }
+    .step p{ margin:0; font-size:14px; color:var(--muted); line-height:1.5; }
+
+    /* ---------- Learn more inline ---------- */
+    .learn{ display:flex; gap:16px; flex-wrap:wrap; justify-content:center; }
+    .chip{ display:inline-flex; align-items:center; gap:10px; background:var(--card); border:1px solid var(--line);
+      border-radius:100px; padding:12px 22px; text-decoration:none; color:var(--ink); font-weight:700; font-size:15px; }
+    .chip:hover{ border-color:var(--brand); color:var(--brand); text-decoration:none; }
+    .chip .fa{ color:var(--brand); }
+
+    /* ---------- Funders ---------- */
+    .funders{ text-align:center; }
+    .funders h3{ font-size:15px; color:var(--muted); font-weight:600; margin:0 0 24px; }
+    .logo-row{ display:flex; flex-wrap:wrap; gap:28px; align-items:center; justify-content:center; }
+    .logo-row img{ height:42px; width:auto; opacity:.8; filter:grayscale(.25); transition:.2s; }
+    @media (prefers-color-scheme:dark){ .logo-row img{ filter:grayscale(.25) brightness(0) invert(1); opacity:.7; } }
+    .logo-row a:hover img{ opacity:1; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/"><img src="/images/ui/logo.webp" alt="Carbon & Place Logo" class="logo"></a>
+    <a href="#tools">Tools</a>
+    <a href="/about/">About</a>
+    <a href="/data/">Data</a>
+    <a href="/manual/">Manual</a>
+    <a href="/reports/">Reports</a>
+    <a href="#" id="expandtopnav" class="icon" aria-label="Expand menu"><i class="fa fa-bars"></i></a>
+  </nav>
+
+  <div id="page">
+    <div class="parapic" id="parallaxoff"></div>
+    <div class="parapic" id="parallax">
+      <div class="parapic_layer parallax" id="parapic-0" data-speed="2"></div>
+      <div class="parapic_layer parallax" id="parapic-1" data-speed="5"></div>
+      <div class="parapic_layer parallax" id="parapic-2" data-speed="11"></div>
+      <div class="parapic_layer parallax" id="parapic-3" data-speed="30"></div>
+      <div class="parapic_layer parallax" id="parapic-4" data-speed="45"></div>
+      <div class="parapic_layer parallax" id="parapic-5" data-speed="60"></div>
+      <div class="parapic_layer parallax" id="parapic-6" data-speed="80"></div>
+      <div class="parapic_layer parallax" id="parapic-7" data-speed="90"></div>
+      <div class="parapic_layer" id="parapic-8" data-speed="100"></div>
+
+      <div class="hero-overlay">
+        <h1>What is the carbon footprint of your neighbourhood?</h1>
+        <p class="tagline">Free, research-based tools for communities, planners and policymakers across Great Britain.</p>
+        <div class="searchcard">
+          <label class="big" for="pc">Find your neighbourhood</label>
+          <form class="searchrow" role="search" aria-label="Postcode search" onsubmit="return false;">
+            <input id="pc" type="text" placeholder="Enter a UK postcode, e.g. LS2 9JT" autocomplete="postal-code" maxlength="9">
+            <button type="submit"><strong>Search</strong></button>
+          </form>
+          <div class="hero-quick">
+            <span>Or jump straight in:</span>
+            <a href="/pbcc/">Carbon</a>
+            <a href="/transport/#/zones/#8/51.482/-0.151">Transport</a>
+            <a href="/retrofit/#/zones/#8/51.482/-0.151">Retrofit</a>
+          </div>
+        </div>
+      </div>
+      <a href="#tools" class="scrollhint" aria-label="Scroll to tools"><i class="fa fa-chevron-down"></i></a>
+    </div>
+
+    <div id="main">
+      <div id="install" class="installstrip" hidden>
+        <p style="float:left"><b>Install the Carbon &amp; Place App</b></p>
+        <button class="buttonInstall"><b>Install</b></button>
+      </div>
+
+      <!-- Tools -->
+      <section class="section" id="tools">
+        <div class="section-head">
+          <span class="eyebrow">The tools</span>
+          <h2>Pick a tool and start exploring</h2>
+          <p>Every tool has help buttons that explain each map and chart. Beta tools give an early look at upcoming features, so treat results with care.</p>
+        </div>
+
+        <div class="tiles">
+          <a class="tile pbcc" href="/pbcc/">
+            <span class="beta">v2</span>
+            <div class="icon"><i class="fa fa-chart-area"></i></div>
+            <h3>Carbon Calculator</h3>
+            <p>How neighbourhood carbon footprints vary across Great Britain, with updated data and wider coverage.</p>
+            <span class="go">Open <i class="fa fa-arrow-right"></i></span>
+          </a>
+
+          <a class="tile transport" href="/transport/#/zones/#8/51.482/-0.151">
+            <div class="icon"><i class="fa fa-bus"></i></div>
+            <h3>Transport &amp; Access</h3>
+            <p>The UK's largest emissions source. See how travel options and accessibility vary across the country.</p>
+            <span class="go">Open <i class="fa fa-arrow-right"></i></span>
+          </a>
+
+          <a class="tile landuse" href="/landuse">
+            <div class="icon"><i class="fa fa-layer-group"></i></div>
+            <h3>Land Use &amp; Planning</h3>
+            <p>Planning designations, environmental constraints and protected places across Great Britain.</p>
+            <span class="go">Open <i class="fa fa-arrow-right"></i></span>
+          </a>
+
+          <a class="tile landown" href="/landownership/#/landowners/#8/51.482/-0.151">
+            <div class="icon"><i class="fa fa-key"></i></div>
+            <h3>Land Ownership</h3>
+            <p>Land Registry data on the UK and overseas companies that own land in England and Wales.</p>
+            <span class="go">Open <i class="fa fa-arrow-right"></i></span>
+          </a>
+
+          <a class="tile retrofit" href="/retrofit/#/zones/#8/51.482/-0.151">
+            <div class="icon"><i class="fa fa-house-chimney"></i></div>
+            <h3>Retrofit Explorer</h3>
+            <p>Detailed data on buildings, their energy use and running costs, and how to fix leaky homes.</p>
+            <span class="go">Open <i class="fa fa-arrow-right"></i></span>
+          </a>
+
+          <a class="tile legacy" href="/legacy">
+            <div class="icon"><i class="fa fa-box-archive"></i></div>
+            <h3>Legacy Calculator</h3>
+            <p>The original 2020 PBCC from CREDS, covering England. Now being archived.</p>
+            <span class="go">Open <i class="fa fa-arrow-right"></i></span>
+          </a>
+        </div>
+      </section>
+
+      <!-- How it works -->
+      <section class="section soft">
+        <div class="section-head">
+          <span class="eyebrow">How it works</span>
+          <h2>From a postcode to local action in three steps</h2>
+        </div>
+        <div class="steps">
+          <div class="step"><div class="n">1</div><div><h3>Find your area</h3><p>Search a postcode above for a combined local report, or click any neighbourhood on a map.</p></div></div>
+          <div class="step"><div class="n">2</div><div><h3>Explore the data</h3><p>Colour maps by different measures and open detailed reports for anything that catches your eye.</p></div></div>
+          <div class="step"><div class="n">3</div><div><h3>Compare and share</h3><p>Compare with the authority, ward and constituency, then share any view by copying the web address.</p></div></div>
+        </div>
+      </section>
+
+      <!-- Learn more -->
+      <section class="section">
+        <div class="section-head">
+          <span class="eyebrow">Go deeper</span>
+          <h2>Learn more and reuse the data</h2>
+        </div>
+        <div class="learn">
+          <a class="chip" href="/manual"><i class="fa fa-book"></i> Read the manual</a>
+          <a class="chip" href="/data"><i class="fa fa-download"></i> Download the data</a>
+          <a class="chip" href="/about/"><i class="fa fa-circle-info"></i> About the project</a>
+          <a class="chip" href="/reports/"><i class="fa fa-file-lines"></i> Area reports</a>
+        </div>
+      </section>
+
+      <!-- Funders -->
+      <section class="section soft funders">
+        <h3>Funded and developed with the help of:</h3>
+        <div class="logo-row">
+          <a href="https://www.edrc.ac.uk/" target="_blank" rel="noopener"><img alt="EDRC" src="/images/ui/edrc-logo.webp" loading="lazy"></a>
+          <a href="https://www.creds.ac.uk/" target="_blank" rel="noopener"><img alt="CREDS" src="/images/ui/CREDS-logo.svg" loading="lazy"></a>
+          <a href="https://www.ukri.org/councils/epsrc/" target="_blank" rel="noopener"><img alt="EPSRC" src="/images/ui/EPSRC.webp" loading="lazy"></a>
+          <a href="https://www.ukri.org/councils/esrc/" target="_blank" rel="noopener"><img alt="ESRC" src="/images/ui/esrc-logo.webp" loading="lazy"></a>
+          <a href="https://www.ukri.org/" target="_blank" rel="noopener"><img alt="UKRI" src="/images/ui/UKRI-logo.webp" loading="lazy"></a>
+          <a href="https://www.leeds.ac.uk/" target="_blank" rel="noopener"><img alt="University of Leeds" src="/images/ui/leeds.webp" loading="lazy"></a>
+          <a href="https://friendsoftheearth.uk/" target="_blank" rel="noopener"><img alt="Friends of the Earth" src="/images/ui/FOE_logo.webp" loading="lazy"></a>
+          <a href="https://www.manchester.ac.uk/" target="_blank" rel="noopener"><img alt="University of Manchester" src="/images/ui/manchester.webp" loading="lazy"></a>
+          <a href="https://transportforthesoutheast.org.uk/" target="_blank" rel="noopener"><img alt="TFSE" src="/images/ui/tfse.webp" loading="lazy"></a>
+          <a href="https://uk.steergroup.com/" target="_blank" rel="noopener"><img alt="Steer" src="/images/ui/steer.webp" loading="lazy"></a>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="/js/parallax.js"></script>
+</body>
+</html>

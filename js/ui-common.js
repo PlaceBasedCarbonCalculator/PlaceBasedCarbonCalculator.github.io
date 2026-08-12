@@ -821,6 +821,14 @@ const capUi = (function () {
 						//console.log ('Layer change for ' + layerId);
 						capUi.toggleLayer(layerId);
 					});
+					// Sliders also update live while being dragged: 'change' alone only
+					// fires on release, which makes a transparency control feel broken
+					// because nothing moves until you let go.
+					if (input.type === 'range') {
+						input.addEventListener ('input', function () {
+							capUi.toggleLayer (input.dataset.layer);
+						});
+					}
 				});
 
 				// Toggle each layer to ensure visibility is set as per the checkbox state

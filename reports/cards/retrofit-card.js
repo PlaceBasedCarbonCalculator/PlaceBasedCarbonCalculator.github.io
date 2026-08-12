@@ -3,9 +3,19 @@
 // Report-card module for the retrofit tool: renders every chart from the tool's
 // zones report modal into the retrofit-card.html fragment on a report page.
 // Data endpoints can be redirected (e.g. to area-level aggregates) by setting
-// window.REPORT_CARD_ENDPOINTS = { '<default path>': '<replacement path>' }.
+// window.REPORT_CARD_ENDPOINTS = { '<default path>': <override> } where the
+// override is either '<replacement path>' (another pbcc-data folder) or
+// { bin: '<dataset>' } (a capBin single-binary dataset, which the page must
+// have capBin.register()ed - see reports/la-report.js).
 
 function retrofitCard_fetchJSON(url) {
+  // 'bin:<dataset>/<id>.json' pseudo-URLs come from the { bin: ... } override
+  // form of REPORT_CARD_ENDPOINTS and are served by capBin range requests.
+  if (url.lastIndexOf('bin:', 0) === 0) {
+    var rest = url.slice(4);
+    var slash = rest.indexOf('/');
+    return capBin.fetchRecord(rest.slice(0, slash), rest.slice(slash + 1).replace(/\.json$/, ''));
+  }
   return fetch(url).then(function (r) {
     if (!r.ok) { throw new Error('HTTP ' + r.status); }
     return r.json();
@@ -13,8 +23,9 @@ function retrofitCard_fetchJSON(url) {
 }
 
 function retrofitCard_endpoint(path) {
-  var overrides = window.REPORT_CARD_ENDPOINTS || {};
-  return 'https://pbcc.blob.core.windows.net/pbcc-data/' + (overrides[path] || path);
+  var override = (window.REPORT_CARD_ENDPOINTS || {})[path];
+  if (override && typeof override === 'object' && override.bin) { return 'bin:' + override.bin + '/'; }
+  return 'https://pbcc.blob.core.windows.net/pbcc-data/' + (override || path);
 }
 
 // Tab switcher scoped to this card's own fragment, so multiple tool cards can

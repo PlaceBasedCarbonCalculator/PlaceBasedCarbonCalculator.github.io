@@ -47,26 +47,63 @@ without duplicating hand-written code.
   scoped to the fragment; print/isochrone/tool-page-only code is stripped;
   and PBCC gains null-guards so missing comparison data degrades gracefully.
 - Data endpoints are routed through an `…endpoint('<path>')` helper which
-  honours `window.REPORT_CARD_ENDPOINTS = { '<default>': '<override>' }`.
-  This is how area-level pages reuse the same cards against aggregated data,
-  e.g. `{ 'vehicle_summary/v1/': 'ward_vehicle_summary/v1/' }`.
+  honours `window.REPORT_CARD_ENDPOINTS = { '<default>': <override> }`. An
+  override is either another pbcc-data folder path, or `{ bin: '<dataset>' }`
+  to serve the data from a capBin single-binary dataset (which the page must
+  `capBin.register()`). This is how area-level pages reuse the same cards
+  against aggregated data, e.g.
+  `{ 'vehicle_summary/v1/': { bin: 'ward_vehicle_summary' } }` — the
+  area aggregates are only published as bins, never as JSON folders.
 - **Regenerate whenever a tool's modal or chart code changes.** The tools remain
   the source of truth; the cards are build artefacts committed to the repo
   (there is no build system on deploy).
 
 ## Area-level reports
 
-`la.html` and its siblings share one engine (`la-report.js`) configured by
-`window.REPORT_CONFIG = { dataPath, level, nameJson }` for the emissions
-charts, plus the same full-card sections as the LSOA report with
-`REPORT_CARD_ENDPOINTS` pointing at area-aggregated data.
+`la.html`, `wards.html`, `parishes.html` and `constituencies.html` are thin
+HTML shells (identical apart from title/copy and one `window.REPORT_CONFIG`
+line) that share one engine, `la-report.js`. It follows the exact same
+*highlight first, expand for detail* structure as `lsoa.html`: a locator map,
+three highlight charts (carbon footprint, vehicles, home energy) rendered
+immediately, and a "Show all charts" button per tool that lazily loads the
+same generated report-card fragments (`cards/`) used by the LSOA report, with
+`REPORT_CARD_ENDPOINTS` redirected to that area's aggregated data. There is no
+per-area context/containment data (the `la.json`/`wards.json`/`parish.json`/
+`westminster.json` name lookups are id/name pairs only), so the context list
+just shows the area type and ONS code, and the tool links open the plain tool
+pages rather than a `?report=` deep link (that deep link only supports the
+LSOA-keyed `zones` map layer).
+
+`window.REPORT_CONFIG = { cardLevel, emissionsBin | dataPath, level, nameJson }`
+configures each page: `cardLevel` (`la`/`ward`/`parish`/`constituency`) drives
+the capBin dataset names, `level` is the display name, `nameJson` is the id/name
+lookup, and `emissionsBin` or `dataPath` locates the per-capita emissions series.
+
+Emissions data per level: `la` still uses the `la_emissions/v2/` JSON folder
+(`dataPath`); `parish`, `ward` and `constituency` use the
+`<level>_emissions` bins (`emissionsBin`). All of `la-report.js`'s bin
+registrations (emissions, transport, retrofit) live in that one file - if an
+area's emissions bin cannot be loaded the highlight chart and full card both
+degrade gracefully (missing-data notice) rather than breaking the page.
 
 Aggregated data is produced by the R pipeline (`../build`):
 - `make_{la,ward,parish,constituency}_summary` → per-capita emissions
   (`<level>_emissions`).
 - `R/area_summaries.R` → transport/retrofit datasets aggregated to each level
   (`<level>_vehicle_summary`, `<level>_pt_frequency`, `<level>_access`,
-  `<level>_epc_dom`, `<level>_gas_electric`).
+  `<level>_epc_dom`, `<level>_gas_electric`, `<level>_prices`), plus
+  `<level>_population` (age bands, households and dwellings summed).
+- `R/family_portraits.R` (`agg_area_household_pics`) → `<level>_community_pics`:
+  the per-LSOA household archetypes summed to each area and run through the same
+  48-slot picture allocation, so the demographics-tab community photo works at
+  area level too.
+
+The pbcc report card also shows an ONS pen portrait / LSOA-classification table.
+These describe a single neighbourhood's 2011 area classification and have no
+area-level aggregate, so `la-report.js` hides those two blocks on the area
+reports (`hideLsoaOnlyPbccBlocks`); the population chart and community photo,
+which do have `<level>_population` / `<level>_community_pics` bins, remain in the
+demographics tab.
 
 **Aggregation methods**: counts are summed; rates and averages are recomputed
 from summed numerators/denominators where possible, otherwise weighted means

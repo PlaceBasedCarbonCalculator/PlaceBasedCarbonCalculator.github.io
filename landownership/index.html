@@ -214,7 +214,7 @@
 				<button aria-label="Help Land Owners" class="helpbutton" data-help="landownership-points"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p> 
 				<select name="landowner_field" data-layer="landowners" class="updatelayer" aria-label="Land owners type">
 						<option value="Category" selected>Organisation type</option>
-            <option value="geocode_type">Geocoding accuracy</option>
+            <option value="match_quality">Location confidence</option>
             <option value="Country">Country of registration</option>
             <option value="Tenure">Tenure</option>
 					</select>
@@ -233,7 +233,13 @@
 			<div class="panel">
 				<p><label><input type="checkbox" id="inspirecheckbox" data-layer="inspire" class="showlayer" value="false">Show Layer</label>
 				<button aria-label="Help INSPIRE Polygons" class="helpbutton" data-help="landownership-inspire"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
-				<div class="legendContextual legendHorizontal">
+				<select name="inspire_field" data-layer="inspire" class="updatelayer" aria-label="INSPIRE polygon colouring">
+					<option value="none" selected>No colouring</option>
+					<option value="uprn_class">Properties on the parcel</option>
+					<option value="price_per_m2">Price per square metre</option>
+				</select>
+				<p></p>
+				<div class="legendContextual" id="inspirelegend">
 					<div class="l_r">
 						<div class="lb"><span style="background-color: #bc80bd"></span></div>
 					</div>
@@ -319,14 +325,16 @@
 				<h4>Land Registry Title</h4>
 				<table>
 					<tr><th>Variable</th><th>Value</th></tr>
-					<tr><th>Title</td><td>{Title}</td></tr>
+					<tr><th>Title</td><td>{title_number}</td></tr>
 					<tr><th>Tenure</td><td>{Tenure}</td></tr>
-					<tr><th>Property Address</td><td>{Property_Address}</td></tr>
-					<tr><th>Company No.</td><td>{Company_No}</td></tr>
+					<tr><th>Property Address</td><td>{address}</td></tr>
+					<tr><th>District</td><td>{district}</td></tr>
+					<tr><th>Postcode</td><td>{postcode}</td></tr>
 					<tr><th>Country</td><td>{Country}</td></tr>
 					<tr><th>Category</td><td>{Category}</td></tr>
-					<tr><th>Geocoded address</td><td>{geocoded_address}</td></tr>
-					<tr><th>Geocode type</td><td>{geocode_type}</td></tr>
+					<tr><th>Location confidence</td><td>{match_quality}</td></tr>
+					<tr><th>How located</td><td>{match_source}</td></tr>
+					<tr><th>UPRN</td><td>{uprn}</td></tr>
 					<tr><th>Proprietor</td><td>{Proprietor}</td></tr>
 				</table>
 		</template>
@@ -339,7 +347,10 @@
 					<tr><th>Variable</th><th>Value</th></tr>
 					<tr><th>ID</td><td>{INSPIREID}</td></tr>
 					<tr><th>Local Authority</td><td>{local_authority}</td></tr>
-					<tr><th>Area</td><td>{area}</td></tr>
+					<tr><th>Area (m&sup2;)</td><td>{area}</td></tr>
+					<tr><th>Properties on parcel</td><td>{uprn_class}</td></tr>
+					<tr><th>Estimated value (2025)</td><td>{single_uprn_value}</td></tr>
+					<tr><th>Price per m&sup2;</td><td>{price_per_m2}</td></tr>
 				</table>
 		</template>
 		

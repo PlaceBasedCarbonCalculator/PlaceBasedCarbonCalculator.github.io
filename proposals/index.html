@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Homepage design proposals - Carbon &amp; Place</title>
+  <link rel="stylesheet" href="/css/main.css">
+  <style>
+    :root { --brand:#ac1a40; --brand-dark:#8f1535; --ink:#1c1c22; --muted:#5a5a66; }
+    body { background:#f4f2f3; color:var(--ink); }
+    .wrap { max-width:1080px; margin:0 auto; padding:80px 24px 64px; }
+    .lead h1 { font-size:clamp(30px,5vw,44px); line-height:1.05; margin:0 0 14px; }
+    .lead p { font-size:18px; color:var(--muted); max-width:640px; margin:0 0 8px; }
+    .note { margin-top:20px; padding:14px 18px; background:#fff; border-left:4px solid var(--brand);
+            border-radius:8px; font-size:14px; color:var(--muted); }
+    .grid { display:grid; gap:24px; margin-top:40px;
+            grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); }
+    .card { background:#fff; border-radius:16px; overflow:hidden; text-decoration:none; color:inherit;
+            box-shadow:0 1px 3px rgba(0,0,0,.08); border:1px solid #e7e2e4;
+            transition:transform .18s ease, box-shadow .18s ease; display:flex; flex-direction:column; }
+    .card:hover { transform:translateY(-4px); box-shadow:0 14px 34px rgba(0,0,0,.14); text-decoration:none; color:inherit; }
+    .card .top { height:110px; display:flex; align-items:flex-end; padding:16px; color:#fff; font-weight:700; }
+    .c1 .top { background:linear-gradient(135deg,#7a1230,#ac1a40 60%,#e0526f); }
+    .c2 .top { background:linear-gradient(135deg,#14213a,#0d3cc7 55%,#6289ff); }
+    .c3 .top { background:linear-gradient(135deg,#0d1a10,#1f7a3a 45%,#77c96b); }
+    .c4 .top { background:linear-gradient(135deg,#2a0309,#c70d0d 55%,#ff6262); }
+    .card .body { padding:18px 18px 22px; }
+    .card h2 { font-size:20px; margin:0 0 8px; }
+    .card p { font-size:15px; color:var(--muted); margin:0 0 14px; line-height:1.5; }
+    .tag { display:inline-block; font-size:12px; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
+           color:var(--brand); }
+    .open { display:inline-block; font-weight:700; color:var(--brand); font-size:15px; }
+    .foot { margin-top:48px; font-size:14px; color:var(--muted); }
+    .foot a { color:var(--brand); font-weight:700; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="lead">
+      <h1>Homepage design proposals</h1>
+      <p>Three directions for refreshing the Carbon &amp; Place homepage. Every one keeps the parallax hero you like and the brand colours, and reworks everything below it for clearer structure and better mobile behaviour.</p>
+      <div class="note"><strong>These are drafts for review only.</strong> The live <code>index.html</code> is untouched. Open each on desktop and narrow your browser (or use device emulation) to see the responsive layout. Links inside the mock-ups point at the real tools.</div>
+    </div>
+
+    <div class="grid">
+      <a class="card c1" href="/proposals/proposal-cards.html">
+        <div class="top">Proposal 1</div>
+        <div class="body">
+          <span class="tag">Clean &amp; scannable</span>
+          <h2>Tool card deck</h2>
+          <p>A responsive grid of tool cards with a coloured accent, screenshot, short blurb and clear call to action. Postcode search floats over the hero. Least text, most scannable.</p>
+          <span class="open">View proposal 1 &rarr;</span>
+        </div>
+      </a>
+
+      <a class="card c2" href="/proposals/proposal-editorial.html">
+        <div class="top">Proposal 2</div>
+        <div class="body">
+          <span class="tag">Warm &amp; narrative</span>
+          <h2>Editorial feature rows</h2>
+          <p>Full-width alternating feature rows with generous typography and a coloured kicker per tool. Reads like a modern research site and gives each tool room to breathe.</p>
+          <span class="open">View proposal 2 &rarr;</span>
+        </div>
+      </a>
+
+      <a class="card c3" href="/proposals/proposal-focused.html">
+        <div class="top">Proposal 3</div>
+        <div class="body">
+          <span class="tag">Action first</span>
+          <h2>Postcode-first dashboard</h2>
+          <p>Puts the postcode search front and centre as the hero action, with a compact tile grid of tools below. Sleek, utilitarian, light and dark aware. Gets people into a tool fastest.</p>
+          <span class="open">View proposal 3 &rarr;</span>
+        </div>
+      </a>
+
+      <a class="card c4" href="/proposals/proposal-pbcc-tool.html">
+        <div class="top">Tool mockup</div>
+        <div class="body">
+          <span class="tag">Proposal 1 applied</span>
+          <h2>PBCC in the new style</h2>
+          <p>The Place-Based Carbon Calculator re-skinned in the proposal 1 design language: new layer panel, welcome splash and neighbourhood report. The map and its data are real; the report content is demo data.</p>
+          <span class="open">View tool mockup &rarr;</span>
+        </div>
+      </a>
+    </div>
+
+    <p class="foot">Back to the current <a href="/">live homepage</a>.</p>
+  </div>
+</body>
+</html>

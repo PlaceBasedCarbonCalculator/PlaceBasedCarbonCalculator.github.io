@@ -3,9 +3,19 @@
 // Report-card module for the pbcc tool: renders every chart from the tool's
 // zones report modal into the pbcc-card.html fragment on a report page.
 // Data endpoints can be redirected (e.g. to area-level aggregates) by setting
-// window.REPORT_CARD_ENDPOINTS = { '<default path>': '<replacement path>' }.
+// window.REPORT_CARD_ENDPOINTS = { '<default path>': <override> } where the
+// override is either '<replacement path>' (another pbcc-data folder) or
+// { bin: '<dataset>' } (a capBin single-binary dataset, which the page must
+// have capBin.register()ed - see reports/la-report.js).
 
 function pbccCard_fetchJSON(url) {
+  // 'bin:<dataset>/<id>.json' pseudo-URLs come from the { bin: ... } override
+  // form of REPORT_CARD_ENDPOINTS and are served by capBin range requests.
+  if (url.lastIndexOf('bin:', 0) === 0) {
+    var rest = url.slice(4);
+    var slash = rest.indexOf('/');
+    return capBin.fetchRecord(rest.slice(0, slash), rest.slice(slash + 1).replace(/\.json$/, ''));
+  }
   return fetch(url).then(function (r) {
     if (!r.ok) { throw new Error('HTTP ' + r.status); }
     return r.json();
@@ -13,8 +23,9 @@ function pbccCard_fetchJSON(url) {
 }
 
 function pbccCard_endpoint(path) {
-  var overrides = window.REPORT_CARD_ENDPOINTS || {};
-  return 'https://pbcc.blob.core.windows.net/pbcc-data/' + (overrides[path] || path);
+  var override = (window.REPORT_CARD_ENDPOINTS || {})[path];
+  if (override && typeof override === 'object' && override.bin) { return 'bin:' + override.bin + '/'; }
+  return 'https://pbcc.blob.core.windows.net/pbcc-data/' + (override || path);
 }
 
 // Tab switcher scoped to this card's own fragment, so multiple tool cards can
@@ -472,14 +483,23 @@ pbccCard_makeChartHistorical = function(){
   const yearIndex = data.labels.length - 1;
 
   // Headline Grade
-  // Set grade image and alt text
+  // Set grade image and alt text. Some feeds carry no grades (e.g. the LA
+  // report's la_emissions folder), so only show the badge when one exists -
+  // otherwise gradelabel[yearIndex] would be read off undefined and throw,
+  // aborting the whole chart build.
   const Totalgrade = (pbccCard_locationData['total_grade'] || [])[yearIndex];
   const TotalgradeImg = document.getElementById('data_total_emissions_grade');
-  TotalgradeImg.src = `/images/grades/${Totalgrade}.webp`;
-  TotalgradeImg.alt = `Grade ${Totalgrade}`;
-  document.getElementById("data_total_emissions_percap").innerHTML = 
-    pbccCard_locationData['total_kgco2e_percap'][yearIndex] + 
-    ' kgCO<sub>2</sub>e per person per year in ' + 
+  if (TotalgradeImg) {
+    if (Totalgrade) {
+      TotalgradeImg.src = `/images/grades/${Totalgrade}.webp`;
+      TotalgradeImg.alt = `Grade ${Totalgrade}`;
+    } else {
+      TotalgradeImg.style.display = 'none';
+    }
+  }
+  document.getElementById("data_total_emissions_percap").innerHTML =
+    (pbccCard_locationData['total_kgco2e_percap'] || [])[yearIndex] +
+    ' kgCO<sub>2</sub>e per person per year in ' +
     data.labels[yearIndex];
   
   //console.log(pbccCard_locationData['total_grade'][yearIndex]);
@@ -492,13 +512,18 @@ pbccCard_makeChartHistorical = function(){
     const dataset = data.datasets.find(ds => ds.label === label);
     if (!dataset) return;
     // Set household emissions value
-    document.getElementById(valueId).innerHTML = dataset.data[yearIndex];
-  
-    // Set grade image and alt text
-    const grade = dataset.gradelabel[yearIndex];
+    document.getElementById(valueId).innerHTML = (dataset.data || [])[yearIndex];
+
+    // Set grade image and alt text (only if this feed carries grades)
+    const grade = (dataset.gradelabel || [])[yearIndex];
     const gradeImg = document.getElementById(gradeId);
-    gradeImg.src = `/images/grades/${grade}.webp`;
-    gradeImg.alt = `Grade ${grade}`;
+    if (!gradeImg) return;
+    if (grade) {
+      gradeImg.src = `/images/grades/${grade}.webp`;
+      gradeImg.alt = `Grade ${grade}`;
+    } else {
+      gradeImg.style.display = 'none';
+    }
   });
 
 		// We draw the horizontal threshold line via a plugin so it always appears on top
@@ -588,7 +613,11 @@ pbccCard_makeChartHistorical = function(){
 		component.forEach(comp => {
 			data_overview.datasets.push({
 				label: comp[0],
-				data: [pbccCard_locationData[comp[1]][yearIndex], pbccCard_laHistoricalData[comp[1]][laYearIndex], pbccCard_oacHistoricalData[comp[1]][oacYearIndex], pbccCard_gbHistoricalData[comp[1]][gbYearIndex]],
+				// Guard each source: on area reports (la/ward/parish/constituency) there
+			// is no LA/"Similar areas" comparison data, so these objects are empty.
+			// Without the || [] the missing field indexes undefined and throws,
+			// which would abort the whole chart build (consumption, energy, etc.).
+			data: [(pbccCard_locationData[comp[1]] || [])[yearIndex], (pbccCard_laHistoricalData[comp[1]] || [])[laYearIndex], (pbccCard_oacHistoricalData[comp[1]] || [])[oacYearIndex], (pbccCard_gbHistoricalData[comp[1]] || [])[gbYearIndex]],
 				backgroundColor: comp[2],
 				borderColor: comp[3],
 				borderWidth: 1,

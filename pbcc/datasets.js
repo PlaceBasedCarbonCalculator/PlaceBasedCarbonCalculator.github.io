@@ -7,11 +7,11 @@
 // re-uploaded - datasets are rebuilt independently, so the dates will diverge.
 if (typeof capBin !== 'undefined') {
 	capBin.register({
-		community_pics: 'index_community_pics_2026-07-14.json.gz',
-		historical_emission: 'index_historical_emission_2026-07-13.json.gz',
-		population: 'index_population_2026-07-12.json.gz',
-		lsoa_overview: 'index_lsoa_overview_2026-07-12.json.gz',
-		oac_emissions: 'index_oac_emissions_2026-07-13.json.gz'
+		community_pics: 'index_community_pics_2026-08-08.json.gz',
+		historical_emission: 'index_historical_emission_2026-08-08.json.gz',
+		population: 'index_population_2026-08-08.json.gz',
+		lsoa_overview: 'index_lsoa_overview_2026-07-15.json.gz',
+		oac_emissions: 'index_oac_emissions_2026-07-15.json.gz'
 	});
 }
 
@@ -25,7 +25,7 @@ const datasets_extra = {
 			'type': 'fill',
 			'source': {
 			'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/zones_pbcc_20251115.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/zones_pbcc_20260811.pmtiles',
 				},
 			'source-layer': 'zones',
 			'paint': {

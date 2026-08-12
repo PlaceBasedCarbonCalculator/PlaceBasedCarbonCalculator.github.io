@@ -9,7 +9,7 @@ const datasets_extra = {
 			'type': 'fill',
 			'source': {
 			'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/inspire.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/inspire_20260811.pmtiles',
 				},
 			'source-layer': 'inspire',
 			'paint': {
@@ -24,7 +24,7 @@ const datasets_extra = {
 			'type': 'circle',
 			'source': {
 				'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/landowners.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/landowners_20260811.pmtiles',
 			},
 			'source-layer': 'landowners',
 			'paint': {
@@ -70,14 +70,37 @@ const datasets_extra = {
 	// Layer styling callbacks functions, each defined below
 	layerStyling: {
 	  landowners:			landownersStyling,
+	  inspire:			inspireStyling,
 	},
 	
 	
 	// #!# These need to be merged with lineColours
 	legends: {
-		
-		
-		
+
+		// The INSPIRE parcel colourings. 'uprn_class' counts the CURRENT
+		// properties whose address point falls inside the parcel: exactly one
+		// means the parcel is that property's plot, none means bare land or a
+		// garden/access strip, several means a block or a shared site.
+		// 'price_per_m2' is only defined for the one-property case - it is the
+		// property's estimated 2025 value divided by the parcel area, which
+		// only means anything when the parcel IS the plot.
+		inspire: {
+			'uprn_class': [
+				['No properties',	'#bdbdbd'],
+				['One property',	'#1f78b4'],
+				['Several',		'#e31a1c'],
+			],
+			'price_per_m2': [
+				['£0',		'#f7fcf0'],
+				['£250',	'#ccebc5'],
+				['£500',	'#7bccc4'],
+				['£1,000',	'#2b8cbe'],
+				['£2,000',	'#0868ac'],
+				['£4,000',	'#084081'],
+				['>£8,000',	'#4d004b'],
+			],
+		},
+
 		landowners: {
 			'Category': [
 				['Community Benefit Society', 	'#1f78b4'],
@@ -91,17 +114,19 @@ const datasets_extra = {
 				['Limited Liability Partnership', 	'#fb9a99'],
 				['Other',	'#000000'],
 			],
-			'geocode_type': [
-				['Address',		      '#4daf4a'],
-				['Admin Division 1',	'#bd0026'],
-				['Admin Division 2', 	'#f03b20'],
-				['Admin Division 3',	'#fd8d3c'],
-				['Region',		'#fecc5c'],
-				['Populated Place',	'#ffffb2'],
-				['Postcode',		    '#377eb8'],
-				['Road',		    '#e41a1c'],
-				['Road Intersection','#f781bf'],
-				['Other',	          '#000000'],
+			// How much to trust the dot's position. Replaces the old
+			// 'geocode_type' (a Bing geocoder precision code): the 2026 pipeline
+			// locates most titles by matching them to a UPRN rather than by
+			// geocoding an address string, so geocoder precision no longer
+			// describes where the majority of these points came from.
+			'match_quality': [
+				['High',	'#1a9641'],
+				['Medium',	'#a6d96a'],
+				['Street',	'#ffffbf'],
+				['Low',		'#fdae61'],
+				['Fuzzy',	'#f46d43'],
+				['Guess',	'#d7191c'],
+				['Other',	'#000000'],
 			],
 			'Tenure': [
 				['Freehold',		'#4daf4a'],
@@ -127,6 +152,29 @@ const datasets_extra = {
 	},
 	
 	
+	// Fill colours for the INSPIRE parcels. uprn_class is categorical (a
+	// 'match' expression), price_per_m2 continuous (an 'interpolate' one);
+	// inspireStyling() picks the right form for the selected field.
+	fillColours: {
+		inspire: {
+			'uprn_class': [
+				'0',	'#bdbdbd',
+				'1',	'#1f78b4',
+				'2+',	'#e31a1c',
+				'#000000',
+			],
+			'price_per_m2': [
+				0,	'#f7fcf0',
+				250,	'#ccebc5',
+				500,	'#7bccc4',
+				1000,	'#2b8cbe',
+				2000,	'#0868ac',
+				4000,	'#084081',
+				8000,	'#4d004b',
+			],
+		},
+	},
+
 	circleColours: {
 		
 				// #!# These are presumably restatements of dzLegendColours
@@ -156,17 +204,14 @@ const datasets_extra = {
         'Limited Liability Partnership','#fb9a99',
 				'#000000'
 			],
-			'geocode_type': [
-				'Address',		      '#4daf4a',
-				'AdminDivision1',	'#bd0026',
-				'AdminDivision2', 	'#f03b20',
-				'AdminDivision3',	'#fd8d3c',
-				'CountryRegion',		'#fecc5c',
-				'PopulatedPlace',	'#ffffb2',
-				'Postcode1',		    '#377eb8',
-				'RoadBlock',		    '#e41a1c',
-				'RoadIntersection','#f781bf',
-				'#e0e0e0',
+			'match_quality': [
+				'High',		'#1a9641',
+				'Medium',	'#a6d96a',
+				'Street',	'#ffffbf',
+				'Low',		'#fdae61',
+				'Fuzzy',	'#f46d43',
+				'Guess',	'#d7191c',
+				'#000000',
 			],
 			'Tenure': [
 				'Freehold',		'#4daf4a',
@@ -245,4 +290,44 @@ function getStyleColumn (layerId, datasets)
 
 
 
+
+
+
+// Styling callback for the INSPIRE parcels.
+//
+// The parcels are drawn as a flat wash by default, because that is what the
+// layer is usually for - seeing where the boundaries of registered freehold
+// land actually run. The two colourings are opt-in from the drop-down:
+//
+//   uprn_class    categorical (no properties / one / several), so a 'match'
+//   price_per_m2  continuous, so an 'interpolate'
+//
+// price_per_m2 is null for every parcel that does not have exactly one current
+// property on it - about half of them - so the interpolate is wrapped in a
+// 'case' that checks the value is a number first. Feeding null into interpolate
+// makes MapLibre log "expected number, found null" for every such feature on
+// every frame, and there are twelve million of them.
+function inspireStyling (layerId, map, settings, datasets, createLegend /* callback */)
+{
+	const select = document.querySelector ('select.updatelayer[data-layer="inspire"][name="inspire_field"]');
+	const field = (select ? select.value : 'none');
+
+	createLegend (datasets.legends.inspire, field, 'inspirelegend');
+
+	if (field === 'uprn_class') {
+		map.setPaintProperty (layerId, 'fill-color',
+			['match', ['get', field], ...datasets.fillColours.inspire.uprn_class]);
+		map.setPaintProperty (layerId, 'fill-opacity', 0.6);
+	} else if (field === 'price_per_m2') {
+		map.setPaintProperty (layerId, 'fill-color', ['case',
+			['==', ['typeof', ['get', field]], 'number'],
+			['interpolate', ['linear'], ['get', field], ...datasets.fillColours.inspire.price_per_m2],
+			'#bdbdbd'
+		]);
+		map.setPaintProperty (layerId, 'fill-opacity', 0.6);
+	} else {
+		map.setPaintProperty (layerId, 'fill-color', '#bc80bd');
+		map.setPaintProperty (layerId, 'fill-opacity', 0.3);
+	}
+}
 

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 	
 	<head>
@@ -220,7 +220,7 @@
 						<option value="modal_type">Building type (most common)</option>
 						<option value="modal_tenure">Tenure at EPC issue (most common)</option>
 						<option value="percent_EPC">% of homes with an EPC</option>
-						<option value="price_2024">Average Property Price (2024)</option>
+						<option value="price_2025">Average Property Price (2025)</option>
 						<option value="house_income_ratio">Property Price to Income Ratio</option>
 						<option value="median_gas_kwh">Gas Use</option>
 						<option value="median_elec_kwh">Electricity Use</option>
@@ -281,7 +281,7 @@
 						<option value="light_ee" >Lighting Rating</option>
 						<option value="sol_wat" >Solar Thermal</option>
 						<option value="pv" >Solar PV</option>
-						<option value="price_2024" >Price 2024 (estimated)</option>
+						<option value="price_2025" >Price 2025 (estimated)</option>
 						<option value="freehold" >Freehold / Leasehold (when last sold)</option>
 						
 					</select>
@@ -305,7 +305,7 @@
 						<option value="transaction" >Transaction</option>
 						<option value="area" >Floor Area</option>
 						<option value="year">Last Assessed</option>
-						<option value="price_2024" >Price 2024 (estimated)</option>
+						<option value="price_2025" >Price 2025 (estimated)</option>
 						<option value="freehold" >Freehold / Leasehold (when last sold)</option>
 					</select>
 					<button aria-label="Help Non-Domestic Properties" class="helpbutton" data-help="retrofit-epc-nondom"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
@@ -321,11 +321,26 @@
 
 			<button class="accordion">Unknown Properties</button>
 			<div class="panel">
-				<p><label><input type="checkbox" class="showlayer" data-layer="uprn_unknown" value="false">Show layer</label> 
+				<p><label><input type="checkbox" class="showlayer" data-layer="uprn_unknown" value="false">Show layer</label>
 					<button aria-label="Help Unknown Properties" class="helpbutton" data-help="retrofit-uprn-unknown"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
-							
+
 			</div>
-			
+
+			<button class="accordion">Solar Potential</button>
+			<div class="panel">
+				<p><label><input type="checkbox" class="showlayer" data-layer="solar" value="false">Show layer</label>
+					<button aria-label="Help Solar Potential" class="helpbutton" data-help="retrofit-solar"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<p>Annual solar energy reaching each square metre of ground and roof, modelled at 2&nbsp;m resolution. Legend values are in Wh/m&sup2; per year; the top band means 2000 or more.</p>
+				<div id="solarlegend" class="legendContextual">
+					<div class="l_rHorizontal">
+						<div class="lb"><span style="background-color: #ffffff"></span>&nbsp;</div>
+					</div>
+				</div>
+				<p class="slider-row"><label for="solartransparency">Transparency</label>
+					<input type="range" id="solartransparency" name="transparency" class="updatelayer" data-layer="solar" min="0" max="95" step="5" value="15" aria-describedby="solartransparencyvalue">
+					<output id="solartransparencyvalue" for="solartransparency">15%</output></p>
+			</div>
+
 			<button class="accordion">Boundaries</button>
 			
 			<div class="panel">
@@ -377,7 +392,7 @@
 		<!-- Modal PostCodes-->
 		<div class="modal" id="postcodes-chartsmodal" style="display: none;">
 			<div class="modal-header">
-				<span class="modal-close">×</span>
+				<span class="modal-close">Ã—</span>
 				<button class="print-button" aria-label="Print this modal" title="Print this page">Print</button>
 				<h2 class="modal-title">Postcode Summary: XXXXX</h2>
 			</div>
@@ -492,7 +507,7 @@
 		<!-- Modal LSOA-->
 		<div class="modal" id="zones-chartsmodal" style="display: none;">
 			<div class="modal-header">
-				<span class="modal-close">×</span>
+				<span class="modal-close">Ã—</span>
 				<button class="print-button" aria-label="Print this modal" title="Print this page">Print</button>
 				<h2 class="modal-title">Neighbourhood Summary</h2>
 			</div>
@@ -502,6 +517,7 @@
 				<div class="tab">
 				<button class="tablinks" onclick="modalTab(event, 'energy')" id="defaultOpen">Energy Consumption</button>
 				<button class="tablinks" onclick="modalTab(event, 'epcs')" >EPCs</button>
+				<button class="tablinks" onclick="modalTab(event, 'stock')">Dwelling Stock</button>
 				<button class="tablinks" onclick="modalTab(event, 'prices')">Prices</button>
 				</div>
 
@@ -914,7 +930,7 @@
 								<button onclick="switchChartTab(event, 'descTab-mainheatdesc-chartrow-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
 								<button onclick="switchChartTab(event, 'descTab-mainheatdesc-chartrow-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
 							</div>
-							<div id="descTab-mainheatdesc-chartrow-overview" class="chart-description-tab-content active"><p>Most homes in England have gas central heating, usually with a condensing boiler. Properly installed and maintained, these are over 90% efficient, but gas is a fossil fuel, so gas boilers need to be replaced with low carbon heating such as heat pumps. Heat pumps are far more efficient than any boiler but cost more to install (very roughly £10,000, against £2,000 for a replacement gas boiler), which is why the <a href="https://www.gov.uk/apply-boiler-upgrade-scheme" target="_blank" rel="noopener">Boiler Upgrade Scheme</a> offers grants. Off the gas grid, homes heated by oil boilers, storage heaters, or coal fires face both high carbon emissions and high running costs, so heat pumps can be financially attractive sooner.</p></div>
+							<div id="descTab-mainheatdesc-chartrow-overview" class="chart-description-tab-content active"><p>Most homes in England have gas central heating, usually with a condensing boiler. Properly installed and maintained, these are over 90% efficient, but gas is a fossil fuel, so gas boilers need to be replaced with low carbon heating such as heat pumps. Heat pumps are far more efficient than any boiler but cost more to install (very roughly Â£10,000, against Â£2,000 for a replacement gas boiler), which is why the <a href="https://www.gov.uk/apply-boiler-upgrade-scheme" target="_blank" rel="noopener">Boiler Upgrade Scheme</a> offers grants. Off the gas grid, homes heated by oil boilers, storage heaters, or coal fires face both high carbon emissions and high running costs, so heat pumps can be financially attractive sooner.</p></div>
 							<div id="descTab-mainheatdesc-chartrow-policy" class="chart-description-tab-content"><p>The heating-system mix defines the decarbonisation route: boiler-dominated areas need heat pump conversion at scale, storage-heater areas can switch to modern electric heating more easily, and communal systems suit heat networks. Heat pump counts show how far the transition has actually progressed.</p></div>
 							<div id="descTab-mainheatdesc-chartrow-methods" class="chart-description-tab-content"><p>Data comes from the domestic <a href="https://epc.opendatacommunities.org/" target="_blank" rel="noopener">Energy Performance Certificate (EPC) register</a>, cleaned and matched to neighbourhoods via UPRNs. Coverage is partial: only dwellings sold, let, or built since 2008 have a certificate (roughly two-thirds of homes), so owner-occupied and older homes are under-represented. Certificates reflect the most recent assessment, which may be years old, and assessor judgement introduces some inconsistency. See the <a href="/manual/#retrofitexplorer" class="opentool">manual</a> for details.</p></div>
 						</div>
@@ -1080,6 +1096,94 @@
 
 				</div>
 
+
+				<div id="stock" class="tabcontent">
+
+					<p>This section describes the dwelling stock recorded on the council tax registers: every home that exists, rather than only those with an Energy Performance Certificate. It is the natural complement to the EPCs tab, which covers roughly two thirds of homes.</p>
+
+					<div class="chart-wrapper" id="dwellingsct-chartrow" style="display: block;">
+						<div class="chart-text">
+						<h4 class="chart-title">Council tax bands</h4>
+						<div class="chart-description-tabs">
+							<div class="chart-description-tab-buttons">
+								<button onclick="switchChartTab(event, 'descTab-dwellingsct-chartrow-overview')" class="chart-tab-btn active"><i class="fa fa-binoculars" aria-hidden="true"></i> Overview</button>
+								<button onclick="switchChartTab(event, 'descTab-dwellingsct-chartrow-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
+								<button onclick="switchChartTab(event, 'descTab-dwellingsct-chartrow-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
+							</div>
+							<div id="descTab-dwellingsct-chartrow-overview" class="chart-description-tab-content active"><p>The number of dwellings in each council tax band, year by year. Because every home is banded, the total is a complete count of the dwelling stock, and its growth over time shows where new homes have been built. Bands are a rough proxy for property size and value, so the mix indicates the character of the neighbourhood: band A and B dominate in areas of small terraces and flats, band F and above in areas of large detached houses.</p></div>
+							<div id="descTab-dwellingsct-chartrow-policy" class="chart-description-tab-content"><p>Band is used to target and means-test support: several energy efficiency and cost-of-living schemes have been restricted to lower bands as a rough proxy for household means. Bands also set council tax income, so the local mix shapes what an authority can fund. Note that the bands rest on 1991 values in England and Scotland, and 2003 in Wales, so they have drifted a long way from current prices.</p></div>
+							<div id="descTab-dwellingsct-chartrow-methods" class="chart-description-tab-content"><p>England and Wales come from the <a href="https://www.gov.uk/government/collections/council-tax-statistics-for-town-and-parish-councils-in-england" target="_blank" rel="noopener">Valuation Office Agency</a> council tax stock statistics (CTSOP), published per LSOA. Scotland comes from the equivalent <a href="https://statistics.gov.scot/" target="_blank" rel="noopener">statistics.gov.scot</a> dwellings-by-band series, published per 2011 Data Zone and apportioned here onto 2022 Data Zones in proportion to postcode counts, so Scottish figures for split or merged zones are estimates rather than counts. Band I exists only in Wales and is empty elsewhere.</p></div>
+						</div>
+						</div>
+						<div class="chart-container">
+							<canvas id="dwellingsct-chart"></canvas>
+						</div>
+					</div>
+
+					<p id="dwellingsct-nodata" style="display: none;">Council tax band data is not available for this area.</p>
+
+					<p id="dwellingsstock-nodata" style="display: none;">Dwelling type, bedroom and build-period breakdowns are published by the Valuation Office Agency for England and Wales only, so they are not available for this area. The council tax band chart above does cover Scotland.</p>
+
+					<div class="chart-wrapper" id="dwellingstype-chartrow" style="display: block;">
+						<div class="chart-text">
+						<h4 class="chart-title">Dwelling type</h4>
+						<div class="chart-description-tabs">
+							<div class="chart-description-tab-buttons">
+								<button onclick="switchChartTab(event, 'descTab-dwellingstype-chartrow-overview')" class="chart-tab-btn active"><i class="fa fa-binoculars" aria-hidden="true"></i> Overview</button>
+								<button onclick="switchChartTab(event, 'descTab-dwellingstype-chartrow-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
+								<button onclick="switchChartTab(event, 'descTab-dwellingstype-chartrow-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
+							</div>
+							<div id="descTab-dwellingstype-chartrow-overview" class="chart-description-tab-content active"><p>Every dwelling by built form: detached, semi-detached, terraced, flat or maisonette, bungalow, and the small residual categories. Unlike the EPC building-type chart, this counts all homes, not only those that have been sold, let or built since 2008.</p></div>
+							<div id="descTab-dwellingstype-chartrow-policy" class="chart-description-tab-content"><p>Built form decides what retrofit is possible and who has to agree to it. Flats need the freeholder and often the whole block; terraces suit street-by-street schemes where scaffolding and survey costs are shared; detached homes have the most external wall to insulate and the most room for a heat pump.</p></div>
+							<div id="descTab-dwellingstype-chartrow-methods" class="chart-description-tab-content"><p>From the <a href="https://www.gov.uk/government/collections/council-tax-statistics-for-town-and-parish-councils-in-england" target="_blank" rel="noopener">Valuation Office Agency</a> CTSOP3 table, per LSOA, England and Wales only, 2020 onwards. Type is recorded by the valuer, so conversions and unusual buildings can be classified inconsistently.</p></div>
+						</div>
+						</div>
+						<div class="chart-container">
+							<canvas id="dwellingstype-chart"></canvas>
+						</div>
+					</div>
+
+					<div class="chart-wrapper" id="dwellingsbedrooms-chartrow" style="display: block;">
+						<div class="chart-text">
+						<h4 class="chart-title">Bedrooms</h4>
+						<div class="chart-description-tabs">
+							<div class="chart-description-tab-buttons">
+								<button onclick="switchChartTab(event, 'descTab-dwellingsbedrooms-chartrow-overview')" class="chart-tab-btn active"><i class="fa fa-binoculars" aria-hidden="true"></i> Overview</button>
+								<button onclick="switchChartTab(event, 'descTab-dwellingsbedrooms-chartrow-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
+								<button onclick="switchChartTab(event, 'descTab-dwellingsbedrooms-chartrow-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
+							</div>
+							<div id="descTab-dwellingsbedrooms-chartrow-overview" class="chart-description-tab-content active"><p>Dwellings by number of bedrooms, from one to six or more. A useful proxy for dwelling size where floor area is not recorded, and for the kind of household an area can accommodate.</p></div>
+							<div id="descTab-dwellingsbedrooms-chartrow-policy" class="chart-description-tab-content"><p>Dwelling size drives both energy demand and the cost of retrofit, and the local size mix is central to arguments about whether an area's housing matches the households that need to live in it.</p></div>
+							<div id="descTab-dwellingsbedrooms-chartrow-methods" class="chart-description-tab-content"><p>Derived from the same VOA CTSOP3 table by summing bedroom counts across all dwelling types. England and Wales only, 2020 onwards. The count is of rooms the valuer recorded as bedrooms, which need not match how a household actually uses them.</p></div>
+						</div>
+						</div>
+						<div class="chart-container">
+							<canvas id="dwellingsbedrooms-chart"></canvas>
+						</div>
+					</div>
+
+					<div class="chart-wrapper" id="dwellingsage-chartrow" style="display: block;">
+						<div class="chart-text">
+						<h4 class="chart-title">Build period</h4>
+						<div class="chart-description-tabs">
+							<div class="chart-description-tab-buttons">
+								<button onclick="switchChartTab(event, 'descTab-dwellingsage-chartrow-overview')" class="chart-tab-btn active"><i class="fa fa-binoculars" aria-hidden="true"></i> Overview</button>
+								<button onclick="switchChartTab(event, 'descTab-dwellingsage-chartrow-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
+								<button onclick="switchChartTab(event, 'descTab-dwellingsage-chartrow-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
+							</div>
+							<div id="descTab-dwellingsage-chartrow-overview" class="chart-description-tab-content active"><p>When the homes in this area were built, from before 1900 to the present. Age is the single best predictor of how a home is built and therefore of what it needs: solid walls before roughly 1920, uninsulated cavities from then until the 1980s, and progressively better fabric since.</p></div>
+							<div id="descTab-dwellingsage-chartrow-policy" class="chart-description-tab-content"><p>Age sorts neighbourhoods into retrofit packages. Solid-wall areas need the expensive interventions that grant schemes have historically struggled to deliver; cavity-wall areas built between the wars and the 1980s are the cheapest remaining wins. Pre-1900 stock is also more likely to be listed or in a conservation area, which constrains external changes.</p></div>
+							<div id="descTab-dwellingsage-chartrow-methods" class="chart-description-tab-content"><p>From the <a href="https://www.gov.uk/government/collections/council-tax-statistics-for-town-and-parish-councils-in-england" target="_blank" rel="noopener">Valuation Office Agency</a> CTSOP4 table, per LSOA, England and Wales only, 2020 onwards. The single years from 2009 to 2021 are combined into one band. A substantial number of dwellings have an unknown build period, shown as its own category rather than distributed across the others.</p></div>
+						</div>
+						</div>
+						<div class="chart-container">
+							<canvas id="dwellingsage-chart"></canvas>
+						</div>
+					</div>
+
+				</div>
+
+
 				<div id="prices" class="tabcontent">
 
 					<p>This section shows property price data for the selected area based on the Land Registry Price Paid data. This includes domestic and non-domestic properties. Data is only available for England and Wales.</p>
@@ -1169,7 +1273,7 @@
 					<tr><th>Variable</th><th>Value</th></tr>
 					<tr><th>Last Sold</td><td>{date}</td></tr>
 					<tr><th>Price Last Sold</td><td>{price}</td></tr>
-					<tr><th>Price 2024 (est)</td><td>{price_2024}</td></tr>
+					<tr><th>Price 2025 (est)</td><td>{price_2025}</td></tr>
 					<tr><th>Property Type</td><td>{property_type}</td></tr>
 					<tr><th>Freehold/Leasehold</td><td>{freehold}</td></tr>
 				</table>
@@ -1197,7 +1301,7 @@
 					<tr><th>Variable</th><th>Value</th></tr>
 					<tr><th>Last Sold</td><td>{date}</td></tr>
 					<tr><th>Price Last Sold</td><td>{price}</td></tr>
-					<tr><th>Price 2024 (est)</td><td>{price_2024}</td></tr>
+					<tr><th>Price 2025 (est)</td><td>{price_2025}</td></tr>
 					<tr><th>Property Type</td><td>{property_type}</td></tr>
 					<tr><th>Freehold/Leasehold</td><td>{freehold}</td></tr>
 				</table>

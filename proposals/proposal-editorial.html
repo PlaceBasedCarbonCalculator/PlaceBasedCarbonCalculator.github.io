@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Proposal 2: Editorial feature rows - Carbon &amp; Place</title>
+  <link rel="stylesheet" href="/css/homepage.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet">
+  <link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet">
+  <style>
+    :root{
+      --brand:#ac1a40; --brand-dark:#8f1535;
+      --ink:#1a1a20; --muted:#57575f; --line:#e8e3e4; --bg:#fffdfd;
+      --pbcc:#c70d0d; --transport:#1f9e12; --landuse:#b98f0d; --landown:#7a0dc7; --retrofit:#0d3cc7;
+    }
+    body{ color:var(--ink); background:var(--bg); }
+    #main{ background:var(--bg); }
+
+    /* ---------- Hero title band under the parallax ---------- */
+    .hero-overlay{
+      position:absolute; left:0; right:0; bottom:0; z-index:200; text-align:center;
+      padding:0 24px 40px;
+    }
+    .hero-overlay h1{
+      color:#fff; font-size:clamp(32px,6vw,60px); line-height:1.02; margin:0 auto 14px; max-width:16ch;
+      text-shadow:0 2px 24px rgba(0,0,0,.5);
+    }
+    .hero-overlay p{
+      color:#fff; font-size:clamp(16px,2.4vw,21px); margin:0 auto; max-width:56ch;
+      text-shadow:0 1px 12px rgba(0,0,0,.55);
+    }
+
+    /* ---------- Intro + postcode band ---------- */
+    .intro{ padding:60px max(20px,calc(50% - 520px)); text-align:center; }
+    .intro .lede{ font-size:clamp(19px,2.6vw,26px); line-height:1.45; color:var(--ink); margin:0 auto 8px; max-width:40ch; font-weight:600; }
+    .intro .sub{ font-size:17px; color:var(--muted); max-width:60ch; margin:12px auto 30px; }
+    .searchband{
+      max-width:600px; margin:0 auto; background:#fff; border:1px solid var(--line);
+      border-radius:16px; padding:26px 26px 28px; box-shadow:0 10px 34px rgba(172,26,64,.08);
+    }
+    .searchband h2{ margin:0 0 6px; font-size:22px; padding-left:0; }
+    .searchband p{ margin:0 0 16px; color:var(--muted); font-size:15px; }
+    .searchrow{ display:flex; gap:10px; flex-wrap:wrap; }
+    .searchrow input{ flex:1 1 220px; min-width:0; padding:14px 16px; font-size:16px;
+      border:1px solid #c6bfc1; border-radius:10px; text-transform:uppercase; }
+    .searchrow input:focus{ outline:2px solid var(--brand); outline-offset:1px; }
+    .searchrow button{ flex:0 0 auto; padding:14px 26px; font-size:16px; font-weight:700; color:#fff;
+      background:var(--brand); border:none; border-radius:10px; cursor:pointer; }
+    .searchrow button:hover{ background:var(--brand-dark); }
+
+    /* ---------- Section divider heading ---------- */
+    .rowhead{ text-align:center; padding:26px 24px 6px; }
+    .rowhead .eyebrow{ font-size:13px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--brand); }
+    .rowhead h2{ font-size:clamp(26px,4vw,38px); margin:8px 0 0; padding-left:0; }
+
+    /* ---------- Feature rows ---------- */
+    .feature{ padding:52px max(20px,calc(50% - 560px)); }
+    .feature.tint{ } /* per-tool tint applied below */
+    .feature .inner{
+      display:grid; gap:44px; align-items:center;
+      grid-template-columns:1fr 1fr;
+    }
+    .feature:nth-of-type(even) .media{ order:2; }
+    .feature .media{ border-radius:16px; overflow:hidden; box-shadow:0 16px 40px rgba(0,0,0,.16); }
+    .feature .media img{ width:100%; height:100%; object-fit:cover; display:block; aspect-ratio:16/10; }
+    .feature .kicker{ display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:700;
+      letter-spacing:.05em; text-transform:uppercase; margin-bottom:12px; }
+    .feature .kicker .dot{ width:11px; height:11px; border-radius:50%; }
+    .feature h3{ font-size:clamp(24px,3.2vw,32px); margin:0 0 14px; line-height:1.12; }
+    .feature p{ font-size:17px; color:var(--muted); line-height:1.6; margin:0 0 22px; max-width:46ch; }
+    .feature .cta{ display:inline-flex; align-items:center; gap:9px; font-weight:700; font-size:16px;
+      color:#fff; padding:13px 22px; border-radius:10px; text-decoration:none; }
+    .feature .cta:hover{ filter:brightness(.93); text-decoration:none; }
+    .feature .cta .fa{ font-size:13px; }
+    .beta-flag{ display:inline-block; font-size:11px; font-weight:700; text-transform:uppercase;
+      padding:3px 8px; border-radius:6px; vertical-align:middle; margin-left:6px; }
+
+    .f-pbcc{ background:linear-gradient(180deg,#fff,#fff6f6);} .f-pbcc .dot,.f-pbcc .cta,.f-pbcc .beta-flag{ background:var(--pbcc);} .f-pbcc .kicker{ color:var(--pbcc);} .f-pbcc .beta-flag{ color:#fff;}
+    .f-transport{ background:linear-gradient(180deg,#fff,#f4fbf2);} .f-transport .dot,.f-transport .cta{ background:var(--transport);} .f-transport .kicker{ color:var(--transport);}
+    .f-landuse{ background:linear-gradient(180deg,#fff,#fdf9ec);} .f-landuse .dot,.f-landuse .cta{ background:var(--landuse);} .f-landuse .kicker{ color:#8a6b00;}
+    .f-landown{ background:linear-gradient(180deg,#fff,#faf4fe);} .f-landown .dot,.f-landown .cta{ background:var(--landown);} .f-landown .kicker{ color:var(--landown);}
+    .f-retrofit{ background:linear-gradient(180deg,#fff,#f2f5fe);} .f-retrofit .dot,.f-retrofit .cta{ background:var(--retrofit);} .f-retrofit .kicker{ color:var(--retrofit);}
+
+    /* ---------- Learn more + legacy strip ---------- */
+    .closing{ padding:56px max(20px,calc(50% - 560px)); background:#faf7f8; }
+    .closing-grid{ display:grid; gap:22px; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
+    .mini{ background:#fff; border:1px solid var(--line); border-radius:14px; padding:24px; }
+    .mini h3{ margin:0 0 8px; font-size:19px; }
+    .mini p{ margin:0 0 14px; color:var(--muted); font-size:15px; }
+    .mini a{ font-weight:700; color:var(--brand); }
+    .mini a:hover{ color:var(--brand-dark); }
+
+    /* ---------- Funders ---------- */
+    .funders{ text-align:center; padding:52px 24px; }
+    .funders h3{ font-size:16px; color:var(--muted); font-weight:600; margin:0 0 26px; }
+    .logo-row{ display:flex; flex-wrap:wrap; gap:30px; align-items:center; justify-content:center; }
+    .logo-row img{ height:46px; width:auto; opacity:.82; filter:grayscale(.2); transition:.2s; }
+    .logo-row a:hover img{ opacity:1; filter:none; }
+
+    @media (max-width:760px){
+      .feature .inner{ grid-template-columns:1fr; gap:24px; }
+      .feature:nth-of-type(even) .media{ order:0; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/"><img src="/images/ui/logo.webp" alt="Carbon & Place Logo" class="logo"></a>
+    <a href="#tools">Tools</a>
+    <a href="/about/">About</a>
+    <a href="/data/">Data</a>
+    <a href="/manual/">Manual</a>
+    <a href="/reports/">Reports</a>
+    <a href="#" id="expandtopnav" class="icon" aria-label="Expand menu"><i class="fa fa-bars"></i></a>
+  </nav>
+
+  <div id="page">
+    <div class="parapic" id="parallaxoff"></div>
+    <div class="parapic" id="parallax">
+      <div class="parapic_layer parallax" id="parapic-0" data-speed="2"></div>
+      <div class="parapic_layer parallax" id="parapic-1" data-speed="5"></div>
+      <div class="parapic_layer parallax" id="parapic-2" data-speed="11"></div>
+      <div class="parapic_layer parallax" id="parapic-3" data-speed="30"></div>
+      <div class="parapic_layer parallax" id="parapic-4" data-speed="45"></div>
+      <div class="parapic_layer parallax" id="parapic-5" data-speed="60"></div>
+      <div class="parapic_layer parallax" id="parapic-6" data-speed="80"></div>
+      <div class="parapic_layer parallax" id="parapic-7" data-speed="90"></div>
+      <div class="parapic_layer" id="parapic-8" data-speed="100"></div>
+
+      <div class="hero-overlay">
+        <h1>The carbon story of every neighbourhood</h1>
+        <p>Free, research-based tools for communities, planners and policymakers across Great Britain.</p>
+      </div>
+    </div>
+
+    <div id="main">
+      <div id="install" class="installstrip" hidden>
+        <p style="float:left"><b>Install the Carbon &amp; Place App</b></p>
+        <button class="buttonInstall"><b>Install</b></button>
+      </div>
+
+      <!-- Intro + postcode -->
+      <section class="intro">
+        <p class="lede">We help you understand how carbon footprints change between places, and how the path to net zero will vary.</p>
+        <p class="sub">Based on the latest research and the best available data, from national patterns down to your own street.</p>
+        <div class="searchband">
+          <h2>Find your neighbourhood</h2>
+          <p>Enter a UK postcode to open a combined local report, with links into all of our tools.</p>
+          <form class="searchrow" role="search" aria-label="Postcode search" onsubmit="return false;">
+            <label for="pc" class="visually-hidden">UK postcode</label>
+            <input id="pc" type="text" placeholder="e.g. LS2 9JT" autocomplete="postal-code" maxlength="9">
+            <button type="submit"><strong>Search</strong></button>
+          </form>
+        </div>
+      </section>
+
+      <div class="rowhead" id="tools">
+        <span class="eyebrow">Explore the tools</span>
+        <h2>Five lenses on place and carbon</h2>
+      </div>
+
+      <!-- PBCC -->
+      <section class="feature f-pbcc">
+        <div class="inner">
+          <div class="media"><img src="/images/ui/pbcc.webp" alt="Place-Based Carbon Calculator map" loading="lazy"></div>
+          <div class="text">
+            <span class="kicker"><span class="dot"></span> Carbon footprints</span>
+            <h3>Place-Based Carbon Calculator <span class="beta-flag">v2</span></h3>
+            <p>Our flagship tool, rebuilt with updated data, expanded coverage and much more. See how neighbourhood carbon footprints vary across Great Britain and where the biggest gains lie.</p>
+            <a class="cta" href="/pbcc/">Open the calculator <i class="fa fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Transport -->
+      <section class="feature f-transport">
+        <div class="inner">
+          <div class="media"><img src="/images/ui/transport.webp" alt="Transport and accessibility map" loading="lazy"></div>
+          <div class="text">
+            <span class="kicker"><span class="dot"></span> Travel &amp; access</span>
+            <h3>Transport &amp; Accessibility Explorer</h3>
+            <p>Transport is the largest source of emissions in the UK. Examine how travel options and access to services vary from place to place, and what that means for emissions.</p>
+            <a class="cta" href="/transport/#/zones/#8/51.482/-0.151">Open the explorer <i class="fa fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Land use -->
+      <section class="feature f-landuse">
+        <div class="inner">
+          <div class="media"><img src="/images/ui/landuse.webp" alt="Land use and planning map" loading="lazy"></div>
+          <div class="text">
+            <span class="kicker"><span class="dot"></span> Land &amp; planning</span>
+            <h3>Land Use &amp; Planning Explorer</h3>
+            <p>How we use land shapes everything from housing to nature. Explore planning designations, environmental constraints and protected places across Great Britain.</p>
+            <a class="cta" href="/landuse">Open the explorer <i class="fa fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Land ownership -->
+      <section class="feature f-landown">
+        <div class="inner">
+          <div class="media"><img src="/images/ui/landownership.webp" alt="Land ownership map" loading="lazy"></div>
+          <div class="text">
+            <span class="kicker"><span class="dot"></span> Ownership</span>
+            <h3>Land Ownership Explorer</h3>
+            <p>Landowners have the power to define and redefine places. Explore Land Registry data about the UK and overseas companies that own land in England and Wales.</p>
+            <a class="cta" href="/landownership/#/landowners/#8/51.482/-0.151">Open the explorer <i class="fa fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Retrofit -->
+      <section class="feature f-retrofit">
+        <div class="inner">
+          <div class="media"><img src="/images/ui/retrofit.webp" alt="Retrofit explorer map" loading="lazy"></div>
+          <div class="text">
+            <span class="kicker"><span class="dot"></span> Buildings &amp; energy</span>
+            <h3>Retrofit Explorer</h3>
+            <p>Britain has some of the coldest and leakiest homes in Europe. Explore detailed data about buildings, their energy use and running costs, and what could be done to fix them.</p>
+            <a class="cta" href="/retrofit/#/zones/#8/51.482/-0.151">Open the explorer <i class="fa fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Closing: learn more + legacy -->
+      <section class="closing">
+        <div class="closing-grid">
+          <div class="mini">
+            <h3>The manual</h3>
+            <p>How to use the tools, plus the background context and methods behind the maps.</p>
+            <a href="/manual">Read the manual &rarr;</a>
+          </div>
+          <div class="mini">
+            <h3>Data downloads</h3>
+            <p>Much of our data is free to download and reuse for your own analysis.</p>
+            <a href="/data">Browse data &rarr;</a>
+          </div>
+          <div class="mini">
+            <h3>Legacy calculator</h3>
+            <p>The original 2020 PBCC from CREDS, covering England, now being archived.</p>
+            <a href="/legacy">Open legacy tool &rarr;</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Funders -->
+      <section class="funders">
+        <h3>Funded and developed with the help of:</h3>
+        <div class="logo-row">
+          <a href="https://www.edrc.ac.uk/" target="_blank" rel="noopener"><img alt="EDRC" src="/images/ui/edrc-logo.webp" loading="lazy"></a>
+          <a href="https://www.creds.ac.uk/" target="_blank" rel="noopener"><img alt="CREDS" src="/images/ui/CREDS-logo.svg" loading="lazy"></a>
+          <a href="https://www.ukri.org/councils/epsrc/" target="_blank" rel="noopener"><img alt="EPSRC" src="/images/ui/EPSRC.webp" loading="lazy"></a>
+          <a href="https://www.ukri.org/councils/esrc/" target="_blank" rel="noopener"><img alt="ESRC" src="/images/ui/esrc-logo.webp" loading="lazy"></a>
+          <a href="https://www.ukri.org/" target="_blank" rel="noopener"><img alt="UKRI" src="/images/ui/UKRI-logo.webp" loading="lazy"></a>
+          <a href="https://www.leeds.ac.uk/" target="_blank" rel="noopener"><img alt="University of Leeds" src="/images/ui/leeds.webp" loading="lazy"></a>
+          <a href="https://friendsoftheearth.uk/" target="_blank" rel="noopener"><img alt="Friends of the Earth" src="/images/ui/FOE_logo.webp" loading="lazy"></a>
+          <a href="https://www.manchester.ac.uk/" target="_blank" rel="noopener"><img alt="University of Manchester" src="/images/ui/manchester.webp" loading="lazy"></a>
+          <a href="https://transportforthesoutheast.org.uk/" target="_blank" rel="noopener"><img alt="TFSE" src="/images/ui/tfse.webp" loading="lazy"></a>
+          <a href="https://uk.steergroup.com/" target="_blank" rel="noopener"><img alt="Steer" src="/images/ui/steer.webp" loading="lazy"></a>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="/js/parallax.js"></script>
+</body>
+</html>
