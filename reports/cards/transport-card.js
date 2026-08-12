@@ -3,9 +3,19 @@
 // Report-card module for the transport tool: renders every chart from the tool's
 // zones report modal into the transport-card.html fragment on a report page.
 // Data endpoints can be redirected (e.g. to area-level aggregates) by setting
-// window.REPORT_CARD_ENDPOINTS = { '<default path>': '<replacement path>' }.
+// window.REPORT_CARD_ENDPOINTS = { '<default path>': <override> } where the
+// override is either '<replacement path>' (another pbcc-data folder) or
+// { bin: '<dataset>' } (a capBin single-binary dataset, which the page must
+// have capBin.register()ed - see reports/la-report.js).
 
 function transportCard_fetchJSON(url) {
+  // 'bin:<dataset>/<id>.json' pseudo-URLs come from the { bin: ... } override
+  // form of REPORT_CARD_ENDPOINTS and are served by capBin range requests.
+  if (url.lastIndexOf('bin:', 0) === 0) {
+    var rest = url.slice(4);
+    var slash = rest.indexOf('/');
+    return capBin.fetchRecord(rest.slice(0, slash), rest.slice(slash + 1).replace(/\.json$/, ''));
+  }
   return fetch(url).then(function (r) {
     if (!r.ok) { throw new Error('HTTP ' + r.status); }
     return r.json();
@@ -13,8 +23,9 @@ function transportCard_fetchJSON(url) {
 }
 
 function transportCard_endpoint(path) {
-  var overrides = window.REPORT_CARD_ENDPOINTS || {};
-  return 'https://pbcc.blob.core.windows.net/pbcc-data/' + (overrides[path] || path);
+  var override = (window.REPORT_CARD_ENDPOINTS || {})[path];
+  if (override && typeof override === 'object' && override.bin) { return 'bin:' + override.bin + '/'; }
+  return 'https://pbcc.blob.core.windows.net/pbcc-data/' + (override || path);
 }
 
 // Tab switcher scoped to this card's own fragment, so multiple tool cards can
@@ -83,21 +94,21 @@ transportCard_manageCharts = function (locationId) {
 transportCard_makeChartAccess = function(){
 
   // Guard: do nothing until access data has loaded
-  if (!transportCard_accessLocationData || !transportCard_accessLocationData['c']) { return; }
+  if (!transportCard_accessLocationData || !transportCard_accessLocationData['categoryname']) { return; }
 
   // Access Chart
   // Destroy old chart
 	if(transportCard_accessChart){
 		transportCard_accessChart.destroy();
 	}
-  
+
   // Get data muliple datasets for each category
-  
-  
-  const category = transportCard_accessLocationData["c"];
-  const datax = transportCard_accessLocationData["p60"];
-	const datay = transportCard_accessLocationData["a60"];
-	const labels = transportCard_accessLocationData["Bc"];
+
+
+  const category = transportCard_accessLocationData["categoryname"];
+  const datax = transportCard_accessLocationData["proximity_60"];
+	const datay = transportCard_accessLocationData["access_60"];
+	const labels = transportCard_accessLocationData["classname"];
 	//const data  = datax.map((xVal, index) => ({ x: xVal, y: datay[index] }));
 	
 	
@@ -201,20 +212,23 @@ transportCard_makeChartAccess = function(){
 
 
 transportCard_makeTableAccess = function(){
-  
+
+    // Guard: do nothing until access data has loaded
+    if (!transportCard_accessLocationData || !transportCard_accessLocationData['categoryname']) { return; }
+
     const tab = document.getElementById('access-table');
     tab.innerHTML = ''
-    
-    const labels = transportCard_accessLocationData["Bc"];
-    const category = transportCard_accessLocationData["c"];
-    const access_15 = transportCard_accessLocationData["a15"];
-    const access_30 = transportCard_accessLocationData["a30"];
-    const access_45 = transportCard_accessLocationData["a45"];
-    const access_60 = transportCard_accessLocationData["a60"];
-    const proximity_15 = transportCard_accessLocationData["p15"];
-    const proximity_30 = transportCard_accessLocationData["p30"];
-    const proximity_45 = transportCard_accessLocationData["p45"];
-    const proximity_60 = transportCard_accessLocationData["p60"];
+
+    const labels = transportCard_accessLocationData["classname"];
+    const category = transportCard_accessLocationData["categoryname"];
+    const access_15 = transportCard_accessLocationData["access_15"];
+    const access_30 = transportCard_accessLocationData["access_30"];
+    const access_45 = transportCard_accessLocationData["access_45"];
+    const access_60 = transportCard_accessLocationData["access_60"];
+    const proximity_15 = transportCard_accessLocationData["proximity_15"];
+    const proximity_30 = transportCard_accessLocationData["proximity_30"];
+    const proximity_45 = transportCard_accessLocationData["proximity_45"];
+    const proximity_60 = transportCard_accessLocationData["proximity_60"];
   
 
 // Group data by category

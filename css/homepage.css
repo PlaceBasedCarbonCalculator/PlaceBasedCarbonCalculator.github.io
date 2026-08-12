@@ -71,7 +71,7 @@ a.smaller {
 }
 
 #parallaxoff {
-	background-image: url('/images/ui/parallax/mobile.webp');
+	background-image: url('/images/ui/parallax2/mobile.webp');
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: auto 100%;
@@ -104,24 +104,25 @@ a.smaller {
 }
 
 #parapic-0 {
-	background-image: url('/images/ui/parallax/parallax0.webp');
+	background-image: url('/images/ui/parallax2/parallax0.webp');
 	background-color: #fff0f0;
 }
 #parapic-1 {
-	background-image: url('/images/ui/parallax/parallax1.webp');
+	background-image: url('/images/ui/parallax2/parallax1.webp');
 }
 #parapic-2 {
-	background-image: url('/images/ui/parallax/parallax2.webp');
+	background-image: url('/images/ui/parallax2/parallax2.webp');
 }
 #parapic-3 {
-	background-image: url('/images/ui/parallax/parallax3.webp');
+	background-image: url('/images/ui/parallax2/parallax3.webp');
 }
 #parapic-4 {
-	background-image: url('/images/ui/parallax/parallax4.webp');
+	background-image: url('/images/ui/parallax2/parallax4.webp');
 }
 #parapic-5 {
-	background-image: url('/images/ui/parallax/parallax5.webp');
+	background-image: url('/images/ui/parallax2/parallax5.webp');
 }
+/*
 #parapic-6 {
 	background-image: url('/images/ui/parallax/parallax6.webp');
 }
@@ -131,11 +132,12 @@ a.smaller {
 #parapic-8 {
 	background-image: url('/images/ui/parallax/parallax8.webp');
 }
+*/
 #parapic-scrim {
 	background-color: #fff0f0;
 	opacity: 0;
 }
-
+/*
 @media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi){ 
   #parapic-0 {
 		background-image: url('/images/ui/parallax/parallax0@2x.webp');
@@ -166,6 +168,7 @@ a.smaller {
 		background-image: url('/images/ui/parallax/parallax8@2x.webp');
 	}
 }
+*/
 /* Mobile Mode */
 @media screen and (max-width: 600px) {
 	#parallaxoff {
@@ -250,12 +253,26 @@ body { color: var(--hp-ink); }
 #main { background: var(--hp-bg); }
 
 /* ---------- Hero overlay ---------- */
+/* Positioning context for the hero overlay, so the copy + search box anchor to
+   the hero area whether the parallax (desktop) or static (mobile) background shows. */
+.hero-media { position: relative; }
 .hero-overlay {
   position: absolute; left: 0; right: 0; bottom: 0; z-index: 200;
   padding: 0 max(20px, calc(50% - 560px)) 34px;
   pointer-events: none;
 }
-.hero-overlay > * { pointer-events: auto; }
+/* Soft readability scrim: darkens the lower band where the copy sits and
+   fades to transparent upward, so the parallax imagery above stays visible. */
+.hero-overlay::before {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; top: -40px;
+  z-index: -1; pointer-events: none;
+  background: linear-gradient(to top,
+    rgba(0,0,0,.58) 0%,
+    rgba(0,0,0,.42) 34%,
+    rgba(0,0,0,.16) 68%,
+    rgba(0,0,0,0) 100%);
+}
+.hero-overlay > * { pointer-events: auto; position: relative; }
 .hero-kicker {
   display: inline-block; background: var(--hp-brand); color: #fff; font-weight: 700;
   font-size: 13px; letter-spacing: .05em; text-transform: uppercase;
@@ -263,10 +280,10 @@ body { color: var(--hp-ink); }
 }
 .hero-title {
   color: #fff; font-size: clamp(30px,5.2vw,52px); line-height: 1.02; margin: 0 0 10px;
-  text-shadow: 0 2px 18px rgba(0,0,0,.45); max-width: 16ch;
+  text-shadow: 0 2px 18px rgba(0,0,0,.45); max-width: none;
 }
 .hero-sub {
-  color: #fff; font-size: clamp(15px,2.2vw,19px); margin: 0 0 22px; max-width: 52ch;
+  color: #fff; font-size: clamp(15px,2.2vw,19px); margin: 0 0 22px; max-width: none;
   text-shadow: 0 1px 10px rgba(0,0,0,.5);
 }
 .hero-search {

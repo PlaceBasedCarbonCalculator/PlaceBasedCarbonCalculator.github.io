@@ -235,7 +235,10 @@ body { color: var(--ink); }
 .modal-body { padding: 18px 24px 28px; }
 
 /* ---------- Report tabs as pills ---------- */
-.modal .tab {
+/* .report-page is the <body> class of the standalone report pages
+   (/reports/*.html), which reuse the modal's tab markup outside a .modal */
+.modal .tab,
+.report-page .tab {
 	border: none;
 	background-color: transparent;
 	display: flex;
@@ -244,7 +247,8 @@ body { color: var(--ink); }
 	padding: 2px 0 12px;
 	margin-top: 4px;
 }
-.modal .tab button {
+.modal .tab button,
+.report-page .tab button {
 	float: none;
 	flex: 0 0 auto;
 	font-family: Arial, sans-serif;
@@ -256,22 +260,27 @@ body { color: var(--ink); }
 	border-radius: 100px;
 	padding: 8px 14px;
 	white-space: nowrap;
+	cursor: pointer;
 }
-.modal .tab button:hover {
+.modal .tab button:hover,
+.report-page .tab button:hover {
 	background-color: var(--bg);
 	color: var(--ink);
 	border-color: #cfc7ca;
 }
-.modal .tab button.active {
+.modal .tab button.active,
+.report-page .tab button.active {
 	background-color: var(--brand);
 	border-color: var(--brand);
 	color: #fff;
 }
-.modal .tabcontent {
+.modal .tabcontent,
+.report-page .tabcontent {
 	border: none;
 	padding: 0 2px 8px;
 }
-.modal .tabcontent > h3 { padding-left: 0; }
+.modal .tabcontent > h3,
+.report-page .tabcontent > h3 { padding-left: 0; }
 
 /* ---------- Chart rows as cards ---------- */
 .chart-wrapper {
@@ -394,6 +403,13 @@ body { color: var(--ink); }
 	border-radius: 14px;
 	padding: 14px;
 }
+/* Match the pbcc tool's community photo size (pbcc/style.css); the report
+   pages don't load that stylesheet, so without this the images render at
+   their natural (larger) size. */
+.family_photo {
+	width: 70px;
+	height: 53px;
+}
 
 /* ---------- Grade explainer popup ---------- */
 .grades-popup {
@@ -432,6 +448,35 @@ body { color: var(--ink); }
 	cursor: pointer;
 }
 .grades-popup-close:hover { background: var(--bg-soft); color: var(--ink); }
+
+/* ---------- Standalone report pages (/reports/) ---------- */
+/* Tool sections and expand buttons are given base styles by the inline
+   <style> block each report page carries (lsoa.html, la.html and its
+   siblings); the .report-page-scoped rules below win on specificity and
+   bring them in line with the new design language. */
+.report-page .tool-section {
+	background: var(--bg);
+	border: 1px solid var(--line);
+	border-radius: var(--radius);
+	box-shadow: var(--shadow-card);
+	padding: 18px 22px 20px;
+}
+.report-page .expand-toggle {
+	background: none;
+	border: 2px solid var(--brand);
+	color: var(--brand);
+	border-radius: 100px;
+	padding: 8px 16px;
+	font-weight: 700;
+	font-size: 14px;
+	cursor: pointer;
+}
+.report-page .expand-toggle:hover { background: var(--brand); color: #fff; }
+.report-page #area-map {
+	border: 1px solid var(--line);
+	border-radius: var(--radius);
+	box-shadow: var(--shadow-card);
+}
 
 /* Keep the popup out of printed reports */
 @media print {

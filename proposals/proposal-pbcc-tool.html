@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mockup: PBCC tool in the new style - Carbon &amp; Place</title>
+
+  <!-- Map dependencies (same versions as the live tool) -->
+  <script src="https://unpkg.com/pmtiles@3.0.6/dist/pmtiles.js"></script>
+  <script src="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.js"></script>
+  <link href="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.css" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet">
+  <link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet">
+
+  <style>
+    :root{
+      --brand:#ac1a40; --brand-dark:#8f1535;
+      --ink:#1b1b21; --muted:#5c5c68; --line:#e7e2e4; --bg:#ffffff; --bg-soft:#f7f4f5;
+      --pbcc:#c70d0d;
+      --chart-housing:#2456d6; --chart-transport:#0f6b28; --chart-consumption:#cf8f0e;
+      --radius:16px; --radius-sm:10px;
+      --shadow-card:0 4px 24px rgba(0,0,0,.13);
+      --shadow-pop:0 24px 70px rgba(0,0,0,.30);
+    }
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; margin:0; }
+    body{ font-family:'Arial',sans-serif; color:var(--ink); line-height:1.4;
+          overscroll-behavior:none; overflow:hidden; }
+    a{ color:var(--brand); }
+
+    /* ---------- Map ---------- */
+    #map{ position:absolute; inset:0; background:#e9e6e7; }
+    .maplibregl-ctrl-top-left{ top:74px; }
+    .maplibregl-ctrl-group{ border-radius:12px; overflow:hidden;
+      box-shadow:var(--shadow-card); border:1px solid var(--line); }
+    .maplibregl-ctrl-group button{ width:36px; height:36px; }
+
+    /* ---------- Nav (matches new homepage) ---------- */
+    nav{
+      position:absolute; top:0; left:0; right:0; height:60px; z-index:1100;
+      backdrop-filter:blur(10px); background:rgba(0,0,0,.6); color:#fff;
+      display:flex; align-items:center; padding:0 8px; overflow:hidden;
+    }
+    nav a{ color:#f2f2f2; text-decoration:none; padding:0 13px; line-height:60px; height:60px; }
+    nav a:hover{ background:gray; }
+    nav .logo{ width:150px; height:50px; vertical-align:middle; margin-right:5px; }
+    nav .navtitle{ font-weight:bold; }
+
+    /* ---------- Mockup badge ---------- */
+    .mockup-badge{
+      position:absolute; top:70px; left:50%; transform:translateX(-50%); z-index:1050;
+      background:var(--ink); color:#fff; font-size:12px; font-weight:700;
+      letter-spacing:.04em; text-transform:uppercase; padding:6px 14px; border-radius:100px;
+      box-shadow:var(--shadow-card); opacity:.92; pointer-events:none; white-space:nowrap;
+    }
+
+    /* ---------- Shared bits ---------- */
+    .eyebrow{ display:block; font-size:12px; font-weight:700; letter-spacing:.06em;
+              text-transform:uppercase; color:var(--brand); margin-bottom:6px; }
+    .beta-flag{ display:inline-block; font-size:11px; font-weight:700; text-transform:uppercase;
+                background:#efe6e9; color:var(--brand); padding:3px 8px; border-radius:6px;
+                margin-left:8px; vertical-align:middle; }
+    .btn{ display:inline-block; font-weight:700; font-size:15px; color:#fff; background:var(--brand);
+          padding:11px 20px; border-radius:9px; border:none; cursor:pointer; text-decoration:none; }
+    .btn:hover{ background:var(--brand-dark); }
+    .btn-outline{ display:inline-block; font-weight:700; font-size:15px; color:var(--brand);
+                  background:transparent; border:2px solid var(--brand); padding:9px 18px;
+                  border-radius:9px; cursor:pointer; text-decoration:none; }
+    .btn-outline:hover{ background:var(--brand); color:#fff; }
+    .helpbutton{ background:none; border:none; color:var(--brand); cursor:pointer; font-size:15px;
+                 padding:2px 4px; }
+    .helpbutton:hover{ color:var(--brand-dark); }
+
+    /* ---------- Toggle switch ---------- */
+    .switch{ position:relative; display:inline-block; width:40px; height:22px; vertical-align:middle; }
+    .switch input{ opacity:0; width:0; height:0; }
+    .slider-toggle{ position:absolute; inset:0; cursor:pointer; background:#c9c2c5;
+      border-radius:22px; transition:.2s; }
+    .slider-toggle:before{ content:""; position:absolute; height:16px; width:16px; left:3px; top:3px;
+      background:#fff; border-radius:50%; transition:.2s; }
+    .switch input:checked + .slider-toggle{ background:var(--brand); }
+    .switch input:checked + .slider-toggle:before{ transform:translateX(18px); }
+
+    /* ---------- Layer panel ---------- */
+    .layer-panel{
+      position:absolute; top:74px; right:14px; z-index:1000;
+      width:330px; max-width:calc(100vw - 28px);
+      background:var(--bg); border:1px solid var(--line); border-radius:var(--radius);
+      box-shadow:var(--shadow-card); overflow:hidden;
+      max-height:calc(100vh - 100px); overflow-y:auto;
+    }
+    .layer-panel-head{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 16px 10px;
+    }
+    .layer-panel-head h2{ font-size:16px; margin:0; }
+    .layer-panel-head .eyebrow{ margin-bottom:2px; }
+    .panel-close{ background:none; border:none; font-size:16px; color:var(--muted); cursor:pointer;
+                  padding:6px 8px; border-radius:8px; }
+    .panel-close:hover{ background:var(--bg-soft); color:var(--ink); }
+
+    .layer-section{ border-top:1px solid var(--line); }
+    .layer-section > button.section-toggle{
+      width:100%; display:flex; align-items:center; gap:10px; text-align:left;
+      background:none; border:none; cursor:pointer; padding:13px 16px;
+      font-size:14px; font-weight:700; color:var(--ink); font-family:inherit;
+    }
+    .layer-section > button.section-toggle:hover{ background:var(--bg-soft); }
+    .section-dot{ width:10px; height:10px; border-radius:50%; background:var(--pbcc); flex:0 0 auto; }
+    .section-chevron{ margin-left:auto; color:var(--muted); transition:transform .18s; }
+    .layer-section.open .section-chevron{ transform:rotate(180deg); }
+    .section-body{ display:none; padding:2px 16px 16px; }
+    .layer-section.open .section-body{ display:block; }
+    .section-body p{ margin:10px 0; font-size:14px; }
+    .section-body label{ font-size:14px; }
+
+    .field-select{
+      width:100%; padding:10px 12px; font-size:14px; font-family:inherit;
+      border:1px solid #c3bcbe; border-radius:9px; background:#fff; color:var(--ink);
+    }
+    .field-select:focus{ outline:2px solid var(--brand); outline-offset:1px; }
+    .field-row{ display:flex; gap:6px; align-items:center; }
+    .field-row .field-select{ flex:1; }
+
+    .legend-ramp{ display:flex; margin-top:10px; border-radius:6px; overflow:hidden; }
+    .legend-ramp span{ flex:1; height:14px; }
+    .legend-labels{ display:flex; justify-content:space-between; font-size:11px;
+                    color:var(--muted); margin-top:3px; }
+    .legend-list{ margin-top:10px; max-height:180px; overflow-y:auto; }
+    .legend-list div{ display:flex; align-items:center; gap:8px; font-size:12px;
+                      color:var(--muted); padding:2px 0; }
+    .legend-list span{ width:14px; height:14px; border-radius:4px; flex:0 0 auto;
+                       border:1px solid rgba(0,0,0,.12); }
+
+    .boundary-row{ display:flex; align-items:center; gap:8px; margin:12px 0; font-size:14px; }
+    .boundary-swatch{ width:14px; height:4px; border-radius:2px; flex:0 0 auto; }
+    .boundary-row .switch{ margin-left:auto; }
+    .boundary-row .names-label{ font-size:12px; color:var(--muted); }
+
+    /* ---------- Show-panel float button ---------- */
+    .show-panel-btn{
+      position:absolute; top:74px; right:14px; z-index:999;
+      width:44px; height:44px; border-radius:12px; border:1px solid var(--line);
+      background:var(--bg); color:var(--ink); font-size:17px; cursor:pointer;
+      box-shadow:var(--shadow-card);
+    }
+    .show-panel-btn:hover{ background:var(--bg-soft); }
+
+    /* ---------- Modal shell (welcome + report) ---------- */
+    .overlay{
+      position:fixed; inset:0; z-index:1200; background:rgba(27,27,33,.55);
+      backdrop-filter:blur(3px); display:none;
+    }
+    .overlay.open{ display:block; }
+    .modal-card{
+      position:fixed; z-index:1300; left:50%; top:50%; transform:translate(-50%,-50%);
+      background:var(--bg); border-radius:var(--radius); box-shadow:var(--shadow-pop);
+      display:none; flex-direction:column; overflow:hidden;
+    }
+    .modal-card.open{ display:flex; }
+
+    /* ---------- Welcome splash ---------- */
+    #welcome{ width:640px; max-width:calc(100vw - 32px); max-height:calc(100vh - 60px); }
+    .welcome-body{ padding:30px 34px 30px; overflow-y:auto; }
+    .welcome-body h1{ font-size:clamp(22px,4vw,30px); line-height:1.1; margin:4px 0 14px; }
+    .welcome-body p{ font-size:15px; color:var(--muted); margin:0 0 14px; line-height:1.55; }
+    .beta-note{
+      background:#fdf6e7; border:1px solid #f0dfae; border-left:4px solid var(--chart-consumption);
+      border-radius:10px; padding:12px 14px; font-size:14px; color:#6a5518; margin:0 0 16px;
+    }
+    .welcome-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top:20px; }
+
+    /* ---------- Report modal ---------- */
+    #report{ width:980px; max-width:calc(100vw - 24px); height:min(86vh, 900px); }
+    .report-header{
+      padding:20px 26px 0; border-bottom:1px solid var(--line); background:var(--bg);
+    }
+    .report-header-top{ display:flex; align-items:flex-start; gap:12px; }
+    .report-header-top .titles{ flex:1; min-width:0; }
+    .report-header h2{ font-size:clamp(18px,3vw,24px); margin:0 0 2px; line-height:1.15; }
+    .report-sub{ font-size:13px; color:var(--muted); margin:0 0 4px; }
+    .icon-btn{ background:none; border:1px solid var(--line); color:var(--muted); cursor:pointer;
+               font-size:14px; width:36px; height:36px; border-radius:10px; flex:0 0 auto; }
+    .icon-btn:hover{ background:var(--bg-soft); color:var(--ink); }
+    .icon-btn-text{ width:auto; padding:0 14px; font-weight:700; font-family:inherit; }
+    .tab-row{ display:flex; gap:6px; overflow-x:auto; padding:14px 0 12px; }
+    .tab-pill{
+      flex:0 0 auto; font-size:13px; font-weight:700; font-family:inherit;
+      color:var(--muted); background:var(--bg-soft); border:1px solid var(--line);
+      padding:8px 14px; border-radius:100px; cursor:pointer; white-space:nowrap;
+    }
+    .tab-pill:hover{ color:var(--ink); }
+    .tab-pill.active{ background:var(--brand); border-color:var(--brand); color:#fff; }
+    .report-body{ flex:1; overflow-y:auto; padding:22px 26px 30px; background:var(--bg-soft); }
+    .tab-content{ display:none; }
+    .tab-content.active{ display:block; }
+
+    /* stat tiles */
+    .stat-row{ display:grid; gap:14px; grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+               margin-bottom:18px; }
+    .stat-tile{ background:var(--bg); border:1px solid var(--line); border-radius:14px;
+                padding:16px 18px; }
+    .stat-tile .label{ font-size:12px; font-weight:700; letter-spacing:.04em;
+                       text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+    .stat-tile .value{ font-size:26px; font-weight:700; line-height:1.1; }
+    .stat-tile .unit{ font-size:12px; color:var(--muted); margin-top:4px; }
+    .grade-chip{ display:inline-block; min-width:44px; text-align:center; font-size:22px;
+                 font-weight:700; padding:6px 10px; border-radius:10px; }
+
+    /* content cards */
+    .report-card{ background:var(--bg); border:1px solid var(--line); border-radius:14px;
+                  padding:20px 22px; margin-bottom:18px; }
+    .report-card h3{ font-size:17px; margin:0 0 6px; }
+    .report-card > p{ font-size:14px; color:var(--muted); margin:0 0 12px; line-height:1.55; }
+
+    /* chart */
+    .chart-legend{ display:flex; gap:18px; flex-wrap:wrap; margin:4px 0 8px; }
+    .chart-legend div{ display:flex; align-items:center; gap:7px; font-size:13px; color:var(--ink); }
+    .chart-legend span{ width:12px; height:12px; border-radius:4px; }
+    .chart-note{ font-size:12px; color:var(--muted); margin-top:8px; }
+    #overview-svg{ width:100%; height:auto; display:block; }
+    #overview-svg .seg:hover{ filter:brightness(.9); }
+
+    /* overview tables */
+    .table-grid{ display:grid; gap:14px; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
+    .mini-table{ width:100%; border-collapse:collapse; font-size:13px; }
+    .mini-table th{ text-align:left; font-size:11px; letter-spacing:.04em; text-transform:uppercase;
+                    color:var(--muted); padding:6px 8px; border-bottom:1px solid var(--line); }
+    .mini-table td{ padding:7px 8px; border-bottom:1px solid var(--bg-soft); }
+    .mini-table td:last-child{ text-align:right; color:var(--muted); }
+    .grade-sm{ display:inline-block; min-width:30px; text-align:center; font-size:12px;
+               font-weight:700; padding:3px 6px; border-radius:7px; }
+
+    .placeholder-tab{ background:var(--bg); border:1px dashed #cfc7ca; border-radius:14px;
+                      padding:34px 26px; text-align:center; color:var(--muted); font-size:14px; }
+    .placeholder-tab i{ font-size:26px; color:#cfc7ca; display:block; margin-bottom:10px; }
+
+    @media screen and (max-width:640px){
+      nav a:not(:first-child){ display:none; }
+      #report{ height:calc(100vh - 12px); max-width:calc(100vw - 12px); }
+      .report-body{ padding:16px 14px 24px; }
+      .layer-panel{ top:auto; bottom:12px; right:12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Menu -->
+  <nav>
+    <a href="/"><img src="/images/ui/logo.webp" alt="Carbon & Place Logo" class="logo"></a>
+    <a href="/pbcc/" class="navtitle">Place-Based Carbon Calculator</a>
+    <a href="/about/">About</a>
+    <a href="/data/">Data</a>
+    <a href="/manual/">Manual</a>
+    <a href="/reports/">Reports</a>
+  </nav>
+
+  <div class="mockup-badge">Design mockup &middot; report uses demo data</div>
+
+  <!-- Map -->
+  <div id="map"></div>
+
+  <!-- Show-panel button (visible when panel hidden) -->
+  <button class="show-panel-btn" id="show-panel" aria-label="Show layer controls" style="display:none;">
+    <i class="fa fa-bars"></i>
+  </button>
+
+  <!-- Layer panel -->
+  <div class="layer-panel" id="layer-panel">
+    <div class="layer-panel-head">
+      <div>
+        <span class="eyebrow">Map layers</span>
+        <h2>Layer controls</h2>
+      </div>
+      <button class="panel-close" id="hide-panel" aria-label="Hide layer controls"><i class="fas fa-times"></i></button>
+    </div>
+
+    <div class="layer-section open" id="section-zones">
+      <button class="section-toggle">
+        <span class="section-dot"></span>
+        Neighbourhoods
+        <span class="section-chevron" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="section-body">
+        <p>
+          <label><input type="checkbox" id="zones-show" checked> Show layer</label>
+        </p>
+        <div class="field-row">
+          <select class="field-select" id="zones-field" aria-label="Neighbourhood measure">
+            <option value="total_grade" selected>Total Emissions</option>
+            <option value="reduction_grade">Decarbonisation progress</option>
+            <option value="dom_gas_grade">Gas</option>
+            <option value="dom_elec_grade">Electricity</option>
+            <option value="car_grade">Car</option>
+            <option value="van_grade">Van</option>
+            <option value="goods_services_combined_grade">Goods &amp; Services</option>
+            <option value="flights_grade">Flights</option>
+            <option value="lsoa_class_code">Area Classification</option>
+          </select>
+          <button class="helpbutton" title="In the real tool this opens the manual section for this layer" aria-label="Help"><i class="fa fa-question-circle"></i></button>
+        </div>
+        <div id="zones-legend"></div>
+        <p style="margin-top:14px;">
+          <label class="switch"><input type="checkbox" id="dasymetric"><span class="slider-toggle"></span></label>
+          Dasymetric
+          <button class="helpbutton" title="Fades zones and colours individual buildings instead (simplified in this mockup)" aria-label="Help dasymetric"><i class="fa fa-question-circle"></i></button>
+        </p>
+      </div>
+    </div>
+
+    <div class="layer-section" id="section-boundaries">
+      <button class="section-toggle">
+        <span class="section-dot" style="background:#07366b;"></span>
+        Boundaries
+        <span class="section-chevron" aria-hidden="true">&#9662;</span>
+      </button>
+      <div class="section-body">
+        <div class="boundary-row">
+          <span class="boundary-swatch" style="background:#206b07;"></span>
+          <label><input type="checkbox"> Wards</label>
+          <span class="names-label">names</span>
+          <label class="switch"><input type="checkbox"><span class="slider-toggle"></span></label>
+        </div>
+        <div class="boundary-row">
+          <span class="boundary-swatch" style="background:#6b0707;"></span>
+          <label><input type="checkbox"> Local Authorities</label>
+          <span class="names-label">names</span>
+          <label class="switch"><input type="checkbox"><span class="slider-toggle"></span></label>
+        </div>
+        <div class="boundary-row">
+          <span class="boundary-swatch" style="background:#6b0763;"></span>
+          <label><input type="checkbox"> Parish</label>
+          <span class="names-label">names</span>
+          <label class="switch"><input type="checkbox"><span class="slider-toggle"></span></label>
+        </div>
+        <div class="boundary-row">
+          <span class="boundary-swatch" style="background:#07366b;"></span>
+          <label><input type="checkbox"> Westminster Constituency</label>
+          <span class="names-label">names</span>
+          <label class="switch"><input type="checkbox"><span class="slider-toggle"></span></label>
+        </div>
+        <p style="font-size:12px;color:var(--muted);">Boundary layers are decorative in this mockup.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overlay shared by both modals -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Welcome splash -->
+  <div class="modal-card open" id="welcome" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
+    <div class="welcome-body">
+      <span class="eyebrow">Carbon footprints &middot; Great Britain</span>
+      <h1 id="welcome-title">Place-Based Carbon Calculator <span class="beta-flag">v2 beta</span></h1>
+      <div class="beta-note"><b>Beta tool:</b> results may include preliminary analysis or incomplete
+        features. Please report issues on
+        <a href="https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/issues" target="_blank" rel="noopener noreferrer">GitHub</a>.</div>
+      <p>Estimates the carbon footprint of every neighbourhood in Great Britain, breaks it down into
+        housing, transport and consumption, and tracks how it has changed since 2010.</p>
+      <p><b>Click any neighbourhood on the map</b> to open its report, or use the layer controls to
+        change what the colours show. The <i class="fa fa-question-circle" aria-hidden="true"></i> help
+        buttons explain each map and chart.</p>
+      <div class="welcome-actions">
+        <button class="btn" id="welcome-start">Start exploring</button>
+        <a class="btn-outline" href="/manual/#placebasedcarboncalculator">Read the manual</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Neighbourhood report modal -->
+  <div class="modal-card" id="report" role="dialog" aria-modal="true" aria-labelledby="report-title">
+    <div class="report-header">
+      <div class="report-header-top">
+        <div class="titles">
+          <span class="eyebrow">Neighbourhood report</span>
+          <h2 id="report-title">LSOA E01000001</h2>
+          <p class="report-sub" id="report-sub">Demo report card &middot; values shown are illustrative</p>
+        </div>
+        <button class="icon-btn icon-btn-text" onclick="window.print()" title="Print this report">Print</button>
+        <button class="icon-btn report-close" title="Close" aria-label="Close report"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="tab-row" id="report-tabs">
+        <button class="tab-pill active" data-tab="tab-overview">Overview</button>
+        <button class="tab-pill" data-tab="tab-history">Historical</button>
+        <button class="tab-pill" data-tab="tab-housing">Housing</button>
+        <button class="tab-pill" data-tab="tab-transport">Transport</button>
+        <button class="tab-pill" data-tab="tab-consumption">Consumption</button>
+        <button class="tab-pill" data-tab="tab-demographics">Demographics</button>
+        <button class="tab-pill" data-tab="tab-future">Future Scenarios</button>
+      </div>
+    </div>
+
+    <div class="report-body">
+      <div class="tab-content active" id="tab-overview">
+
+        <div class="stat-row">
+          <div class="stat-tile">
+            <div class="label">Total footprint</div>
+            <div class="value">8,650</div>
+            <div class="unit">kgCO<sub>2</sub>e per person per year</div>
+          </div>
+          <div class="stat-tile">
+            <div class="label">Overall grade</div>
+            <div class="value"><span class="grade-chip" id="stat-grade">D</span></div>
+            <div class="unit">relative to the average neighbourhood</div>
+          </div>
+          <div class="stat-tile">
+            <div class="label">vs local authority</div>
+            <div class="value">+11%</div>
+            <div class="unit">above the local authority average</div>
+          </div>
+          <div class="stat-tile">
+            <div class="label">vs Great Britain</div>
+            <div class="value">+14%</div>
+            <div class="unit">above the national average</div>
+          </div>
+        </div>
+
+        <div class="report-card">
+          <h3>Overall carbon footprint</h3>
+          <p>Per-person footprint compared with the local authority, Great Britain, and neighbourhoods
+            with the same ONS area classification. The dashed line marks the per-person level implied by the
+            Climate Change Committee's Sixth Carbon Budget (2033&ndash;2037).</p>
+          <div class="chart-legend">
+            <div><span style="background:var(--chart-housing);"></span> Housing</div>
+            <div><span style="background:var(--chart-transport);"></span> Transport</div>
+            <div><span style="background:var(--chart-consumption);"></span> Consumption</div>
+          </div>
+          <div id="overview-chart"></div>
+          <p class="chart-note">Demo data for design purposes. In the live tool this chart is built from
+            the neighbourhood's real footprint history.</p>
+        </div>
+
+        <div class="report-card">
+          <h3>Overview by category</h3>
+          <p>Each value is graded from A+ (lowest footprint) to F- (highest) relative to all
+            neighbourhoods.</p>
+          <div class="table-grid">
+            <div>
+              <table class="mini-table">
+                <tr><th colspan="3">Housing</th></tr>
+                <tr><td>Electricity</td><td><span class="grade-sm" data-grade="C+">C+</span></td><td>540</td></tr>
+                <tr><td>Gas</td><td><span class="grade-sm" data-grade="D">D</span></td><td>980</td></tr>
+                <tr><td>Other heating</td><td><span class="grade-sm" data-grade="B">B</span></td><td>140</td></tr>
+                <tr><td>Other housing</td><td><span class="grade-sm" data-grade="C">C</span></td><td>490</td></tr>
+              </table>
+            </div>
+            <div>
+              <table class="mini-table">
+                <tr><th colspan="3">Transport</th></tr>
+                <tr><td>Car driving</td><td><span class="grade-sm" data-grade="E+">E+</span></td><td>1,470</td></tr>
+                <tr><td>Public transport</td><td><span class="grade-sm" data-grade="B-">B-</span></td><td>180</td></tr>
+                <tr><td>Flights</td><td><span class="grade-sm" data-grade="D-">D-</span></td><td>760</td></tr>
+                <tr><td>Vehicle purchase</td><td><span class="grade-sm" data-grade="D+">D+</span></td><td>270</td></tr>
+              </table>
+            </div>
+            <div>
+              <table class="mini-table">
+                <tr><th colspan="3">Consumption</th></tr>
+                <tr><td>Food &amp; drink</td><td><span class="grade-sm" data-grade="C-">C-</span></td><td>1,320</td></tr>
+                <tr><td>Goods &amp; services</td><td><span class="grade-sm" data-grade="D">D</span></td><td>1,510</td></tr>
+                <tr><td>Recreation</td><td><span class="grade-sm" data-grade="C+">C+</span></td><td>620</td></tr>
+                <tr><td>Restaurants &amp; hotels</td><td><span class="grade-sm" data-grade="C">C</span></td><td>370</td></tr>
+              </table>
+            </div>
+          </div>
+          <p class="chart-note" style="margin-top:12px;">Units: kgCO<sub>2</sub>e per person per year.
+            Demo values.</p>
+        </div>
+
+      </div>
+
+      <div class="tab-content" id="tab-history">
+        <div class="placeholder-tab">
+          <i class="fa fa-compass"></i>
+          In the full tool this tab shows the neighbourhood's footprint for every year since 2010 as a
+          stacked series, with Overview / Policy / Methods notes beside each chart.
+        </div>
+      </div>
+      <div class="tab-content" id="tab-housing">
+        <div class="placeholder-tab">
+          <i class="fa fa-compass"></i>
+          Housing emissions detail: gas and electricity consumption over time, energy efficiency, and
+          links into the Retrofit Explorer.
+        </div>
+      </div>
+      <div class="tab-content" id="tab-transport">
+        <div class="placeholder-tab">
+          <i class="fa fa-compass"></i>
+          Transport emissions detail: car, van and flight emissions over time, with links into the
+          Transport &amp; Accessibility Explorer.
+        </div>
+      </div>
+      <div class="tab-content" id="tab-consumption">
+        <div class="placeholder-tab">
+          <i class="fa fa-compass"></i>
+          Consumption emissions detail: goods, services, food and drink categories over time.
+        </div>
+      </div>
+      <div class="tab-content" id="tab-demographics">
+        <div class="placeholder-tab">
+          <i class="fa fa-compass"></i>
+          Demographic context: population, households, area classification and how footprints relate to
+          them.
+        </div>
+      </div>
+      <div class="tab-content" id="tab-future">
+        <div class="placeholder-tab">
+          <i class="fa fa-compass"></i>
+          Future scenarios: pathways for this neighbourhood towards net zero.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    'use strict';
+
+    /* ================= Palettes (copied from the live tool's datasets) ================= */
+    const gradePalette = [
+      'A+','#313695','A','#4575b4','A-','#4575b4','B+','#74add1','B','#abd9e9','B-','#abd9e9',
+      'C+','#e0f3f8','C','#e0f3f8','C-','#ffffbf','D+','#ffffbf','D','#fee090','D-','#fee090',
+      'E+','#fdae61','E','#fdae61','E-','#f46d43','F+','#d73027','F','#d73027','F-','#a50026'
+    ];
+    const gradeLegend = [
+      ['A+','#313695'],['A','#4575b4'],['B+','#74add1'],['B','#abd9e9'],['C+','#e0f3f8'],
+      ['C-','#ffffbf'],['D','#fee090'],['E','#fdae61'],['E-','#f46d43'],['F','#d73027'],['F-','#a50026']
+    ];
+    const classPalette = [
+      '1a','#955123','2a','#007f42','2b','#3ea456','2c','#8aca8e','2d','#cfe8d1',
+      '3a','#00498d','3b','#2967ad','3c','#7b99c7','3d','#b9c8e1','4a','#e3ac20',
+      '4b','#edca1a','4c','#f6e896','4d','#fcf5d8','5a','#e64c2b','5b','#ec773c',
+      '5c','#faa460','5d','#fcc9a0','5e','#fee4ce','6a','#f79ff0','7a','#6a339a',
+      '7b','#9f84bd','8a','#576362','8b','#a1a2a1','8c','#e5e4e3'
+    ];
+    const classLegend = [
+      ['Cosmopolitan student neighbourhoods','#955123'],['Ageing rural neighbourhoods','#007f42'],
+      ['Prospering countryside life','#3ea456'],['Remoter communities','#8aca8e'],
+      ['Rural traits','#cfe8d1'],['Achieving neighbourhoods','#00498d'],
+      ['Asian traits','#2967ad'],['Highly qualified professionals','#7b99c7'],
+      ['Households in terraces and flats','#b9c8e1'],['Challenged white communities','#e3ac20'],
+      ['Constrained renters','#edca1a'],['Hampered neighbourhoods','#f6e896'],
+      ['Hard-pressed flat dwellers','#fcf5d8'],['Ageing urban communities','#e64c2b'],
+      ['Aspiring urban households','#ec773c'],['Comfortable neighbourhoods','#faa460'],
+      ['Endeavouring social renters','#fcc9a0'],['Primary sector workers','#fee4ce'],
+      ['Inner city cosmopolitan','#f79ff0'],['Urban cultural mix','#6a339a'],
+      ['Young ethnic communities','#9f84bd'],['Affluent communities','#576362'],
+      ['Ageing suburbanites','#a1a2a1'],['Comfortable suburbia','#e5e4e3']
+    ];
+    // Grades whose fill is light enough to need dark text
+    const lightFills = new Set(['#e0f3f8','#ffffbf','#abd9e9','#fee090','#fdae61','#f6e896','#fcf5d8',
+                                '#cfe8d1','#b9c8e1','#fcc9a0','#fee4ce','#e5e4e3','#edca1a','#faa460']);
+
+    function gradeColour (grade) {
+      const i = gradePalette.indexOf(grade);
+      return (i >= 0 ? gradePalette[i + 1] : '#9c9898');
+    }
+
+    /* ================= Map ================= */
+    const protocol = new pmtiles.Protocol();
+    maplibregl.addProtocol('pmtiles', protocol.tile);
+
+    const map = new maplibregl.Map({
+      container: 'map',
+      style: '/tiles/style_greyscale_nobuild.json',
+      center: [-0.151, 51.482],
+      zoom: 8.5,
+      minZoom: 5,
+      maxZoom: 19,
+      attributionControl: true
+    });
+    map.addControl(new maplibregl.NavigationControl(), 'top-left');
+
+    map.on('load', function () {
+      // Insert the zones layer beneath the basemap's labels
+      let firstSymbol = null;
+      for (const layer of map.getStyle().layers) {
+        if (layer.type === 'symbol') { firstSymbol = layer.id; break; }
+      }
+      map.addSource('zones', {
+        type: 'vector',
+        url: 'pmtiles://https://pbcc.blob.core.windows.net/pbcc-pmtiles/zones_pbcc_20251115.pmtiles'
+      });
+      map.addLayer({
+        id: 'zones',
+        type: 'fill',
+        source: 'zones',
+        'source-layer': 'zones',
+        paint: {
+          'fill-color': zoneFillExpression('total_grade'),
+          'fill-opacity': 0.8,
+          'fill-outline-color': 'rgba(0, 0, 0, 0.2)'
+        }
+      }, firstSymbol);
+
+      map.on('mouseenter', 'zones', () => { map.getCanvas().style.cursor = 'pointer'; });
+      map.on('mouseleave', 'zones', () => { map.getCanvas().style.cursor = ''; });
+      map.on('click', 'zones', (e) => {
+        if (!e.features || !e.features.length) { return; }
+        openReport(e.features[0].properties);
+      });
+    });
+
+    function zoneFillExpression (field) {
+      const palette = (field === 'lsoa_class_code' ? classPalette : gradePalette);
+      return ['match', ['get', field], ...palette, '#9c9898'];
+    }
+
+    /* ================= Layer panel behaviour ================= */
+    document.querySelectorAll('.section-toggle').forEach(btn => {
+      btn.addEventListener('click', () => btn.parentElement.classList.toggle('open'));
+    });
+
+    const fieldSelect = document.getElementById('zones-field');
+    fieldSelect.addEventListener('change', () => {
+      if (map.getLayer('zones')) {
+        map.setPaintProperty('zones', 'fill-color', zoneFillExpression(fieldSelect.value));
+      }
+      renderLegend(fieldSelect.value);
+    });
+
+    document.getElementById('zones-show').addEventListener('change', (e) => {
+      if (map.getLayer('zones')) {
+        map.setLayoutProperty('zones', 'visibility', (e.target.checked ? 'visible' : 'none'));
+      }
+    });
+
+    document.getElementById('dasymetric').addEventListener('change', (e) => {
+      // Simplified for the mockup: the real tool colours individual buildings in this mode
+      if (map.getLayer('zones')) {
+        map.setPaintProperty('zones', 'fill-opacity', (e.target.checked ? 0.35 : 0.8));
+      }
+    });
+
+    function renderLegend (field) {
+      const el = document.getElementById('zones-legend');
+      if (field === 'lsoa_class_code') {
+        el.innerHTML = '<div class="legend-list">' + classLegend.map(([name, colour]) =>
+          `<div><span style="background:${colour}"></span>${name}</div>`).join('') + '</div>';
+      } else {
+        el.innerHTML =
+          '<div class="legend-ramp">' + gradeLegend.map(([, colour]) =>
+            `<span style="background:${colour}"></span>`).join('') + '</div>' +
+          '<div class="legend-labels"><span>A+ lowest</span><span>F- highest</span></div>';
+      }
+    }
+    renderLegend('total_grade');
+
+    const layerPanel = document.getElementById('layer-panel');
+    const showPanelBtn = document.getElementById('show-panel');
+    document.getElementById('hide-panel').addEventListener('click', () => {
+      layerPanel.style.display = 'none';
+      showPanelBtn.style.display = 'block';
+    });
+    showPanelBtn.addEventListener('click', () => {
+      layerPanel.style.display = 'block';
+      showPanelBtn.style.display = 'none';
+    });
+
+    /* ================= Modals ================= */
+    const overlay = document.getElementById('overlay');
+    const welcome = document.getElementById('welcome');
+    const report = document.getElementById('report');
+
+    // Welcome starts open; skip it with ?nosplash, or jump straight to the
+    // demo report with ?report (both useful when demoing)
+    const urlParams = new URLSearchParams(location.search);
+    if (urlParams.has('nosplash') || urlParams.has('report')) {
+      welcome.classList.remove('open');
+    } else {
+      overlay.classList.add('open');
+    }
+
+    function closeAll () {
+      overlay.classList.remove('open');
+      welcome.classList.remove('open');
+      report.classList.remove('open');
+    }
+    document.getElementById('welcome-start').addEventListener('click', closeAll);
+    overlay.addEventListener('click', closeAll);
+    document.querySelector('.report-close').addEventListener('click', closeAll);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeAll(); } });
+
+    function openReport (props) {
+      welcome.classList.remove('open');
+      // Title from the real clicked feature; report body stays demo data
+      const id = props.LSOA21CD || props.lsoa || 'E01000001';
+      document.getElementById('report-title').textContent = 'LSOA ' + id;
+
+      // Overall grade chip from the real feature where available
+      const grade = props.total_grade || 'D';
+      const chip = document.getElementById('stat-grade');
+      chip.textContent = grade;
+      const fill = gradeColour(grade);
+      chip.style.background = fill;
+      chip.style.color = (lightFills.has(fill) ? '#1b1b21' : '#ffffff');
+
+      overlay.classList.add('open');
+      report.classList.add('open');
+    }
+
+    // Style the small grade chips in the demo tables
+    document.querySelectorAll('.grade-sm').forEach(el => {
+      const fill = gradeColour(el.dataset.grade);
+      el.style.background = fill;
+      el.style.color = (lightFills.has(fill) ? '#1b1b21' : '#ffffff');
+    });
+
+    if (urlParams.has('report')) {
+      openReport({ LSOA21CD: 'E01000001', total_grade: 'D' });
+    }
+
+    /* ================= Tabs ================= */
+    document.querySelectorAll('#report-tabs .tab-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#report-tabs .tab-pill').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    /* ================= Overview chart (static demo data, SVG) ================= */
+    (function buildOverviewChart () {
+      const series = [
+        { key: 'Housing',     colour: 'var(--chart-housing)' },
+        { key: 'Transport',   colour: 'var(--chart-transport)' },
+        { key: 'Consumption', colour: 'var(--chart-consumption)' }
+      ];
+      const groups = [
+        { label: 'This area',          values: [2150, 2680, 3820] },
+        { label: 'Local authority',    values: [1980, 2260, 3540] },
+        { label: 'Great Britain',      values: [1820, 2380, 3410] },
+        { label: 'Similar areas',      values: [2040, 2510, 3660] }
+      ];
+      const target = 4400;	// CCC Sixth Carbon Budget, per person (demo)
+
+      const W = 680, H = 360;
+      const plot = { left: 62, right: W - 14, top: 26, bottom: H - 34 };
+      const yMax = 9000;
+      const y = v => plot.bottom - (v / yMax) * (plot.bottom - plot.top);
+      const barW = 66, gap = 2, r = 4;
+      const fmt = v => v.toLocaleString('en-GB');
+
+      let s = `<svg id="overview-svg" viewBox="0 0 ${W} ${H}" role="img" ` +
+              `aria-label="Stacked bar chart comparing this area's per-person carbon footprint with averages">`;
+
+      // gridlines + y labels
+      for (let v = 0; v <= yMax; v += 2000) {
+        s += `<line x1="${plot.left}" y1="${y(v)}" x2="${plot.right}" y2="${y(v)}" ` +
+             `stroke="#e7e2e4" stroke-width="1"/>` +
+             `<text x="${plot.left - 8}" y="${y(v) + 4}" text-anchor="end" ` +
+             `font-size="11" fill="#5c5c68">${fmt(v)}</text>`;
+      }
+
+      // bars
+      groups.forEach((g, i) => {
+        const cx = plot.left + (plot.right - plot.left) * (i + 0.5) / groups.length;
+        const x = cx - barW / 2;
+        let base = 0;
+        const total = g.values.reduce((a, b) => a + b, 0);
+        g.values.forEach((v, j) => {
+          const y0 = y(base), y1 = y(base + v);
+          const isTop = (j === g.values.length - 1);
+          const hh = Math.max(0, (y0 - y1) - (isTop ? 0 : gap));
+          const yy = y1 + (isTop ? 0 : gap);
+          let shape;
+          if (isTop) {
+            shape = `M${x},${yy + r} a${r},${r} 0 0 1 ${r},-${r} h${barW - 2 * r} ` +
+                    `a${r},${r} 0 0 1 ${r},${r} v${hh - r} h${-barW} z`;
+            shape = `<path class="seg" d="${shape}" fill="${series[j].colour}">` +
+                    `<title>${g.label} — ${series[j].key}: ${fmt(v)} kgCO₂e</title></path>`;
+          } else {
+            shape = `<rect class="seg" x="${x}" y="${yy}" width="${barW}" height="${hh}" ` +
+                    `fill="${series[j].colour}"><title>${g.label} — ${series[j].key}: ` +
+                    `${fmt(v)} kgCO₂e</title></rect>`;
+          }
+          s += shape;
+          base += v;
+        });
+        // total label + x label
+        s += `<text x="${cx}" y="${y(total) - 7}" text-anchor="middle" font-size="12" ` +
+             `font-weight="bold" fill="#1b1b21">${fmt(total)}</text>` +
+             `<text x="${cx}" y="${plot.bottom + 18}" text-anchor="middle" font-size="12" ` +
+             `fill="#1b1b21">${g.label}</text>`;
+      });
+
+      // CCC target line (white halo keeps the label readable where it crosses a bar)
+      s += `<line x1="${plot.left}" y1="${y(target)}" x2="${plot.right}" y2="${y(target)}" ` +
+           `stroke="#1b1b21" stroke-width="1.5" stroke-dasharray="6 4"/>` +
+           `<text x="${plot.right}" y="${y(target) - 7}" text-anchor="end" font-size="11" ` +
+           `fill="#1b1b21" stroke="#ffffff" stroke-width="3.5" paint-order="stroke" ` +
+           `stroke-linejoin="round">CCC Sixth Carbon Budget: ${fmt(target)}</text>`;
+
+      s += '</svg>';
+      document.getElementById('overview-chart').innerHTML = s;
+    })();
+  </script>
+</body>
+</html>

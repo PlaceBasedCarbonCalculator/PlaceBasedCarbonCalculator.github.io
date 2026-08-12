@@ -1,7 +1,7 @@
 // Bump CACHE_VERSION whenever the precache list or caching strategy changes.
 // This is used to derive a single, versioned cache name so old caches are
 // purged on activation and offline behaviour stays consistent.
-const CACHE_VERSION = 'v4';
+const CACHE_VERSION = 'v12';
 const CACHE_NAME = `CAP-cache-${CACHE_VERSION}`;
 
 const OFFLINE_FALLBACK_PAGE = '/offline.html';
@@ -18,6 +18,7 @@ const PRECACHE_ASSETS = [
     // Shared styles
     '/css/homepage.css',
     '/css/main.css',
+    '/css/content-new.css',
     '/css/manual.css',
     '/css/map.css',
     '/css/map-new.css',
@@ -42,13 +43,17 @@ const PRECACHE_ASSETS = [
     '/privacy/index.html',
     '/reports/index.html',
     '/reports/lsoa.html',
+    '/reports/la.html',
+    '/reports/wards.html',
+    '/reports/parishes.html',
+    '/reports/constituencies.html',
+    '/reports/la-report.js',
     '/reports/cards/pbcc-card.html',
     '/reports/cards/pbcc-card.js',
     '/reports/cards/transport-card.html',
     '/reports/cards/transport-card.js',
     '/reports/cards/retrofit-card.html',
     '/reports/cards/retrofit-card.js',
-    '/reports/area-cards.js',
     '/reports/area-map.js',
     // Feature tools
     '/pbcc/index.html',

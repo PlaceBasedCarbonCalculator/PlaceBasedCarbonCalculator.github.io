@@ -1,0 +1,219 @@
+/* New design language for the long-form content pages (about, data, manual,
+   reports index and their sub-pages). Same token palette as css/map-new.css
+   (kept as its own copy so this file has no load-order dependency on it) -
+   loaded after css/main.css, scoped to body.content-page so it never touches
+   the map tools or the homepage. */
+
+:root {
+	--brand: #ac1a40;
+	--brand-dark: #8f1535;
+	--ink: #1b1b21;
+	--muted: #5c5c68;
+	--line: #e7e2e4;
+	--bg: #ffffff;
+	--bg-soft: #f7f4f5;
+	--radius: 16px;
+	--radius-sm: 10px;
+	--shadow-card: 0 4px 24px rgba(0,0,0,.13);
+}
+
+body.content-page { color: var(--ink); background: var(--bg); }
+
+body.content-page .content {
+	max-width: 880px;
+	padding: 32px 20px 64px;
+	margin: 0 auto;
+	width: calc(100% - 40px);
+	box-sizing: border-box;
+	height: auto;
+}
+
+body.content-page .back-link {
+	display: inline-block;
+	margin-bottom: 16px;
+	font-weight: 700;
+	color: var(--brand);
+}
+body.content-page .back-link:hover { color: var(--brand-dark); }
+
+body.content-page h1 {
+	font-size: clamp(30px, 4vw, 40px);
+	line-height: 1.1;
+	margin-bottom: 8px;
+	color: var(--ink);
+}
+
+body.content-page .page-lede {
+	color: var(--muted);
+	font-size: 17px;
+	line-height: 1.55;
+	margin: 0 0 30px;
+	max-width: 70ch;
+}
+
+body.content-page .eyebrow {
+	display: block;
+	font-size: 13px;
+	font-weight: 700;
+	letter-spacing: .06em;
+	text-transform: uppercase;
+	color: var(--brand);
+	margin: 0 0 6px;
+}
+
+body.content-page h2 {
+	font-size: 24px;
+	line-height: 1.2;
+	margin: 44px 0 14px;
+	padding-left: 0;
+	padding-top: 22px;
+	border-top: 1px solid var(--line);
+	color: var(--ink);
+}
+body.content-page h2:first-of-type { margin-top: 0; padding-top: 0; border-top: none; }
+
+body.content-page h3 {
+	font-size: 19px;
+	margin: 26px 0 10px;
+	padding-left: 0;
+	color: var(--ink);
+}
+
+body.content-page h4 {
+	font-size: 16px;
+	margin: 20px 0 8px;
+	padding-left: 0;
+	color: var(--ink);
+}
+
+body.content-page .content > p,
+body.content-page .content > ul,
+body.content-page .content > ol {
+	font-size: 16px;
+	line-height: 1.65;
+	color: #333;
+}
+
+body.content-page .content a { color: var(--brand); font-weight: 600; }
+body.content-page .content a:hover { color: var(--brand-dark); text-decoration: underline; }
+/* .btn/.btn-outline are usually <a> tags inside .content, and "a" adds a type
+   selector that would otherwise outrank the plain-link colour rule above -
+   restate the button colours here at matching specificity so they win. */
+body.content-page .content a.btn { color: #fff; }
+body.content-page .content a.btn:hover { color: #fff; }
+body.content-page .content a.btn-outline { color: var(--brand); }
+body.content-page .content a.btn-outline:hover { color: #fff; }
+
+body.content-page .content table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 10px 0 20px;
+	font-size: 15px;
+}
+body.content-page .content th,
+body.content-page .content td {
+	text-align: left;
+	padding: 10px 12px;
+	border-bottom: 1px solid var(--line);
+}
+body.content-page .content th {
+	background: var(--bg-soft);
+	color: var(--muted);
+	font-size: 13px;
+	text-transform: uppercase;
+	letter-spacing: .03em;
+}
+
+/* ---------- Pill buttons ---------- */
+body.content-page .btn,
+body.content-page .btn-outline {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	font-weight: 700;
+	font-size: 15px;
+	padding: 10px 18px;
+	border-radius: 100px;
+	text-decoration: none;
+	cursor: pointer;
+	border: 2px solid var(--brand);
+}
+body.content-page .btn {
+	background: var(--brand);
+	color: #fff;
+	border-color: var(--brand);
+}
+body.content-page .btn:hover { background: var(--brand-dark); border-color: var(--brand-dark); color: #fff; text-decoration: none; }
+body.content-page .btn-outline {
+	background: transparent;
+	color: var(--brand);
+}
+body.content-page .btn-outline:hover { background: var(--brand); color: #fff; text-decoration: none; }
+
+/* ---------- Generic card grid (team bios, dataset downloads, ...) ---------- */
+body.content-page .card-grid {
+	display: grid;
+	gap: 18px;
+	grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+	margin: 18px 0 8px;
+	list-style: none;
+	padding: 0;
+}
+body.content-page .card {
+	background: var(--bg);
+	border: 1px solid var(--line);
+	border-radius: var(--radius);
+	box-shadow: var(--shadow-card);
+	padding: 20px 22px;
+}
+body.content-page .card h3,
+body.content-page .card h4 { margin-top: 0; }
+body.content-page .card p { font-size: 14px; color: var(--muted); line-height: 1.5; }
+
+/* Person cards (about page team bios) */
+body.content-page .person-card { display: flex; flex-direction: column; }
+body.content-page .person-card img {
+	width: 96px; height: 96px; border-radius: 50%; object-fit: cover;
+	margin-bottom: 14px; border: 3px solid var(--bg-soft);
+}
+body.content-page .person-card .person-name { font-weight: 700; font-size: 16px; margin-bottom: 2px; }
+body.content-page .person-card .person-role { font-size: 13px; color: var(--muted); margin-bottom: 10px; }
+
+/* Dataset cards (data page downloads) */
+body.content-page .dataset-card { display: flex; flex-direction: column; }
+body.content-page .dataset-card p { flex: 1; }
+body.content-page .dataset-card .btn,
+body.content-page .dataset-card .btn-outline { align-self: flex-start; margin-top: 6px; }
+
+/* ---------- FAQ accordion (native <details>, no JS) ---------- */
+body.content-page .faq-item {
+	background: var(--bg);
+	border: 1px solid var(--line);
+	border-radius: var(--radius-sm);
+	padding: 4px 18px;
+	margin: 10px 0;
+}
+body.content-page .faq-item summary {
+	cursor: pointer;
+	font-weight: 700;
+	padding: 14px 0;
+	list-style: none;
+	position: relative;
+	padding-right: 28px;
+}
+body.content-page .faq-item summary::-webkit-details-marker { display: none; }
+body.content-page .faq-item summary::after {
+	content: '+';
+	position: absolute;
+	right: 0;
+	top: 12px;
+	color: var(--brand);
+	font-size: 20px;
+	font-weight: 700;
+}
+body.content-page .faq-item[open] summary::after { content: '\2212'; }
+body.content-page .faq-item summary:hover { color: var(--brand); }
+body.content-page .faq-item p { margin: 0 0 16px; color: var(--muted); }
+
+/* ---------- Location selector cards (reports index) ---------- */
+body.content-page .location-selector { max-width: none; margin: 4px 0 0; }

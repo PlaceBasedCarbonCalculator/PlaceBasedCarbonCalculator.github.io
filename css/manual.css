@@ -1,64 +1,84 @@
+/* Layout rules are scoped under body.manual-page so their specificity beats
+   the generic body.content-page .content rule in css/content-new.css (same
+   selector shape, but manual.css loads after it, so these win the cascade)
+   while still picking up content-new.css's typography/link/table styling and
+   :root design tokens. */
 @media screen and (max-width: 760px) {
-  .table-of-contents {
+  body.manual-page .table-of-contents {
     display: none;
   }
-  .content {
+  body.manual-page .content {
     width: calc(100% - 30px);
+    margin-left: 0;
   }
 }
 @media screen and (min-width: 761px) {
-	.content {
-    margin-left: 220px;
-    width: calc(95% - 220px);
+	body.manual-page .content {
+    margin-left: 240px;
+    width: calc(95% - 240px);
   }
 }
 
-body {
+body.manual-page {
   overflow: visible;
 }
 
-.content {
-  padding:10px; 
+body.manual-page .content {
+  padding: 10px;
   max-width: 800px;
 }
 
-.table-of-contents {
+body.manual-page .table-of-contents {
   position: fixed;
-  left: 0;
-  top: 60px;
+  left: 16px;
+  top: 76px;
   width: 200px;
-  padding: 10px;
-  background-color: #f5f5f5;
-  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
+  padding: 14px 16px;
+  background-color: var(--bg, #fff);
+  border: 1px solid var(--line, #e7e2e4);
+  border-radius: var(--radius-sm, 10px);
+  box-shadow: var(--shadow-card, 0 4px 24px rgba(0,0,0,.13));
   overflow: auto;
-  max-height: calc(100% - 60px);
+  max-height: calc(100% - 96px);
 }
 
-.table-of-contents ul {
+body.manual-page .table-of-contents ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.table-of-contents a {
+body.manual-page .table-of-contents a {
   display: block;
-  padding: 5px 0;
-  color: #333;
+  padding: 6px 0;
+  color: var(--muted, #5c5c68);
   text-decoration: none;
-  font-weight: 400;
+  font-weight: 600;
+  font-size: 14px;
+}
+body.manual-page .table-of-contents a:hover {
+  color: var(--brand, #ac1a40);
 }
 
-.table-of-contents li ul {
+body.manual-page .table-of-contents li ul {
   margin: 0;
-  padding: 0 0 0 20px;
+  padding: 0 0 0 14px;
 }
 
-.table-of-contents li ul li {
-  list-style: circle;
+body.manual-page .table-of-contents li ul li {
+  list-style: none;
+}
+body.manual-page .table-of-contents li ul a {
+  font-weight: 400;
+  font-size: 13px;
+  border-left: 2px solid var(--line, #e7e2e4);
+  padding-left: 10px;
+}
+body.manual-page .table-of-contents li ul a:hover {
+  border-left-color: var(--brand, #ac1a40);
 }
 
 #editlink {
-  
   float: right;
   margin-right: 15px;
   padding: 5px 10px;
@@ -72,11 +92,11 @@ body {
   position: absolute;
 }
 
-img {
+body.manual-page img {
   max-width: 100%;
 }
 
-img[alt=family_photo] { 
+body.manual-page img[alt=family_photo] {
   width: 50px;
   height: 38px;
   right: 5px;
