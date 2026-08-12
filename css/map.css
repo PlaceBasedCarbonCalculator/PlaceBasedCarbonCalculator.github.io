@@ -1250,3 +1250,22 @@ input:checked + .slider:before {
 		max-height: 400px;
 	}
 }
+
+/* Layer-panel slider row (e.g. the solar raster transparency control): keep the
+   label, slider and its readout on one line, with the slider taking the slack
+   and the readout wide enough that "100%" does not shunt the layout as the
+   value changes. */
+.slider-row {
+	display: flex;
+	align-items: center;
+	gap: 0.5em;
+}
+.slider-row input[type="range"] {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+.slider-row output {
+	flex: 0 0 3em;
+	text-align: right;
+	font-variant-numeric: tabular-nums;
+}

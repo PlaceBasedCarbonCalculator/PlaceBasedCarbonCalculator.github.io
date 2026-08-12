@@ -1,4 +1,4 @@
-// Chart Globals
+﻿// Chart Globals
 var accessChart;
 
 
@@ -10,23 +10,158 @@ var accessChart;
 // re-uploaded - datasets are rebuilt independently, so the dates will diverge.
 if (typeof capBin !== 'undefined') {
 	capBin.register({
-		pt_frequency: 'index_pt_frequency_2026-07-13.json.gz',
-		access: 'index_access_2026-07-12.json.gz',
-		vehicle_summary: 'index_vehicle_summary_2026-07-12.json.gz'
+		pt_frequency: 'index_pt_frequency_2026-08-10.json.gz',
+		access: 'index_access_2026-08-08.json.gz',
+		vehicle_summary: 'index_vehicle_summary_2026-08-08.json.gz'
 	});
 }
 
+
+// Which years and modes the zone tiles carry. These MUST match
+// select_transport_vars() in the build repo (R/public_transport_frequency.R):
+// it writes one tph_daytime_avg_<year>_<mode> column per combination below,
+// plus one change_bus_2008_<year> per entry in transportChangeYears. Adding a
+// year here without rebuilding the tiles gives an all-black map; rebuilding
+// without adding it here just hides the new data.
+const transportTphYears = [2025, 2024, 2023];
+const transportTphModes = [0, 1, 2, 3, 4];
+const transportChangeYears = [2025, 2023];
+
+// Colour ramps. Every year/mode combination of trips-per-hour shares one
+// scale - that is the point, since the map exists to compare places and years
+// against each other - so each ramp is written once here and expanded over the
+// combinations below, rather than the fifteen near-identical copies this file
+// used to carry for a single year.
+const tphLegendRamp = [
+	['NA','#111111'],
+	['<1','#b2182b'],
+	[1,'#d6604d'],
+	[2,'#f4a582'],
+	[5,'#fddbc7'],
+	[10,'#f7f7f7'],
+	[20,'#d1e5f0'],
+	[30,'#92c5de'],
+	[50,'#4393c3'],
+	['>100','#053061']
+];
+const tphColourRamp = [
+	0,'#b2182b',
+	1,'#d6604d',
+	2,'#f4a582',
+	5,'#fddbc7',
+	10,'#f7f7f7',
+	20,'#d1e5f0',
+	30,'#92c5de',
+	50,'#4393c3',
+	100,'#053061'
+];
+
+const changeLegendRamp = [
+	['-100%','#67001f'],
+	['-80%','#b2182b'],
+	['-60%','#d6604d'],
+	['-40%','#f4a582'],
+	['-20%','#fddbc7'],
+	['-10%','#f7f7f7'],
+	['0%','#d1e5f0'],
+	['+10%','#92c5de'],
+	['+20%','#4393c3'],
+	['>+50','#053061']
+];
+const changeColourRamp = [
+	-101,'#67001f',
+	-80,'#b2182b',
+	-60,'#d6604d',
+	-40,'#f4a582',
+	-20,'#fddbc7',
+	-10,'#f7f7f7',
+	0,'#d1e5f0',
+	10,'#92c5de',
+	20,'#4393c3',
+	50,'#053061'
+];
+
+const evLegendRamp = [
+	[0,'#b2182b'],
+	[0.5,'#d6604d'],
+	[1,'#f4a582'],
+	[1.5,'#fddbc7'],
+	[2,'#f7f7f7'],
+	[4,'#d1e5f0'],
+	[8,'#92c5de'],
+	[10,'#4393c3'],
+	['>12','#053061']
+];
+const evColourRamp = [
+	0,'#b2182b',
+	0.5,'#d6604d',
+	1,'#f4a582',
+	1.5,'#fddbc7',
+	2,'#f7f7f7',
+	4,'#d1e5f0',
+	8,'#92c5de',
+	10,'#4393c3',
+	12,'#053061'
+];
+
+const vehiclesLegendRamp = [
+	['<0.4','#053061'],
+	[0.4,'#4393c3'],
+	[0.6,'#d1e5f0'],
+	[0.8,'#f7f7f7'],
+	[1,'#fddbc7'],
+	[1.2,'#f4a582'],
+	[1.6,'#d6604d'],
+	['>2','#b2182b']
+];
+const vehiclesColourRamp = [
+	0,'#053061',
+	0.4,'#4393c3',
+	0.6,'#d1e5f0',
+	0.8,'#f7f7f7',
+	1,'#fddbc7',
+	1.2,'#f4a582',
+	1.6,'#d6604d',
+	2,'#b2182b'
+];
+
+// Expand the ramps over every field the tiles actually contain.
+const zoneLegends = {};
+const zoneColours = {};
+
+transportChangeYears.forEach (function (year) {
+	zoneLegends['change_bus_2008_' + year] = changeLegendRamp;
+	zoneColours['change_bus_2008_' + year] = changeColourRamp;
+});
+
+transportTphYears.forEach (function (year) {
+	transportTphModes.forEach (function (mode) {
+		const field = 'tph_daytime_avg_' + year + '_' + mode;
+		zoneLegends[field] = tphLegendRamp;
+		zoneColours[field] = tphColourRamp;
+	});
+});
+
+['pBEV_PRIVATE', 'pULEV_PRIVATE', 'pBEV_COMPANY', 'pULEV_COMPANY'].forEach (function (field) {
+	zoneLegends[field] = evLegendRamp;
+	zoneColours[field] = evColourRamp;
+});
+
+zoneLegends['vehiclesPHousehold'] = vehiclesLegendRamp;
+zoneColours['vehiclesPHousehold'] = vehiclesColourRamp;
+
+
 const datasets_extra = {
-	
+
 	// Data layers
 	layers: {
-	  
+
 	  zones: {
 			'id': 'zones',
 			'type': 'fill',
 			'source': {
 			'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/zones_transport_20260209.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/zones_transport_20260811.pmtiles',
 				},
 			'source-layer': 'zones',
 			'paint': {
@@ -35,278 +170,26 @@ const datasets_extra = {
 				'fill-outline-color': '#000000'
 			}
 		}
-		
-	
+
+
 	},
-	
+
 	// Layer styling callbacks functions, each defined below
 	layerStyling: {
 	  zones:			zonesStyling,
 	},
-	
-	
+
+
 	// #!# These need to be merged with lineColours
 	legends: {
+		zones: zoneLegends,
+	},
 
-		zones: {
-			'change_bus_2008_2023': [
-				['-100%','#67001f'],
-				['-80%','#b2182b'],
-				['-60%','#d6604d'],
-				['-40%','#f4a582'],
-				['-20%','#fddbc7'],
-				['-10%','#f7f7f7'],
-				['0%','#d1e5f0'],
-				['+10%','#92c5de'],
-				['+20%','#4393c3'],
-				['>+50','#053061']
-			],
-			'tph_daytime_avg_2023_0': [
-				['NA','#111111'],
-				['<1','#b2182b'],
-				[1,'#d6604d'],
-				[2,'#f4a582'],
-				[5,'#fddbc7'],
-				[10,'#f7f7f7'],
-				[20,'#d1e5f0'],
-				[30,'#92c5de'],
-				[50,'#4393c3'],
-				['>100','#053061']
-			],
-			
-			'tph_daytime_avg_2023_1': [
-				['NA','#111111'],
-				['<1','#b2182b'],
-				[1,'#d6604d'],
-				[2,'#f4a582'],
-				[5,'#fddbc7'],
-				[10,'#f7f7f7'],
-				[20,'#d1e5f0'],
-				[30,'#92c5de'],
-				[50,'#4393c3'],
-				['>100','#053061']
-			],
-			'tph_daytime_avg_2023_2': [
-				['NA','#111111'],
-				['<1','#b2182b'],
-				[1,'#d6604d'],
-				[2,'#f4a582'],
-				[5,'#fddbc7'],
-				[10,'#f7f7f7'],
-				[20,'#d1e5f0'],
-				[30,'#92c5de'],
-				[50,'#4393c3'],
-				['>100','#053061']
-			],
-			'tph_daytime_avg_2023_3': [
-				['NA','#111111'],
-				['<1','#b2182b'],
-				[1,'#d6604d'],
-				[2,'#f4a582'],
-				[5,'#fddbc7'],
-				[10,'#f7f7f7'],
-				[20,'#d1e5f0'],
-				[30,'#92c5de'],
-				[50,'#4393c3'],
-				['>100','#053061']
-			],
-			'tph_daytime_avg_2023_4': [
-				['NA','#111111'],
-				['<1','#b2182b'],
-				[1,'#d6604d'],
-				[2,'#f4a582'],
-				[5,'#fddbc7'],
-				[10,'#f7f7f7'],
-				[20,'#d1e5f0'],
-				[30,'#92c5de'],
-				[50,'#4393c3'],
-				['>100','#053061']
-			],
-			'pBEV_PRIVATE': [
-				[0,'#b2182b'],
-				[0.5,'#d6604d'],
-				[1,'#f4a582'],
-				[1.5,'#fddbc7'],
-				[2,'#f7f7f7'],
-				[4,'#d1e5f0'],
-				[8,'#92c5de'],
-				[10,'#4393c3'],
-				['>12','#053061']
-			],
-			'pULEV_PRIVATE': [
-				[0,'#b2182b'],
-				[0.5,'#d6604d'],
-				[1,'#f4a582'],
-				[1.5,'#fddbc7'],
-				[2,'#f7f7f7'],
-				[4,'#d1e5f0'],
-				[8,'#92c5de'],
-				[10,'#4393c3'],
-				['>12','#053061']
-			],
-			'pBEV_COMPANY': [
-				[0,'#b2182b'],
-				[0.5,'#d6604d'],
-				[1,'#f4a582'],
-				[1.5,'#fddbc7'],
-				[2,'#f7f7f7'],
-				[4,'#d1e5f0'],
-				[8,'#92c5de'],
-				[10,'#4393c3'],
-				['>12','#053061']
-			],
-			'pULEV_COMPANY': [
-				[0,'#b2182b'],
-				[0.5,'#d6604d'],
-				[1,'#f4a582'],
-				[1.5,'#fddbc7'],
-				[2,'#f7f7f7'],
-				[4,'#d1e5f0'],
-				[8,'#92c5de'],
-				[10,'#4393c3'],
-				['>12','#053061']
-			],
-			'vehiclesPHousehold': [
-				['<0.4','#053061'],
-				[0.4,'#4393c3'],
-				[0.6,'#d1e5f0'],
-				[0.8,'#f7f7f7'],
-				[1,'#fddbc7'],
-				[1.2,'#f4a582'],
-				[1.6,'#d6604d'],
-				['>2','#b2182b']
-			]
-		},
-	},
-	
 	lineColours: {
-	  zones: {
-			'change_bus_2008_2023': [
-				-101,'#67001f',
-				-80,'#b2182b',
-				-60,'#d6604d',
-				-40,'#f4a582',
-				-20,'#fddbc7',
-				-10,'#f7f7f7',
-				0,'#d1e5f0',
-				10,'#92c5de',
-				20,'#4393c3',
-				50,'#053061'
-			],
-			'tph_daytime_avg_2023_0': [
-				0,'#b2182b',
-				1,'#d6604d',
-				2,'#f4a582',
-				5,'#fddbc7',
-				10,'#f7f7f7',
-				20,'#d1e5f0',
-				30,'#92c5de',
-				50,'#4393c3',
-				100,'#053061'
-			],
-			'tph_daytime_avg_2023_1': [
-				0,'#b2182b',
-				1,'#d6604d',
-				2,'#f4a582',
-				5,'#fddbc7',
-				10,'#f7f7f7',
-				20,'#d1e5f0',
-				30,'#92c5de',
-				50,'#4393c3',
-				100,'#053061'
-			],
-			'tph_daytime_avg_2023_2': [
-				0,'#b2182b',
-				1,'#d6604d',
-				2,'#f4a582',
-				5,'#fddbc7',
-				10,'#f7f7f7',
-				20,'#d1e5f0',
-				30,'#92c5de',
-				50,'#4393c3',
-				100,'#053061'
-			],
-			'tph_daytime_avg_2023_3': [
-				0,'#b2182b',
-				1,'#d6604d',
-				2,'#f4a582',
-				5,'#fddbc7',
-				10,'#f7f7f7',
-				20,'#d1e5f0',
-				30,'#92c5de',
-				50,'#4393c3',
-				100,'#053061'
-			],
-			'tph_daytime_avg_2023_4': [
-				0,'#b2182b',
-				1,'#d6604d',
-				2,'#f4a582',
-				5,'#fddbc7',
-				10,'#f7f7f7',
-				20,'#d1e5f0',
-				30,'#92c5de',
-				50,'#4393c3',
-				100,'#053061'
-			],
-			'pBEV_PRIVATE': [
-				0,'#b2182b',
-				0.5,'#d6604d',
-				1,'#f4a582',
-				1.5,'#fddbc7',
-				2,'#f7f7f7',
-				4,'#d1e5f0',
-				8,'#92c5de',
-				10,'#4393c3',
-				12,'#053061'
-			],
-			'pULEV_PRIVATE': [
-				0,'#b2182b',
-				0.5,'#d6604d',
-				1,'#f4a582',
-				1.5,'#fddbc7',
-				2,'#f7f7f7',
-				4,'#d1e5f0',
-				8,'#92c5de',
-				10,'#4393c3',
-				12,'#053061'
-			],
-			'pBEV_COMPANY': [
-				0,'#b2182b',
-				0.5,'#d6604d',
-				1,'#f4a582',
-				1.5,'#fddbc7',
-				2,'#f7f7f7',
-				4,'#d1e5f0',
-				8,'#92c5de',
-				10,'#4393c3',
-				12,'#053061'
-			],
-			'pULEV_COMPANY': [
-				0,'#b2182b',
-				0.5,'#d6604d',
-				1,'#f4a582',
-				1.5,'#fddbc7',
-				2,'#f7f7f7',
-				4,'#d1e5f0',
-				8,'#92c5de',
-				10,'#4393c3',
-				12,'#053061'
-			],
-			'vehiclesPHousehold': [
-				0,'#053061',
-				0.4,'#4393c3',
-				0.6,'#d1e5f0',
-				0.8,'#f7f7f7',
-				1,'#fddbc7',
-				1.2,'#f4a582',
-				1.6,'#d6604d',
-				2,'#b2182b'
-			]
-		},
+		zones: zoneColours,
 	},
-	
-	
-	
+
+
 	// Chart definitions, indexed by map layer ID, then datasource ID, different from NPT wich has one data soruce per modal per map layer
 	// I.e. charts > Layer clicked on to trigger modal > datasource to fill the modal
 	
@@ -376,11 +259,39 @@ function getStyleColumn (layerId, datasets)
 	//return datasets.lineColours.zones['Grade'];
 }
 
+// Resolve the two layer menus into the single tile attribute to colour by.
+//
+// The frequency measures exist once per year, so the menu offers the mode
+// ("Buses/hour") and the year separately rather than listing every
+// year-and-mode pairing - fifteen entries in one list, growing by five every
+// time the timetable series gains a year. The mode option's value carries just
+// the route type ("tph_daytime_avg_3") and the year is spliced in here.
+//
+// Everything else - the change-since-2008 measures and the vehicle measures -
+// has no year to choose, so the year menu is disabled while one is selected
+// rather than left looking like it does something.
+function getTransportField ()
+{
+	const base = document.querySelector ('select.updatelayer[data-layer="zones"][name="field"]').value;
+	const yearSelect = document.querySelector ('select.updatelayer[data-layer="zones"][name="year"]');
+	const prefix = 'tph_daytime_avg_';
+	const isByYear = (base.indexOf (prefix) === 0);
+
+	if (yearSelect) {
+		yearSelect.disabled = !isByYear;
+		if (isByYear) {
+			return prefix + yearSelect.value + '_' + base.substring (prefix.length);
+		}
+	}
+	return base;
+}
+
+
 // Styling callback for data zones (including buildings styling)
 function zonesStyling (layerId, map, settings, datasets, createLegend /* callback */)
 {
 	// Update the legend (even if map layer is off)
-	const field = document.querySelector ('select.updatelayer[data-layer="zones"][name="field"]').value
+	const field = getTransportField ();
 	createLegend (datasets.legends.zones, field, 'zoneslegend'); // Fixed Legeng for Grades
 	
 	// Get UI state
@@ -420,7 +331,7 @@ function getBuildingsColour (settings)
 	// If dasymetric mode, use a colour set based on the layer (guarding null values
 	// so buildings in areas without data render near-black rather than erroring)
 	if (document.querySelector ('input.updatelayer[data-layer="zones"][name="daysymetricmode"]').checked) {
-		const field = document.querySelector ('select.updatelayer[data-layer="zones"][name="field"]').value;
+		const field = getTransportField ();
 		return ['case',
 			['==', ['typeof', ['get', field]], 'number'],
 			['interpolate', ['linear'], ['get', field], ...getStyleColumn (field, datasets)],

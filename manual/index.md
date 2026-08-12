@@ -238,8 +238,10 @@ Community groups have used this kind of evidence to prioritise retrofit projects
 
 The Neighbourhoods layer colours each Lower layer Super Output Area (LSOA), or Scottish Data Zone, by its carbon footprint and related indicators. Values are per person per year (kgCO<sub>2</sub>e) so that areas of different sizes can be compared. Use the drop-down menu to change which measure is shown; the map colours and legend update to match. The available measures are:
 
+The map shows 2022, the most recent year in the data.
+
 * **Total Emissions**: the overall per-person footprint, graded from A+ (low) to F- (high) relative to the national distribution.
-* **Decarbonisation progress**: how quickly the neighbourhood's footprint has fallen in recent years compared with the rest of the country.
+* **Decarbonisation progress**: how far the neighbourhood's per-person footprint has fallen between 2010 and 2022, graded against the rest of the country.
 * **Housing: Gas & Electricity**: emissions from domestic energy use, derived from metered consumption data.
 * **Transport: Car & Van**: emissions from private road transport attributed to the neighbourhood's residents.
 * **Consumption: Goods & Services**: embodied emissions from household purchases, estimated with a synthetic population model.
@@ -257,7 +259,7 @@ Clicking a neighbourhood opens its report card. The tabs are described below.
 
 #### Overview
 
-The Overview summarises the neighbourhood's footprint using 2019 data, the most recent year unaffected by the COVID-19 pandemic. The title bar gives the LSOA's ID, its ONS area classification, and its ward name (wards are larger than LSOAs but have recognisable local names).
+The Overview summarises the neighbourhood's footprint using the most recent year in the data, currently 2022; the year is stated next to the headline figure. Bear in mind that 2020 and 2021 were strongly affected by the COVID-19 pandemic, so 2019 remains the best year to compare against for a picture of normal conditions. The title bar gives the LSOA's ID, its ONS area classification, and its ward name (wards are larger than LSOAs but have recognisable local names).
 
 The bar chart shows the total footprint per person for four groups: the selected neighbourhood, the average for its local authority, the national average, and the average for neighbourhoods with the same ONS area classification. The final column is often the most informative comparison, because it sets the area against places with similar populations and geography rather than the country as a whole.
 
@@ -323,7 +325,7 @@ Demographics strongly influence emissions. Higher-income households consume more
 <!-- #pbcc-community-photo -->
 ##### Community Photo
 
-The community photo gives an at-a-glance overview of who lives in a neighbourhood. Each photo is a grid of 48 household pictures, distributed in proportion to the household types recorded in the 2021 Census (2022 in Scotland).
+The community photo gives an at-a-glance overview of who lives in a neighbourhood. Each photo is a grid of 48 household pictures, distributed in proportion to the household types recorded in the 2021 Census (2022 in Scotland). Images from [Freepik](https://www.magnific.com)
 
 The pictures are selected automatically from a set of around 200 household archetypes based on three census variables.
 
@@ -447,9 +449,11 @@ This evidence is directly relevant to local transport plans, bus service improve
 
 The Neighbourhoods layer uses Lower layer Super Output Areas (LSOAs) to report a range of transport statistics. Use the drop-down menu to change the measure:
 
-**Change in buses/hour (2008 - 2023)**: the change in bus frequency (daytime average trips per hour) for services stopping in or near each neighbourhood between 2008 and 2023. This shows where services have been cut and where they have improved.
+**Change in buses/hour**: the change in bus frequency (daytime average trips per hour) for services stopping in or near each neighbourhood, measured from the best year in 2006-08 to a later year. This shows where services have been cut and where they have improved. Two end years are offered: 2025, the most recent, and 2023, which is the window used in the published [Friends of the Earth analysis](https://policy.friendsoftheearth.uk/insight/how-britains-bus-services-have-drastically-declined) and is kept so those figures remain reproducible here.
 
-**Bus/Tram/Subway/Rail/Ferry per hour (daytime average)**: the 2023 frequency of each type of public transport stopping in or near the neighbourhood. Not every mode exists everywhere; places with no timetabled service are shown in black.
+**Bus/Tram/Subway/Rail/Ferry per hour (daytime average)**: the frequency of each type of public transport stopping in or near the neighbourhood. Choose the mode from the first menu and the year (2023, 2024 or 2025) from the **Year** menu below it; the year menu is greyed out for the measures that do not vary by year. Not every mode exists everywhere; places with no timetabled service are shown in black.
+
+The map carries the three most recent years only, to keep the tile size reasonable for a layer covering every neighbourhood in Great Britain. The full series back to 2004 is in the report card charts: click any neighbourhood.
 
 **Percentage of Low Emission Vehicles**: four measures of low emission vehicle adoption. Battery Electric Vehicles (BEVs) are fully electric with no exhaust emissions. Ultra Low Emission Vehicles (ULEVs) are a broader official category that also includes plug-in hybrids and other low emission technologies.
 
@@ -530,9 +534,12 @@ There is no single official archive of public transport timetables in the UK, so
 
 * the [National Public Transport Data Repository](https://www.data.gov.uk/dataset/d1f9e79f-d9db-44d0-b7b1-41c216fe5df6/national-public-transport-data-repository-nptdr) (NPTDR), an annual October snapshot of timetables from 2004 to 2011;
 * the [Bus Archive](https://www.busarchive.org.uk/), which provided October bus timetables outside London from 2014 to 2017;
-* an archive of the [Traveline National Dataset](https://www.data.gov.uk/dataset/0447f8d9-8f1b-4a68-bbc8-246981d02256/traveline-national-dataset) (TNDS) and the [Rail Delivery Group](https://data.atoc.org/) (formerly ATOC) national rail timetable from 2018 to the present, maintained by [Dr Malcolm Morgan](https://environment.leeds.ac.uk/transport/staff/964/dr-malcolm-morgan).
+* an archive of the [Traveline National Dataset](https://www.data.gov.uk/dataset/0447f8d9-8f1b-4a68-bbc8-246981d02256/traveline-national-dataset) (TNDS) and the [Rail Delivery Group](https://data.atoc.org/) (formerly ATOC) national rail timetable from 2018 onwards, maintained by [Dr Malcolm Morgan](https://environment.leeds.ac.uk/transport/staff/964/dr-malcolm-morgan);
+* the [Bus Open Data Service](https://www.bus-data.dft.gov.uk/) (BODS) coach dataset from 2024 onwards. TNDS stopped carrying the national coach network during this period, so from 2024 local bus is taken from TNDS and coach from BODS, and the two are counted separately to avoid double-counting the same journey.
 
 To our knowledge this is the largest collection of digital, analysable timetables in the UK, covering most of the last twenty years, though it is patchy in places: there is no data for 2012 and 2013, rail data is missing from 2014 to 2017, and coverage in London is incomplete in several years.
+
+The whole archive was reprocessed in 2026 with a substantially improved version of UK2GTFS. The frequencies shown are therefore not directly comparable with figures published from earlier versions of this analysis: the biggest single change is better detection of duplicate journeys in the older NPTDR files, which removed around a quarter of the counted stop calls in the mid-2000s and so makes the measured decline in bus service since 2008 shallower than previously reported, without changing its direction.
 
 Each source stores timetables in a different format, so all were converted to the standard GTFS format using the [UK2GTFS](https://itsleeds.github.io/UK2GTFS/) R package. For each year, a one-month snapshot was produced, usually October, with other months used where October data was unavailable.
 
@@ -612,7 +619,7 @@ The drop-down menu changes the visualised measure:
 * Floor type (most common)
 * Building type (most common)
 * % of homes with an EPC
-* Average Property Price (2024)
+* Average Property Price (2025)
 * Property Price to Income Ratio
 * Gas Use
 * Electricity Use
@@ -624,7 +631,7 @@ Clicking any neighbourhood opens its report card.
 
 ##### Property Price Data
 
-House price data comes from the [Land Registry Price Paid data](https://www.gov.uk/guidance/about-the-price-paid-data) for England and Wales, so it is not available for Scotland. Prices for 2024 are estimated by taking the last sale price of each property and extrapolating forward using local price trends: if a terraced house sold for £100,000 in 2014 and terraced house prices in that local authority have since risen 50%, the property is estimated at £150,000. This simple model ignores small local variations and changes to the property itself, so it must not be used for personal financial decisions, but it is sufficient to show spatial patterns. Properties not sold since the dataset began in 1995 are excluded.
+House price data comes from the [Land Registry Price Paid data](https://www.gov.uk/guidance/about-the-price-paid-data) for England and Wales, so it is not available for Scotland. Prices for 2025 are estimated by taking the last sale price of each property and extrapolating forward using local price trends: if a terraced house sold for £100,000 in 2014 and terraced house prices in that local authority have since risen 50%, the property is estimated at £150,000. This simple model ignores small local variations and changes to the property itself, so it must not be used for personal financial decisions, but it is sufficient to show spatial patterns. Properties not sold since the dataset began in 1995 are excluded.
 
 The Property Price to Income Ratio gives an indication of affordability, since households facing prices far above local incomes may struggle with rent or mortgage costs (compare the ONS [housing affordability statistics](https://www.ons.gov.uk/peoplepopulationandcommunity/housing/bulletins/housingaffordabilityinenglandandwales/latest)). Two caveats: the ratio ignores housing type, so an area of small London flats can show a similar ratio to an area of large northern houses; and areas with many non-domestic properties can show inflated prices, because the Price Paid data does not cleanly separate domestic from non-domestic sales.
 
@@ -683,7 +690,7 @@ Clicking any postcode opens its report card. Postcode boundaries are copyright o
 
 ![Domestic properties](/images/manual/domestic_properties.webp)
 
-The Domestic Properties layer combines Energy Performance Certificates (England, Scotland, and Wales) with Land Registry price data (England and Wales only), for individual homes. The map is based on a national extract from September 2025. Where a property has multiple EPCs or sales records, only the most recent is shown.
+The Domestic Properties layer combines Energy Performance Certificates (England, Scotland, and Wales) with Land Registry price data (England and Wales only), for individual homes. The England and Wales certificates come from the 2026 Q1 extract; the Scottish certificates from the 2025 Q2 extract, which is the most recent Scotland publishes in this form. Where a property has multiple EPCs or sales records, only the most recent is shown.
 
 The drop-down menu changes the visualised characteristic:
 
@@ -696,7 +703,7 @@ The drop-down menu changes the visualised characteristic:
 * Floor / Hot Water / Windows / Walls / Roof / Heating / Controls / Lighting Rating: efficiency of each element (Very Good to Very Poor)
 * Solar Thermal: has solar water heating (yes/no)
 * Solar PV: has solar photovoltaic panels (yes/no)
-* Price 2024 (Estimated): estimated value based on historical sales
+* Price 2025 (Estimated): estimated value based on historical sales
 * Freehold / Leasehold: tenure at the time of the last sale
 
 Clicking any property shows a popup with details from the EPC (descriptions of the roof, walls, floor, heating, and controls) and the most recent Land Registry sale where available.
@@ -714,7 +721,7 @@ The Scottish EPC register is separate from, and slightly different to, the Engla
 <!-- #retrofit-epc-nondom -->
 #### Non-domestic Properties
 
-The Non-domestic Properties layer shows Energy Performance Certificates for commercial and public buildings (England, Scotland, and Wales) combined with Land Registry price data (England and Wales only). The map is based on a national extract from September 2025, showing the most recent certificate and sale for each property.
+The Non-domestic Properties layer shows Energy Performance Certificates for commercial and public buildings (England, Scotland, and Wales) combined with Land Registry price data (England and Wales only). The England and Wales certificates come from the 2026 Q1 extract and the Scottish certificates from the 2025 Q2 extract, showing the most recent certificate and sale for each property.
 
 The drop-down menu changes the visualised characteristic:
 
@@ -722,7 +729,7 @@ The drop-down menu changes the visualised characteristic:
 * Transaction: the type of transaction that triggered the EPC
 * Floor Area: total floor area (m²)
 * Last Assessed: the year the EPC was issued
-* Price 2024 (Estimated): estimated value based on historical sales
+* Price 2025 (Estimated): estimated value based on historical sales
 * Freehold / Leasehold: tenure at the time of the last sale
 
 Clicking any point shows a popup with more details.
@@ -748,6 +755,25 @@ Clicking a UPRN shows its ID number, whether the property currently exists, and 
 
 * [OS Open UPRN](https://www.ordnancesurvey.co.uk/products/os-open-uprn)
 <!-- /#retrofit-uprn-unknown -->
+
+<!-- #retrofit-solar -->
+#### Solar Potential
+
+The Solar Potential layer maps how much solar energy reaches every 2 metre square of Great Britain over a year, measured in watt-hours per square metre (Wh/m²). It is a photograph of the resource, not a prediction of output: it shows how much sunlight arrives, before any assumptions about panel efficiency, orientation of the panel itself, or shading by anything not in the terrain model.
+
+Because the model works from a surface model that includes buildings and trees, it resolves individual roof pitches. Zoom in far enough and a south-facing slope reads orange or red while the north-facing slope of the same roof reads blue, and the shadow a tall building casts over its neighbours is visible as a cool patch. Zoom out and the pattern is dominated by latitude and by terrain: south-facing valley sides are noticeably brighter than north-facing ones.
+
+Colours run from dark blue (least sunlight) through green and yellow to dark red (most), using the Turbo colour scale. The scale is fixed from 0 to 2000 Wh/m² so that the colours mean the same thing every time the layer is rebuilt. A small number of places exceed 2000 Wh/m², so the darkest red should be read as "2000 or more" rather than as the maximum. Areas with no data, including the sea, are transparent.
+
+The transparency slider fades the layer so that streets and buildings on the basemap can be seen through it. At 0% the solar map is solid; drag it up to see the map underneath.
+
+Two limitations are worth keeping in mind. The layer is a visualisation, and the colour is compressed slightly when the tiles are stored, so it should be read to the nearest band rather than as an exact number. And it models sunlight reaching a surface, not electricity: converting to expected generation needs assumptions about panel type, efficiency, and how much of a roof is usable, none of which are applied here.
+
+##### Data Sources
+
+* [Environment Agency LIDAR Composite](https://www.data.gov.uk/dataset/fba12e80-519f-4dd2-9262-4dcf8ea23d485/lidar-composite-digital-surface-model-dsm-1m) (surface model, via the GBDEM analysis)
+* [ECMWF ERA5](https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5) (cloud and radiation adjustment)
+<!-- /#retrofit-solar -->
 
 ### Retrofit report card
 
@@ -776,6 +802,16 @@ Summary statistics for the domestic properties in the neighbourhood that have an
 ##### Prices
 
 Summary statistics from the Land Registry Price Paid data for England and Wales, covering domestic and non-domestic sales.
+
+#### Dwelling stock
+
+The Dwelling Stock tab describes every home in the area, taken from the council tax registers rather than from EPCs. This is the complement to the EPCs tab: an EPC exists only for a home built, sold or let since 2008, roughly two thirds of the stock, whereas every dwelling is banded for council tax.
+
+**Council tax bands** counts dwellings in each band, year by year. The total is a complete count of homes, so its growth shows where building has happened, and the band mix is a rough indication of property size and value. Remember the bands rest on 1991 values in England and Scotland, and 2003 in Wales, so they have drifted a long way from current prices. Band I exists only in Wales.
+
+**Dwelling type**, **Bedrooms** and **Build period** break the same complete stock down by built form, size and age. Build period is the most useful of the three for retrofit: it predicts wall construction, and therefore which insulation measures apply and what they cost.
+
+These four charts have different coverage. Council tax bands are shown for the whole of Great Britain: the Valuation Office Agency publishes England and Wales, and the equivalent Scottish series from statistics.gov.scot is added on 2022 Data Zones. The type, bedroom and build period breakdowns are published for England and Wales only, and no Scottish equivalent exists, so for a Scottish neighbourhood those three charts are replaced by a short note saying so.
 
 #### Postcodes
 
@@ -808,7 +844,7 @@ This can inform neighbourhood plans, community land purchases, campaigns for acc
 <!-- #landownership-inspire -->
 #### INSPIRE Polygons
 
-The INSPIRE polygons, named after the [EU INSPIRE Directive](https://use-land-property-data.service.gov.uk/datasets/inspire) that required their publication, are created by HM Land Registry and show the boundaries of registered freehold land in England and Wales. They are open data, but the Land Registry does not provide an easy way to view them; this layer fills that gap with a cleaned snapshot from 2022.
+The INSPIRE polygons, named after the [EU INSPIRE Directive](https://use-land-property-data.service.gov.uk/datasets/inspire) that required their publication, are created by HM Land Registry and show the boundaries of registered freehold land in England and Wales. They are open data, but the Land Registry does not provide an easy way to view them; this layer fills that gap with a cleaned snapshot from 2026.
 
 Land Registry maps are often digitised from old paper maps, so single holdings are frequently split along the grid lines where one paper map sheet met the next. An automated method was used to rejoin these split polygons and give a clearer picture of large landholdings. The process is imperfect: some grid-aligned titles remain, some polygons have been merged, and merged polygons carry only one of their original INSPIRE IDs, chosen effectively at random.
 
@@ -827,7 +863,23 @@ Not all land is registered, so the map has genuine gaps. Registration only becam
 
 Some polygons overlap, which happens when different interests exist in the same land. London Underground may own a tunnel while someone else owns the surface, and solar farm operators sometimes purchase air rights to stop neighbouring development shading their panels.
 
-Click any polygon to see its INSPIRE ID (which can be used to purchase the full title from the Land Registry), the local authority name, and the area in square metres.
+##### Colouring the parcels
+
+By default the parcels are drawn as a plain wash, because the usual reason to turn the layer on is simply to see where the boundaries run. The drop-down offers two colourings.
+
+**Properties on the parcel** counts how many current addresses sit inside each parcel, and sorts them into three groups:
+
+* **One property**: the parcel is that property's plot. This is the common case, about seven in ten parcels.
+* **No properties**: bare land. Fields, gardens and access strips held on their own title, car parks, yards, and sites where the building has gone. Also, occasionally, a parcel whose address point happens to fall just outside the mapped boundary.
+* **Several**: a block of flats, a terrace held on one title, a farm with several dwellings, or a large mixed site.
+
+"Current" matters here. The count uses only addresses present in the latest Ordnance Survey release, not every address ever recorded, so a plot whose two flats were long ago knocked through into one house counts as one property rather than two.
+
+**Price per square metre** divides a property's estimated 2025 value by the area of its parcel. It is shown **only** for the one-property parcels, and that restriction is the whole point: only when the parcel is a single property's plot does dividing its value by that area mean anything. For a block of flats the same sum would divide one flat's value by the whole building's footprint.
+
+Treat the result as indicative. The value is a model estimate, extrapolated forward from the property's last recorded sale using local price trends, so it is least reliable for homes that have not changed hands recently and is unavailable for homes never sold since 1995. The area is the registered parcel, which is not always the same as the garden or the usable land. The measure is most informative compared between neighbouring parcels rather than read as a number.
+
+Click any polygon to see its INSPIRE ID (which can be used to purchase the full title from the Land Registry), the local authority name, the area in square metres, how many properties are on it, and where applicable the estimated value and price per square metre.
 <!-- /#landownership-inspire -->
 
 <!-- #landownership-points -->
@@ -835,7 +887,7 @@ Click any polygon to see its INSPIRE ID (which can be used to purchase the full 
 
 HM Land Registry publishes two open datasets that explicitly name landowners: [UK companies that own property in England and Wales](https://use-land-property-data.service.gov.uk/datasets/ccod) (CCOD) and [Overseas companies that own property in England and Wales](https://use-land-property-data.service.gov.uk/datasets/ocod) (OCOD). Note that these cover organisations only; property owned by private individuals is not included.
 
-*The data in this tool is a 2022 snapshot and may be out of date.*
+The points are located by matching each title's address text to a known property address wherever possible, and only falling back to geocoding the raw text when no match can be found. The **Location confidence** colouring shows how much to trust each dot's position, from High (matched to a specific property) down through Street (the right street, but not the right building) to Guess. Colour by it before drawing conclusions from a cluster of points: a dense group of low-confidence dots may be one street's worth of titles all snapped to the same place.
 
 These datasets are rich but hard to use because they are published as tables of text addresses, not as a map. The main purpose of this layer is to [geocode](https://en.wikipedia.org/wiki/Address_geocoding) those addresses, converting text into coordinates that can be plotted.
 

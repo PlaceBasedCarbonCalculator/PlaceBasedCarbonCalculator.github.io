@@ -36,8 +36,6 @@ var plefTransformChart;
 var populationChart;
 
 var locationData = {};
-var voa2020LocationData = {};
-var voa2010LocationData = {};
 var communityPicLocationData = {};
 var populationLocationData = {};
 var lsoaOverviewData = {};
@@ -45,10 +43,6 @@ var laHistoricalData = {};
 var oacHistoricalData = {};
 var gbHistoricalData = {};
 
-var dwellingsctChart;
-var dwellingstypeChart;
-var dwellingsbedroomsChart;
-var dwellingsageChart;
 
 // Draws the CCC target line on top of a chart without creating a legend entry.
 // Defined at file level so both the historical chart and the rebuildable
@@ -143,22 +137,18 @@ manageCharts = function (locationId) {
 		});
 
 	// Independent fetches
-	/* Will be moved to retrofit tool
-	const pVOA2010 = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/voa_2010/' + locationId + '.json')
-		.then(data => { voa2010LocationData = data; makeChartVOA2010(); })
-		.catch(err => { console.error('VOA2010 failed:', err); });
-
-	const pVOA2020 = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/voa_2020/' + locationId + '.json')
-		.then(data => { voa2020LocationData = data; makeChartVOA2020(); })
-		.catch(err => { console.error('VOA2020 failed:', err); });
-	*/
 	// Community "family photo" data now comes from the community_pics bin
 	// (single binary + range request) instead of one JSON file per zone.
+	//
+	// The two VOA dwelling-stock charts used to live here. They describe the
+	// building stock rather than emissions, so they now belong to the retrofit
+	// tool (retrofit/ui.js, "Dwelling stock charts") and read from the
+	// voa_2010 / voa_2020 bins.
 	const pCommunity = capBin.fetchRecord('community_pics', locationId)
 		.then(data => { communityPicLocationData = data; makeCommunityPic(); })
 		.catch(err => { console.error('Community photo failed:', err); });
 
-    return Promise.all([primary,  pCommunity]); //pVOA2010, pVOA2020,
+    return Promise.all([primary,  pCommunity]);
 };
 
 makeCommunityPic = function(){
@@ -490,14 +480,23 @@ makeChartHistorical = function(){
   const yearIndex = data.labels.length - 1;
 
   // Headline Grade
-  // Set grade image and alt text
-  const Totalgrade = locationData['total_grade'][yearIndex];
+  // Set grade image and alt text. Some feeds carry no grades (e.g. the area
+  // report cards' la_emissions folder), so only show the badge when one exists -
+  // otherwise gradelabel[yearIndex] would be read off undefined and throw,
+  // aborting the whole chart build.
+  const Totalgrade = (locationData['total_grade'] || [])[yearIndex];
   const TotalgradeImg = document.getElementById('data_total_emissions_grade');
-  TotalgradeImg.src = `/images/grades/${Totalgrade}.webp`;
-  TotalgradeImg.alt = `Grade ${Totalgrade}`;
-  document.getElementById("data_total_emissions_percap").innerHTML = 
-    locationData['total_kgco2e_percap'][yearIndex] + 
-    ' kgCO<sub>2</sub>e per person per year in ' + 
+  if (TotalgradeImg) {
+    if (Totalgrade) {
+      TotalgradeImg.src = `/images/grades/${Totalgrade}.webp`;
+      TotalgradeImg.alt = `Grade ${Totalgrade}`;
+    } else {
+      TotalgradeImg.style.display = 'none';
+    }
+  }
+  document.getElementById("data_total_emissions_percap").innerHTML =
+    (locationData['total_kgco2e_percap'] || [])[yearIndex] +
+    ' kgCO<sub>2</sub>e per person per year in ' +
     data.labels[yearIndex];
   
   //console.log(locationData['total_grade'][yearIndex]);
@@ -510,13 +509,18 @@ makeChartHistorical = function(){
     const dataset = data.datasets.find(ds => ds.label === label);
     if (!dataset) return;
     // Set household emissions value
-    document.getElementById(valueId).innerHTML = dataset.data[yearIndex];
-  
-    // Set grade image and alt text
-    const grade = dataset.gradelabel[yearIndex];
+    document.getElementById(valueId).innerHTML = (dataset.data || [])[yearIndex];
+
+    // Set grade image and alt text (only if this feed carries grades)
+    const grade = (dataset.gradelabel || [])[yearIndex];
     const gradeImg = document.getElementById(gradeId);
-    gradeImg.src = `/images/grades/${grade}.webp`;
-    gradeImg.alt = `Grade ${grade}`;
+    if (!gradeImg) return;
+    if (grade) {
+      gradeImg.src = `/images/grades/${grade}.webp`;
+      gradeImg.alt = `Grade ${grade}`;
+    } else {
+      gradeImg.style.display = 'none';
+    }
   });
 
 		// The CCC target line is drawn by the shared thresholdLinePlugin (defined
@@ -583,7 +587,12 @@ makeChartHistorical = function(){
 		component.forEach(comp => {
 			data_overview.datasets.push({
 				label: comp[0],
-				data: [locationData[comp[1]][yearIndex], laHistoricalData[comp[1]][laYearIndex], oacHistoricalData[comp[1]][oacYearIndex], gbHistoricalData[comp[1]][gbYearIndex]],
+				// Guard each source: the report cards reuse this code for area
+				// levels (la/ward/parish/constituency) that have no LA/"Similar
+				// areas" comparison data, so those objects are empty. Without the
+				// || [] the missing field indexes undefined and throws, aborting
+				// the whole chart build (consumption, energy, etc.).
+				data: [(locationData[comp[1]] || [])[yearIndex], (laHistoricalData[comp[1]] || [])[laYearIndex], (oacHistoricalData[comp[1]] || [])[oacYearIndex], (gbHistoricalData[comp[1]] || [])[gbYearIndex]],
 				backgroundColor: comp[2],
 				borderColor: comp[3],
 				borderWidth: 1,
@@ -773,466 +782,6 @@ makeChartHistorical = function(){
   bikeCompanyChart = makeStandardConsumptionChart('bikeCompany-chart','Bikes & Company Vehicles');
   publicTransportChart = makeStandardConsumptionChart('publicTransport-chart','Public Transport');
 
-}
-
-makeChartVOA2010 = function(){
-  
-  	// overview Chart
-  	// Destroy old chart
-	if(dwellingsctChart){
-		dwellingsctChart.destroy();
-	}
-  
-  	//console.log(voa2010LocationData);
- 
-	const years = voa2010LocationData['year'];	  
-	const bA = voa2010LocationData['banda'];
-  	const bB = voa2010LocationData['bandb'];
-  	const bC = voa2010LocationData['bandc'];
-  	const bD = voa2010LocationData['bandd'];
-  	const bE = voa2010LocationData['bande'];
-  	const bF = voa2010LocationData['bandf'];
-  	const bG = voa2010LocationData['bandg'];
-  	const bH = voa2010LocationData['bandh'];
-  	const bI = voa2010LocationData['bandi'];
-  
-  
-  var dwellingsctctx = document.getElementById('dwellingsct-chart').getContext('2d');
-	dwellingsctChart = new Chart(dwellingsctctx, {
-		type: 'bar',
-		data: {
-			labels: years,
-			datasets: [{
-				label: 'A',
-				data: bA,
-				backgroundColor: 'rgba(77,146,33, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-			{
-				label: 'B',
-				data: bB,
-				backgroundColor: 'rgba(127,188,65, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-			{
-				label: 'C',
-				data: bC,
-				backgroundColor: 'rgba(184,225,134, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-			{
-				label: 'D',
-				data: bD,
-				backgroundColor: 'rgba(230,245,208, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-			{
-				label: 'E',
-				data: bE,
-				backgroundColor: 'rgba(247,247,247, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-      {
-				label: 'F',
-				data: bF,
-				backgroundColor: 'rgba(253,224,239, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-      {
-				label: 'G',
-				data: bG,
-				backgroundColor: 'rgba(241,182,218, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-      {
-				label: 'H',
-				data: bH,
-				backgroundColor: 'rgba(222,119,174, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-      {
-				label: 'I',
-				data: bI,
-				backgroundColor: 'rgba(197,27,125, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-			]
-		},
-		options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-							y: {
-								stacked: true,
-								ticks: {
-									beginAtZero: true
-								}
-							},
-							x: {
-								stacked: true
-							}
-      },
-      plugins: {
-        legend: {
-          position: 'top',
-        }
-      }
-    }
-	});
-  
-  
-}
-
-
-makeChartVOA2020 = function(){
-  
-  // Destroy old chart
-	if(dwellingstypeChart){
-		dwellingstypeChart.destroy();
-	}
-	
-	if(dwellingsbedroomsChart){
-		dwellingsbedroomsChart.destroy();
-	}
-	
-	if(dwellingsageChart){
-		dwellingsageChart.destroy();
-	}
-  
-	const years = voa2020LocationData['year'];	  
-
-  var dwellingstypectx = document.getElementById('dwellingstype-chart').getContext('2d');
-	dwellingstypeChart = new Chart(dwellingstypectx, {
-		type: 'bar',
-		data: {
-			labels: years,
-			datasets: [{
-				label: 'Bungalow',
-				data: voa2020LocationData['bungalow'],
-				backgroundColor: 'rgba(105, 60, 153, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-			{
-				label: 'Flat/Maisonette',
-				data: voa2020LocationData['flatmais'],
-				backgroundColor: 'rgba(227, 26, 28, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-			{
-				label: 'Terraced',
-				data: voa2020LocationData['terraced'],
-				backgroundColor: 'rgba(17, 219, 13, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-			{
-				label: 'Semi-Detached',
-				data: voa2020LocationData['semi'],
-				backgroundColor: 'rgba(14, 156, 11, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-			{
-				label: 'Detached',
-				data: voa2020LocationData['detached'],
-				backgroundColor: 'rgba(8, 82, 7, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-      {
-				label: 'Annexe',
-				data: voa2020LocationData['annexe'],
-				backgroundColor: 'rgba(31, 120, 180, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-      {
-				label: 'Caravan/Boat/Mobile home',
-				data: voa2020LocationData['caravanboatmobilehome'],
-				backgroundColor: 'rgba(250, 124, 0, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-      {
-				label: 'Unknown',
-				data: voa2020LocationData['unknown'],
-				backgroundColor: 'rgba(135, 136, 138, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			}
-			]
-		},
-		options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-							y: {
-								stacked: true,
-								ticks: {
-									beginAtZero: true
-								}
-							},
-							x: {
-								stacked: true
-							}
-      },
-      plugins: {
-        legend: {
-          position: 'top',
-        }
-      }
-    }
-	});
-	
-	
-	var dwellingsbedroomsctx = document.getElementById('dwellingsbedrooms-chart').getContext('2d');
-	dwellingsbedroomsChart = new Chart(dwellingsbedroomsctx, {
-		type: 'bar',
-		data: {
-			labels: years,
-			datasets: [{
-				label: '1',
-				data: voa2020LocationData['bed1'],
-				backgroundColor: 'rgba(204,235,197, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-			{
-				label: '2',
-				data: voa2020LocationData['bed2'],
-				backgroundColor: 'rgba(168,221,181, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-			{
-				label: '3',
-				data: voa2020LocationData['bed3'],
-				backgroundColor: 'rgba(123,204,196, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-			{
-				label: '4',
-				data: voa2020LocationData['bed4'],
-				backgroundColor: 'rgba(78,179,211, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-			{
-				label: '5',
-				data: voa2020LocationData['bed5'],
-				backgroundColor: 'rgba(43,140,190, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-      {
-				label: '6+',
-				data: voa2020LocationData['bed6'],
-				backgroundColor: 'rgba(8,88,158, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			}
-			]
-		},
-		options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-							y: {
-								stacked: true,
-								ticks: {
-									beginAtZero: true
-								}
-							},
-							x: {
-								stacked: true
-							}
-      },
-      plugins: {
-        legend: {
-          position: 'top',
-        }
-      }
-    }
-	});
-	
-	
-	var dwellingsagectx = document.getElementById('dwellingsage-chart').getContext('2d');
-	dwellingsageChart = new Chart(dwellingsagectx, {
-		type: 'bar',
-		data: {
-			labels: years,
-			datasets: [{
-				label: 'pre 1900',
-				data: voa2020LocationData['bppre1900'],
-				backgroundColor: 'rgba(158, 1, 66, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-			{
-				label: '1900-18',
-				data: voa2020LocationData['bp19001918'],
-				backgroundColor: 'rgba(213, 62, 79, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-			{
-				label: '1919-29',
-				data: voa2020LocationData['bp19191929'],
-				backgroundColor: 'rgba(244, 109, 67, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-			{
-				label: '1930-39',
-				data: voa2020LocationData['bp19301939'],
-				backgroundColor: 'rgba(244, 109, 67, 0.8)',
-				borderColor: 'rgba(253, 174, 97)',
-				borderWidth: 1,
-				order: 1
-			},
-			{
-				label: '1945-54',
-				data: voa2020LocationData['bp19451954'],
-				backgroundColor: 'rgba(254,224,139, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-      {
-				label: '1955-64',
-				data: voa2020LocationData['bp19551964'],
-				backgroundColor: 'rgba(255,255,191, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-      {
-				label: '1965-72',
-				data: voa2020LocationData['bp19651972'],
-				backgroundColor: 'rgba(230,245,152, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-      {
-				label: '1973-82',
-				data: voa2020LocationData['bp19731982'],
-				backgroundColor: 'rgba(171,221,164, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-      {
-				label: '1983-92',
-				data: voa2020LocationData['bp19831992'],
-				backgroundColor: 'rgba(102,194,165, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},			
-      {
-				label: '1993-99',
-				data: voa2020LocationData['bp19931999'],
-				backgroundColor: 'rgba(50,136,189, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},			
-      {
-				label: '2000-08',
-				data: voa2020LocationData['bp20002008'],
-				backgroundColor: 'rgba(94,79,162, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},			
-      {
-				label: '2009-21',
-				data: voa2020LocationData['bp20092021'],
-				backgroundColor: 'rgba(144, 77, 159, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},			
-      {
-				label: '2022-24',
-				data: voa2020LocationData['bp20222024'],
-				backgroundColor: 'rgba(217, 22, 74, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-      {
-				label: 'Unknown',
-				data: voa2020LocationData['bpunkw'],
-				backgroundColor: 'rgba(135, 136, 138, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			}	
-			]
-		},
-		options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-							y: {
-								stacked: true,
-								ticks: {
-									beginAtZero: true
-								}
-							},
-							x: {
-								stacked: true
-							}
-      },
-      plugins: {
-        legend: {
-          position: 'top',
-        }
-      }
-    }
-	});
-  
-  
 }
 
 

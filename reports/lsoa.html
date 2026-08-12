@@ -10,6 +10,7 @@
 
 	<link rel="stylesheet" href="/css/main.css">
 	<link rel="stylesheet" href="/css/map.css"><!-- chart card styles shared with the map tools -->
+	<link rel="stylesheet" href="/css/map-new.css"><!-- new design language overrides -->
 	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 	<link rel="icon" href="/favicon.ico" type="image/x-icon">
 
@@ -73,7 +74,7 @@
 		.community-photo img { width: 40px; height: 40px; object-fit: cover; border-radius: 3px; }
 	</style>
 </head>
-<body>
+<body class="report-page">
 
 <!-- Menu -->
 <nav>
@@ -149,10 +150,6 @@
 		<h2>Explore this neighbourhood in our tools</h2>
 		<p>Each tool opens focused on this neighbourhood.</p>
 		<ul class="card-grid" id="tool-links"></ul>
-
-		<h2>Area summary reports</h2>
-		<p>See how this neighbourhood sits within larger areas.</p>
-		<ul class="report-links" id="area-report-links"></ul>
 	</div>
 </div>
 
@@ -192,11 +189,17 @@
 	var areaWord = isScotland ? 'Data Zone' : 'LSOA';
 
 	// Fetch the neighbourhood overview (admin areas, classification) and the
-	// centroid (to centre the map tools that do not yet support ?report=)
-	var overviewUrl = 'https://pbcc.blob.core.windows.net/pbcc-data/lsoa_overview/v1/' + encodeURIComponent(lsoa) + '.json';
+	// centroid (to centre the map tools that do not yet support ?report=).
+	// The overview now comes from the same single-binary bin the map tools
+	// draw from (js/databin.js). Unlike the old lsoa_overview JSON folder it
+	// carries the ward/parish/constituency ONS codes the report links below
+	// need. Bump this index name whenever the overview bin is rebuilt.
+	if (typeof capBin !== 'undefined') {
+		capBin.register({ lsoa_overview: 'index_lsoa_overview_2026-07-15.json.gz' });
+	}
 
 	Promise.all([
-		fetch(overviewUrl).then(function (r) { if (!r.ok) { throw new Error('overview'); } return r.json(); }),
+		capBin.fetchRecord('lsoa_overview', lsoa),
 		fetch('/data/lsoa_centroids.json').then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; })
 	]).then(function (results) {
 		var raw = results[0];
@@ -216,15 +219,18 @@
 		document.title = heading + ' - Carbon & Place';
 		ledeEl.textContent = className ? ('This is a "' + className + '" neighbourhood.') : '';
 
-		// Context cards. Each links to the corresponding area report where the
-		// area's code is available in the overview data.
+		// Context cards. Each links to the corresponding area report, using the
+		// ONS code carried in the overview bin. An LSOA that lies in no civil
+		// parish (PAR23NM/CD are "Unparished") still gets a Parish box, but one
+		// that says so rather than linking anywhere.
+		var parished = d.PAR23NM && d.PAR23NM !== 'Unparished' && d.PAR23CD && d.PAR23CD !== 'Unparished';
 		var context = [
 			['Local authority', d.LAD25NM, d.LAD25CD, '/reports/la.html'],
 			['Ward', d.WD25NM, d.WD25CD, '/reports/wards.html'],
 			['Constituency', d.PCON24NM, d.PCON24CD, '/reports/constituencies.html'],
-			['Parish', (d.PAR23NM && d.PAR23NM !== 'Unparished' ? d.PAR23NM : null),
-				(d.PAR23CD && d.PAR23CD !== 'Unparished' ? d.PAR23CD : null), '/reports/parishes.html'],
-			['Neighbourhood type', className, null, null]
+			parished
+				? ['Parish', d.PAR23NM, d.PAR23CD, '/reports/parishes.html']
+				: ['Parish', 'This area is unparished', null, null]
 		];
 		var ctxHtml = '';
 		context.forEach(function (row) {
@@ -270,22 +276,6 @@
 		});
 		document.getElementById('tool-links').innerHTML = toolHtml;
 
-		// Area summary reports (only where we have the code for that area)
-		var areaReports = [
-			[d.LAD25CD, d.LAD25NM, '/reports/la.html', 'Local authority'],
-			[d.WD25CD, d.WD25NM, '/reports/wards.html', 'Ward'],
-			[d.PAR23CD && d.PAR23CD !== 'Unparished' ? d.PAR23CD : null, d.PAR23NM, '/reports/parishes.html', 'Parish'],
-			[d.PCON24CD, d.PCON24NM, '/reports/constituencies.html', 'Constituency']
-		];
-		var arHtml = '';
-		areaReports.forEach(function (a) {
-			if (!a[0]) { return; }
-			arHtml += '<li><a href="' + a[2] + '?id=' + encodeURIComponent(a[0]) + '">' +
-				esc(a[3]) + ' report: <strong>' + esc(a[1] || a[0]) + '</strong></a></li>';
-		});
-		if (!arHtml) { arHtml = '<li>No area summary reports are available for this neighbourhood yet.</li>'; }
-		document.getElementById('area-report-links').innerHTML = arHtml;
-
 		bodyEl.style.display = 'block';
 
 		if (typeof getCookie === 'function' && getCookie('analyticstrack') === 'true' && typeof gtag === 'function') {
@@ -306,6 +296,23 @@
 
 	var BLOB = 'https://pbcc.blob.core.windows.net/pbcc-data/';
 	var enc = encodeURIComponent(lsoa);
+
+	// The transport tool's LSOA datasets now live in single-binary bins (see
+	// js/databin.js) with a newer schema than the legacy Access/ etc. folders,
+	// so point the transport card at the bins, exactly like the tool itself.
+	// Index file names mirror transport/datasets.js - bump them together.
+	if (typeof capBin !== 'undefined') {
+		capBin.register({
+			access: 'index_access_2026-08-08.json.gz',
+			pt_frequency: 'index_pt_frequency_2026-08-10.json.gz',
+			vehicle_summary: 'index_vehicle_summary_2026-08-08.json.gz'
+		});
+		window.REPORT_CARD_ENDPOINTS = {
+			'Access/': { bin: 'access' },
+			'PTfrequency/v2/': { bin: 'pt_frequency' },
+			'vehicle_summary/v1/': { bin: 'vehicle_summary' }
+		};
+	}
 
 	// Point each section's "Open in …" link at the deep-linked tool report
 	[['link-pbcc', '/pbcc/'], ['link-transport', '/transport/'], ['link-retrofit', '/retrofit/']].forEach(function (p) {

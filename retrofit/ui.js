@@ -69,7 +69,36 @@ manageCharts =  function (locationId, mapLayerId){
         }
       });
 
-    return Promise.all([pEPC, pPrices, pEnergy]);
+    // Council tax bands, GB-wide (see the dwelling stock section below).
+    const pVOABands = capBin.fetchRecord('voa_2010', locationId)
+      .then(data => {
+        voaBandsLocationData = data;
+        voaSetAvailable(['dwellingsct'], 'dwellingsct-nodata', true);
+        makeChartVOABands();
+      })
+      .catch(err => {
+        console.error('VOA council tax bands failed:', err);
+        if(dwellingsctChart){ dwellingsctChart.destroy(); }
+        voaSetAvailable(['dwellingsct'], 'dwellingsct-nodata', false);
+      });
+
+    // Dwelling type/bedrooms/build period, England and Wales only. A Scottish
+    // zone has no record here at all, so this rejects; that is the expected
+    // outcome rather than a failure, and the charts are replaced by a note.
+    const pVOAStock = capBin.fetchRecord('voa_2020', locationId)
+      .then(data => {
+        voaStockLocationData = data;
+        voaSetAvailable(['dwellingstype','dwellingsbedrooms','dwellingsage'], 'dwellingsstock-nodata', true);
+        makeChartVOAStock();
+      })
+      .catch(err => {
+        if(dwellingstypeChart){ dwellingstypeChart.destroy(); }
+        if(dwellingsbedroomsChart){ dwellingsbedroomsChart.destroy(); }
+        if(dwellingsageChart){ dwellingsageChart.destroy(); }
+        voaSetAvailable(['dwellingstype','dwellingsbedrooms','dwellingsage'], 'dwellingsstock-nodata', false);
+      });
+
+    return Promise.all([pEPC, pPrices, pEnergy, pVOABands, pVOAStock]);
     //return p;
   } else if (mapLayerId == 'postcodes'){
     // Postcode gas/electricity data now comes from the postcode bin (single
@@ -1287,3 +1316,513 @@ switchChartTab = function (evt, tabName) {
     evt.currentTarget.classList.add('active');
   }
 };
+
+
+// ---------------------------------------------------------------------------
+// Dwelling stock charts (VOA council tax registers)
+//
+// Moved here from the PBCC tool, where they were written against the old
+// one-JSON-file-per-zone endpoints and had been commented out; they read from
+// the voa_2010 / voa_2020 bins now (js/databin.js) like everything else in
+// this tool. They belong in the retrofit tool because they describe the
+// building stock - what is there, how big, how old - which is the question
+// this tool exists to answer.
+//
+// Two datasets, two different geographies:
+//
+//   voa_2010  council tax bands, 2010 onwards. GB-wide: the VOA covers
+//             England and Wales, and the build repo folds the equivalent
+//             Scottish council tax register in on 2022 Data Zones
+//             (summarise_voa_post2010()). Band I is Wales-only and stays
+//             empty everywhere else.
+//   voa_2020  dwelling type, bedrooms and build period, 2020 onwards.
+//             England and Wales ONLY - Scotland publishes no equivalent
+//             breakdown, so for a Scottish zone the bin has no record and
+//             fetchRecord() rejects. That is expected, not an error, so the
+//             three charts are hidden and a short explanation shown in their
+//             place rather than leaving three empty axes on screen.
+// ---------------------------------------------------------------------------
+
+var voaBandsLocationData = {};
+var voaStockLocationData = {};
+
+var dwellingsctChart;
+var dwellingstypeChart;
+var dwellingsbedroomsChart;
+var dwellingsageChart;
+
+// Show/hide a group of chart blocks and its "no data here" note together.
+// Chart rows in this tool are wrapped in a div whose id is the chart name with
+// '-chartrow' appended, so a whole group can be swapped for one explanation
+// without disturbing the rest of the report card.
+function voaSetAvailable (chartNames, noteId, available)
+{
+	chartNames.forEach (function (name) {
+		const row = document.getElementById (name + '-chartrow');
+		if (row) { row.style.display = (available ? 'block' : 'none'); }
+	});
+	const note = document.getElementById (noteId);
+	if (note) { note.style.display = (available ? 'none' : 'block'); }
+}
+
+makeChartVOABands = function(){
+  
+  	// overview Chart
+  	// Destroy old chart
+	if(dwellingsctChart){
+		dwellingsctChart.destroy();
+	}
+  
+  	//console.log(voaBandsLocationData);
+ 
+	const years = voaBandsLocationData['year'];	  
+	const bA = voaBandsLocationData['banda'];
+  	const bB = voaBandsLocationData['bandb'];
+  	const bC = voaBandsLocationData['bandc'];
+  	const bD = voaBandsLocationData['bandd'];
+  	const bE = voaBandsLocationData['bande'];
+  	const bF = voaBandsLocationData['bandf'];
+  	const bG = voaBandsLocationData['bandg'];
+  	const bH = voaBandsLocationData['bandh'];
+  	const bI = voaBandsLocationData['bandi'];
+  
+  
+  var dwellingsctctx = document.getElementById('dwellingsct-chart').getContext('2d');
+	dwellingsctChart = new Chart(dwellingsctctx, {
+		type: 'bar',
+		data: {
+			labels: years,
+			datasets: [{
+				label: 'A',
+				data: bA,
+				backgroundColor: 'rgba(77,146,33, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: 'B',
+				data: bB,
+				backgroundColor: 'rgba(127,188,65, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: 'C',
+				data: bC,
+				backgroundColor: 'rgba(184,225,134, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: 'D',
+				data: bD,
+				backgroundColor: 'rgba(230,245,208, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: 'E',
+				data: bE,
+				backgroundColor: 'rgba(247,247,247, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},
+      {
+				label: 'F',
+				data: bF,
+				backgroundColor: 'rgba(253,224,239, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},
+      {
+				label: 'G',
+				data: bG,
+				backgroundColor: 'rgba(241,182,218, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},
+      {
+				label: 'H',
+				data: bH,
+				backgroundColor: 'rgba(222,119,174, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},
+      {
+				label: 'I',
+				data: bI,
+				backgroundColor: 'rgba(197,27,125, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},
+			]
+		},
+		options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+							y: {
+								stacked: true,
+								ticks: {
+									beginAtZero: true
+								}
+							},
+							x: {
+								stacked: true
+							}
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      }
+    }
+	});
+  
+  
+}
+
+
+makeChartVOAStock = function(){
+  
+  // Destroy old chart
+	if(dwellingstypeChart){
+		dwellingstypeChart.destroy();
+	}
+	
+	if(dwellingsbedroomsChart){
+		dwellingsbedroomsChart.destroy();
+	}
+	
+	if(dwellingsageChart){
+		dwellingsageChart.destroy();
+	}
+  
+	const years = voaStockLocationData['year'];	  
+
+  var dwellingstypectx = document.getElementById('dwellingstype-chart').getContext('2d');
+	dwellingstypeChart = new Chart(dwellingstypectx, {
+		type: 'bar',
+		data: {
+			labels: years,
+			datasets: [{
+				label: 'Bungalow',
+				data: voaStockLocationData['bungalow'],
+				backgroundColor: 'rgba(105, 60, 153, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: 'Flat/Maisonette',
+				data: voaStockLocationData['flatmais'],
+				backgroundColor: 'rgba(227, 26, 28, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: 'Terraced',
+				data: voaStockLocationData['terraced'],
+				backgroundColor: 'rgba(17, 219, 13, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: 'Semi-Detached',
+				data: voaStockLocationData['semi'],
+				backgroundColor: 'rgba(14, 156, 11, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: 'Detached',
+				data: voaStockLocationData['detached'],
+				backgroundColor: 'rgba(8, 82, 7, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},
+      {
+				label: 'Annexe',
+				data: voaStockLocationData['annexe'],
+				backgroundColor: 'rgba(31, 120, 180, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},
+      {
+				label: 'Caravan/Boat/Mobile home',
+				data: voaStockLocationData['caravanboatmobilehome'],
+				backgroundColor: 'rgba(250, 124, 0, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},
+      {
+				label: 'Unknown',
+				data: voaStockLocationData['unknown'],
+				backgroundColor: 'rgba(135, 136, 138, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			}
+			]
+		},
+		options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+							y: {
+								stacked: true,
+								ticks: {
+									beginAtZero: true
+								}
+							},
+							x: {
+								stacked: true
+							}
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      }
+    }
+	});
+	
+	
+	var dwellingsbedroomsctx = document.getElementById('dwellingsbedrooms-chart').getContext('2d');
+	dwellingsbedroomsChart = new Chart(dwellingsbedroomsctx, {
+		type: 'bar',
+		data: {
+			labels: years,
+			datasets: [{
+				label: '1',
+				data: voaStockLocationData['bed1'],
+				backgroundColor: 'rgba(204,235,197, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: '2',
+				data: voaStockLocationData['bed2'],
+				backgroundColor: 'rgba(168,221,181, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: '3',
+				data: voaStockLocationData['bed3'],
+				backgroundColor: 'rgba(123,204,196, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: '4',
+				data: voaStockLocationData['bed4'],
+				backgroundColor: 'rgba(78,179,211, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: '5',
+				data: voaStockLocationData['bed5'],
+				backgroundColor: 'rgba(43,140,190, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},
+      {
+				label: '6+',
+				data: voaStockLocationData['bed6'],
+				backgroundColor: 'rgba(8,88,158, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			}
+			]
+		},
+		options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+							y: {
+								stacked: true,
+								ticks: {
+									beginAtZero: true
+								}
+							},
+							x: {
+								stacked: true
+							}
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      }
+    }
+	});
+	
+	
+	var dwellingsagectx = document.getElementById('dwellingsage-chart').getContext('2d');
+	dwellingsageChart = new Chart(dwellingsagectx, {
+		type: 'bar',
+		data: {
+			labels: years,
+			datasets: [{
+				label: 'pre 1900',
+				data: voaStockLocationData['bppre1900'],
+				backgroundColor: 'rgba(158, 1, 66, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: '1900-18',
+				data: voaStockLocationData['bp19001918'],
+				backgroundColor: 'rgba(213, 62, 79, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: '1919-29',
+				data: voaStockLocationData['bp19191929'],
+				backgroundColor: 'rgba(244, 109, 67, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: '1930-39',
+				data: voaStockLocationData['bp19301939'],
+				backgroundColor: 'rgba(244, 109, 67, 0.8)',
+				borderColor: 'rgba(253, 174, 97)',
+				borderWidth: 1,
+				order: 1
+			},
+			{
+				label: '1945-54',
+				data: voaStockLocationData['bp19451954'],
+				backgroundColor: 'rgba(254,224,139, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},
+      {
+				label: '1955-64',
+				data: voaStockLocationData['bp19551964'],
+				backgroundColor: 'rgba(255,255,191, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},
+      {
+				label: '1965-72',
+				data: voaStockLocationData['bp19651972'],
+				backgroundColor: 'rgba(230,245,152, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},
+      {
+				label: '1973-82',
+				data: voaStockLocationData['bp19731982'],
+				backgroundColor: 'rgba(171,221,164, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},
+      {
+				label: '1983-92',
+				data: voaStockLocationData['bp19831992'],
+				backgroundColor: 'rgba(102,194,165, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},			
+      {
+				label: '1993-99',
+				data: voaStockLocationData['bp19931999'],
+				backgroundColor: 'rgba(50,136,189, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},			
+      {
+				label: '2000-08',
+				data: voaStockLocationData['bp20002008'],
+				backgroundColor: 'rgba(94,79,162, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},			
+      {
+				label: '2009-21',
+				data: voaStockLocationData['bp20092021'],
+				backgroundColor: 'rgba(144, 77, 159, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},			
+      {
+				label: '2022-24',
+				data: voaStockLocationData['bp20222024'],
+				backgroundColor: 'rgba(217, 22, 74, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			},
+      {
+				label: 'Unknown',
+				data: voaStockLocationData['bpunkw'],
+				backgroundColor: 'rgba(135, 136, 138, 0.8)',
+				borderColor: 'rgb(0,0,0)',
+				borderWidth: 1,
+				order: 1
+			}	
+			]
+		},
+		options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+							y: {
+								stacked: true,
+								ticks: {
+									beginAtZero: true
+								}
+							},
+							x: {
+								stacked: true
+							}
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      }
+    }
+	});
+  
+  
+}
+
+

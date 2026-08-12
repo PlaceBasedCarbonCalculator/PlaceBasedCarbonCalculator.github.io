@@ -2,7 +2,7 @@
 const settings_extra = {
 	
 	// Buildings/placenames tiles URL; can use %tileserverUrl to represent the above
-	buildingsTilesUrl: 'pmtiles://%tileserverUrl/buildings_retrofit_20260206.pmtiles',
+	buildingsTilesUrl: 'pmtiles://%tileserverUrl/buildings_retrofit_20260808.pmtiles',
 
 };
 

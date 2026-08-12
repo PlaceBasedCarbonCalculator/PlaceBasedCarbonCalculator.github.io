@@ -14,10 +14,16 @@
 // and redeploy postcodes.pmtiles together whenever postcode data is rebuilt.
 if (typeof capBin !== 'undefined') {
 	capBin.register({
-		epc_dom: 'index_epc_dom_2026-07-14.json.gz',
-		historical_domestic_gas_elec: 'index_historical_domestic_gas_elec_2026-07-13.json.gz',
-		prices: 'index_prices_2026-07-14.json.gz',
-		postcode: { bin: 'data_postcode_2026-07-13.bin' }
+		epc_dom: 'index_epc_dom_2026-08-08.json.gz',
+		historical_domestic_gas_elec: 'index_historical_domestic_gas_elec_2026-08-08.json.gz',
+		prices: 'index_prices_2026-07-25.json.gz',
+		// Dwelling stock from the council tax registers. voa_2010 (bands) is
+		// GB-wide; voa_2020 (type/bedrooms/age) is England and Wales only and
+		// legitimately has no record for a Scottish zone - see the dwelling
+		// stock section of ui.js.
+		voa_2010: 'index_voa_2010_2026-08-11.json.gz',
+		voa_2020: 'index_voa_2020_2026-07-13.json.gz',
+		postcode: { bin: 'data_postcode_2026-08-08.bin' }
 	});
 }
 
@@ -31,7 +37,7 @@ const datasets_extra = {
 			'type': 'fill',
 			'source': {
 				'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/zones_retrofit_20260206.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/zones_retrofit_20260808.pmtiles',
 				//'url': 'pmtiles://zones_retrofit.pmtiles',
 				},
 			'source-layer': 'zones',
@@ -47,7 +53,7 @@ const datasets_extra = {
 			'type': 'fill',
 			'source': {
 			'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/postcodes_20260713.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/postcodes_20260809.pmtiles',
 				},
 			'source-layer': 'postcodes',
 			'paint': {
@@ -62,7 +68,7 @@ const datasets_extra = {
 			'type': 'circle',
 			'source': {
 				'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/epc_dom_20260113.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/epc_dom_20260728.pmtiles',
 				},
 			'source-layer': 'epc_dom',
 			'paint': {
@@ -83,7 +89,7 @@ const datasets_extra = {
 			'type': 'circle',
 			'source': {
 			'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/epc_nondom_20260113.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/epc_nondom_20260728.pmtiles',
 				},
 			'source-layer': 'epc_nondom',
 			'paint': {
@@ -103,7 +109,7 @@ const datasets_extra = {
 			'type': 'circle',
 			'source': {
 			'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/uprn_unknown_20260113.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/uprn_unknown_20260728.pmtiles',
 				},
 			'source-layer': 'uprn_unknown',
 			'paint': {
@@ -117,21 +123,77 @@ const datasets_extra = {
 				]
 				}
 			}
+		},
+
+		// Annual solar insolation at 2 m resolution, from the GBsolar repo. This
+		// is a RASTER layer: the tiles are pre-coloured WebP images, not values,
+		// so it must be 'raster' and never 'raster-dem' - MapLibre would try to
+		// decode the Turbo colours as terrain heights. There is no 'source-layer'
+		// and no data-driven styling; the colour ramp is baked into the pixels
+		// (see the solar legend below, and GBsolar/METHOD.md section 3 for the
+		// authoritative colour-to-value table).
+		solar: {
+			'id': 'solar',
+			'type': 'raster',
+			'source': {
+				'type': 'raster',
+				'url': 'pmtiles://%tileserverUrl/GBsolar.pmtiles',
+				'tileSize': 512,
+				'minzoom': 5,
+				'maxzoom': 14,
+				'attribution': 'Solar model: University of Leeds, from Environment Agency LIDAR and ERA5'
+			},
+			'paint': {
+				'raster-opacity': 0.85,
+				// Keep rendering (upscaled) past the tileset's z14 rather than
+				// blanking out, since the rest of this tool works to z19
+				'raster-resampling': 'linear'
+			}
 		}
 	},
-	
+
 	// Layer styling callbacks functions, each defined below
 	layerStyling: {
 	  zones: zonesStyling,
 	  postcodes:	postcodesStyling,
 	  epc_dom:    EPCDomStyling,
-	  epc_nondom: EPCNonDomStyling
-	  
+	  epc_nondom: EPCNonDomStyling,
+	  solar:      solarStyling
+
+	},
+
+	// Explicit insertion anchors (see capUi.initialiseDatasets). Layers are
+	// otherwise all inserted below 'placeholder_name' in definition order, which
+	// puts each new one on top of the last - wrong for the solar raster, which is
+	// an opaque image and would hide every layer beneath it. Anchoring it to
+	// 'zones' keeps it under all the data layers and over the basemap.
+	layerBeforeId: {
+		solar: 'zones'
 	},
 	
 	
 	// #!# These need to be merged with lineColours
 	legends: {
+		// Static legend for the solar raster. These swatches are read off the
+		// Turbo colour table in GBsolar/METHOD.md section 3 - they are the
+		// definition of what the pixels mean, so they must be changed together
+		// with a re-render of GBsolar.pmtiles, never on their own. The top entry
+		// is a clamp, not a maximum: the measured data maximum is 2288 Wh/m2 but
+		// the ramp domain is 0-2000, so the darkest red means "2000 or more".
+		solar: {
+			'insolation': [
+				['0',      '#30123B'],
+				['250',    '#466BE3'],
+				['500',    '#28BBEC'],
+				['750',    '#31F299'],
+				['1000',   '#A2FC3C'],
+				['1250',   '#EDD03A'],
+				['1500',   '#FB8022'],
+				['1750',   '#D23105'],
+				['2000+',  '#7A0403']
+			]
+		},
+
 		postcodes: {
 				'Grade': [
 					['A+','#313695'],
@@ -286,7 +348,7 @@ const datasets_extra = {
   				['no','#2c7bb6'],
 				['No data','#000000']
 			],
-			'price_2024': [
+			'price_2025': [
 				['<£200k','#276419'],
 				['£200-300k','#4d9221'],
 				['£300-400k','#7fbc41'],
@@ -421,7 +483,7 @@ const datasets_extra = {
 				['80-90%','#e31a1c'],
 				['>90%','#b10026']
 			],
-			'price_2024': [
+			'price_2025': [
 				['<£200k','#276419'],
 				['£200-300k','#4d9221'],
 				['£300-400k','#7fbc41'],
@@ -534,7 +596,7 @@ const datasets_extra = {
   				['140-160','#de77ae'],
   				['>160','#c51b7d']
 			],
-			'price_2024': [
+			'price_2025': [
 				['<£200k','#276419'],
 				['£200-300k','#4d9221'],
 				['£300-400k','#7fbc41'],
@@ -709,7 +771,7 @@ const datasets_extra = {
 				'90-200','#b10026',
 				'#000000'
 			],
-			'price_2024': [
+			'price_2025': [
 				0,'#276419',
 				200000,'#4d9221',
 				300000,'#7fbc41',
@@ -919,7 +981,7 @@ const datasets_extra = {
 					'no','#2c7bb6',
 					'#000000'
 				],
-			'price_2024': [
+			'price_2025': [
 				0,'#276419',
 				200000,'#4d9221',
 				300000,'#7fbc41',
@@ -985,7 +1047,7 @@ const datasets_extra = {
 				140,'#de77ae',
 				160,'#c51b7d'
 			],
-			'price_2024': [
+			'price_2025': [
 				0,'#276419',
 				200000,'#4d9221',
 				300000,'#7fbc41',
@@ -1145,7 +1207,7 @@ function EPCDomStyling (layerId, map, settings, datasets, createLegend /* callba
 	const style = getEPCDomStyleColumn (field, datasets);
 	//console.log(style);
 
-  let interpolate = ['area', 'year', 'price_2024'];
+  let interpolate = ['area', 'year', 'price_2025'];
 
 	// Set paint properties
 	if(interpolate.includes(field)){
@@ -1176,7 +1238,7 @@ function EPCNonDomStyling (layerId, map, settings, datasets, createLegend /* cal
 	const style = getEPCNonDomStyleColumn (field, datasets);
 	//console.log(style);
 
-  let interpolate = ['area', 'year','price_2024'];
+  let interpolate = ['area', 'year','price_2025'];
 
 	// Set paint properties
 	if(interpolate.includes(field)){
@@ -1200,7 +1262,7 @@ function zonesStyling (layerId, map, settings, datasets, createLegend /* callbac
 	// Get UI state
 	const daysymetricMode = document.querySelector ('input.updatelayer[data-layer="zones"][name="daysymetricmode"]').checked;
 	
-	let interpolate = ['price_2024', 'house_income_ratio','median_gas_kwh','median_elec_kwh'];
+	let interpolate = ['price_2025', 'house_income_ratio','median_gas_kwh','median_elec_kwh'];
 
 	// Set paint properties
 	if(interpolate.includes(field)){
@@ -1221,6 +1283,25 @@ function zonesStyling (layerId, map, settings, datasets, createLegend /* callbac
 		
 }
 
+// Styling callback for the solar raster. Unlike every other layer here there
+// is no data-driven paint expression to build - the colours are baked into the
+// tiles - so this only draws the static legend and applies the transparency
+// slider. The slider is labelled (and read) as transparency because that is
+// what a user is choosing; MapLibre wants the opposite, hence the 1 - v.
+function solarStyling (layerId, map, settings, datasets, createLegend /* callback */)
+{
+	createLegend (datasets.legends.solar, 'insolation', 'solarlegend');
+
+	const slider = document.querySelector ('input.updatelayer[data-layer="solar"][name="transparency"]');
+	if (slider) {
+		const transparency = Number (slider.value);
+		map.setPaintProperty (layerId, 'raster-opacity', 1 - (transparency / 100));
+		const readout = document.getElementById ('solartransparencyvalue');
+		if (readout) { readout.textContent = transparency + '%'; }
+	}
+}
+
+
 // Function to determine the buildings colour
 function getBuildingsColour (settings)
 {
@@ -1235,7 +1316,7 @@ function getBuildingsColour (settings)
 	if (document.querySelector ('input.updatelayer[data-layer="zones"][name="daysymetricmode"]').checked) {
 		const field = document.querySelector ('select.updatelayer[data-layer="zones"][name="field"]').value;
 
-		let interpolate = ['price_2024', 'house_income_ratio','median_gas_kwh','median_elec_kwh'];
+		let interpolate = ['price_2025', 'house_income_ratio','median_gas_kwh','median_elec_kwh'];
 
 		// Set paint properties
 		if(interpolate.includes(field)){

@@ -66,8 +66,10 @@ const settings_common = {
 	// Manual
 	manualEditingUrl: 'https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/edit/dev/%id/index.md',
 	
-	// OSM data date
-	osmDate: '6 December 2023',
+	// OSM data date - the Geofabrik united-kingdom extract the build repo uses
+	// (inputdata/osm/united-kingdom-260717). Currently only shown in a
+	// commented-out element in the transport tool.
+	osmDate: '17 July 2026',
 	
 	// Analytics
 	gaProperty: 'G-Q11V10CDRV',
