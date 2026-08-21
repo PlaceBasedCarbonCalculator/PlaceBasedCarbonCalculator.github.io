@@ -51,11 +51,17 @@
 		<script src="/app.js" defer></script>
 		
 		<!-- Map dependencies -->
-		<script src="https://unpkg.com/pmtiles@3.0.6/dist/pmtiles.js"></script>
+		<script src="https://unpkg.com/pmtiles@4.5.0/dist/pmtiles.js"></script>
 		<script src="/js/lib/geocoder/maplibre-gl-geocoder.min.js"></script>
 		<link rel="stylesheet" href="/js/lib/geocoder/maplibre-gl-geocoder-small.css" type="text/css"/>
-		<script src="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.js"></script>
-		<link href="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.css" rel="stylesheet" />
+		<link href="https://unpkg.com/maplibre-gl@6.4.1/dist/maplibre-gl.css" rel="stylesheet" />
+		<!-- MapLibre GL JS 6 is ESM-only (no UMD maplibre-gl.js any more), so import it
+		     and publish the global that ui-common.js and the geocoder expect. Module
+		     scripts are deferred, so this runs before ui.js and before DOMContentLoaded. -->
+		<script type="module">
+			import * as maplibregl from 'https://unpkg.com/maplibre-gl@6.4.1/dist/maplibre-gl.mjs';
+			window.maplibregl = {...maplibregl};	// Copied, as a module namespace object is frozen
+		</script>
 		
 		<!-- Styles -->
 		<link rel="stylesheet" href="/css/main.css">
@@ -119,8 +125,8 @@
 		
 		<!-- Welcome Splash -->
 		<div id="welcome-modal" class="welcome-modal">
-			<span class="modal-close" style="visibility:hidden;">&times;</span> 
-			<div>
+			<span class="modal-close" style="visibility:hidden;">&times;</span>
+			<div class="modal-body">
 				<h1>Land Ownership Explorer</h1>
 				
 				<p class="beta-note"><b>Beta Tool</b>: This tool is still in development and may contain preliminary analysis, bugs, or incomplete features. Beta tools are intended to provide an early look at upcoming features and so results should be treated with care. The tool may change at any time without warning. We are interested in your feedback and you can report issues or bugs on <a href="https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/issues" target="_blank" rel="noopener noreferrer">GitHub</a></p>

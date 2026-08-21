@@ -286,6 +286,7 @@ makeChartPostcode = function(locationId){
       data: dataMeters,
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         interaction: {
           intersect: false,
         },
@@ -314,6 +315,7 @@ makeChartPostcode = function(locationId){
     data: dataEmissions,
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       scales: {
         y: {
           title: {
@@ -343,6 +345,7 @@ makeChartPostcode = function(locationId){
     data: dataGas,
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       scales: {
         y: {
           title: {
@@ -372,6 +375,7 @@ makeChartPostcode = function(locationId){
     data: dataElectricity,
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       scales: {
         y: {
           title: {
@@ -566,6 +570,7 @@ makeChartLSOAEnergy = function(locationId){
       data: dataMeters,
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         interaction: {
           intersect: false,
         },
@@ -594,6 +599,7 @@ makeChartLSOAEnergy = function(locationId){
     data: dataEmissions,
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       scales: {
         y: {
           title: {
@@ -623,6 +629,7 @@ makeChartLSOAEnergy = function(locationId){
     data: dataEnergyBills,
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       scales: {
         y: {
           title: {
@@ -652,6 +659,7 @@ makeChartLSOAEnergy = function(locationId){
     data: dataGas,
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       scales: {
         y: {
           title: {
@@ -681,6 +689,7 @@ makeChartLSOAEnergy = function(locationId){
     data: dataElectricity,
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       scales: {
         y: {
           title: {

@@ -167,16 +167,67 @@ const capUi = (function () {
 		// Modal print buttons
 		initPrintButtons:function () {
 			const printButtons = document.querySelectorAll('.print-button');
-			
+
 			printButtons.forEach(function(button) {
 				button.addEventListener('click', function(e) {
 				e.preventDefault();
 				e.stopPropagation();
-				
-				// Simply trigger the print dialog - CSS handles the rest
+
+				// Trigger the print dialog - CSS and the beforeprint hook below
+				// handle the rest
 				window.print();
 				});
 			});
+
+			// The print stylesheet reveals every tab, but a Chart.js canvas built
+			// inside a display:none tab was sized to 0x0, and CSS cannot fix an
+			// already-rasterised bitmap. So unviewed tabs printed their text with a
+			// blank space where the chart should be, and a report only printed in
+			// full if the reader happened to click through every tab first. Laying
+			// the charts out on beforeprint fixes the Print button and the browser's
+			// own print command (Ctrl+P) alike.
+			let undoPrintLayout = null;
+			window.addEventListener('beforeprint', function () {
+				if (undoPrintLayout) { return; }
+				undoPrintLayout = capUi.layOutHiddenChartsForPrint();
+			});
+			window.addEventListener('afterprint', function () {
+				if (!undoPrintLayout) { return; }
+				undoPrintLayout();
+				undoPrintLayout = null;
+			});
+		},
+
+		// Make every chart on the page measurable so it renders before printing.
+		// Returns a function that undoes the temporary changes.
+		layOutHiddenChartsForPrint: function ()
+		{
+			const restorers = [];
+
+			// Reveal any collapsed tab panel, remembering its inline display so the
+			// on-screen report is unchanged once printing has finished
+			document.querySelectorAll('.tabcontent').forEach(function (panel) {
+				if (window.getComputedStyle(panel).display !== 'none') { return; }
+				const previous = panel.style.display;
+				panel.style.display = 'block';
+				restorers.push(function () { panel.style.display = previous; });
+			});
+
+			// Now that the containers have real dimensions, resize and redraw each
+			// chart synchronously ('none' skips the animation, so the canvas holds
+			// its finished image by the time the print dialog snapshots the page)
+			if (window.Chart && typeof window.Chart.getChart === 'function') {
+				document.querySelectorAll('canvas').forEach(function (canvas) {
+					const chart = window.Chart.getChart(canvas);
+					if (!chart) { return; }
+					chart.resize();
+					chart.update('none');
+				});
+			}
+
+			return function () {
+				restorers.forEach(function (undo) { undo(); });
+			};
 		},
 
 		// Function to manage an accordion
@@ -330,7 +381,11 @@ const capUi = (function () {
 				maxPitch: 85,
 				hash: false,	// Emulating the hash manually for now; see layerStateUrl
 				attributionControl: false, // Created manually below
-				antialias: document.getElementById('antialiascheckbox').checked
+				// MapLibre 5+ reads WebGL context options from canvasContextAttributes, rather
+				// than the top-level antialias option that 4.x used
+				canvasContextAttributes: {
+					antialias: document.getElementById('antialiascheckbox').checked
+				}
 			});
 			
 			// Manage Sky
@@ -1267,6 +1322,9 @@ const capUi = (function () {
 			capUi.setReportParam (locationId);
 			capUi.trackEvent('report_open', {'layer': mapLayerId, 'location': locationId});
 
+			// Aim any cross-tool links in this report at the same area
+			capUi.updateReportLinks (mapLayerId, locationId);
+
 			// Set the title (may be async)
 			if (mapLayerId === 'zones') {
 				capUi.manageLSOAOverview (mapLayerId, locationId);
@@ -1344,6 +1402,33 @@ const capUi = (function () {
 			window.history.replaceState(window.history.state, '', url.toString());
 		},
 
+		// Point "find out more in the ... Explorer" links at the area the reader is
+		// currently looking at, rather than dropping them on a generic map view.
+		// Links opt in with data-report-link and are authored with a normal map
+		// href, so they still work before any report is open; this inserts
+		// ?report=<code> ahead of the hash, which the target tool picks up in
+		// handleReportDeepLink(). The pristine href is kept in data-report-href so
+		// opening a second report rewrites rather than compounds.
+		//
+		// Only safe where the linking and linked tools key their reports on the
+		// same code: all three zone reports use the LSOA/Data Zone code, so a
+		// zones report can link to another tool's zones report.
+		updateReportLinks: function (mapLayerId, locationId)
+		{
+			const modal = document.getElementById (mapLayerId + '-chartsmodal');
+			if (!modal || !locationId) { return; }
+
+			modal.querySelectorAll ('a[data-report-link]').forEach (function (link) {
+				if (!link.dataset.reportHref) { link.dataset.reportHref = link.getAttribute ('href') || ''; }
+				const base = link.dataset.reportHref;
+				const hashIndex = base.indexOf ('#');
+				const path = (hashIndex === -1 ? base : base.substring (0, hashIndex));
+				const hash = (hashIndex === -1 ? '' : base.substring (hashIndex));
+				const separator = (path.includes ('?') ? '&' : '?');
+				link.setAttribute ('href', path + separator + 'report=' + encodeURIComponent (locationId) + hash);
+			});
+		},
+
 		// Add a Share button to a report modal's header (next to Print). Clicking
 		// opens a small dependency-free share menu: copy link, email, and the
 		// standard social share-intent URLs (no third-party scripts involved).
@@ -1373,15 +1458,17 @@ const capUi = (function () {
 
 			const pageTitle = document.title;
 
-			// Menu entries: [label, icon class, hrefBuilder]; all plain share-intent
-			// URLs opened in a new tab - no SDKs or third-party scripts
+			// Menu entries: [label, hrefBuilder]; all plain share-intent URLs opened
+			// in a new tab - no SDKs or third-party scripts. These are label-only:
+			// the icon fonts loaded by the tools do not carry glyphs for every
+			// entry, so a per-entry icon showed up as a blank gap.
 			const entries = [
-				['Email', 'fa-envelope', function (url) { return 'mailto:?subject=' + encodeURIComponent (pageTitle) + '&body=' + encodeURIComponent (url); }],
-				['Facebook', null, function (url) { return 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent (url); }],
-				['X (Twitter)', null, function (url) { return 'https://twitter.com/intent/tweet?url=' + encodeURIComponent (url) + '&text=' + encodeURIComponent (pageTitle); }],
-				['LinkedIn', null, function (url) { return 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent (url); }],
-				['WhatsApp', null, function (url) { return 'https://wa.me/?text=' + encodeURIComponent (pageTitle + ' ' + url); }],
-				['Bluesky', null, function (url) { return 'https://bsky.app/intent/compose?text=' + encodeURIComponent (pageTitle + ' ' + url); }]
+				['Email', function (url) { return 'mailto:?subject=' + encodeURIComponent (pageTitle) + '&body=' + encodeURIComponent (url); }],
+				['Facebook', function (url) { return 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent (url); }],
+				['X (Twitter)', function (url) { return 'https://twitter.com/intent/tweet?url=' + encodeURIComponent (url) + '&text=' + encodeURIComponent (pageTitle); }],
+				['LinkedIn', function (url) { return 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent (url); }],
+				['WhatsApp', function (url) { return 'https://wa.me/?text=' + encodeURIComponent (pageTitle + ' ' + url); }],
+				['Bluesky', function (url) { return 'https://bsky.app/intent/compose?text=' + encodeURIComponent (pageTitle + ' ' + url); }]
 			];
 
 			// Copy link (first item)
@@ -1417,9 +1504,9 @@ const capUi = (function () {
 				item.type = 'button';
 				item.className = 'share-menu-item';
 				item.setAttribute ('role', 'menuitem');
-				item.innerHTML = (entry[1] ? '<i class="fa ' + entry[1] + '" aria-hidden="true"></i> ' : '') + entry[0];
+				item.textContent = entry[0];
 				item.addEventListener ('click', function () {
-					window.open (entry[2] (window.location.href), '_blank', 'noopener');
+					window.open (entry[1] (window.location.href), '_blank', 'noopener');
 					capUi.trackEvent ('report_share', {'layer': mapLayerId, 'method': entry[0]});
 					hideMenu ();
 				});

@@ -100,7 +100,11 @@ pbccCard_manageCharts = function (locationId) {
 		pbccCard_endpoint('historical_emissions/v2/') + locationId + '.json',
 		pbccCard_endpoint('population/') + locationId + '.json',
 		pbccCard_endpoint('lsoa_overview/v1/') + locationId + '.json',
-		'https://pbcc.blob.core.windows.net/pbcc-data/la_emissions/v2/GB.json'
+		// The GB comparison row lives in the la_emissions dataset under the ID
+		// 'GB' (see make_la_summary() in build/R/la_summaries.R), so it follows
+		// whatever the host page maps 'la_emissions/v2/' to rather than being
+		// pinned to the old JSON folder.
+		pbccCard_endpoint('la_emissions/v2/') + 'GB.json'
 	];
 
 	const primary = Promise.all(urlsPrimary.map(function (u) { return pbccCard_fetchJSON(u).catch(function () { return null; }); }))
@@ -483,9 +487,10 @@ pbccCard_makeChartHistorical = function(){
   const yearIndex = data.labels.length - 1;
 
   // Headline Grade
-  // Set grade image and alt text. Some feeds carry no grades (e.g. the LA
-  // report's la_emissions folder), so only show the badge when one exists -
-  // otherwise gradelabel[yearIndex] would be read off undefined and throw,
+  // Set grade image and alt text. Grades are relative to other areas of the
+  // same type, so not every feed carries them (the GB row in la_emissions is
+  // ungraded, for one). Only show the badge when a grade exists - otherwise
+  // gradelabel[yearIndex] would be read off undefined and throw,
   // aborting the whole chart build.
   const Totalgrade = (pbccCard_locationData['total_grade'] || [])[yearIndex];
   const TotalgradeImg = document.getElementById('data_total_emissions_grade');
@@ -601,14 +606,22 @@ pbccCard_makeChartHistorical = function(){
 		});
 		const data_overview = {datasets: []};
 
-		// la_emissions and the GB comparison file aren't migrated to the extended
-		// 2010-2022 bin format yet, so their year range can be shorter than
-		// pbccCard_locationData's. Index each source by its own latest year rather
-		// than reusing yearIndex, otherwise the LA/GB figures silently read past
-		// the end of their arrays (undefined, no bar shown).
-		const laYearIndex = (pbccCard_laHistoricalData['year'] || []).length - 1;
-		const oacYearIndex = (pbccCard_oacHistoricalData['year'] || []).length - 1;
-		const gbYearIndex = (pbccCard_gbHistoricalData['year'] || []).length - 1;
+		// All four sources are now bins covering the same 2010-2022 range, but
+		// they are rebuilt and deployed independently, so line them up on the
+		// year VALUE rather than assuming a shared index. If a source is ever
+		// redeployed one year behind the others, this leaves its bar out of the
+		// comparison instead of silently showing an older year's figure beside
+		// the current one (or reading past the end of the array for no bar).
+		// Sources absent altogether on area reports give -1 -> undefined, as
+		// before.
+		const latestYear = (pbccCard_locationData['year'] || [])[yearIndex];
+		const yearIndexIn = function (source) {
+			const i = (source['year'] || []).indexOf(latestYear);
+			return (i === -1 ? undefined : i);
+		};
+		const laYearIndex = yearIndexIn(pbccCard_laHistoricalData);
+		const oacYearIndex = yearIndexIn(pbccCard_oacHistoricalData);
+		const gbYearIndex = yearIndexIn(pbccCard_gbHistoricalData);
 
 		component.forEach(comp => {
 			data_overview.datasets.push({

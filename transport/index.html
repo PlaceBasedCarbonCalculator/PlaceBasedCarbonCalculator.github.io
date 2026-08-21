@@ -51,11 +51,17 @@
 		<script src="/app.js" defer></script>
 		
 		<!-- Map dependencies -->
-		<script src="https://unpkg.com/pmtiles@3.0.6/dist/pmtiles.js"></script>
+		<script src="https://unpkg.com/pmtiles@4.5.0/dist/pmtiles.js"></script>
 		<script src="/js/lib/geocoder/maplibre-gl-geocoder.min.js"></script>
 		<link rel="stylesheet" href="/js/lib/geocoder/maplibre-gl-geocoder-small.css" type="text/css"/>
-		<script src="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.js"></script>
-		<link href="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.css" rel="stylesheet" />
+		<link href="https://unpkg.com/maplibre-gl@6.4.1/dist/maplibre-gl.css" rel="stylesheet" />
+		<!-- MapLibre GL JS 6 is ESM-only (no UMD maplibre-gl.js any more), so import it
+		     and publish the global that ui-common.js and the geocoder expect. Module
+		     scripts are deferred, so this runs before ui.js and before DOMContentLoaded. -->
+		<script type="module">
+			import * as maplibregl from 'https://unpkg.com/maplibre-gl@6.4.1/dist/maplibre-gl.mjs';
+			window.maplibregl = {...maplibregl};	// Copied, as a module namespace object is frozen
+		</script>
 		
 		<!-- Styles -->
 		<link rel="stylesheet" href="/css/main.css">
@@ -186,14 +192,13 @@
 					<select name="field" class="updatelayer" data-layer="zones" aria-label="Neighbourhood  layer">
 						<optgroup label="Change over time">
 							<option value="change_bus_2008_2025" selected>Change in buses/hour (2008-2025)</option>
-							<option value="change_bus_2008_2023">Change in buses/hour (2008-2023)</option>
 						</optgroup>
 						<optgroup label="Services per hour (daytime average)">
-							<option value="tph_daytime_avg_3">Buses/hour</option>
-							<option value="tph_daytime_avg_2">Trains/hour</option>
-							<option value="tph_daytime_avg_0">Trams/hour</option>
-							<option value="tph_daytime_avg_1">Subway/hour</option>
-							<option value="tph_daytime_avg_4">Ferries/hour</option>
+							<option value="tph_daytime_avg_2025_3">Buses/hour</option>
+							<option value="tph_daytime_avg_2025_2">Trains/hour</option>
+							<option value="tph_daytime_avg_2025_0">Trams/hour</option>
+							<option value="tph_daytime_avg_2025_1">Subway/hour</option>
+							<option value="tph_daytime_avg_2025_4">Ferries/hour</option>
 						</optgroup>
 						<optgroup label="Vehicles">
 							<option value="pBEV_PRIVATE">% Vehicles BEV (Private)</option>
@@ -204,13 +209,6 @@
 						</optgroup>
 					</select>
 					<button aria-label="Help Neighbourhoods" class="helpbutton" data-help="transport-zones"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
-				</p>
-				<p><label for="zonesyear">Year</label>
-					<select id="zonesyear" name="year" class="updatelayer" data-layer="zones" aria-label="Year of service frequency" disabled>
-						<option value="2025" selected>2025</option>
-						<option value="2024">2024</option>
-						<option value="2023">2023</option>
-					</select>
 				</p>
 				<div id="zoneslegend" class="legendContextual">
 					<div class="l_rHorizontal">
@@ -299,21 +297,31 @@
 				<div class="warningbox">
 					<div class="warning" id="warning_1">
 					The 2022 Census in Scotland significantly changed Data Zone boundaries, historic data has been adjusted to the new boundaries
+					<button aria-label="Help data warnings" class="helpbutton" data-help="data-warnings"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
 					</div>
 					<div class="warning" id="warning_2">
 					This LSOA had a complex border change between 2011 and 2021, historical data uses closest matching LSOA
+					<button aria-label="Help data warnings" class="helpbutton" data-help="data-warnings"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
 					</div>
 					<div class="warning" id="warning_3">
 					This LSOA was formed in 2021 by merging two LSOAs, historical data has been merged
+					<button aria-label="Help data warnings" class="helpbutton" data-help="data-warnings"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
 					</div>
 					<div class="warning" id="warning_4">
 					This LSOA was formed in 2021 by splitting two LSOAs, historical data has been split
+					<button aria-label="Help data warnings" class="helpbutton" data-help="data-warnings"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
 					</div>
 					<div class="warning" id="warning_5">
 					At some point this LSOA has had zero residents
+					<button aria-label="Help data warnings" class="helpbutton" data-help="data-warnings"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
 					</div>
 					<div class="warning" id="warning_6">
 					In some years this LSOA has an unusually large number of company cars
+					<button aria-label="Help data warnings" class="helpbutton" data-help="data-warnings"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+					</div>
+					<div class="warning" id="warning_7">
+					In some years this LSOA has odd results due to a very low recorded population
+					<button aria-label="Help data warnings" class="helpbutton" data-help="data-warnings"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
 					</div>
 				</div>
 

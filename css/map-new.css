@@ -182,6 +182,19 @@ body { color: var(--ink); }
 .welcome-modal .modal-close { font-size: 26px; color: var(--muted); }
 .welcome-modal .modal-close:hover { color: var(--ink); }
 
+/* On phones the splash was losing most of its width to chrome: the 5% side
+   margins from map.css, the 34px padding above, and the .modal-body padding
+   below all stack up. Tighten all three, but only for the splash: the report
+   modals keep their roomier spacing. */
+@media (max-width: 600px) {
+	.welcome-modal {
+		margin-left: 12px;
+		margin-right: 12px;
+		padding: 16px 16px 20px;
+	}
+	.welcome-modal .modal-body { padding: 0; }
+}
+
 /* ---------- Help modal ---------- */
 #help_modal {
 	border: none;
@@ -300,6 +313,26 @@ body { color: var(--ink); }
 	clear: both;
 }
 .chart-wrapper h4.chart-title { font-size: 17px; margin-bottom: 8px; }
+
+/* Below the desktop breakpoint the floats in map.css collapse and the card
+   stacks in source order, putting the description above its chart. Readers scan
+   the chart first, so lift it to the top of the card. `not all and (min-width:)`
+   is the exact complement of map.css's `min-width: 56.25rem` float rule, so the
+   two can never both apply. Flex is only used to reorder: every other child
+   keeps its source position, and the float-clearing ::after is dropped because
+   it would otherwise become a stray flex item. */
+@media not all and (min-width: 56.25rem) {
+	.chart-wrapper {
+		display: flex;
+		flex-direction: column;
+	}
+	.chart-wrapper::after { content: none; }
+	.chart-wrapper > .chart-container,
+	.chart-wrapper > .chart-container-wide {
+		order: -1;
+		margin-bottom: 14px;
+	}
+}
 
 /* Overview / Policy / Methods sub-tabs inside chart cards */
 .chart-description-tab-buttons {

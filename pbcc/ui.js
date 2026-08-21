@@ -98,15 +98,16 @@ var _overviewComparison = null;
 manageCharts = function (locationId) {
 	console.log('Managing Charts');
 
-	// Primary chained requests that feed multiple charts. historical_emissions,
-	// population and lsoa_overview now come from their bins (single binary +
-	// range request) instead of one JSON file per zone. la_emissions has no bin
-	// yet, so the GB and LA comparison figures still come from folder JSON.
+	// Primary chained requests that feed multiple charts. Every source now comes
+	// from its bin (single binary + range request) rather than one JSON file per
+	// zone. The GB comparison row lives in the la_emissions bin under the ID
+	// 'GB' (added by make_la_summary() in build/R/la_summaries.R), so it is a
+	// range request into the same binary as the per-LAD figures.
 	const primary = Promise.all([
 		capBin.fetchRecord('historical_emission', locationId),
 		capBin.fetchRecord('population', locationId),
 		capBin.fetchRecord('lsoa_overview', locationId),
-		capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/la_emissions/v2/GB.json')
+		capBin.fetchRecord('la_emissions', 'GB')
 	])
 		.then(([historicalData, populationData, overviewArr, GBData]) => {
 			locationData = historicalData;
@@ -114,11 +115,9 @@ manageCharts = function (locationId) {
 			lsoaOverviewData = overviewArr[0];
 			gbHistoricalData = GBData;
 
-			// oac_emissions now comes from its bin; la_emissions (per-LAD) has no
-			// bin yet and still comes from folder JSON.
 			return Promise.all([
 				capBin.fetchRecord('oac_emissions', lsoaOverviewData.lsoa_class_code),
-				capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/la_emissions/v2/' + lsoaOverviewData.LAD25CD + '.json')
+				capBin.fetchRecord('la_emissions', lsoaOverviewData.LAD25CD)
 			])
 				.then(([oacData, laData]) => {
 					laHistoricalData = laData;
@@ -480,10 +479,11 @@ makeChartHistorical = function(){
   const yearIndex = data.labels.length - 1;
 
   // Headline Grade
-  // Set grade image and alt text. Some feeds carry no grades (e.g. the area
-  // report cards' la_emissions folder), so only show the badge when one exists -
-  // otherwise gradelabel[yearIndex] would be read off undefined and throw,
-  // aborting the whole chart build.
+  // Set grade image and alt text. Grades are relative to other areas of the
+  // same type, so not every feed carries them (the GB row in la_emissions is
+  // ungraded, for one). Only show the badge when a grade exists - otherwise
+  // gradelabel[yearIndex] would be read off undefined and throw, aborting the
+  // whole chart build.
   const Totalgrade = (locationData['total_grade'] || [])[yearIndex];
   const TotalgradeImg = document.getElementById('data_total_emissions_grade');
   if (TotalgradeImg) {
@@ -575,14 +575,22 @@ makeChartHistorical = function(){
 		});
 		const data_overview = {datasets: []};
 
-		// la_emissions and the GB comparison file aren't migrated to the extended
-		// 2010-2022 bin format yet, so their year range can be shorter than
-		// locationData's. Index each source by its own latest year rather than
-		// reusing yearIndex, otherwise the LA/GB figures silently read past the
-		// end of their arrays (undefined, no bar shown).
-		const laYearIndex = (laHistoricalData['year'] || []).length - 1;
-		const oacYearIndex = (oacHistoricalData['year'] || []).length - 1;
-		const gbYearIndex = (gbHistoricalData['year'] || []).length - 1;
+		// All four sources are now bins covering the same 2010-2022 range, but
+		// they are rebuilt and deployed independently, so line them up on the
+		// year VALUE rather than assuming a shared index. If a source is ever
+		// redeployed one year behind the others, this leaves its bar out of the
+		// comparison instead of silently showing an older year's figure beside
+		// the current one (or reading past the end of the array for no bar).
+		// Sources absent altogether on area reports give -1 -> undefined, as
+		// before.
+		const latestYear = (locationData['year'] || [])[yearIndex];
+		const yearIndexIn = function (source) {
+			const i = (source['year'] || []).indexOf(latestYear);
+			return (i === -1 ? undefined : i);
+		};
+		const laYearIndex = yearIndexIn(laHistoricalData);
+		const oacYearIndex = yearIndexIn(oacHistoricalData);
+		const gbYearIndex = yearIndexIn(gbHistoricalData);
 
 		component.forEach(comp => {
 			data_overview.datasets.push({
@@ -1531,27 +1539,10 @@ function lsoaCharacteristicsTable(lsoadata) {
 	document.getElementById("data_lsoa_class_name").innerHTML = 'Subgroup Description: "' + lsoadata.lsoa_class_name + '"';
 }
 
-// Initialize print button functionality
-function initPrintButtons() {
-  const printButtons = document.querySelectorAll('.print-button');
-  
-  printButtons.forEach(function(button) {
-    button.addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      
-      // Simply trigger the print dialog - CSS handles the rest
-      window.print();
-    });
-  });
-}
-
-// Initialize print buttons when page loads
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initPrintButtons);
-} else {
-  initPrintButtons();
-}
+// Print buttons are wired up by capUi.initPrintButtons (js/ui-common.js), which
+// also lays out the charts in unopened tabs so they appear in the printout. This
+// file used to bind its own duplicate handler, which bound a second click
+// listener to the same buttons and so opened the print dialog twice.
 
 
 // (Re)build the overview comparison chart from the stored per-category data.

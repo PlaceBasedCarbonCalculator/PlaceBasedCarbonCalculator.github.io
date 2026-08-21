@@ -297,20 +297,32 @@
 	var BLOB = 'https://pbcc.blob.core.windows.net/pbcc-data/';
 	var enc = encodeURIComponent(lsoa);
 
-	// The transport tool's LSOA datasets now live in single-binary bins (see
-	// js/databin.js) with a newer schema than the legacy Access/ etc. folders,
-	// so point the transport card at the bins, exactly like the tool itself.
-	// Index file names mirror transport/datasets.js - bump them together.
+	// The tools' LSOA datasets now live in single-binary bins (see js/databin.js)
+	// with a newer schema than the legacy Access/ etc. folders, so point the
+	// cards at the bins, exactly like the tools themselves. Index file names
+	// mirror transport/datasets.js and pbcc/datasets.js - bump them together.
+	//
+	// The emissions folders (historical_emissions/v2/, oac_emissions/v2/,
+	// la_emissions/v2/) were last rebuilt to 2020; only the bins carry the full
+	// 2010-2022 series, so a card left on a folder would stop its lines two
+	// years short of the ones beside it.
 	if (typeof capBin !== 'undefined') {
 		capBin.register({
 			access: 'index_access_2026-08-08.json.gz',
 			pt_frequency: 'index_pt_frequency_2026-08-10.json.gz',
-			vehicle_summary: 'index_vehicle_summary_2026-08-08.json.gz'
+			vehicle_summary: 'index_vehicle_summary_2026-08-08.json.gz',
+			historical_emission: 'index_historical_emission_2026-08-08.json.gz',
+			oac_emissions: 'index_oac_emissions_2026-07-15.json.gz',
+			la_emissions: 'index_la_emissions_2026-08-08.json.gz'
 		});
 		window.REPORT_CARD_ENDPOINTS = {
 			'Access/': { bin: 'access' },
 			'PTfrequency/v2/': { bin: 'pt_frequency' },
-			'vehicle_summary/v1/': { bin: 'vehicle_summary' }
+			'vehicle_summary/v1/': { bin: 'vehicle_summary' },
+			'historical_emissions/v2/': { bin: 'historical_emission' },
+			'oac_emissions/v2/': { bin: 'oac_emissions' },
+			// Also serves the 'GB' national comparison row - see pbcc-card.js
+			'la_emissions/v2/': { bin: 'la_emissions' }
 		};
 	}
 
@@ -346,9 +358,12 @@
 			scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, title: { display: true, text: yTitle } } }
 		};
 	}
-	// Fetch the highlight datasets (the full cards fetch their own data on expand)
+	// Fetch the highlight datasets (the full cards fetch their own data on expand).
+	// Emissions come from the bin registered above: the historical_emissions/v2/
+	// folder stops at 2020, so the footprint chart would end two years short of
+	// the same chart in the pbcc tool.
 	var P = {
-		hist: getJSON(BLOB + 'historical_emissions/v2/' + enc + '.json'),
+		hist: capBin.fetchRecord('historical_emission', lsoa),
 		veh: getJSON(BLOB + 'vehicle_summary/v1/' + enc + '.json'),
 		energy: getJSON(BLOB + 'lsoa_gas_electric/v2/' + enc + '.json')
 	};

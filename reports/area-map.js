@@ -24,9 +24,9 @@ const capAreaMap = (function () {
 		});
 	}
 
-	const MAPLIBRE_JS = 'https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.js';
-	const MAPLIBRE_CSS = 'https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.css';
-	const PMTILES_JS = 'https://unpkg.com/pmtiles@3.0.6/dist/pmtiles.js';
+	const MAPLIBRE_MJS = 'https://unpkg.com/maplibre-gl@6.4.1/dist/maplibre-gl.mjs';
+	const MAPLIBRE_CSS = 'https://unpkg.com/maplibre-gl@6.4.1/dist/maplibre-gl.css';
+	const PMTILES_JS = 'https://unpkg.com/pmtiles@4.5.0/dist/pmtiles.js';
 
 	let _depsPromise = null;
 
@@ -50,7 +50,13 @@ const capAreaMap = (function () {
 					l.href = MAPLIBRE_CSS;
 					document.head.appendChild(l);
 				}
-				return (typeof maplibregl === 'undefined') ? loadScript(MAPLIBRE_JS) : null;
+				// MapLibre 6 is ESM-only, so it is pulled in with a dynamic import
+				// rather than a <script> tag, and the namespace is published as the
+				// global the code below expects (copied, as a namespace is frozen).
+				if (typeof maplibregl !== 'undefined') { return null; }
+				return import(MAPLIBRE_MJS).then(function (module) {
+					window.maplibregl = {...module};
+				});
 			})
 			.then(function () {
 				return (typeof pmtiles === 'undefined') ? loadScript(PMTILES_JS) : null;

@@ -345,6 +345,7 @@ makeChartFrequency = function(){
 		},
 		options: {
       responsive: true,
+      maintainAspectRatio: false,
       plugins: {
         legend: {
           position: 'top',
@@ -910,27 +911,10 @@ modalTab = function (evt, tabName) {
 
 document.getElementById("defaultOpen").click();
 
-// Initialize print button functionality
-function initPrintButtons() {
-  const printButtons = document.querySelectorAll('.print-button');
-  
-  printButtons.forEach(function(button) {
-    button.addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      
-      // Simply trigger the print dialog - CSS handles the rest
-      window.print();
-    });
-  });
-}
-
-// Initialize print buttons when page loads
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initPrintButtons);
-} else {
-  initPrintButtons();
-}
+// Print buttons are wired up by capUi.initPrintButtons (js/ui-common.js), which
+// also lays out the charts in unopened tabs so they appear in the printout. This
+// file used to bind its own duplicate handler, which bound a second click
+// listener to the same buttons and so opened the print dialog twice.
 
 // Function to switch chart description tabs (Overview / Policy / Methods)
 // Scoped to the chart's own .chart-description-tabs container, so multiple
