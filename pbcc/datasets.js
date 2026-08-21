@@ -11,7 +11,12 @@ if (typeof capBin !== 'undefined') {
 		historical_emission: 'index_historical_emission_2026-08-08.json.gz',
 		population: 'index_population_2026-08-08.json.gz',
 		lsoa_overview: 'index_lsoa_overview_2026-07-15.json.gz',
-		oac_emissions: 'index_oac_emissions_2026-07-15.json.gz'
+		oac_emissions: 'index_oac_emissions_2026-07-15.json.gz',
+		// Per-LA per-capita emissions, plus a 'GB' record holding the national
+		// comparison row (see make_la_summary() in build/R/la_summaries.R).
+		// Replaces the old pbcc-data/la_emissions/v2/ JSON folder, which was
+		// never rebuilt past 2020.
+		la_emissions: 'index_la_emissions_2026-08-08.json.gz'
 	});
 }
 
@@ -25,7 +30,7 @@ const datasets_extra = {
 			'type': 'fill',
 			'source': {
 			'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/zones_pbcc_20260811.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/zones_pbcc_20260821.pmtiles',
 				},
 			'source-layer': 'zones',
 			'paint': {

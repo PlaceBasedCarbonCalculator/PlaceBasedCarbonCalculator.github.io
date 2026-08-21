@@ -96,6 +96,42 @@ In the Place-Based Carbon Calculator, Transport, and Retrofit tools, clicking a 
 * **Policy**: why the measure matters for local and national decision making.
 * **Methods**: where the data comes from and how the values were calculated.
 
+<!-- #data-warnings -->
+#### Data warnings
+
+Some neighbourhoods show one or more warnings in a coloured box at the top of the report card. A warning does not mean the figures are wrong, but it does flag something about the area, or about the data recorded for it, that is worth knowing before reading the charts. You can open this explanation at any time using the question mark beside a warning.
+
+Most warnings concern boundaries. Carbon & Place reports every year of history on the neighbourhood boundaries in use today, so where a boundary has changed the older figures have had to be moved onto the new one. The [Office for National Statistics](https://www.ons.gov.uk/methodology/geography/ukgeographies/censusgeographies/census2021geographies) revises Lower layer Super Output Areas at each census, recording for every area whether it was left unchanged, split, merged, or redrawn in a more complicated way. The warnings below follow those categories. Where an area is affected, comparisons with the rest of the country remain sound, but changes over time within that one neighbourhood should be read with more caution than usual.
+
+**The 2022 Census in Scotland significantly changed Data Zone boundaries, historic data has been adjusted to the new boundaries**
+
+Scotland held [its census](https://www.scotlandscensus.gov.uk/) in 2022, a year later than England and Wales, and the Data Zone boundaries were revised afterwards. Figures for years before the revision have been reallocated from the old Data Zones to the new ones. Totals for Scotland as a whole are unaffected, but a jump between one year and the next in this area may reflect the change of boundary rather than a real change on the ground.
+
+**This LSOA had a complex border change between 2011 and 2021, historical data uses closest matching LSOA**
+
+This neighbourhood was neither left alone nor cleanly split or merged: its boundary was redrawn in a way that exchanges land with several neighbours at once. There is no exact way to carry the older figures across such a change, so the historical values shown are those of the earlier neighbourhood that overlaps this one most closely. The recent years are unaffected, and the general level of the older values should be about right, but small year-to-year movements before the change may be an artefact of the matching.
+
+**This LSOA was formed in 2021 by merging two LSOAs, historical data has been merged**
+
+Where a population falls far enough, the ONS combines two neighbourhoods into one. The historical figures for the two former areas have been added together, so counts such as total emissions or numbers of vehicles are consistent across the join. Values expressed per person or per household are also consistent, because both the totals and the populations were combined. The one thing lost is the difference between the two former areas, which may have been quite unlike each other.
+
+**This LSOA was formed in 2021 by splitting two LSOAs, historical data has been split**
+
+Where a population grows far enough, typically through new housing, the ONS divides a neighbourhood into two or more. The historical figures for the former, larger area have been divided between the new ones in proportion to their populations. Per-person values are therefore reasonable, but the split assumes the new areas were alike before the division, which is often untrue when one part contains the new housing and the other does not. Treat the years before the split as an estimate for this neighbourhood rather than a measurement of it.
+
+**At some point this LSOA has had zero residents**
+
+In at least one year no residents were recorded here. This usually means the area is not really residential, for example a business park, an airport, or a site cleared for redevelopment before new homes were occupied. Totals for the area remain valid, but anything measured per person cannot be calculated for a year with no residents, so those values are shown as missing or as zero rather than as a real figure.
+
+**In some years this LSOA has an unusually large number of company cars**
+
+Vehicles in the [vehicle licensing statistics](https://www.gov.uk/government/statistical-data-sets/vehicle-licensing-statistics-data-files) are counted at the address of the registered keeper. For a company car or a leased vehicle that address is the fleet operator's office, not the driver's home. A single leasing company or large employer can therefore place thousands of vehicles in one neighbourhood, none of which are driven by the people who live there. Where this happens, vehicle counts and the transport emissions derived from them are far too high for the residents of the area, and are best ignored.
+
+**In some years this LSOA has odd results due to a very low recorded population**
+
+Most figures in Carbon & Place are divided by the population of the neighbourhood to give a value per person. When the recorded population is very small, that division becomes unstable: a handful of people, or a rounding adjustment applied by the statistical agencies to protect privacy, can swing the result dramatically. Very low populations usually occur where an area is largely non-residential, or in the years before new housing was occupied. The totals for the area are still sound; it is the per-person values, and any grade based on them, that should be discounted for the affected years.
+<!-- /#data-warnings -->
+
 ### Key Concepts
 
 #### What is a carbon footprint?
@@ -449,11 +485,11 @@ This evidence is directly relevant to local transport plans, bus service improve
 
 The Neighbourhoods layer uses Lower layer Super Output Areas (LSOAs) to report a range of transport statistics. Use the drop-down menu to change the measure:
 
-**Change in buses/hour**: the change in bus frequency (daytime average trips per hour) for services stopping in or near each neighbourhood, measured from the best year in 2006-08 to a later year. This shows where services have been cut and where they have improved. Two end years are offered: 2025, the most recent, and 2023, which is the window used in the published [Friends of the Earth analysis](https://policy.friendsoftheearth.uk/insight/how-britains-bus-services-have-drastically-declined) and is kept so those figures remain reproducible here.
+**Change in buses/hour**: the change in bus frequency (daytime average trips per hour) for services stopping in or near each neighbourhood, measured from the best year in 2006-08 to 2025. This shows where services have been cut and where they have improved. The [Friends of the Earth analysis](https://policy.friendsoftheearth.uk/insight/how-britains-bus-services-have-drastically-declined) of bus service decline uses the same measure, ending in 2023.
 
-**Bus/Tram/Subway/Rail/Ferry per hour (daytime average)**: the frequency of each type of public transport stopping in or near the neighbourhood. Choose the mode from the first menu and the year (2023, 2024 or 2025) from the **Year** menu below it; the year menu is greyed out for the measures that do not vary by year. Not every mode exists everywhere; places with no timetabled service are shown in black.
+**Bus/Tram/Subway/Rail/Ferry per hour (daytime average)**: the frequency of each type of public transport stopping in or near the neighbourhood. Not every mode exists everywhere; places with no timetabled service are shown in black.
 
-The map carries the three most recent years only, to keep the tile size reasonable for a layer covering every neighbourhood in Great Britain. The full series back to 2004 is in the report card charts: click any neighbourhood.
+The map shows 2025 only, to keep the tile size reasonable for a layer covering every neighbourhood in Great Britain. The full series back to 2004 is in the report card charts: click any neighbourhood.
 
 **Percentage of Low Emission Vehicles**: four measures of low emission vehicle adoption. Battery Electric Vehicles (BEVs) are fully electric with no exhaust emissions. Ultra Low Emission Vehicles (ULEVs) are a broader official category that also includes plug-in hybrids and other low emission technologies.
 

@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mockup: PBCC tool in the new style - Carbon &amp; Place</title>
 
-  <!-- Map dependencies (same versions as the live tool) -->
-  <script src="https://unpkg.com/pmtiles@3.0.6/dist/pmtiles.js"></script>
-  <script src="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.js"></script>
-  <link href="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.css" rel="stylesheet">
+  <!-- Map dependencies (same versions as the live tool). MapLibre 6 is ESM-only,
+       so it is imported by the module script at the foot of the page. -->
+  <script src="https://unpkg.com/pmtiles@4.5.0/dist/pmtiles.js"></script>
+  <link href="https://unpkg.com/maplibre-gl@6.4.1/dist/maplibre-gl.css" rel="stylesheet">
 
   <!-- Font Awesome -->
   <link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet">
@@ -515,8 +515,11 @@
     </div>
   </div>
 
-  <script>
+  <script type="module">
     'use strict';
+
+    // MapLibre 6 ships as ESM only, hence the module script and this import
+    import * as maplibregl from 'https://unpkg.com/maplibre-gl@6.4.1/dist/maplibre-gl.mjs';
 
     /* ================= Palettes (copied from the live tool's datasets) ================= */
     const gradePalette = [

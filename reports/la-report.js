@@ -8,8 +8,8 @@
 //              dataset names (<cardLevel>_emissions/_vehicle_summary/...)
 //   level      display name, e.g. 'Local Authority'
 //   nameJson   '/reports/la.json' etc - the id -> name lookup for the title
-//   emissionsBin | dataPath   where the per-capita emissions series live
-//              (a capBin dataset, or a pbcc-data JSON folder) - see README.
+//   emissionsBin  the capBin dataset holding the per-capita emissions series
+//              for this level (<cardLevel>_emissions) - see README.
 (function () {
 	'use strict';
 
@@ -39,12 +39,15 @@
 	}
 
 	// The area-aggregated datasets are published as single-binary bins (see
-	// js/databin.js), never as per-area JSON folders (la_emissions is the one
-	// exception, still a folder - see cfg.dataPath below). Register the current
-	// index file name for every level; only the current page's level is ever
-	// fetched, so the unused registrations cost nothing.
+	// js/databin.js), never as per-area JSON folders. Register the current index
+	// file name for every level; only the current page's level is ever fetched,
+	// so the unused registrations cost nothing.
 	if (typeof capBin !== 'undefined') {
 		capBin.register({
+			// la_emissions also carries the 'GB' national comparison row used by
+			// the pbcc card. It replaces the pbcc-data/la_emissions/v2/ folder,
+			// which was never rebuilt past 2020.
+			la_emissions: 'index_la_emissions_2026-08-08.json.gz',
 			parish_emissions: 'index_parish_emissions_2026-07-13.json.gz',
 			ward_emissions: 'index_ward_emissions_2026-07-15.json.gz',
 			constituency_emissions: 'index_constituency_emissions_2026-07-15.json.gz',
@@ -97,10 +100,12 @@
 	// Redirect the report-card modules' data endpoints (see cards/*.js) to the
 	// area aggregates - same JSON shapes as the per-LSOA data, produced by
 	// ../build/R/area_summaries.R. The { bin: ... } form routes through capBin
-	// (registered above); a plain string is a pbcc-data folder path override
-	// (used for 'la', whose emissions are still a per-area JSON folder).
+	// (registered above); a plain string would be a pbcc-data folder path
+	// override, but every level is published as a bin now.
 	window.REPORT_CARD_ENDPOINTS = {
-		'historical_emissions/v2/': cfg.emissionsBin ? { bin: cfg.emissionsBin } : (cfg.dataPath || 'la_emissions/v2/'),
+		'historical_emissions/v2/': { bin: cfg.emissionsBin || (level + '_emissions') },
+		// The pbcc card's GB comparison row, whatever level this page reports on
+		'la_emissions/v2/': { bin: 'la_emissions' },
 		'vehicle_summary/v1/': { bin: level + '_vehicle_summary' },
 		'PTfrequency/v2/': { bin: level + '_pt_frequency' },
 		'Access/': { bin: level + '_access' },
@@ -193,12 +198,7 @@
 	}
 
 	function loadHighlights() {
-		var BLOB = 'https://pbcc.blob.core.windows.net/pbcc-data/';
-
-		var emissionsPromise = cfg.emissionsBin
-			? capBin.fetchRecord(cfg.emissionsBin, areaId)
-			: fetch(BLOB + (cfg.dataPath || 'la_emissions/v2/') + areaId + '.json')
-				.then(function (r) { if (!r.ok) { throw new Error(String(r.status)); } return r.json(); });
+		var emissionsPromise = capBin.fetchRecord(cfg.emissionsBin || (level + '_emissions'), areaId);
 
 		emissionsPromise.then(renderFootprint).catch(function () {
 			markMissing('chart-footprint', 'Carbon footprint data is not yet available for this area.');
