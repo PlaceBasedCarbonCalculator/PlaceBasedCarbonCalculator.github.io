@@ -95,7 +95,7 @@ Aggregated data is produced by the R pipeline (`../build`):
 - `R/area_summaries.R` → transport/retrofit datasets aggregated to each level
   (`<level>_vehicle_summary`, `<level>_pt_frequency`, `<level>_access`,
   `<level>_epc_dom`, `<level>_gas_electric`, `<level>_prices`), plus
-  `<level>_population` (age bands, households and dwellings summed).
+  `<level>_population` (age bands, households, and dwellings summed).
 - `R/family_portraits.R` (`agg_area_household_pics`) → `<level>_community_pics`:
   the per-LSOA household archetypes summed to each area and run through the same
   48-slot picture allocation, so the demographics-tab community photo works at
@@ -110,7 +110,7 @@ demographics tab.
 
 **Aggregation methods**: counts are summed; rates and averages are recomputed
 from summed numerators/denominators where possible, otherwise weighted means
-(population weights for PT frequency, accessibility and vehicle rates; meter or
+(population weights for PT frequency, accessibility, and vehicle rates; meter or
 dwelling weights for energy and EPC averages). **Medians at area level are
 weighted medians — an approximation** (a true median needs unit-level data) —
 and are flagged as such wherever shown. Isochrones are point-based and are

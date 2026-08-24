@@ -77,136 +77,134 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div class="content">
 <p class="back-link"><a href="/about/">&larr; About</a></p>
 <h1>Frequently Asked Questions</h1>
-<p class="page-lede">Answers to questions we are often asked about the tools, the data behind them, and their limitations.</p>
+<p class="page-lede">Answers to the questions we are asked most often about the tools, the data behind them, and their limitations. If your question is not here, the <a href="/manual/">manual</a> goes into more depth, and the <a href="/about/feedback/">feedback form</a> reaches us directly.</p>
 
-<h2>Who is the tool for?</h2>
+<h2>Who the tools are for</h2>
 
 <details class="faq-item">
-<summary>Who is the intended audience for this - general public/policy/researchers?</summary>
-<p>We see the primary audience of the tool as local authority councillors and officers who are developing decarbonisation policies. However, we expect that the tool will be used by local authorities, community groups and other organisations to communicate to the public why changes are needed in their communities.</p>
+<summary>Who is the intended audience: the public, policymakers, or researchers?</summary>
+<p>All three, and the tools are arranged so that each can stop at the level of detail they need. The audience we design for first is councillors and local authority officers developing decarbonisation policy, because they hold many of the levers and are rarely given evidence at neighbourhood scale. Community groups use the tools to make a local case, and researchers use the underlying data directly. Every chart carries a plain-language Overview, a Policy note on why the measure matters for decision making, and a Methods note on where the numbers come from.</p>
 </details>
 
-<h2>Funding</h2>
+<details class="faq-item">
+<summary>What can a local authority actually do with this?</summary>
+<p>The most common uses we see are targeting: identifying which neighbourhoods should be first in line for an area-based retrofit scheme, evidencing a bus service improvement plan with twenty years of frequency data, and testing whether a proposed development site is somewhere people could live without a car. The tools are evidence for those decisions, not a substitute for local knowledge or survey work. We would rather you treated a striking result as a question to investigate than as a finding to act on directly.</p>
+</details>
+
+<details class="faq-item">
+<summary>Can I use screenshots and figures in a report or a council paper?</summary>
+<p>Yes. Please cite Morgan (2026) and link to <a href="https://www.carbon.place">www.carbon.place</a>. Note that some basemaps carry third-party copyright, so check the <a href="/manual/#mapcontrols">manual</a> before reproducing a screenshot that uses the satellite or historical basemaps. The <a href="/data/">data page</a> sets out the licence conditions in full.</p>
+</details>
+
+<h2>Funding and governance</h2>
 
 <details class="faq-item">
 <summary>Who funded this work?</summary>
-<p>The PBCC was produced with funding from UK Research and Innovation through the Centre for Research into Energy Demand Solutions, grant reference number EP/R035288/1.</p>
+<p>Carbon &amp; Place is funded by UK Research and Innovation, through the Engineering and Physical Sciences Research Council and the Economic and Social Research Council, via the <a href="https://www.edrc.ac.uk/" target="_blank" rel="noopener">Energy Demand Research Centre</a> (grant EP/Y010078/1). It forms part of the <a href="https://www.edrc.ac.uk/research/place/" target="_blank" rel="noopener">EDRC Place theme</a>. The original Place-Based Carbon Calculator was funded through the <a href="https://www.creds.ac.uk/" target="_blank" rel="noopener">Centre for Research into Energy Demand Solutions</a> (grant EP/R035288/1), which closed in 2023.</p>
+</details>
+
+<details class="faq-item">
+<summary>Will the data be updated?</summary>
+<p>Yes, though not on a fixed schedule. Each dataset is rebuilt when its source publishes an update, so the most recent year differs between charts and is stated on each one. Funding for the current phase runs to 2028. We cannot promise indefinite maintenance, which is one reason the analysis code and most of the outputs are published openly: if this project ends, the work can be continued by others.</p>
 </details>
 
 <h2>About the data</h2>
 
 <details class="faq-item">
-<summary>Will the data be updated?</summary>
-<p>We are seeking additional funding to allow us to update the data annually.</p>
+<summary>Where do the emissions figures for each neighbourhood come from?</summary>
+<p>From three kinds of source, and the difference between them matters when you read the results. Domestic gas and electricity are <em>measured</em>, from meter readings published by the Department for Energy Security and Net Zero. Car and van emissions are <em>derived</em>, by combining vehicle registrations with mileages from MOT odometer readings. Everything else, including flights, food, goods, and services, is <em>modelled</em>, by matching a synthetic population built from census data to spending records in the Living Costs and Food Survey. The measured components are the most reliable and the modelled ones the least. The <a href="/manual/#howthefootprintsarecalculated">manual</a> explains each in detail, and the <a href="https://github.com/PlaceBasedCarbonCalculator/build" target="_blank" rel="noopener">analysis pipeline</a> is published in full.</p>
 </details>
 
 <details class="faq-item">
-<summary>How are the emission data captured for each LSOA?</summary>
-<p>We use a wide range of different data sources to build up a complete carbon footprint. We try to use the most locally detailed data available, but when such data is unavailable, we use surveys and modelling to fill in the gaps.</p>
+<summary>How far back does the data go?</summary>
+<p>It depends on the tool. Carbon footprints run from 2010. Public transport frequency in the Transport and Accessibility Explorer runs from 2004, with gaps in 2012 and 2013 where no timetable archive survives. Energy consumption in the Retrofit Explorer runs from 2015. The end year varies by dataset and is shown on each chart.</p>
 </details>
 
 <details class="faq-item">
-<summary>Does the historical transport data include past decades?</summary>
-<p>The historical data starts in 2010. The exact end year varies between datasets, and we extend the series as new data is published.</p>
+<summary>Which census does this use?</summary>
+<p>Mostly the 2021 Census for England and Wales and the 2022 Census for Scotland. All neighbourhood boundaries are the 2021 LSOAs and 2022 Data Zones, with earlier years mapped onto them. Some contextual datasets lag: the ONS area classification used for the "similar areas" comparison is still the 2011 version, which is a known weakness we intend to update.</p>
 </details>
 
 <details class="faq-item">
-<summary>Is the data based on 2011 census? And what is the estimated accuracy of the emissions data?</summary>
-<p>No, most of the data is more recent. The current version of the tools uses the 2021 Census (2022 in Scotland) where available, although some contextual datasets, such as the ONS area classifications, are still based on the 2011 census.</p>
+<summary>How does this relate to the official DESNZ local and regional CO<sub>2</sub> statistics?</summary>
+<p>They are different datasets built for different purposes, and they will not agree. The <a href="https://www.gov.uk/government/collections/uk-local-authority-and-regional-carbon-dioxide-emissions-national-statistics" target="_blank" rel="noopener">official statistics</a> are territorial: they count emissions physically released within an area, including from industry and from traffic passing through. Carbon &amp; Place is consumption-based: it counts the emissions caused by the people who live in an area, wherever in the world those emissions occurred, and excludes traffic that merely passes through. Neither is more correct; they answer different questions. Use the official statistics for territorial reporting obligations, and this tool for understanding what local residents' consumption implies.</p>
 </details>
 
 <details class="faq-item">
-<summary>What are the limitations of using the 2011 travel to work Census data?</summary>
-<p>It is currently a big open question about how commuting patterns will change in the long term after Covid. We hope to update the tool with the 2021 travel to work data once it is published.</p>
+<summary>Where do business and industrial emissions appear?</summary>
+<p>As part of residents' consumption, rather than as emissions at the site. The emissions of a car factory are attributed to the neighbourhoods where the cars are eventually bought, not to the neighbourhood containing the factory. This means a town with heavy industry does not carry those emissions in this tool, and it also means the tool cannot answer questions about industrial decarbonisation at a site. For that, use the territorial statistics.</p>
 </details>
 
 <details class="faq-item">
-<summary>How do the data relate to the official (DESNZ, formerly BEIS) local and regional CO2 statistics?</summary>
-<p>While there is some overlap, these are separate datasets produced by different methods. Significant differences include: PBCC is a consumption-based footprint and so accounts for emissions related to imports from other parts of the UK and abroad. The PBCC also allocated car emissions based on the location of a car’s registered keeper rather than traffic on the roads. This benefits areas that have a lot of pass-through traffic.</p>
+<summary>Does this cover Scope 1, 2, and 3 emissions?</summary>
+<p>The scopes framework describes the emissions of organisations, so it does not map neatly onto a place-based footprint. The closest analogy is to imagine asking every resident of a neighbourhood to complete a detailed personal carbon footprint and then averaging the results: that includes what a company would call scope 1 (their gas boiler), scope 2 (their electricity), and much of scope 3 (everything they buy). It is not a substitute for an organisational inventory.</p>
 </details>
 
 <details class="faq-item">
-<summary>How are business-related emissions shown?</summary>
-<p>PBCC shows a consumption-based footprint, so business emissions are shown as the consumption of goods and services by local residents. For example, the emissions from a car factory would be attributed to all the places where people bought cars made in that factory. We don’t have sufficient local data to track the sale of everything across the world. So we use surveys and modelling to understand the typical consumption patterns of different groups of people and then convert those into carbon footprints.</p>
+<summary>The largest parts of the footprint are consumption and flights, which are also the most heavily modelled. Is that a problem?</summary>
+<p>It is a real limitation, and worth stating plainly rather than defending. The categories with the best data, principally metered gas and electricity, are not the largest categories, and the largest categories rest on survey-based modelling. Three things follow. First, we present grades in wide bands rather than precise values, so that attention falls on large differences rather than on differences the data cannot support. Second, comparisons between places and trends over time are far more trustworthy than any single value for a single area in a single year. Third, each Methods tab states the specific weakness of that category, so you can judge how much weight to put on it. If you need a defensible number for one small area, the metered energy figures are the ones to use.</p>
 </details>
 
 <details class="faq-item">
-<summary>Does PBCC consider Scope 1, 2 and 3 emissions for calculations?</summary>
-<p>The Scope 1,2,3 emission system refers to the emissions from organisations. The PBCC shows the aggregated average emissions from individuals, so a direct comparison is not appropriate. However, as the PBCC includes emissions from the consumption of goods and services, it is closest to Scope 3. A useful analogy for the PBCC would be to imagine asking everybody in an LSOA to make a detailed personal carbon footprint and then taking the average of those personal carbon footprints.</p>
+<summary>Are flight emissions based on residents' flying or on nearby airports?</summary>
+<p>On residents. Flights are allocated using the synthetic population and research on how flying varies with income and demographics, so living near an airport does not raise a neighbourhood's figure. Our estimates are higher than the Department for Transport's official figures for three reasons: the DfT counts only departing flights, whereas we count flights taken by British residents in either direction; the DfT counts only commercial aviation, whereas we include private flights; and the DfT counts carbon dioxide alone, whereas we include an uplift for the non-CO<sub>2</sub> warming effects of emissions released at altitude, which roughly triples the estimated climate impact (<a href="https://doi.org/10.1016/j.atmosenv.2020.117834" target="_blank" rel="noopener">Lee et al. 2021</a>; <a href="https://www.creds.ac.uk/publications/the-non-co2-impacts-of-planes-are-a-key-reason-to-reduce-aviation-demand/" target="_blank" rel="noopener">CREDS</a>). That third choice is a judgement, and it is the main reason our figures and the government's differ so much.</p>
 </details>
 
 <details class="faq-item">
-<summary>The biggest determinants of the “total” grade are consumption & flights, but these are the most unreliable stats, highly dependent on modelling. Is this a problem?</summary>
-<p>It is true that some of the largest sources of emissions, such as flights, lack high-quality local data. This is one of the reasons we use wide grade bands rather than precise carbon footprints. So that users focus on the big differences rather than small differences that may be due to limitations in the data.</p>
+<summary>Could you add the Index of Multiple Deprivation, Mosaic, or Acorn?</summary>
+<p>Commercial segmentation products such as Mosaic and Acorn cannot be included in an open-source tool under their licences. Open datasets such as the Index of Multiple Deprivation could be added, but they are already well mapped elsewhere, so we have concentrated on producing data that does not otherwise exist at this scale. You can download our data and join it to any of these yourself.</p>
 </details>
 
 <details class="faq-item">
-<summary>Is data for flights based on flights taken by the residents, or does it relate to the airport in the area?</summary>
-<p>The flight emissions are distributed based on household income and research showing how much people with different incomes fly. Emissions are based on Great Britain’s share of total UK flights. Our estimate of emissions is significantly higher than the Department for Transport’s official estimate for several reasons. Firstly the DfT only considers departing flights to contribute to UK emissions. In contrast, we believe flights with UK residents in any direction contribute to UK emissions. Secondly, the DfT only counts commercial flights and so excludes private flights, which we include. Thirdly the DfT only considers carbon dioxide emissions directly and does not include other greenhouse gasses, and the radiative forcing caused emissions being produced at high altitudes.</p>
+<summary>Does the footprint account for carbon sequestration, for example by chalk grassland or woodland?</summary>
+<p>No. Carbon &amp; Place measures emissions caused by residents and does not net off carbon stored in the land within a neighbourhood. For most urban neighbourhoods the quantities involved are small relative to the footprint, but that is not true everywhere: a rural area containing peatland or extensive woodland could store or release amounts that matter. Sequestration is also genuinely hard to estimate at this scale, and attributing land carbon to the residents of the LSOA that happens to contain it raises questions we have not resolved. Treat its absence as a gap in the tool rather than as a judgement that it does not matter.</p>
+</details>
+
+<h2>What the tools can and cannot do</h2>
+
+<details class="faq-item">
+<summary>Can I benchmark my area against others?</summary>
+<p>Yes. Every neighbourhood report card compares the area with its local authority, with the national average for Great Britain, and with neighbourhoods of the same ONS area classification. The last of these is usually the most informative, because it compares like with like rather than setting a rural village against the national average. For larger areas, the <a href="/reports/">Reports</a> section provides ready-made summaries for local authorities, wards, parishes, and Westminster constituencies.</p>
 </details>
 
 <details class="faq-item">
-<summary>Could you include the Index of Multiple Deprivation? What about Mosaic or Acorn?</summary>
-<p>We could include many different datasets; however, some, such as Mosaic, are commercial and cannot be included in a free open source tool. We decided to mainly focus on the new datasets that the PBCC can provide rather than remapping existing data.</p>
+<summary>How are "similar areas" identified?</summary>
+<p>By the <a href="https://www.ons.gov.uk/methodology/geography/geographicalproducts/areaclassifications" target="_blank" rel="noopener">Office for National Statistics area classification</a>, which groups neighbourhoods with similar social, economic, and demographic characteristics. Carbon &amp; Place currently uses the classification derived from the 2011 Census; an updated version based on 2021 data exists and we intend to move to it.</p>
 </details>
 
 <details class="faq-item">
-<summary>Do you know the carbon sequestration rates of, for example, chalk grasslands?</summary>
-<p>No, carbon sequestration is not part of the calculations as they are unlikely to be significant for most LSOAs.</p>
-</details>
-
-<h2>What can the tool do?</h2>
-
-<details class="faq-item">
-<summary>You mentioned benchmarking vs. other local authorities being possible - is a simple process for the user / built-in functionality at present?</summary>
-<p>The LSOA report card includes the carbon footprint compared to the average for the Local Authority, England, and LSOAs with the same ONS area classification. These are intended to help you understand how a neighbourhood is performing in relation to similar neighbourhoods nearby and across the country.</p>
+<summary>Can I show only my own council area on the map?</summary>
+<p>Not at present. You can turn on the administrative boundary layers to see where your area begins and ends, and the Reports section produces a summary for a single authority. Filtering the map to one authority is a reasonable request that we have not yet implemented.</p>
 </details>
 
 <details class="faq-item">
-<summary>Can you exclude other authorities from the map? E.g. could you just show your borough on the map?</summary>
-<p>This is not currently a feature of the tool, but you can add administrative boundaries to the map to help you navigate.</p>
+<summary>Can I combine local authorities, for example to get a county-level figure?</summary>
+<p>Not within the tool, but you can download the neighbourhood data and aggregate it yourself. One statistical warning: averaging the per-person values of a set of neighbourhoods is not the same as the per-person value for the combined population, because neighbourhoods differ in size. Weight by population to avoid that bias.</p>
 </details>
 
 <details class="faq-item">
-<summary>How are the ‘similar areas’ identified?</summary>
-<p>Similar areas are based on the Office for National Statistics area classifications, which grouped LSOAs into 26 categories based on data from the 2011 census.</p>
+<summary>Does averaging to neighbourhoods really help target interventions?</summary>
+<p>It helps with a particular kind of question: what about this place, rather than these people, shapes the emissions here. An area with high car use and poor bus frequency is telling you something about the transport available, not about the willpower of residents, and that is a problem local government can act on. It is less useful for questions about individual behaviour, which neighbourhood averages cannot answer and should not be used to imply.</p>
 </details>
 
 <details class="faq-item">
-<summary>Can you combine local authority areas to get figures for a larger area, such as a county council area with a 2-tier structure?</summary>
-<p>We don’t currently offer summaries for upper-tier local authorities. But you can download the LSOA data and aggregate it yourself to produce such a summary. Note that combining the averages of LSOAs in a local authority is not the same as the average of each person in a local authority. So this will introduce some unavoidable bias to the results.</p>
+<summary>Can I use this to build a local carbon budget?</summary>
+<p>Not directly. The tools show historical and current footprints and include a reference line derived from the Sixth Carbon Budget, but they do not project forward or account for local targets, and the reference line divides the national budget equally per person rather than reflecting what would be fair or feasible in a given place. You can download the data and build your own budget from it. Downscaled local pathways, based on the <a href="https://low-energy.creds.ac.uk/" target="_blank" rel="noopener">Positive Low Energy Futures</a> scenarios, are in development through the <a href="https://www.edrc.ac.uk/research/futures/" target="_blank" rel="noopener">EDRC Futures theme</a>.</p>
 </details>
 
 <details class="faq-item">
-<summary>Does the LSOA aggregation help understand where best to target interventions?</summary>
-<p>Averaging across LSOAs helps highlight patterns that are related to location rather than focusing on individual choices. For example, an area with high car use may indicate a lack of non-car travel options, which could help justify a local intervention such as building a cycleway.</p>
+<summary>Does the tool reflect the fact that many councils have set 2030 net zero targets?</summary>
+<p>Not yet. The tools describe what has happened rather than what is planned, and they contain no local targets. Adding scenario and target-tracking features is something we would like to do and is dependent on future funding.</p>
 </details>
 
 <details class="faq-item">
-<summary>Can we use the tool to develop place-based carbon budgets?</summary>
-<p>The tool doesn’t currently include a future budgeting competence, although we do have a comparison to the 6th carbon budget for reference. This is a feature we would like to include in future updates of the tool, but will be dependent on further funding. In the meantime, you can use the data in the PBCC to develop your own carbon budgets.</p>
+<summary>Is the tool open source? Can I embed it in my own site?</summary>
+<p>The code is open source under the GNU Affero General Public Licence v3, so you may build your own version provided it is also open source. You can find it on <a href="https://github.com/PlaceBasedCarbonCalculator" target="_blank" rel="noopener">GitHub</a>. We do not permit embedding the hosted tools in third-party sites, partly because some of the underlying data licences do not allow it, but you are welcome to download the data and build your own visualisations, citing Carbon &amp; Place as the source.</p>
 </details>
 
 <details class="faq-item">
-<summary>Is the tool going to be open source in some form? Do you have plans to provide a way to embed the tool on third-party sites (even under a paid quota)?</summary>
-<p>The tool is open source under a share-alike licence, which means you can make your own versions as long as they are also open source. We do not permit the embedding of the tool into third-party sites. But third-parties may download the data for use in their own tools if they cite the PBCC as the source.</p>
-</details>
-
-<h2>Additional functionality</h2>
-
-<details class="faq-item">
-<summary>How does the tool allow for the differential in terms of policy, whereby many local authorities have set 2030 net-zero targets, 20 years ahead of UK commitment?</summary>
-<p>Currently, the tool does not consider future emissions or local targets. We hope to extend the tool in the future to add these features.</p>
-</details>
-
-<details class="faq-item">
-<summary>Are there any plans for adding scenarios of change, e.g. impacts of active travel vs public transport vs telecommuting vs improving insulation policies in different areas?</summary>
-<p>Yes, we are seeking additional funding to add these kinds of features.</p>
-</details>
-
-<details class="faq-item">
-<summary>Has any thought been given to showing the absolute values or showing all LSOAs as the same size to avoid falling into the trap of focusing on the rural areas?</summary>
-<p>As LSOAs are roughly equal in population they do vary significantly in size. However, it is difficult to represent them any other way on a geographically accurate map. It would be possible to produce different types of data visualisation that adjusted the areas of LSOAs at the expense of geographical accuracy, but we do not have resource to do this.</p>
+<summary>Rural neighbourhoods dominate the map because they are large. Can that be fixed?</summary>
+<p>It is a real problem with any map of areas that are equal in population but wildly unequal in size. Our partial answer is the dasymetric view, which is on by default: it colours only the built-up parts of each neighbourhood, so a large rural area no longer floods the map with a colour representing a few hundred people. A cartogram, which resizes areas by population, would address it more completely at the cost of geographical accuracy, and we have not had the resources to build one.</p>
 </details>
 
 </div>
