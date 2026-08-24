@@ -10,6 +10,19 @@ The manual is written for three groups of readers, and each tool's chapter is ar
 
 The manual is revised as the tools develop. You are welcome to suggest improvements or contribute directly via [GitHub](https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/blob/dev/manual/index.md).
 
+Carbon & Place is built in the open, and the analysis behind every map is published. The [Carbon & Place organisation on GitHub](https://github.com/PlaceBasedCarbonCalculator) holds the code, and the methods sections of this manual link to the specific repository for each analysis:
+
+* **[build](https://github.com/PlaceBasedCarbonCalculator/build)**: the main analysis pipeline, written in R using [targets](https://books.ropensci.org/targets/). It assembles every dataset behind the Place-Based Carbon Calculator.
+* **[EPC](https://github.com/PlaceBasedCarbonCalculator/EPC)**: parses, cleans, and harmonises Energy Performance Certificates for England, Wales, and Scotland, and matches them to addresses.
+* **[PublicTransportAnalysis](https://github.com/PlaceBasedCarbonCalculator/PublicTransportAnalysis)**: measures scheduled public transport service for every neighbourhood in Great Britain, for each year from 2004.
+* **[LandOwnership](https://github.com/PlaceBasedCarbonCalculator/LandOwnership)**: cleans the INSPIRE polygons and geocodes the Land Registry corporate ownership datasets.
+* **[GBDEM](https://github.com/PlaceBasedCarbonCalculator/GBDEM)**: builds the high-resolution terrain and surface models of Great Britain.
+* **[GBsolar](https://github.com/PlaceBasedCarbonCalculator/GBsolar)**: derives the national solar resource map from the surface model.
+* **[inputdata](https://github.com/PlaceBasedCarbonCalculator/inputdata)** and **[outputdata](https://github.com/PlaceBasedCarbonCalculator/outputdata)**: the open inputs to, and outputs from, the pipeline.
+* **[PlaceBasedCarbonCalculator.github.io](https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io)**: this website.
+
+The pipeline is demanding to run: it is designed for a machine with more than 36 cores and 256&nbsp;GB of memory, takes several days, and produces over 70&nbsp;GB of output. Most people will find the [data downloads](/data/) more practical than rebuilding it. Some inputs are licensed in ways that prevent republication; where that is the case, the repository holds a placeholder describing the dataset and how to obtain it.
+
 Short extracts of this manual can be read within the tools by clicking the <i class="fa fa-question-circle" aria-hidden="true" style="color: #0b38e6;"></i> help buttons.
 
 ## Getting Started
@@ -20,7 +33,7 @@ Carbon & Place is a collection of tools that share a common map interface. Each 
 
 * **[Place-Based Carbon Calculator](/pbcc/)**: What is the carbon footprint of my neighbourhood, what causes it, and how has it changed over time?
 * **[Transport and Accessibility Explorer](/transport/)**: How good are public transport, walking, and cycling options here, and how car dependent is this area?
-* **[Retrofit Explorer](/retrofit/)**: How energy efficient are the buildings in this area, what do they cost to heat, and where is the greatest need for insulation and low carbon heating?
+* **[Retrofit Explorer](/retrofit/)**: How energy efficient are the buildings in this area, what do they cost to heat, and where is the greatest need for insulation and low-carbon heating?
 * **[Land Ownership Explorer](/landownership/)**: Who owns the land and property in this area, according to official Land Registry records?
 * **[Land Use and Planning Explorer](/landuse/)**: What planning designations, environmental constraints, and protections apply to this area?
 * **[Area Reports](/reports/)**: Ready-made summaries for local authorities, wards, parishes, and Westminster constituencies that draw together data from all the tools.
@@ -103,50 +116,52 @@ Some neighbourhoods show one or more warnings in a coloured box at the top of th
 
 Most warnings concern boundaries. Carbon & Place reports every year of history on the neighbourhood boundaries in use today, so where a boundary has changed the older figures have had to be moved onto the new one. The [Office for National Statistics](https://www.ons.gov.uk/methodology/geography/ukgeographies/censusgeographies/census2021geographies) revises Lower layer Super Output Areas at each census, recording for every area whether it was left unchanged, split, merged, or redrawn in a more complicated way. The warnings below follow those categories. Where an area is affected, comparisons with the rest of the country remain sound, but changes over time within that one neighbourhood should be read with more caution than usual.
 
-**The 2022 Census in Scotland significantly changed Data Zone boundaries, historic data has been adjusted to the new boundaries**
+**The 2022 Census in Scotland changed Data Zone boundaries substantially; historical data has been adjusted onto the new boundaries**
 
 Scotland held [its census](https://www.scotlandscensus.gov.uk/) in 2022, a year later than England and Wales, and the Data Zone boundaries were revised afterwards. Figures for years before the revision have been reallocated from the old Data Zones to the new ones. Totals for Scotland as a whole are unaffected, but a jump between one year and the next in this area may reflect the change of boundary rather than a real change on the ground.
 
-**This LSOA had a complex border change between 2011 and 2021, historical data uses closest matching LSOA**
+**This LSOA had a complex boundary change between 2011 and 2021; historical data is taken from the closest matching earlier LSOA**
 
 This neighbourhood was neither left alone nor cleanly split or merged: its boundary was redrawn in a way that exchanges land with several neighbours at once. There is no exact way to carry the older figures across such a change, so the historical values shown are those of the earlier neighbourhood that overlaps this one most closely. The recent years are unaffected, and the general level of the older values should be about right, but small year-to-year movements before the change may be an artefact of the matching.
 
-**This LSOA was formed in 2021 by merging two LSOAs, historical data has been merged**
+**This LSOA was formed in 2021 by merging two LSOAs; their historical data has been added together**
 
 Where a population falls far enough, the ONS combines two neighbourhoods into one. The historical figures for the two former areas have been added together, so counts such as total emissions or numbers of vehicles are consistent across the join. Values expressed per person or per household are also consistent, because both the totals and the populations were combined. The one thing lost is the difference between the two former areas, which may have been quite unlike each other.
 
-**This LSOA was formed in 2021 by splitting two LSOAs, historical data has been split**
+**This LSOA was formed in 2021 by splitting an earlier LSOA; its historical data has been divided between the new areas**
 
 Where a population grows far enough, typically through new housing, the ONS divides a neighbourhood into two or more. The historical figures for the former, larger area have been divided between the new ones in proportion to their populations. Per-person values are therefore reasonable, but the split assumes the new areas were alike before the division, which is often untrue when one part contains the new housing and the other does not. Treat the years before the split as an estimate for this neighbourhood rather than a measurement of it.
 
-**At some point this LSOA has had zero residents**
+**In at least one year, no residents were recorded in this LSOA**
 
 In at least one year no residents were recorded here. This usually means the area is not really residential, for example a business park, an airport, or a site cleared for redevelopment before new homes were occupied. Totals for the area remain valid, but anything measured per person cannot be calculated for a year with no residents, so those values are shown as missing or as zero rather than as a real figure.
 
-**In some years this LSOA has an unusually large number of company cars**
+**In some years this LSOA records an unusually large number of company cars**
 
 Vehicles in the [vehicle licensing statistics](https://www.gov.uk/government/statistical-data-sets/vehicle-licensing-statistics-data-files) are counted at the address of the registered keeper. For a company car or a leased vehicle that address is the fleet operator's office, not the driver's home. A single leasing company or large employer can therefore place thousands of vehicles in one neighbourhood, none of which are driven by the people who live there. Where this happens, vehicle counts and the transport emissions derived from them are far too high for the residents of the area, and are best ignored.
 
-**In some years this LSOA has odd results due to a very low recorded population**
+**In some years this LSOA gives unreliable per-person figures because its recorded population is very low**
 
 Most figures in Carbon & Place are divided by the population of the neighbourhood to give a value per person. When the recorded population is very small, that division becomes unstable: a handful of people, or a rounding adjustment applied by the statistical agencies to protect privacy, can swing the result dramatically. Very low populations usually occur where an area is largely non-residential, or in the years before new housing was occupied. The totals for the area are still sound; it is the per-person values, and any grade based on them, that should be discounted for the affected years.
 <!-- /#data-warnings -->
 
 ### Key Concepts
 
+<!-- #carbon-footprint -->
 #### What is a carbon footprint?
 
 A carbon footprint is the total amount of greenhouse gas released to the atmosphere as a result of an activity, a household, or a place. Carbon & Place uses a **consumption-based** footprint: emissions are allocated to the people who ultimately use goods and services, wherever in the world the emissions physically occurred. If a phone is manufactured abroad and bought in Britain, its manufacturing emissions count towards the buyer's footprint.
 
 This differs from the **territorial** accounting used in official statistics such as the [UK greenhouse gas emissions statistics](https://www.gov.uk/government/collections/final-uk-greenhouse-gas-emissions-national-statistics), which count emissions physically released within the UK. The UK Government also publishes a national consumption-based estimate, [the UK's carbon footprint](https://www.gov.uk/government/statistics/uks-carbon-footprint), which is consistently higher than the territorial figure because the UK imports more emissions embodied in goods than it exports. Research shows that household consumption drives a large majority of global emissions, and that footprints vary substantially with income, housing, and location ([Ivanova et al. 2020](https://doi.org/10.1088/1748-9326/ab8589)).
 
-Consumption-based accounting has one clear advantage: it prevents a country or a neighbourhood from appearing to decarbonise simply by moving its industry elsewhere.
+Consumption-based accounting has one clear advantage: it prevents a country or a neighbourhood from appearing to decarbonise simply by moving its industry elsewhere. It also has a clear cost: because nobody records what every household buys, the consumption part of the footprint has to be modelled, and it is therefore the least certain part of the estimate.
+<!-- /#carbon-footprint -->
 
 #### Neighbourhood Statistics
 
 The tools mostly present results as neighbourhood statistics, using the Lower layer Super Output Areas (LSOAs) created by the [Office for National Statistics](https://www.ons.gov.uk/methodology/geography/ukgeographies/censusgeographies/census2021geographies) for the census, or their Scottish equivalents (Data Zones).
 
-LSOAs are small statistical areas designed to contain roughly the same number of people (about 1,500 to 3,000). Because population density varies, they vary greatly in size: in cities an LSOA may be a few streets, while in rural areas one can cover many square miles. The ONS created them for the 2001 Census and revised them for 2011 and 2021. Carbon & Place uses the 2021 boundaries but sometimes reports historical data collected on 2001 or 2011 boundaries. Most LSOAs are unchanged between censuses; where boundaries changed, values are interpolated, which can introduce minor errors.
+LSOAs are small statistical areas designed to contain roughly the same number of people: between 1,000 and 3,000 residents, or 400 to 1,200 households, averaging about 1,700 people. Because population density varies, they vary greatly in size: in cities an LSOA may be a few streets, while in rural areas one can cover many square miles. The ONS created them for the 2001 Census and revised them for 2011 and 2021. Carbon & Place uses the 2021 boundaries but sometimes reports historical data collected on 2001 or 2011 boundaries. Most LSOAs are unchanged between censuses; where boundaries changed, values are interpolated, which can introduce minor errors.
 
 LSOAs are the standard unit for publishing small-area statistics in Britain. Government and academic datasets on income, deprivation, energy, transport, and health are all available at this scale, which makes LSOAs a useful unit of comparison.
 
@@ -164,11 +179,15 @@ By default, neighbourhood statistics are shown as a [dasymetric](https://en.wiki
 The same underlying data is shown in both modes; the difference is purely visual. Dasymetric maps avoid a common misreading of choropleth maps, in which large rural zones dominate the picture even though few people live in most of their area. By colouring only the built-up parts, dasymetric maps emphasise where people actually live.
 <!-- /#dasymetric -->
 
+<!-- #grades -->
 #### Understanding the grades
 
 Many values in the tools are given a grade from A+ to F- so that a neighbourhood can be compared quickly with the rest of the country. Grades are relative to the average neighbourhood: A+ to C- is better than average, D+ to F- is worse. Because most areas cluster near the average, the middle grade bands are wide (around 7% of neighbourhoods each), while the extreme bands are narrow, so only about 1% of neighbourhoods receive an A+ or an F-. Where data is missing or suppressed, an NA is shown instead.
 
 A good grade means a neighbourhood performs well compared with the rest of Britain today. It does not mean the area is sustainable: reaching the UK's [net zero target](https://www.legislation.gov.uk/ukpga/2008/27/contents) will require reductions in most places, including many A-graded ones.
+
+Grades are also not a judgement of the people who live somewhere. Much of what determines a footprint, including the age and construction of the housing, the availability of a bus service, and the distance to the nearest shop, is fixed long before any current resident arrives. A neighbourhood graded F for transport is usually one where driving is the only practical option, which is a statement about the place rather than about its residents. Places with poor grades should be viewed as locations that may need additional help or attention while places with high grades are where lessons can be learnt.
+<!-- /#grades -->
 
 #### Digital Terrain Model and 3D buildings
 
@@ -272,9 +291,7 @@ Community groups have used this kind of evidence to prioritise retrofit projects
 
 ![PBCC Neighbouhoods](/images/manual/pbcc-zones.webp)
 
-The Neighbourhoods layer colours each Lower layer Super Output Area (LSOA), or Scottish Data Zone, by its carbon footprint and related indicators. Values are per person per year (kgCO<sub>2</sub>e) so that areas of different sizes can be compared. Use the drop-down menu to change which measure is shown; the map colours and legend update to match. The available measures are:
-
-The map shows 2022, the most recent year in the data.
+The Neighbourhoods layer colours each Lower layer Super Output Area (LSOA), or Scottish Data Zone, by its carbon footprint and related indicators. Values are per person per year (kgCO<sub>2</sub>e) so that areas of different sizes can be compared. Use the drop-down menu to change which measure is shown; the map colours and legend update to match. The map shows 2022, the most recent year in the data. The available measures are:
 
 * **Total Emissions**: the overall per-person footprint, graded from A+ (low) to F- (high) relative to the national distribution.
 * **Decarbonisation progress**: how far the neighbourhood's per-person footprint has fallen between 2010 and 2022, graded against the rest of the country.
@@ -299,7 +316,7 @@ The Overview summarises the neighbourhood's footprint using the most recent year
 
 The bar chart shows the total footprint per person for four groups: the selected neighbourhood, the average for its local authority, the national average, and the average for neighbourhoods with the same ONS area classification. The final column is often the most informative comparison, because it sets the area against places with similar populations and geography rather than the country as a whole.
 
-The horizontal black line marks the per-person footprint implied by the Climate Change Committee's [Sixth Carbon Budget](https://www.theccc.org.uk/publication/sixth-carbon-budget/) for 2032 to 2037. It shows how far there is to go, in this and almost every neighbourhood, to stay on track for net zero by 2050.
+The horizontal black line is a reference level, obtained by dividing the national emissions allowed under the Climate Change Committee's [Sixth Carbon Budget](https://www.theccc.org.uk/publication/sixth-carbon-budget/) for 2033 to 2037 by the UK population. Two cautions about reading it. It is not a target set for this neighbourhood: an equal per-person share takes no account of income, of the housing stock, or of whether the alternatives to driving exist locally. And it describes the middle of the 2030s, not 2050. It is included to indicate the scale of the change implied by the UK's legal commitment, and almost every neighbourhood in Britain currently sits well above it.
 
 Below the chart, summary tables give a grade and a per-person value for each component of the footprint, and an explanation of how the grades are calculated.
 
@@ -361,7 +378,7 @@ Demographics strongly influence emissions. Higher-income households consume more
 <!-- #pbcc-community-photo -->
 ##### Community Photo
 
-The community photo gives a quick overview of who lives in a neighbourhood. Each photo is a grid of 48 household pictures, distributed in proportion to the household types recorded in the 2021 Census (2022 in Scotland). Images from [Freepik](https://www.magnific.com)
+The community photo gives a quick overview of who lives in a neighbourhood. Each photo is a grid of 48 household pictures, distributed in proportion to the household types recorded in the 2021 Census (2022 in Scotland). Household illustrations from [Freepik](https://www.freepik.com/).
 
 The pictures are selected automatically from a set of around 200 household archetypes based on three census variables.
 
@@ -383,9 +400,9 @@ A dependent child is aged 0 to 15, or 16 to 18 and in full-time education living
 
 [Ethnicity](https://www.ons.gov.uk/peoplepopulationandcommunity/culturalidentity/ethnicity/bulletins/ethnicgroupenglandandwales/census2021) is shown in three broad categories:
 
-* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_White.webp) **White**: White (English, Welsh, Scottish, Northern Irish or British), Irish, Gypsy or Irish Traveller, Roma, Other White (74.4% of population)
-* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_Black.webp) **Black**: Black, Black British, Black Welsh, Caribbean or African (4.0% of population)
-* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_Other.webp) **Other**: Asian, Asian British, Asian Welsh, Mixed, Multiple, or Other ethnic group (14.3% of population)
+* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_White.webp) **White**: White (English, Welsh, Scottish, Northern Irish or British), Irish, Gypsy or Irish Traveller, Roma, Other White (81.7% of the population of England and Wales in 2021)
+* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_Black.webp) **Black**: Black, Black British, Black Welsh, Caribbean or African (4.0%)
+* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_Other.webp) **Other**: Asian, Asian British, Asian Welsh, Mixed, Multiple, or Other ethnic group (14.3%)
 
 The [National Statistics Socio-economic Classification](https://www.ons.gov.uk/methodology/classificationsandstandards/otherclassifications/thenationalstatisticssocioeconomicclassificationnssecrebasedonsoc2010) (NS-SEC) classifies people by occupation, in six categories:
 
@@ -413,15 +430,19 @@ The community photo trades accuracy for legibility, and its main limitations fol
 
 As part of the [Energy Demand Research Centre Futures theme](https://www.edrc.ac.uk/research/futures/), we are downscaling the [Positive Low Energy Futures scenarios](https://low-energy.creds.ac.uk/) to give each neighbourhood a local decarbonisation pathway. This work is ongoing and will be added to the tool when complete.
 
+<!-- #footprint-method -->
 ### How the footprints are calculated
 
-The PBCC methodology is described in a peer-reviewed paper, which is the appropriate citation for academic use: [Morgan, M. (2025). Carbon & Place: Data and tools to understand the spatial variation in carbon footprints. *Environment and Planning B*](https://doi.org/10.1177/23998083251401613). This section summarises the approach.
+The PBCC methodology is described in a peer-reviewed paper, which is the appropriate citation for academic use: [Morgan, M. (2026). Carbon & Place: Data and tools to understand the spatial variation in carbon footprints. *Environment and Planning B: Urban Analytics and City Science*, 53(3), 538&ndash;554](https://doi.org/10.1177/23998083251401613). This section summarises the approach.
 
 The footprint combines three families of estimate:
 
 * **Measured energy consumption.** Domestic gas and electricity use comes from the meter-level statistics published by the Department for Energy Security and Net Zero at LSOA level ([gas](https://www.gov.uk/government/collections/sub-national-gas-consumption-data), [electricity](https://www.gov.uk/government/collections/sub-national-electricity-consumption-data)), converted to emissions with the [UK government conversion factors](https://www.gov.uk/government/collections/government-conversion-factors-for-company-reporting) for each year. Heating fuels beyond the gas grid are modelled from census central heating data, since no metered equivalent exists.
-* **Vehicle-based transport estimates.** Car and van emissions are built from the [vehicle licensing statistics](https://www.gov.uk/government/statistical-data-sets/vehicle-licensing-statistics-data-files) (which vehicles are registered where) combined with odometer readings from the [anonymised MOT test data](https://www.gov.uk/government/collections/mot-anonymised-results) (how far similar vehicles are driven). Using MOT records to study local car use is an established method in transport research ([Chatterton et al. 2015](https://doi.org/10.1016/j.trd.2015.06.003)). Emissions per kilometre reflect the fuel type and efficiency of the local vehicle fleet.
-* **Synthetic population consumption estimates.** Spending on goods, services, food, flights, and public transport is estimated by matching synthetic households (built from census tables) to respondents in the [Living Costs and Food Survey](https://www.ons.gov.uk/peoplepopulationandcommunity/personalandhouseholdfinances/incomeandwealth/methodologies/livingcostsandfoodsurvey), then converting spending to emissions using category-specific carbon intensities consistent with the UK's [consumption-based accounts](https://www.gov.uk/government/statistics/uks-carbon-footprint). The synthetic population method is explained below.
+* **Vehicle-based transport estimates.** Car and van emissions are built from the [vehicle licensing statistics](https://www.gov.uk/government/statistical-data-sets/vehicle-licensing-statistics-data-files) (which vehicles are registered where) combined with odometer readings from the [anonymised MOT test data](https://www.gov.uk/government/collections/mot-anonymised-results) (how far similar vehicles are driven). Using MOT records to study local car use is an established method in transport research ([Chatterton et al. 2015](https://doi.org/10.1016/j.trd.2015.06.003), which introduced the approach to the study of spatial and social variation in car use). Emissions per kilometre reflect the fuel type and efficiency of the local vehicle fleet.
+* **Synthetic population consumption estimates.** Spending on goods, services, food, flights, and public transport is estimated by matching synthetic households (built from census tables) to respondents in the [Living Costs and Food Survey](https://www.ons.gov.uk/peoplepopulationandcommunity/personalandhouseholdfinances/incomeandwealth/methodologies/livingcostsandfoodsurvey), then converting spending to emissions using category-specific carbon intensities consistent with the UK's [consumption-based accounts](https://www.gov.uk/government/statistics/uks-carbon-footprint). The synthetic population method is explained below, and the code is in the [`build`](https://github.com/PlaceBasedCarbonCalculator/build) repository.
+
+The three differ in how much confidence they deserve, and it is worth carrying that distinction into any use of the results. Metered gas and electricity are the most reliable, because somebody read a meter. Vehicle emissions sit in the middle: the fleet and its mileage are observed, but attributed to the registered keeper's address rather than to where the driving happens. Consumption estimates are the least certain, because they rest on matching modelled households to a survey of a few thousand real ones. Unhelpfully, the least certain component is also among the largest.
+<!-- /#footprint-method -->
 
 #### Synthetic populations: a way to know the unknown
 
@@ -429,7 +450,7 @@ Here is a deceptively simple question: how many bananas do people on your street
 
 It is the kind of question you might be asked at a university interview to test your reasoning. You might respond with an assumption: every household buys a bunch of bananas each week, there are 100 households on my street, therefore around 5,200 bunches per year.
 
-To do better than that, we need real data about what people actually buy. Fortunately, the UK has it. Every year the Office for National Statistics runs the [Living Costs and Food Survey](https://www.ons.gov.uk/peoplepopulationandcommunity/personalandhouseholdfinances/incomeandwealth/methodologies/livingcostsandfoodsurvey) (LCFS), in which around 6,000 households keep a detailed two-week spending diary and complete a questionnaire about regular bills and larger, less frequent purchases such as holidays and cars. The ONS categorises this spending using the international [Classification of Individual Consumption by Purpose](https://unstats.un.org/unsd/classifications/unsdclassifications/COICOP_2018_-_pre-edited_white_cover_version_-_2018-12-26.pdf) (COICOP). From this we can estimate how many bananas the average British household buys.
+To do better than that, we need real data about what people actually buy. Fortunately, the UK has it. Every year the Office for National Statistics runs the [Living Costs and Food Survey](https://www.ons.gov.uk/peoplepopulationandcommunity/personalandhouseholdfinances/incomeandwealth/methodologies/livingcostsandfoodsurvey) (LCFS), in which roughly five thousand households keep a detailed two-week spending diary and complete a questionnaire about regular bills and larger, less frequent purchases such as holidays and cars. The ONS categorises this spending using the international [Classification of Individual Consumption by Purpose](https://unstats.un.org/unsd/classifications/unsdclassifications/COICOP_2018_-_pre-edited_white_cover_version_-_2018-12-26.pdf) (COICOP). From this we can estimate how many bananas the average British household buys.
 
 But is your street average? Almost certainly not. So we want to adjust the national estimate to reflect how your street differs from the rest of Britain.
 
@@ -448,6 +469,18 @@ Consider a different product: nappies. Households with small children buy a lot 
 
 The census does publish some multivariate tables (household size by composition, for example), which anchor the combinations, and the ONS deliberately adds small amounts of noise to published counts to protect privacy, which the method must tolerate. Synthetic populations are never perfect, but they are usually close to the real population, and they let us pair every synthetic household with a similar LCFS respondent. That matched subsample of the survey is what we use to estimate the spending, and therefore the consumption emissions, of every neighbourhood in Great Britain.
 
+#### Further reading
+
+Carbon & Place is one of several strands of UK work on place and energy demand, and it is intended as a starting point rather than a destination. You may be interested in:
+
+* [Morgan, M. (2026). *Carbon & Place: Data and tools to understand the spatial variation in carbon footprints*](https://doi.org/10.1177/23998083251401613), the peer-reviewed account of this method.
+* [Barrett et al. (2022), *Energy demand reduction options for meeting national zero-emission targets in the United Kingdom*](https://doi.org/10.1038/s41560-022-01057-y), a CREDS study finding that UK energy demand could be roughly halved by 2050.
+* [CREDS, *Shifting the focus: energy demand in a net-zero carbon UK*](https://www.creds.ac.uk/publications/shifting-the-focus-energy-demand-in-a-net-zero-carbon-uk/), the flagship synthesis of the demand-side case.
+* [Ivanova et al. (2020), *Quantifying the potential for climate change mitigation of consumption options*](https://doi.org/10.1088/1748-9326/ab8589), on which household consumption choices matter most.
+* [CREDS, *Emissions savings from equitable energy demand reduction*](https://www.creds.ac.uk/publications/emissions-savings-from-equitable-energy-demand-reduction/), on the distributional questions this data raises.
+* The [EDRC Place theme](https://www.edrc.ac.uk/research/place/), which funds this tool, and the [EDRC Equity theme](https://www.edrc.ac.uk/research/equity/).
+* The [Climate Change Committee's advice to local authorities](https://www.theccc.org.uk/publication/local-authorities-and-the-sixth-carbon-budget/), for the policy framing.
+
 #### Interpretation and limitations
 
 * Consumption values are modelled, not measured. They are most reliable for comparing places and least reliable for small categories in single years, where the rotation of LCFS respondents can cause visible noise.
@@ -463,7 +496,7 @@ The Transport and Accessibility Explorer examines transport provision and access
 
 Transport is the largest source of greenhouse gas emissions in the UK, and it has decarbonised more slowly than any other major sector ([UK greenhouse gas emissions statistics](https://www.gov.uk/government/collections/final-uk-greenhouse-gas-emissions-national-statistics)). Most transport emissions come from cars, so cutting them means some combination of cleaner vehicles and fewer or shorter car journeys. Whether people can realistically drive less depends on where they live: on how close the shops, schools, and jobs are, and on whether walking, cycling, or public transport are genuine options.
 
-Transport is also a fairness issue. Around a fifth of households have no car ([National Travel Survey](https://www.gov.uk/government/collections/national-travel-survey-statistics)), and where public transport is poor they are effectively cut off from opportunities. Car dependence is expensive for households and carries wider costs for society in congestion, road danger, air pollution, and land take ([Gössling et al. 2024](https://doi.org/10.1016/j.jtrangeo.2024.103817)). Outside London, bus services have declined substantially since 2008 ([DfT bus statistics](https://www.gov.uk/government/collections/bus-statistics)), and this tool records that decline neighbourhood by neighbourhood.
+Transport is also a fairness issue. Around a fifth of households have no car ([National Travel Survey](https://www.gov.uk/government/collections/national-travel-survey-statistics)), and where public transport is poor they are effectively cut off from opportunities. Car dependence is expensive for households and carries wider costs for society in congestion, road danger, air pollution, and land take ([Miner et al. 2024](https://doi.org/10.1016/j.jtrangeo.2024.103817)). Outside London, bus services have declined substantially since 2008 ([DfT bus statistics](https://www.gov.uk/government/collections/bus-statistics)), and this tool records that decline neighbourhood by neighbourhood.
 
 ### Using the transport data in your area
 
@@ -485,7 +518,7 @@ This evidence is directly relevant to local transport plans, bus service improve
 
 The Neighbourhoods layer uses Lower layer Super Output Areas (LSOAs) to report a range of transport statistics. Use the drop-down menu to change the measure:
 
-**Change in buses/hour**: the change in bus frequency (daytime average trips per hour) for services stopping in or near each neighbourhood, measured from the best year in 2006-08 to 2025. This shows where services have been cut and where they have improved. The [Friends of the Earth analysis](https://policy.friendsoftheearth.uk/insight/how-britains-bus-services-have-drastically-declined) of bus service decline uses the same measure, ending in 2023.
+**Change in buses/hour**: the change in bus frequency (daytime average trips per hour) for services stopping in or near each neighbourhood, measured from the best year in 2006 to 2008 up to 2025. This shows where services have been cut and where they have improved. The [Friends of the Earth analysis](https://policy.friendsoftheearth.uk/insight/how-britains-bus-services-have-drastically-declined) was an earlier version of this ending in 2023, but the results had been improved since then.
 
 **Bus/Tram/Subway/Rail/Ferry per hour (daytime average)**: the frequency of each type of public transport stopping in or near the neighbourhood. Not every mode exists everywhere; places with no timetabled service are shown in black.
 
@@ -539,6 +572,9 @@ With a complete dataset it becomes possible to calculate measures such as vehicl
 
 The published tables do not provide every combination of these variables. For example, we can say how many battery electric vehicles an area has, but not how many are cars. Petrol and diesel counts are inferred by subtracting the other fuel types from the total, a simplification that ignores the small number of vehicles running on unusual fuels such as LPG.
 
+Three limitations apply to every vehicle chart, and the first is much the most important. Vehicles are counted at the **registered keeper's address**, which for a company car or a leased vehicle is the fleet operator's office rather than the driver's home. A single leasing company can place thousands of vehicles in one neighbourhood, none of them driven by anybody who lives there. Where this happens the report card shows a warning, and the affected values are suppressed from the carbon footprint totals rather than allowed to distort them, but the raw counts on this tab still show them. Second, vehicles under a **Statutory Off Road Notification** are not being driven but remain registered, which is why licensed and SORN vehicles are shown separately. Third, a **registration address lags a house move**, so a small share of vehicles is attributed to a previous address.
+
+<!-- #frequency -->
 #### Public Transport Frequency
 
 This section charts the frequency of public transport (trips per hour) serving the neighbourhood, by mode, time of day, and day of week, from 2004 to the present. Frequency matters because it determines how usable public transport really is:
@@ -548,7 +584,10 @@ This section charts the frequency of public transport (trips per hour) serving t
 3. **Turn up and go.** When services are frequent, people stop consulting timetables and just travel, the way car journeys work.
 4. **Resilience to delay.** One late bus per hour ruins the hour; one late bus every 10 minutes is barely noticed.
 
-Frequency usually varies through the day, with more services at rush hour and fewer in evenings and weekends. When off-peak frequency drops too low, the service stops being useful for shift workers, hospital visits, or a night out, and a vicious cycle can begin: low frequency leads to low ridership, which justifies further cuts. Much of the UK outside London is somewhere in this cycle, as the charts for most neighbourhoods show.
+Frequency usually varies through the day, with more services at rush hour and fewer in evenings and weekends. When off-peak frequency drops too low, the service stops being useful for shift workers, hospital visits, or a night out, and a vicious cycle can begin: low frequency leads to low ridership, which justifies further cuts. Much of Britain outside London is somewhere in this cycle, as the charts for most neighbourhoods show.
+
+One caution about what the chart counts. Frequencies are taken from published timetables, so they record the service that was scheduled rather than the service that ran. Cancellations, delays, and unreliability are not included, and in places where reliability is the main complaint the chart will look better than daily experience. The counts also cover services stopping in or near the neighbourhood, without regard to where those services go, so a frequent route that does not serve anywhere useful counts the same as one that does.
+<!-- /#frequency -->
 
 #### Accessibility & Proximity
 
@@ -577,7 +616,7 @@ To our knowledge this is the largest collection of digital, analysable timetable
 
 The whole archive was reprocessed in 2026 with a substantially improved version of UK2GTFS. The frequencies shown are therefore not directly comparable with figures published from earlier versions of this analysis: the biggest single change is better detection of duplicate journeys in the older NPTDR files, which removed around a quarter of the counted stop calls in the mid-2000s and so makes the measured decline in bus service since 2008 shallower than previously reported, without changing its direction.
 
-Each source stores timetables in a different format, so all were converted to the standard GTFS format using the [UK2GTFS](https://itsleeds.github.io/UK2GTFS/) R package. For each year, a one-month snapshot was produced, usually October, with other months used where October data was unavailable.
+Each source stores timetables in a different format, so all were converted to the standard GTFS format using the [UK2GTFS](https://itsleeds.github.io/UK2GTFS/) R package ([source code](https://github.com/ITSLeeds/UK2GTFS)). The analysis that turns those timetables into neighbourhood statistics is published as [`PublicTransportAnalysis`](https://github.com/PlaceBasedCarbonCalculator/PublicTransportAnalysis). For each year, a one-month snapshot was produced, usually October, with other months used where October data was unavailable.
 
 Because the collection is retrospective and contribution to the source datasets was voluntary, it is difficult to state exactly what proportion of services is captured in any year and place. It seems unlikely that an operator would deposit a partial timetable, so we treat any provided timetable as complete. Timetables generally arrive as one file per route, which makes missing data detectable as implausible year-to-year jumps: a bus that ran half-hourly in 2006, vanished in 2007-08, and returned identical in 2009 more likely reflects a missing file than a real withdrawal.
 
@@ -603,9 +642,23 @@ At this very local scale, timetable data is complex and messy. A sudden drop in 
 
 One of the strongest patterns in the data: in most of the country, the weekday rush hour bus service is worse than a Sunday evening service in the London suburbs. Since 2008, bus services have declined significantly across the UK except in London, where they have remained roughly stable. This is consistent with the official [DfT bus statistics](https://www.gov.uk/government/collections/bus-statistics), which record the decline in vehicle miles outside London.
 
+<!-- #accessibility -->
 #### Accessibility analysis method
 
-The accessibility and proximity plots are produced as follows. First, the [Ordnance Survey Points of Interest](https://www.ordnancesurvey.co.uk/products/points-of-interest) dataset provides 2,477,906 destinations in 385 categories, a much broader set than accessibility studies usually consider. Second, the 34,753 population-weighted centroids of 2011 LSOAs are used as origins. Third, public transport isochrones (15, 30, 45, and 60 minutes) and circular buffers (0.75, 1.5, 2.25, and 3 miles, equivalent to walking at 3 mph) are generated around each centroid. Fourth, the number of each destination type within each isochrone and buffer is counted and divided by the resident population of the measured area to give a per-capita rate (for example, Great Britain has 6.46 restaurants per 10,000 people). Finally, scores are normalised to standard deviations from the national average; 89% of neighbourhoods fall within three standard deviations, and more extreme values are truncated to the -3 to +3 range.
+The accessibility and proximity plots are produced as follows. First, the [Ordnance Survey Points of Interest](https://www.ordnancesurvey.co.uk/products/points-of-interest) dataset provides 2,477,906 destinations in 385 categories, a much broader set than accessibility studies usually consider. Second, the 34,753 population-weighted centroids of 2011 LSOAs are used as origins. Note that this is one place where the analysis still rests on 2011 boundaries while the rest of the tool uses 2021 ones; results for neighbourhoods whose boundaries changed should be treated with corresponding caution. Third, public transport isochrones (15, 30, 45, and 60 minutes) and circular buffers (0.75, 1.5, 2.25, and 3 miles, equivalent to walking at 3 mph) are generated around each centroid. Fourth, the number of each destination type within each isochrone and buffer is counted and divided by the resident population of the measured area to give a per-capita rate (for example, Great Britain has 6.46 restaurants per 10,000 people). Finally, scores are normalised to standard deviations from the national average; 89% of neighbourhoods fall within three standard deviations, and more extreme values are truncated to the -3 to +3 range.
+
+Two properties of this measure are easy to misread. It is entirely relative, so a service that is scarce across the whole of Britain still scores zero here: the analysis tells you how an area compares with the country, not whether provision is adequate. And it counts destinations without judging them, so a retail park of identical outlets and a high street of varied ones can score alike. Use the summary table to see which categories drive an area's score before drawing a conclusion from the headline.
+<!-- /#accessibility -->
+
+#### Further reading
+
+* [Mattioli et al. (2020), *The political economy of car dependence: a systems of provision approach*](https://doi.org/10.1016/j.erss.2020.101486), on why car dependence persists.
+* [Miner et al. (2024), *Car harm: a global review of automobility's harm to people and the environment*](https://doi.org/10.1016/j.jtrangeo.2024.103817), a systematic account of the wider costs.
+* [CREDS, *A disaggregate analysis of "excess" car travel and its role in decarbonisation*](https://www.creds.ac.uk/publications/a-disaggregate-analysis-of-excess-car-travel-and-its-role-in-decarbonisation/), on how much driving could realistically be avoided.
+* [CREDS, *Reverse gear: the reality and implications of national transport emission reduction policies*](https://www.creds.ac.uk/publications/reverse-gear-the-reality-and-implications-of-national-transport-emission-reduction-policies/), a critical assessment of UK transport policy.
+* [CREDS, *e-bikes could slash transport emissions*](https://www.creds.ac.uk/publications/e-bikes-could-slash-transport-emissions/) and [*Shared mobility: the case for fewer cars, more sharing*](https://www.creds.ac.uk/publications/shared-mobility-the-case-for-fewer-cars-more-sharing/).
+* [EDRC, *Developing solutions to fuel and transport poverty challenges*](https://www.edrc.ac.uk/research/projects/developing-solutions-to-fuel-and-transport-poverty-challenges/).
+* [TCPA guidance on 20-minute neighbourhoods](https://www.tcpa.org.uk/resources/20-minute-neighbourhoods/), for the planning concept behind the accessibility analysis.
 
 #### Acknowledgement
 
@@ -617,7 +670,7 @@ The Retrofit Explorer focuses on buildings and the energy they use for heating a
 
 ### The case for local building data
 
-Heating and powering homes accounts for around a fifth of the UK's greenhouse gas emissions, and the housing stock is among the oldest and least efficient in Europe ([Climate Change Committee, UK housing: Fit for the future?](https://www.theccc.org.uk/publication/uk-housing-fit-for-the-future/)). Reaching net zero requires insulating millions of homes and replacing gas boilers with low carbon heating such as heat pumps ([Heat and Buildings Strategy](https://www.gov.uk/government/publications/heat-and-buildings-strategy)). Unlike a power station, the building stock cannot be decarbonised by a handful of national decisions: it means physical work on nearly every street in the country.
+Heating and powering homes accounts for around a fifth of the UK's greenhouse gas emissions, and the housing stock is among the oldest and least efficient in Europe ([Climate Change Committee, UK housing: Fit for the future?](https://www.theccc.org.uk/publication/uk-housing-fit-for-the-future/)). Reaching net zero requires insulating millions of homes and replacing gas boilers with low-carbon heating such as heat pumps ([Heat and Buildings Strategy](https://www.gov.uk/government/publications/heat-and-buildings-strategy)). Unlike a power station, the building stock cannot be decarbonised by a handful of national decisions: it means physical work on nearly every street in the country.
 
 Energy efficiency is also a cost of living issue. Households in inefficient homes pay hundreds of pounds a year more for the same warmth, and cold homes damage health. Government statistics link fuel poverty directly to the energy efficiency of the dwelling ([fuel poverty statistics](https://www.gov.uk/government/collections/fuel-poverty-statistics)). Knowing which neighbourhoods have the leakiest, most expensive homes shows where retrofit investment would do the most good, for the climate and for the people who live there.
 
@@ -744,9 +797,21 @@ The drop-down menu changes the visualised characteristic:
 
 Clicking any property shows a popup with details from the EPC (descriptions of the roof, walls, floor, heating, and controls) and the most recent Land Registry sale where available.
 
-EPCs are a valuable but imperfect source: they are only created when a home is built, sold, or let, assessments contain errors, and older certificates may not reflect recent improvements (see [Hardy & Glew 2019](https://doi.org/10.1016/j.enpol.2019.03.022) for an analysis of errors in the EPC register). Treat individual certificates as indicative.
+The processing behind these layers, including the cleaning of free-text fields, the matching to UPRNs, and the harmonisation of the Scottish and England and Wales registers, is published as [`EPC`](https://github.com/PlaceBasedCarbonCalculator/EPC).
 
 The Scottish EPC register is separate from, and slightly different to, the England and Wales register. Carbon & Place harmonises the two, which can cause small inconsistencies in the Scottish data; for example, Scotland uses different building age bands, which are mapped to the closest England and Wales equivalent.
+
+##### What the EPC caveats mean in practice
+
+Every chart and layer in Carbon & Place that draws on EPCs carries the same three limitations. They are summarised on each chart's Methods tab; this is the fuller version.
+
+**Coverage is partial, and not partial at random.** A certificate is required when a home is built, sold, or let, and lasts ten years. Homes that have changed hands or been rented recently therefore appear; homes owned by the same household for decades often do not. Because tenure and length of residence correlate with age, income, and dwelling type, the sample is biased rather than merely incomplete: rented properties are over-represented, and long-held owner-occupied homes under-represented. The **% of homes with an EPC** layer shows how large the gap is in each neighbourhood, and is the first thing to check before comparing areas. The Dwelling Stock tab, built from council tax records, covers every home and is the better basis for counting.
+
+**Certificates age.** A certificate reflects the home as it was on the day of the assessment, which may be years ago. Improvements made since, including new insulation, a new boiler, or solar panels, are missing until the next assessment. Retrofit is therefore systematically under-counted, and solar PV especially so, since people often improve a home shortly after buying it, which is exactly when its certificate was issued.
+
+**Assessments contain errors, and the model behind them is not a predictor of energy use.** An audit of the register found at least one error in a majority of certificates ([Hardy & Glew 2019](https://doi.org/10.1016/j.enpol.2019.03.022)). Separately, and more fundamentally, the EPC band scores modelled energy *cost* per square metre under standard occupancy. It is not a measurement, and modelled EPC energy intensity runs systematically higher than smart-metered consumption in gas-heated homes ([CREDS](https://www.creds.ac.uk/publications/the-over-prediction-of-primary-energy-use-intensity-by-epcs-in-great-britain-a-direct-comparison-of-epc-modelled-and-smart-metered-energy-use-in-gas-heated-homes/)). Because the band follows cost rather than carbon, a home on an expensive but clean fuel can score below a leakier home burning gas.
+
+None of this makes EPCs useless. They remain the only national dataset in which a trained assessor has visited the building and recorded what it is made of, which is why we use them. But an EPC-based figure for a neighbourhood is a statement about the certificated homes in that neighbourhood, not about all its homes, and it should be quoted that way.
 
 ##### Data Sources
 
@@ -795,19 +860,19 @@ Clicking a UPRN shows its ID number, whether the property currently exists, and 
 <!-- #retrofit-solar -->
 #### Solar Potential
 
-The Solar Potential layer maps how much solar energy reaches every 2 metre square of Great Britain over a year, measured in watt-hours per square metre (Wh/m²). It is a photograph of the resource, not a prediction of output: it shows how much sunlight arrives, before any assumptions about panel efficiency, orientation of the panel itself, or shading by anything not in the terrain model.
+The Solar Potential layer maps how much solar energy reaches every 2 metre square of Great Britain over a year, measured in kilowatt-hours per square metre (kWh/m²). It is a photograph of the resource, not a prediction of output: it shows how much sunlight arrives, before any assumptions about panel efficiency, orientation of the panel itself, or shading by anything not in the terrain model.
 
 Because the model works from a surface model that includes buildings and trees, it resolves individual roof pitches. Zoom in far enough and a south-facing slope reads orange or red while the north-facing slope of the same roof reads blue, and the shadow a tall building casts over its neighbours is visible as a cool patch. Zoom out and the pattern is dominated by latitude and by terrain: south-facing valley sides are noticeably brighter than north-facing ones.
 
-Colours run from dark blue (least sunlight) through green and yellow to dark red (most), using the Turbo colour scale. The scale is fixed from 0 to 2000 Wh/m² so that the colours mean the same thing every time the layer is rebuilt. A small number of places exceed 2000 Wh/m², so the darkest red should be read as "2000 or more" rather than as the maximum. Areas with no data, including the sea, are transparent.
-
-The transparency slider fades the layer so that streets and buildings on the basemap can be seen through it. At 0% the solar map is solid; drag it up to see the map underneath.
+Colours run from dark blue (least sunlight) through green and yellow to dark red (most), using the Turbo colour scale. The transparency slider fades the layer so that streets and buildings on the basemap can be seen through it.
 
 Two limitations are worth keeping in mind. The layer is a visualisation, and the colour is compressed slightly when the tiles are stored, so it should be read to the nearest band rather than as an exact number. And it models sunlight reaching a surface, not electricity: converting to expected generation needs assumptions about panel type, efficiency, and how much of a roof is usable, none of which are applied here.
 
+If you need a detailed solar assessment for a single building we suggest [Solar Wizard](https://solarwizard.org.uk/) which uses additional commercial data to provide more detail but only on a building by building basis.
+
 ##### Data Sources
 
-* [Environment Agency LIDAR Composite](https://www.data.gov.uk/dataset/fba12e80-519f-4dd2-9262-4dcf8ea23d485/lidar-composite-digital-surface-model-dsm-1m) (surface model, via the GBDEM analysis)
+* [Environment Agency National LIDAR Programme](https://www.data.gov.uk/dataset/f0db0249-f17b-4036-9e65-309148c97ce4/national-lidar-programme) (surface model, processed by the [GBDEM](https://github.com/PlaceBasedCarbonCalculator/GBDEM) and [GBsolar](https://github.com/PlaceBasedCarbonCalculator/GBsolar) analyses)
 * [ECMWF ERA5](https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5) (cloud and radiation adjustment)
 <!-- /#retrofit-solar -->
 
@@ -819,7 +884,7 @@ The neighbourhood report card summarises energy, EPCs, and prices for each area.
 
 ##### Energy Consumption
 
-Historical data (2015 to 2024) on domestic gas and electricity consumption, shown three ways:
+Historical data, from 2015 to 2024, on domestic gas and electricity consumption, shown three ways:
 
 * Mean: total consumption divided by the number of homes
 * Median: the middle home (half use more, half use less)
@@ -833,7 +898,7 @@ For households off the gas grid, consumption of other heating fuels (oil, wood, 
 
 ##### EPCs
 
-Summary statistics for the domestic properties in the neighbourhood that have an EPC. Remember that homes without an EPC (typically those not built, sold, or let recently) are invisible here, and in some neighbourhoods they are the majority.
+Summary statistics for the domestic properties in the neighbourhood that have an EPC. Remember that homes without an EPC (typically those not built, sold, or let recently) are not included, and in a few neighbourhoods they are the majority.
 
 ##### Prices
 
@@ -841,13 +906,13 @@ Summary statistics from the Land Registry Price Paid data for England and Wales,
 
 #### Dwelling stock
 
-The Dwelling Stock tab describes every home in the area, taken from the council tax registers rather than from EPCs. This is the complement to the EPCs tab: an EPC exists only for a home built, sold or let since 2008, roughly two thirds of the stock, whereas every dwelling is banded for council tax.
+The Dwelling Stock tab describes every home in the area, taken from the council tax registers rather than from EPCs. This is the complement to the EPCs tab: an EPC exists only for a home built, sold, or let since 2008, roughly two thirds of the stock, whereas every dwelling is banded for council tax.
 
 **Council tax bands** counts dwellings in each band, year by year. The total is a complete count of homes, so its growth shows where building has happened, and the band mix is a rough indication of property size and value. Remember the bands rest on 1991 values in England and Scotland, and 2003 in Wales, so they have drifted a long way from current prices. Band I exists only in Wales.
 
-**Dwelling type**, **Bedrooms** and **Build period** break the same complete stock down by built form, size and age. Build period is the most useful of the three for retrofit: it predicts wall construction, and therefore which insulation measures apply and what they cost.
+**Dwelling type**, **Bedrooms**, and **Build period** break the same complete stock down by built form, size, and age. Build period is the most useful of the three for retrofit: it predicts wall construction, and therefore which insulation measures apply and what they cost.
 
-These four charts have different coverage. Council tax bands are shown for the whole of Great Britain: the Valuation Office Agency publishes England and Wales, and the equivalent Scottish series from statistics.gov.scot is added on 2022 Data Zones. The type, bedroom and build period breakdowns are published for England and Wales only, and no Scottish equivalent exists, so for a Scottish neighbourhood those three charts are replaced by a short note saying so.
+These four charts have different coverage. Council tax bands are shown for the whole of Great Britain: the Valuation Office Agency publishes England and Wales, and the equivalent Scottish series from statistics.gov.scot is added on 2022 Data Zones. The type, bedroom, and build period breakdowns are published for England and Wales only, and no Scottish equivalent exists, so for a Scottish neighbourhood those three charts are replaced by a short note saying so.
 
 #### Postcodes
 
@@ -856,6 +921,17 @@ The postcode report card provides historical data (2015 to 2024) on domestic gas
 Electricity is further divided by meter type: all, standard, and Economy 7. Economy 7 meters are an older type charging two rates by time of day; they are becoming less common and are being replaced by smart meters (counted in the standard category).
 
 To protect privacy, DESNZ removes data for postcodes with few properties, and may remove one meter type where it is rare, which causes gaps in the data. Postcodes are also not designed for statistics: unlike LSOAs, they change frequently to meet mail delivery needs. Carbon & Place shows data for current postcodes only, so historical data is missing in some places.
+
+### Further reading
+
+* [Climate Change Committee, *UK housing: fit for the future?*](https://www.theccc.org.uk/publication/uk-housing-fit-for-the-future/).
+* [CREDS, *Decarbonisation of heat findings report*](https://www.creds.ac.uk/decarbonisation-of-heat/decarbonisation-of-heat-findings-report/), a synthesis of UK research on heat.
+* [CREDS, *Existing and future technologies for retrofitting the UK housing stock*](https://www.creds.ac.uk/publications/existing-and-future-technologies-for-retrofitting-the-uk-housing-stock/).
+* [CREDS, *The over-prediction of primary energy use intensity by EPCs in Great Britain*](https://www.creds.ac.uk/publications/the-over-prediction-of-primary-energy-use-intensity-by-epcs-in-great-britain-a-direct-comparison-of-epc-modelled-and-smart-metered-energy-use-in-gas-heated-homes/), essential background if you plan to use EPC bands to estimate energy use.
+* [Hardy & Glew (2019), *An analysis of errors in the Energy Performance Certificate database*](https://doi.org/10.1016/j.enpol.2019.03.022).
+* [EDRC, *Place-based Retrofit and Regeneration Models*](https://www.edrc.ac.uk/research/projects/place-based-retrofit-and-regeneration-models/), current work on how retrofit is delivered at neighbourhood scale.
+* [Historic England, energy efficiency and historic buildings](https://historicengland.org.uk/advice/technical-advice/energy-efficiency-and-historic-buildings/), for conservation areas and listed homes.
+* [Government fuel poverty statistics](https://www.gov.uk/government/collections/fuel-poverty-statistics), for the affordability side.
 
 ## Land Ownership Explorer
 
@@ -906,14 +982,14 @@ By default the parcels are drawn as a plain wash, because the usual reason to tu
 **Properties on the parcel** counts how many current addresses sit inside each parcel, and sorts them into three groups:
 
 * **One property**: the parcel is that property's plot. This is the common case, about seven in ten parcels.
-* **No properties**: bare land. Fields, gardens and access strips held on their own title, car parks, yards, and sites where the building has gone. Also, occasionally, a parcel whose address point happens to fall just outside the mapped boundary.
+* **No properties**: bare land. Fields, gardens, and access strips held on their own title, car parks, yards, and sites where the building has gone. Also, occasionally, a parcel whose address point happens to fall just outside the mapped boundary.
 * **Several**: a block of flats, a terrace held on one title, a farm with several dwellings, or a large mixed site.
 
-"Current" matters here. The count uses only addresses present in the latest Ordnance Survey release, not every address ever recorded, so a plot whose two flats were long ago knocked through into one house counts as one property rather than two.
+The count uses only addresses present in the latest Ordnance Survey release, not every address ever recorded, so a plot whose two flats were long ago knocked through into one house counts as one property rather than two.
 
-**Price per square metre** divides a property's estimated 2025 value by the area of its parcel. It is shown **only** for the one-property parcels, and that restriction is the whole point: only when the parcel is a single property's plot does dividing its value by that area mean anything. For a block of flats the same sum would divide one flat's value by the whole building's footprint.
+**Price per square metre** divides a property's estimated 2025 value by the area of its parcel. It is shown **only** for the one-property parcels.
 
-Treat the result as indicative. The value is a model estimate, extrapolated forward from the property's last recorded sale using local price trends, so it is least reliable for homes that have not changed hands recently and is unavailable for homes never sold since 1995. The area is the registered parcel, which is not always the same as the garden or the usable land. The measure is most informative compared between neighbouring parcels rather than read as a number.
+Treat the result as indicative. The value is a model estimate, extrapolated forward from the property's last recorded sale using local price trends, so it is least reliable for homes that have not changed hands recently and is unavailable for homes never sold since 1995. Also in most cases the buildings on the land will be a significant proportion of the value of property. So while this map shows price per square metre it is on a true measure of land value. The area is the registered parcel, which is not always the same as the garden or the usable land. The measure is most informative compared between neighbouring parcels.
 
 Click any polygon to see its INSPIRE ID (which can be used to purchase the full title from the Land Registry), the local authority name, the area in square metres, how many properties are on it, and where applicable the estimated value and price per square metre.
 <!-- /#landownership-inspire -->
@@ -970,7 +1046,7 @@ The points can be coloured by four variables:
 
 ### Methods and further reading
 
-The geocoding pipeline described above was developed for Carbon & Place. For context on land ownership in Britain, see HM Land Registry's [open data portal](https://use-land-property-data.service.gov.uk/), and for the wider debate, the [House of Commons Library research on land value capture](https://commonslibrary.parliament.uk/research-briefings/sn06846/).
+The geocoding and polygon-cleaning pipeline described above was developed for Carbon & Place and is published as [`LandOwnership`](https://github.com/PlaceBasedCarbonCalculator/LandOwnership). For context on land ownership in Britain, see HM Land Registry's [open data portal](https://use-land-property-data.service.gov.uk/), and for the wider debate, the [House of Commons Library research on land value capture](https://commonslibrary.parliament.uk/research-briefings/sn06846/).
 
 ## Land Use and Planning Explorer
 
@@ -1113,7 +1189,7 @@ Management typically involves maintaining the habitats that make each site speci
 <!-- #landuse-parksandgardens -->
 #### Registered Parks and Gardens
 
-The [Register of Historic Parks and Gardens](https://historicengland.org.uk/listing/what-is-designation/registered-parks-and-gardens/), maintained by Historic England, identifies designed landscapes of national importance in England: over 1,700 sites ranging from mediaeval deer parks and great country house landscapes to municipal parks, cemeteries, and post-war designed spaces.
+The [Register of Historic Parks and Gardens](https://historicengland.org.uk/listing/what-is-designation/registered-parks-and-gardens/), maintained by Historic England, identifies designed landscapes of national importance in England: over 1,700 sites ranging from medieval deer parks and great country house landscapes to municipal parks, cemeteries, and post-war designed spaces.
 
 Sites are graded I, II*, and II on the same basis as listed buildings, according to the quality and rarity of the design and its state of survival. Registration does not create a separate consent regime, but it is a material consideration in planning: harm to a registered landscape must be weighed in any planning decision, and Historic England is consulted on proposals affecting the most important sites.
 
@@ -1145,7 +1221,7 @@ Protection is among the strongest in the planning system: any plan or project li
 
 Scheduled monuments are archaeological and historic sites of national importance protected under the [Ancient Monuments and Archaeological Areas Act 1979](https://www.legislation.gov.uk/ukpga/1979/46). England has nearly 20,000, managed through [Historic England](https://historicengland.org.uk/listing/what-is-designation/scheduled-monuments/); Cadw, Historic Environment Scotland, and the Northern Ireland Environment Agency maintain the equivalent schedules elsewhere in the UK.
 
-Scheduling protects sites where the archaeology itself is the primary interest: prehistoric standing stones and burial mounds, hillforts, Roman remains, mediaeval castles and monasteries, and industrial sites. Any works affecting a scheduled monument, above or below ground, require scheduled monument consent, and unauthorised works or metal detecting are criminal offences.
+Scheduling protects sites where the archaeology itself is the primary interest: prehistoric standing stones and burial mounds, hillforts, Roman remains, medieval castles and monasteries, and industrial sites. Any works affecting a scheduled monument, above or below ground, require scheduled monument consent, and unauthorised works or metal detecting are criminal offences.
 
 Unlike listed buildings, scheduled monuments are often not buildings in use, and scheduling does not create any right of public access; many monuments sit on private land. Management focuses on preventing gradual harm from ploughing, erosion, burrowing animals, and vegetation, alongside conservation, research, and interpretation.
 <!-- /#landuse-scheduledmonuments -->
@@ -1194,4 +1270,4 @@ Carbon & Place is developed in the open, and we welcome corrections. If somethin
 
 * Send us your thoughts through the [feedback form](/about/feedback/).
 * Propose changes to this manual directly on [GitHub](https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/blob/dev/manual/index.md).
-* For academic use, cite [Morgan (2025)](https://doi.org/10.1177/23998083251401613), and see the [About page](/about/) for licensing and data reuse conditions.
+* For academic use, cite [Morgan (2026)](https://doi.org/10.1177/23998083251401613), and see the [About page](/about/) for licensing and data reuse conditions.

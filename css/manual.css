@@ -4,9 +4,6 @@
    while still picking up content-new.css's typography/link/table styling and
    :root design tokens. */
 @media screen and (max-width: 760px) {
-  body.manual-page .table-of-contents {
-    display: none;
-  }
   body.manual-page .content {
     width: calc(100% - 30px);
     margin-left: 0;
@@ -14,8 +11,8 @@
 }
 @media screen and (min-width: 761px) {
 	body.manual-page .content {
-    margin-left: 240px;
-    width: calc(95% - 240px);
+    margin-left: 282px;
+    width: calc(95% - 282px);
   }
 }
 
@@ -100,4 +97,72 @@ body.manual-page img[alt=family_photo] {
   width: 50px;
   height: 38px;
   right: 5px;
+}
+
+
+/* Floating contents button and slide-out contents panel, mobile only. These
+   mobile rules sit at the end of the file because the base
+   .table-of-contents rule above has the same specificity, so the later
+   declarations are the ones that win. */
+body.manual-page .toc-toggle,
+body.manual-page .toc-backdrop {
+  display: none;
+}
+
+body.manual-page .toc-toggle {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 1300;
+  width: 52px;
+  height: 52px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--brand, #ac1a40);
+  color: #fff;
+  font-size: 20px;
+  line-height: 1;
+  box-shadow: var(--shadow-card, 0 4px 24px rgba(0,0,0,.13));
+  cursor: pointer;
+}
+
+body.manual-page .toc-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  background-color: rgba(0, 0, 0, .4);
+}
+
+@media screen and (max-width: 760px) {
+  body.manual-page .toc-toggle {
+    display: flex;
+  }
+  body.manual-page .table-of-contents {
+    display: none;
+    left: 16px;
+    right: 16px;
+    top: auto;
+    bottom: 80px;
+    width: auto;
+    max-width: 360px;
+    /* On wider phones the panel is narrower than the space available, so pull
+       it across to sit next to the button rather than away from it. */
+    margin-left: auto;
+    max-height: min(60vh, calc(100% - 160px));
+    z-index: 1200;
+  }
+  body.manual-page.toc-open .table-of-contents,
+  body.manual-page.toc-open .toc-backdrop {
+    display: block;
+  }
+}
+
+@media screen and (min-width: 761px) {
+  /* Never leave the panel stuck open if the window is widened while it is. */
+  body.manual-page .toc-backdrop {
+    display: none;
+  }
 }
