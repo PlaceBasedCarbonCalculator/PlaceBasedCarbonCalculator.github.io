@@ -1,0 +1,2929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Carbon &amp; Place - promotional flythrough</title>
+
+<!--
+	Carbon & Place - promotional flythrough
+	=======================================
+
+	A self-contained, single-file demo reel. It is NOT part of the site tool
+	set: nothing else in the repository references it, and it references no
+	other file in the repository except the two static basemap definitions
+	(/tiles/style_*.json and /tiles/partial-style_oszoom_names.json), which it
+	only ever reads. All of its own CSS and JS is inline, so it can be moved,
+	copied or deleted without touching anything else.
+
+	What it does
+	------------
+	One full-screen MapLibre map flies a single scripted camera path - two
+	minutes by default - from a wide view of northern Britain, down into
+	Manchester, through the 3D buildings, and out over the Pennines to Leeds. As it flies, the data
+	layers of the real tools cross-fade underneath it: PBCC neighbourhood carbon
+	grades, dasymetric 3D buildings, domestic EPCs, the solar insolation raster,
+	15-minute isochrones, buses per hour and energy bills against income.
+
+	Smoothness
+	----------
+	MapLibre only ever fetches tiles for the CURRENT viewport, so a scripted
+	flight will always pop unless the tiles are already in hand. Before the reel
+	becomes playable this page therefore flies the whole path once, slowly,
+	stopping at each sample point until the map reports itself idle, with every
+	layer already switched on at zero opacity. That fills the tile cache (sized
+	generously via maxTileCacheSize) with exactly the tiles the flight needs.
+
+	The second half of that trick matters just as much: after the sweep no layer
+	is ever hidden again. Toggling layer visibility forces MapLibre to re-run
+	layout for that source, which is precisely the hitch the sweep was meant to
+	remove, so playback drives opacity alone and leaves visibility untouched.
+
+	Captions, legends, the wordmark, the attribution line and the end card are
+	all drawn onto a 2D canvas layered over the map, NOT as HTML. That is
+	deliberate: it means the in-page recorder can composite the map canvas and
+	the overlay canvas into one video with every caption intact. The playback
+	controls are the only HTML chrome, and they are never recorded.
+
+	URL parameters
+	--------------
+	?duration=120  Length in seconds (8-600). Everything scales proportionally.
+	?endcard=4     Seconds the brand end card holds (does not scale).
+	?anonymise=1   Drop the house number from the property popup, leaving the
+	               street. The EPC register is open data and the tool shows the
+	               same card on click, but a promotional video puts one specific
+	               household in front of an audience that did not go looking.
+	?ar=16:9       Stage aspect ratio, e.g. 16:9, 9:16, 1:1, or 'fill'.
+	?basemap=...   Any style name in /tiles/, e.g. satellite, dark_nobuild.
+	?terrain=0     Disable 3D terrain (use if the DEM tiles are slow).
+	?exaggeration= Terrain relief multiplier (default 1.1).
+	?fardetail=    Extra far-field detail, 0 to 0.9 (default 0.5). Higher keeps
+	               3D buildings going further towards the horizon and costs
+	               sharply more tiles; 0 restores MapLibre's own falloff.
+	?holds=1       Pause at each scene change until its layer has loaded. Off by
+	               default - the pauses break the animation, and the preload
+	               sweep plus a properly sized tile cache make them unnecessary.
+	?record=1      Enable in-page recording. Costs some smoothness (it forces
+	               preserveDrawingBuffer), so it is off unless asked for.
+	?warmup=0      Skip the preload sweep (faster to start, pops during playback).
+	?warmupsteps=  How many stops the preload sweep makes (default 44).
+	?chrome=0      Hide the playback controls entirely.
+	?autoplay=1    Start as soon as the map is ready.
+	?interactive=1 Re-enable mouse control of the map, for finding new camera
+	               keyframes (the current camera prints to the console on 'C').
+
+	Keys: Space play/pause, R restart, C log camera, H hide chrome, F fullscreen.
+
+	Recording
+	---------
+	The Record button captures stage-sized WebM in real time via MediaRecorder.
+	The output resolution is the stage size in DEVICE pixels, so on a 2x display
+	a 960x540 CSS stage records at 1920x1080. For a guaranteed-clean 1080p
+	master, a desktop screen recorder (OBS et al.) pointed at this page with
+	?chrome=0 will always beat real-time browser capture on a loaded machine.
+-->
+
+<link href="https://unpkg.com/maplibre-gl@6.4.1/dist/maplibre-gl.css" rel="stylesheet">
+
+<!-- The PBCC tool's own stylesheets, so the injected report card is styled by
+     the real thing rather than a copy of it. Loaded BEFORE this page's <style>
+     below, so the demo's own chrome wins wherever the two overlap. -->
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/map.css">
+<link rel="stylesheet" href="/css/map-new.css">
+<link rel="stylesheet" href="/assets/fontawesome/css/fontawesome.css">
+<link rel="stylesheet" href="/assets/fontawesome/css/solid.min.css">
+<script src="https://unpkg.com/pmtiles@4.5.0/dist/pmtiles.js"></script>
+
+<style>
+	:root {
+		--brand: #ac1a40;
+		--brand-light: #ff6b8f;
+	}
+	* { box-sizing: border-box; }
+	html, body {
+		margin: 0; padding: 0; height: 100%; width: 100%;
+		background: #08080b; overflow: hidden;
+		font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+		color: #fff;
+	}
+	#shell {
+		position: fixed; inset: 0;
+		display: flex; align-items: center; justify-content: center;
+	}
+	#stage {
+		position: relative; overflow: hidden;
+		background: #0d0f14;
+		box-shadow: 0 30px 90px rgba(0,0,0,.6);
+	}
+	#map { position: absolute; inset: 0; }
+	/* Named #reeloverlay, not #overlay: map.css claims #overlay for a
+	   half-opaque black sheet over the whole viewport, which is exactly what it
+	   did to this canvas once the tool's stylesheets were linked in. */
+	#reeloverlay {
+		position: absolute; inset: 0; width: 100%; height: 100%;
+		pointer-events: none;
+	}
+	/* MapLibre chrome is unwanted here: everything visible is drawn on #reeloverlay */
+	.maplibregl-control-container { display: none; }
+	.maplibregl-canvas { outline: none; }
+
+	/* ---------- Curtain (pre-roll) ---------- */
+	#curtain {
+		position: absolute; inset: 0; z-index: 5;
+		display: flex; flex-direction: column; align-items: center; justify-content: center;
+		gap: 18px; text-align: center; padding: 24px;
+		background: radial-gradient(120% 120% at 50% 40%, #1d2130 0%, #0a0b10 70%);
+		transition: opacity .5s ease;
+	}
+	#curtain.hidden { opacity: 0; pointer-events: none; }
+	#curtain h1 {
+		margin: 0; font-size: clamp(20px, 3.2vw, 40px); font-weight: 700; letter-spacing: -.01em;
+	}
+	#curtain h1 span { color: var(--brand-light); }
+	#curtain p { margin: 0; color: #9aa0b0; font-size: clamp(12px, 1.3vw, 15px); max-width: 46ch; line-height: 1.55; }
+	#playbig {
+		margin-top: 6px; width: 84px; height: 84px; border-radius: 50%;
+		border: 0; cursor: pointer; background: var(--brand); color: #fff;
+		display: grid; place-items: center; transition: transform .18s ease, background .18s ease;
+		box-shadow: 0 12px 40px rgba(172,26,64,.45);
+	}
+	#playbig:hover:not(:disabled) { transform: scale(1.06); background: #c31f4a; }
+	#playbig:disabled { background: #2a2e3c; box-shadow: none; cursor: progress; }
+	#playbig svg { width: 34px; height: 34px; margin-left: 5px; fill: #fff; }
+	#playbig.loading svg { display: none; }
+	/* Not .spinner: map.css hides that class outright */
+	.reel-spinner {
+		width: 30px; height: 30px; border-radius: 50%;
+		border: 3px solid rgba(255,255,255,.18); border-top-color: #fff;
+		animation: spin 900ms linear infinite; display: none;
+	}
+	#playbig.loading .reel-spinner { display: block; }
+	@keyframes spin { to { transform: rotate(360deg); } }
+	#progress {
+		display: none; width: min(340px, 60vw); height: 4px; border-radius: 999px;
+		background: rgba(255,255,255,.12); overflow: hidden;
+	}
+	#progressbar {
+		width: 0%; height: 100%; background: var(--brand);
+		transition: width .3s ease;
+	}
+
+	/* ---------- Controls ---------- */
+	#controls {
+		position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%);
+		z-index: 20; display: flex; align-items: center; gap: 10px;
+		padding: 9px 12px; border-radius: 999px;
+		background: rgba(18,19,26,.86); border: 1px solid rgba(255,255,255,.10);
+		box-shadow: 0 12px 40px rgba(0,0,0,.5);
+		backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+		transition: opacity .35s ease;
+		font-size: 13px;
+	}
+	#controls.idle { opacity: 0; pointer-events: none; }
+	#controls.gone { display: none; }
+	#controls button {
+		border: 0; cursor: pointer; border-radius: 999px; padding: 7px 14px;
+		background: rgba(255,255,255,.09); color: #eceef5; font: inherit; font-weight: 600;
+		transition: background .15s ease;
+	}
+	#controls button:hover { background: rgba(255,255,255,.18); }
+	#controls button.primary { background: var(--brand); color: #fff; }
+	#controls button.primary:hover { background: #c31f4a; }
+	#controls button.rec { background: #7b1020; }
+	#controls button.rec.on { background: #e0143c; animation: pulse 1.2s ease-in-out infinite; }
+	@keyframes pulse { 50% { opacity: .55; } }
+	#scrub { width: 220px; accent-color: var(--brand); cursor: pointer; }
+	#clock { font-variant-numeric: tabular-nums; color: #989eb0; min-width: 92px; text-align: center; }
+	#hint {
+		position: fixed; right: 16px; top: 14px; z-index: 20;
+		font-size: 11.5px; color: #7d8496; text-align: right; line-height: 1.7;
+		transition: opacity .35s ease; pointer-events: none;
+	}
+	#hint.idle { opacity: 0; }
+	#hint b { color: #aeb4c4; font-weight: 600; }
+	#hint.gone { display: none; }
+
+	/* The injected PBCC report modal: half the frame, down the left-hand side.
+	   The tool's own .modal is position:fixed against the viewport, which is
+	   wrong inside the stage, so it is re-anchored to this host. */
+	#reporthost {
+		position: absolute; z-index: 4;
+		left: 3%; top: 5%; width: 44%; height: 90%;
+		opacity: 0; transition: opacity .9s ease;
+		pointer-events: none;
+		/* This page sets body colour to white for the video chrome, which the
+		   report would otherwise inherit - white text on the modal's pale grey.
+		   Reassert the site's own ink here; .modal-header still overrides it. */
+		color: #1b1b21;
+		font-family: Arial, sans-serif;
+		text-align: left;
+	}
+	#reporthost .modal {
+		position: absolute !important;
+		left: 0 !important; top: 0 !important; right: 0 !important; bottom: 0 !important;
+		max-width: none !important; width: 100% !important; height: 100% !important;
+		margin: 0; overflow: hidden auto;
+	}
+	/* The reel drives the tabs, so the tool's own controls are along for the ride */
+	#reporthost .modal-close, #reporthost .print-button, #reporthost .share-button { pointer-events: none; }
+	/* Nothing may scroll: the reel trims each tab to fit instead (see fitTab) */
+	#reporthost .modal, #reporthost .modal-body { overflow: hidden !important; }
+
+	/* The tool's .modal-body is an ordinary block, so it has no height of its
+	   own - it is simply as tall as whatever is inside it. That made every
+	   "does this overflow?" test in fitTab and growCharts trivially false
+	   (scrollHeight and clientHeight were always the same number), which is why
+	   nothing was ever trimmed and the charts never grew. Laying the modal out
+	   as a column gives the body a real, bounded height to measure against. */
+	#reporthost .modal { display: flex !important; flex-direction: column; }
+	#reporthost .modal-header { flex: 0 0 auto; }
+	#reporthost .modal-body { flex: 1 1 auto; min-height: 0; }
+
+	/* A starting height only. growCharts() overwrites it, also !important, with
+	   whatever the panel has left once the tab has been thinned to one chart, so
+	   these numbers just need to be small enough not to overflow on their own.
+	   position:relative is what Chart.js measures against. */
+	#reporthost .chart-container { height: 220px !important; position: relative; }
+	#reporthost .chart-container-wide { height: 260px !important; position: relative; }
+	#reporthost .modal-body { font-size: 13px; }
+	#reporthost .chart-description-tab-content p { margin: 6px 0 0; }
+	/* setBlockHeight clamps the text to whole lines instead, so there is nothing
+	   left to scroll to and no scrollbar down the side of the card */
+	#reporthost .chart-description-tab-content { overflow: hidden !important; }
+
+	/* Overview: the headline grade is the thing to see, so give it room. Its
+	   wrapper carries an inline min-height:400px sized for the tool's 400px
+	   chart, which leaves a band of dead space under the shorter one here. */
+	#reporthost #overview > div[style*="min-height"] { min-height: 0 !important; }
+	#reporthost .headline-grade { margin: 0 0 4px auto; }
+	#reporthost .headline-grade img { width: 190px !important; height: 190px !important; }
+	#reporthost #overview .chart-container { margin-bottom: 0 !important; }
+
+	/* Demographics' pen portrait: about fifty household photographs, 70x53 in the
+	   tool, which is 379px of a 739px panel before the chart even starts. Scaled
+	   down the montage reads the same and leaves the population pyramid its room;
+	   cropToWholeRows then trims it to a whole number of rows. */
+	#reporthost .community_photos { padding: 8px !important; line-height: 0; }
+	#reporthost .community_photos .family_photo { width: 40px !important; height: 30px !important; }
+</style>
+</head>
+
+<body>
+
+<div id="shell">
+	<div id="stage">
+		<div id="map"></div>
+		<canvas id="reeloverlay"></canvas>
+		<div id="curtain">
+			<h1>Carbon <span>&amp;</span> Place</h1>
+			<p>A two minute flight from northern Britain into Manchester, through the buildings, and out over the Pennines to Leeds. It pauses at each new layer so nothing pops in; those pauses are listed in the console for cutting afterwards.</p>
+			<button id="playbig" class="loading" disabled aria-label="Play">
+				<div class="reel-spinner"></div>
+				<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>
+			</button>
+			<p id="curtainstatus">Loading map tiles&hellip;</p>
+			<div id="progress"><div id="progressbar"></div></div>
+		</div>
+	</div>
+</div>
+
+<div id="controls">
+	<button id="play" class="primary">Play</button>
+	<button id="restart">Restart</button>
+	<input id="scrub" type="range" min="0" max="1000" value="0" step="1" aria-label="Timeline">
+	<span id="clock">0.0 / 30.0s</span>
+	<button id="record" class="rec">Record</button>
+</div>
+
+<div id="hint">
+	<b>Space</b> play/pause &nbsp; <b>R</b> restart<br>
+	<b>H</b> hide chrome &nbsp; <b>F</b> fullscreen &nbsp; <b>C</b> log camera
+</div>
+
+<script type="module">
+// MapLibre GL JS 6 is ESM-only, as on the rest of the site
+import * as maplibregl from 'https://unpkg.com/maplibre-gl@6.4.1/dist/maplibre-gl.mjs';
+
+
+/* ==========================================================================
+   1. Configuration
+   ========================================================================== */
+
+const P = new URLSearchParams (location.search);
+const clamp = (v, lo, hi) => Math.min (hi, Math.max (lo, v));
+
+// The storyboard below is authored against a two minute master, so every time
+// written in the CAMERA and STORY tables is simply the second it happens on.
+// K rescales the lot when ?duration= asks for a different length, and is 1 at
+// the default. Two minutes is the default deliberately: the slower the camera
+// moves, the longer every tile has to arrive before it is needed.
+const MASTER      = 120;
+const DURATION    = clamp (parseFloat (P.get ('duration')) || MASTER, 8, 600);
+const K           = DURATION / MASTER;
+
+// Buildings are hidden below this zoom - they are far too small to read, and
+// loading them nationally would be ruinous. Shared by the two buildings layers
+// and by the mid-scene hold that waits for them to arrive.
+const BUILDINGS_MINZOOM = 11;
+const ASPECT      = P.get ('ar') || '16:9';
+const BASEMAP     = P.get ('basemap') || 'greyscale_nobuild';
+const USE_TERRAIN = P.get ('terrain') !== '0';
+const EXAGGERATION = clamp (parseFloat (P.get ('exaggeration')) || 1.1, 0, 3);
+
+// How much extra detail to hold in the far field. In a pitched view MapLibre
+// drops a zoom level for every doubling of distance from the camera, which is
+// why the 3D buildings stop partway to the horizon and the distance flattens
+// into bare low-zoom ground.
+//
+// 0 leaves MapLibre's own falloff alone; 1 would abolish it entirely and draw
+// every tile at the centre zoom. Higher is more detail further away, and it is
+// expensive: the tile count in the far band goes up roughly fourfold for every
+// whole zoom level held back, so 0.5 asks for something like an order of
+// magnitude more distant tiles than the default. That is why it is applied to
+// the buildings sources only, where the break is what you actually see.
+const FAR_DETAIL = clamp (parseFloat (P.get ('fardetail')) || 0.5, 0, 0.9);
+const INTERACTIVE = P.get ('interactive') === '1';
+const ANONYMISE   = P.get ('anonymise') === '1';
+const RECORDABLE  = P.get ('record') === '1';
+const WARMUP      = P.get ('warmup') !== '0';
+const WARMUP_STEPS = clamp (parseInt (P.get ('warmupsteps'), 10) || 80, 6, 400);
+// Off by default: pausing at each scene change was meant to hide loading, but a
+// pause is itself a break in the animation. With the tile cache sized properly
+// and no paint rebuilds mid-flight there is nothing left to wait for, so the
+// reel runs straight through. ?holds=1 brings them back.
+const HOLDS       = P.get ('holds') === '1';
+
+// Hold timings, in wall-clock milliseconds
+const HOLD_SETTLE = 700;	// after the tiles report loaded, let labels and buckets settle
+const HOLD_MAX    = 9000;	// give up waiting rather than stall the reel for ever
+const AUTOPLAY    = P.get ('autoplay') === '1';
+let   showChrome  = P.get ('chrome') !== '0';
+
+// Where the data lives; the same blob container the tools use
+const TILES = 'https://pbcc.blob.core.windows.net/pbcc-pmtiles';
+const DATA  = 'https://pbcc.blob.core.windows.net/pbcc-data';
+
+// The LSOA whose 15-minute isochrones are shown, chosen because its centroid
+// sits under the camera as it climbs out of north Manchester
+const ISO_LSOA = 'E01005321';
+
+// How far ahead of its scene a layer is switched on (at zero opacity) so that
+// its tiles are already in the cache when it fades up. Layers are only ever
+// switched on, never off again - see the note on visibility in the header.
+const PRELOAD = 12 * K;
+
+// Paint transition length; every cross-fade between scenes uses it. Scaled with
+// the reel, within limits, so a short cut does not linger and a long one does
+// not snap.
+const FADE = Math.round (1500 * clamp (K, 0.4, 2));
+
+
+/* ==========================================================================
+   2. Palettes
+   --------------------------------------------------------------------------
+   Copied from the tools own datasets.js files so the reel shows the same
+   colours the user will meet when they open the real map. If a palette is
+   changed there, change it here too - nothing links the two automatically.
+   ========================================================================== */
+
+// PBCC emissions grade, A+ (best) to F- (worst); pbcc/datasets.js
+const GRADES = [
+	['A+', '#313695'], ['A',  '#4575b4'], ['A-', '#4575b4'],
+	['B+', '#74add1'], ['B',  '#abd9e9'], ['B-', '#abd9e9'],
+	['C+', '#e0f3f8'], ['C',  '#e0f3f8'], ['C-', '#ffffbf'],
+	['D+', '#ffffbf'], ['D',  '#fee090'], ['D-', '#fee090'],
+	['E+', '#fdae61'], ['E',  '#fdae61'], ['E-', '#f46d43'],
+	['F+', '#d73027'], ['F',  '#d73027'], ['F-', '#a50026']
+];
+const GRADE_RAMP = ['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8',
+                    '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026'];
+
+// Domestic EPC current rating; retrofit/datasets.js
+const EPC_BANDS = [
+	['A', '#0e7e58'], ['B', '#2aa45b'], ['C', '#8cbc42'], ['D', '#f6cc15'],
+	['E', '#f2a867'], ['F', '#f17e23'], ['G', '#e31d3e']
+];
+
+// Annual solar insolation, Wh/m2 per year; retrofit/datasets.js (Turbo ramp)
+const SOLAR_RAMP = ['#30123B', '#466BE3', '#28BBEC', '#31F299', '#A2FC3C',
+                    '#EDD03A', '#FB8022', '#D23105', '#7A0403'];
+
+// Buses per hour, daytime average, 2025; transport/datasets.js. Mode 3 is the
+// bus; the same ramp serves every mode in the tool, which is the point of it -
+// it exists so places can be compared against each other.
+const TPH_FIELD = 'tph_daytime_avg_2025_3';
+const TPH_RAMP  = ['#b2182b', '#d6604d', '#f4a582', '#fddbc7', '#f7f7f7',
+                   '#d1e5f0', '#92c5de', '#4393c3', '#053061'];
+const TPH_STOPS = [0, '#b2182b', 1, '#d6604d', 2, '#f4a582', 5, '#fddbc7', 10, '#f7f7f7',
+                   20, '#d1e5f0', 30, '#92c5de', 50, '#4393c3', 100, '#053061'];
+
+// Average EPC score by neighbourhood; retrofit/datasets.js (categorical bands)
+const SCORE_BANDS = [
+	['0-50', '#d73027'], ['50-55', '#fc8d59'], ['55-60', '#fee08b'], ['60-65', '#ffffbf'],
+	['65-70', '#d9ef8b'], ['70-80', '#91cf60'], ['80-100', '#1a9850']
+];
+
+// Energy bills against income, retrofit/datasets.js. A bivariate scale: the
+// field holds a two-digit code XY where X is the energy-bill quintile and Y the
+// income quintile, both 1 (low) to 5 (high), so the value is matched rather than
+// interpolated. Read the grid as: orange = high bills on low incomes, green =
+// low bills on high incomes, white = middling on both.
+const BILLS_VS_INCOME = 'fuelcost_bivaraite';	// spelling as it is in the tiles
+const BIVARIATE = [
+	[11, '#F07621'], [21, '#F3896D'], [31, '#F597A5'], [41, '#EF5091'], [51, '#E90C7E'],
+	[12, '#DEB15C'], [22, '#EDBD9D'], [32, '#F8CBD1'], [42, '#E991BB'], [52, '#D959A6'],
+	[13, '#CEE28D'], [23, '#E8F0CC'], [33, '#FAFAFA'], [43, '#E3CBE1'], [53, '#CC9BC8'],
+	[14, '#7BBC6D'], [24, '#AAD2B0'], [34, '#D6E7EB'], [44, '#BCB3D2'], [54, '#9D7CB8'],
+	[15, '#0D8943'], [25, '#51A788'], [35, '#9BC8D2'], [45, '#7A8BB9'], [55, '#5950A1']
+];
+
+// Travel-time isochrone modes; transport/ui.js
+const ISO_MODES = [
+	['Walk', '#4daf4a'], ['Cycle', '#377eb8'],
+	['Bus & rail', '#984ea3'], ['Cycle + rail', '#e41a1c']
+];
+
+// Build a MapLibre 'match' expression from [[value, colour], ...] pairs
+const matchExpr = (field, pairs, fallback) =>
+	['match', ['get', field]].concat (...pairs.map (p => [p[0], p[1]])).concat ([fallback]);
+
+const GRADE_MATCH = matchExpr ('total_grade', GRADES, '#9c9898');
+
+
+/* ==========================================================================
+   3. Camera path
+   --------------------------------------------------------------------------
+   Keyframes on the 30 second master clock. Longitude and latitude increase
+   monotonically the whole way - Great Britain, down into central Manchester,
+   through the buildings heading north-east, up over the Pennines, into Leeds -
+   which keeps the interpolated path free of any doubling back.
+
+   Each channel is shaped to turn at most once over the whole flight - zoom
+   climbs, holds at its peak, then falls away and settles; pitch rises to 78 and
+   comes back down; bearing swings one way and returns. That matters because the
+   interpolation flattens at every local extremum, so a keyframe table that
+   wanders up and down produces a camera that visibly bobs. Adding a keyframe
+   whose value reverses direction is the quickest way to make this reel look
+   bouncy again.
+
+   The opening is a wide regional shot rather than the whole island: at z7 the
+   frame still runs from the Midlands to central Scotland, which reads as
+   national while keeping enough detail in the neighbourhood colours to be worth
+   looking at. The descent from there to Manchester takes 26 seconds of the two
+   minutes - deliberately the briskest passage in the reel, since it is the part
+   with the least to look at.
+
+   Zoom values are written for a 1080px-tall frame and corrected at runtime for
+   the real stage height (see zoomOffset), so the framing is the same on a
+   laptop as it is on a 1080p recording.
+   ========================================================================== */
+
+const CAMERA = [
+	// t      lng        lat       zoom   pitch  bearing
+	[   0.0, -3.0500,  54.3000,   7.00,    0,     0 ],	// northern Britain, wide
+	[   9.0, -2.9000,  54.0500,   7.85,   20,     5 ],	// starting to fall
+	[  18.0, -2.5800,  53.7800,   9.70,   44,    16 ],	// north-west England
+	[  26.0, -2.3400,  53.5200,  12.60,   62,    30 ],	// Manchester, descent complete
+	[  34.0, -2.2500,  53.4790,  15.30,   74,    42 ],	// down among the city centre towers
+	[  44.0, -2.2180,  53.4830,  15.90,   78,    50 ],	// threading through the buildings
+	[  56.0, -2.1900,  53.4890,  15.90,   78,    55 ],	// holding altitude over the terraces
+	[  68.0, -2.1620,  53.4960,  15.70,   74,    58 ],	// low over the rooftops
+	[  76.0, -2.1000,  53.5300,  13.20,   66,    54 ],	// climbing out of the city
+	[  90.0, -1.9500,  53.6200,  11.20,   62,    48 ],	// the Pennines
+	[ 104.0, -1.7600,  53.7100,  11.60,   58,    42 ],	// countryside towards Leeds
+	[ 112.0, -1.6200,  53.7700,  12.00,   54,    38 ],	// Leeds outskirts
+	[ 120.0, -1.5400,  53.8000,  12.40,   48,    32 ]	// over Leeds, holding
+];
+
+// Monotone cubic Hermite interpolation (Fritsch-Carlson). Chosen over a plain
+// Catmull-Rom spline because it is C1 continuous - so the camera never stops or
+// jerks at a keyframe - while being incapable of overshooting, which a
+// Catmull-Rom would do on the sharp zoom reversals in the middle of the path.
+function makeSpline (xs, ys)
+{
+	const n = xs.length;
+	if (n < 2) { return () => ys[0]; }
+	const dxs = [], ms = [];
+	for (let i = 0; i < n - 1; i++) {
+		const dx = xs[i + 1] - xs[i];
+		dxs.push (dx);
+		ms.push ((ys[i + 1] - ys[i]) / dx);
+	}
+	const c1s = [ms[0]];
+	for (let i = 0; i < dxs.length - 1; i++) {
+		const m = ms[i], mNext = ms[i + 1];
+		if (m * mNext <= 0) {
+			c1s.push (0);	// a local extremum: flatten rather than overshoot
+		} else {
+			const dx = dxs[i], dxNext = dxs[i + 1], common = dx + dxNext;
+			c1s.push (3 * common / ((common + dxNext) / m + (common + dx) / mNext));
+		}
+	}
+	c1s.push (ms[ms.length - 1]);
+
+	const c2s = [], c3s = [];
+	for (let i = 0; i < c1s.length - 1; i++) {
+		const c1 = c1s[i], m = ms[i], invDx = 1 / dxs[i], common = c1 + c1s[i + 1] - m - m;
+		c2s.push ((m - c1 - common) * invDx);
+		c3s.push (common * invDx * invDx);
+	}
+
+	return function (x) {
+		if (x <= xs[0])     { return ys[0]; }
+		if (x >= xs[n - 1]) { return ys[n - 1]; }
+		let lo = 0, hi = n - 2;
+		while (lo < hi) {
+			const mid = (lo + hi + 1) >> 1;
+			if (xs[mid] <= x) { lo = mid; } else { hi = mid - 1; }
+		}
+		const d = x - xs[lo];
+		return ys[lo] + c1s[lo] * d + c2s[lo] * d * d + c3s[lo] * d * d * d;
+	};
+}
+
+const camTimes = CAMERA.map (k => k[0] * K);
+// MASTER * K is DURATION, but only to within a rounding error, and a last
+// keyframe sitting an ulp past the end of the clock would stop the flight
+// landing exactly on Leeds. Pin both ends.
+camTimes[0] = 0;
+camTimes[camTimes.length - 1] = DURATION;
+
+const camLng   = makeSpline (camTimes, CAMERA.map (k => k[1]));
+const camLat   = makeSpline (camTimes, CAMERA.map (k => k[2]));
+const camZoom  = makeSpline (camTimes, CAMERA.map (k => k[3]));
+const camPitch = makeSpline (camTimes, CAMERA.map (k => k[4]));
+const camBear  = makeSpline (camTimes, CAMERA.map (k => k[5]));
+
+// Soften the very first and very last moments of the flight only. Captions and
+// layer changes read the unwarped clock, so their timing is unaffected.
+function warp (t)
+{
+	const T = 4 * K;
+	// Both parameters are clamped to [0, 1] before being raised to a fractional
+	// power: rounding can otherwise put u a hair outside the range, and
+	// Math.pow() of a negative base returns NaN, which would blank the map on
+	// the very last frame of the reel
+	if (t < T) {
+		return T * Math.pow (clamp (t / T, 0, 1), 1.8);
+	}
+	if (t > DURATION - T) {
+		const u = clamp ((t - (DURATION - T)) / T, 0, 1);
+		return (DURATION - T) + T * (1 - Math.pow (1 - u, 1.8));
+	}
+	return t;
+}
+
+
+/* ==========================================================================
+   4. Data layers
+   --------------------------------------------------------------------------
+   Every layer is added once, in this order (so each sits above the previous),
+   and is thereafter only ever faded. Sources and field names match the live
+   tools; see the settings.js / datasets.js of each tool.
+
+   Dasymetric mode - the default in the PBCC, transport and retrofit tools - is
+   what the close-up scenes show: the zone fill drops to a faint wash and the
+   building footprints themselves carry the colour. That needs a buildings
+   tileset holding the field being mapped, so there is one per tool; the PBCC
+   and retrofit sets are both loaded here. The two widest scenes stay on the
+   flat zone fill because the camera is above z11 there, where individual
+   buildings are far too small to read - which is what the real tools show at
+   that scale too.
+   ========================================================================== */
+
+const LAYERS = [
+
+	// Retrofit tool: modelled annual solar insolation, 2 m resolution. A raster
+	// of pre-coloured pixels, so it carries no data-driven styling.
+	{
+		id: 'solar', opacityProp: 'raster-opacity',
+		source: { type: 'raster', url: 'pmtiles://' + TILES + '/GBsolar.pmtiles',
+		          tileSize: 512, minzoom: 5, maxzoom: 14 },
+		// The layer minzooms below matter: without them the preload pass, which
+		// runs several seconds before a layer's scene and therefore at a much
+		// lower zoom, would fetch nationwide imagery, buildings and points that
+		// are never seen
+		layer: { type: 'raster', minzoom: 11, paint: {
+			'raster-opacity': 0, 'raster-resampling': 'linear', 'raster-fade-duration': 300,
+			'raster-opacity-transition': { duration: FADE }
+		} }
+	},
+
+	// PBCC tool: neighbourhood (LSOA) total carbon footprint, graded A+ to F-
+	{
+		id: 'zones_pbcc', opacityProp: 'fill-opacity',
+		source: { type: 'vector', url: 'pmtiles://' + TILES + '/zones_pbcc_20260821.pmtiles' },
+		layer: { type: 'fill', 'source-layer': 'zones', paint: {
+			'fill-color': GRADE_MATCH,
+			'fill-opacity': 0,
+			'fill-outline-color': 'rgba(0,0,0,0.18)',
+			'fill-opacity-transition': { duration: FADE }
+		} }
+	},
+
+	// Transport tool: buses per hour, daytime average, 2025. Zones with no
+	// timetabled service carry no number, and are drawn near-black as in the
+	// tool rather than being fed to the interpolate ramp.
+	{
+		id: 'zones_transport', opacityProp: 'fill-opacity',
+		source: { type: 'vector', url: 'pmtiles://' + TILES + '/zones_transport_20260821.pmtiles' },
+		layer: { type: 'fill', 'source-layer': 'zones', paint: {
+			'fill-color': ['case',
+				['==', ['typeof', ['get', TPH_FIELD]], 'number'],
+				['interpolate', ['linear'], ['get', TPH_FIELD]].concat (TPH_STOPS),
+				'#111111'
+			],
+			'fill-opacity': 0,
+			'fill-outline-color': 'rgba(0,0,0,0.18)',
+			'fill-opacity-transition': { duration: FADE }
+		} }
+	},
+
+	// Retrofit tool: energy bills against income, by neighbourhood
+	{
+		id: 'zones_retrofit', opacityProp: 'fill-opacity',
+		source: { type: 'vector', url: 'pmtiles://' + TILES + '/zones_retrofit_20260808.pmtiles' },
+		layer: { type: 'fill', 'source-layer': 'zones', paint: {
+			'fill-color': matchExpr (BILLS_VS_INCOME, BIVARIATE, '#111111'),
+			'fill-opacity': 0,
+			'fill-outline-color': 'rgba(0,0,0,0.18)',
+			'fill-opacity-transition': { duration: FADE }
+		} }
+	},
+
+	// Transport tool: 15-minute travel-time isochrones for one LSOA, loaded as
+	// GeoJSON exactly as the tool does when a centroid is clicked
+	{
+		id: 'isochrones', opacityProp: 'fill-opacity',
+		source: { type: 'geojson', data: DATA + '/isochrones_legacy/' + ISO_LSOA + '.geojson' },
+		layer: { type: 'fill', paint: {
+			'fill-color': ['match', ['get', 'mode'],
+				'WALK', '#4daf4a', 'BIKE', '#377eb8',
+				'TRANSIT', '#984ea3', 'BIKETRANSIT', '#e41a1c', '#e0e0e0'],
+			'fill-opacity': 0,
+			'fill-outline-color': 'rgba(0,0,0,0.55)',
+			'fill-opacity-transition': { duration: FADE }
+		} }
+	},
+
+	// PBCC tool: 3D building footprints carrying their neighbourhood grade, the
+	// dasymetric view. Height ramps in from z12 as in the tools.
+	//
+	// The colour is set ONCE, here, and never touched again. That is not a
+	// stylistic preference: fill-extrusion-color is data-driven, so MapLibre
+	// compiles it into a per-vertex attribute buffer for every loaded tile, and
+	// re-assigning it mid-flight rebuilds those buffers for the whole cached
+	// source in one synchronous lump. With a tile cache this size that lands as
+	// a visible freeze at the exact moment of a scene change. Scenes vary these
+	// layers by OPACITY alone, which is a uniform and costs nothing.
+	{
+		id: 'buildings', opacityProp: 'fill-extrusion-opacity', farDetail: true,
+		source: { type: 'vector', url: 'pmtiles://' + TILES + '/buildings_pbcc_20260821.pmtiles' },
+		layer: { type: 'fill-extrusion', 'source-layer': 'buildings', minzoom: BUILDINGS_MINZOOM, paint: {
+			'fill-extrusion-color': GRADE_MATCH,
+			'fill-extrusion-height': ['interpolate', ['linear'], ['zoom'], 12, 1, 14.05, ['get', 'height']],
+			'fill-extrusion-opacity': 0,
+			'fill-extrusion-opacity-transition': { duration: FADE }
+		} }
+	},
+
+	// Retrofit tool: the same building footprints, but carrying the retrofit
+	// fields, for the dasymetric view of the closing Leeds scene. A separate
+	// tileset because each tool bakes only its own fields into its buildings.
+	{
+		id: 'buildings_retrofit', opacityProp: 'fill-extrusion-opacity', farDetail: true,
+		source: { type: 'vector', url: 'pmtiles://' + TILES + '/buildings_retrofit_20260808.pmtiles' },
+		layer: { type: 'fill-extrusion', 'source-layer': 'buildings', minzoom: BUILDINGS_MINZOOM, paint: {
+			'fill-extrusion-color': matchExpr (BILLS_VS_INCOME, BIVARIATE, '#9c9898'),
+			'fill-extrusion-height': ['interpolate', ['linear'], ['zoom'], 12, 1, 14.05, ['get', 'height']],
+			'fill-extrusion-opacity': 0,
+			'fill-extrusion-opacity-transition': { duration: FADE }
+		} }
+	},
+
+	// Retrofit tool: one point per domestic EPC, coloured by current rating
+	{
+		id: 'epc_dom', opacityProp: 'circle-opacity',
+		// The white halo has to fade with the fill, or the points would appear
+		// as bare rings during the preload and the cross-fades
+		extraOpacity: ['circle-stroke-opacity'],
+		source: { type: 'vector', url: 'pmtiles://' + TILES + '/epc_dom_20260728.pmtiles' },
+		layer: { type: 'circle', 'source-layer': 'epc_dom', minzoom: 12, paint: {
+			'circle-color': matchExpr ('cur_rate', EPC_BANDS, '#bdbdbd'),
+			'circle-opacity': 0,
+			'circle-radius': ['interpolate', ['exponential', 1.6], ['zoom'],
+			                  12, 2, 15, 5.5, 17, 12, 19, 28],
+			'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 14, 0, 16, 0.8],
+			'circle-stroke-color': 'rgba(255,255,255,0.75)',
+			'circle-stroke-opacity': 0,
+			'circle-opacity-transition': { duration: FADE },
+			'circle-stroke-opacity-transition': { duration: FADE }
+		} }
+	}
+];
+
+
+/* ==========================================================================
+   5. Storyboard
+   --------------------------------------------------------------------------
+   One entry per scene, on the 30 second master clock. 'layers' gives the target
+   opacity of every layer named in it (anything not named goes to zero), 'set'
+   applies one-off paint changes on entry, and 'legend' is drawn in the caption
+   panel. Times line up with the camera keyframes above.
+   ========================================================================== */
+
+const STORY = [
+	{
+		t: 0.0,
+		eyebrow: 'Carbon & Place',
+		title: 'Every neighbourhood in Great Britain',
+		sub: 'One free map of where our carbon emissions actually come from.',
+		layers: { zones_pbcc: 0.88 },
+		legend: { kind: 'ramp', colours: GRADE_RAMP, left: 'A+', right: 'F-',
+		          caption: 'Total emissions grade' }
+	},
+	{
+		t: 12.0,
+		eyebrow: 'Place-based carbon calculator',
+		title: 'Graded A+ to F-',
+		sub: 'Household emissions from gas, electricity, cars, flights, goods and services.',
+		// The buildings are switched on here but only start drawing as the zoom
+		// crosses their z11 minimum, so they arrive on their own during the dive
+		// rather than snapping in at the next scene change
+		layers: { zones_pbcc: 0.88, buildings: 0.96 },
+		legend: { kind: 'ramp', colours: GRADE_RAMP, left: 'A+', right: 'F-',
+		          caption: 'Total emissions grade' }
+	},
+	{
+		t: 26.0,
+		eyebrow: 'Dasymetric mapping',
+		title: 'Down to every building',
+		sub: 'Emissions painted onto the buildings people actually live in.',
+		// Dasymetric: the zone fill drops to a wash and the buildings carry the grade.
+		// Nothing new is switched on here - the buildings arrived during the dive -
+		// so the pause has to be asked for rather than detected.
+		hold: true,
+		layers: { zones_pbcc: 0.14, buildings: 0.96 },
+		legend: { kind: 'ramp', colours: GRADE_RAMP, left: 'A+', right: 'F-',
+		          caption: 'Total emissions grade' }
+	},
+	{
+		t: 46.0,
+		eyebrow: 'Retrofit tool',
+		title: 'Every home, address by address',
+		sub: 'Domestic energy performance certificates for millions of properties.',
+		// The buildings drop back rather than turning neutral - same reason the
+		// colour is fixed at creation - which leaves the EPC points reading
+		// clearly over a dimmed version of the dasymetric map beneath them
+		layers: { buildings: 0.4, epc_dom: 1 },
+		popup: 'epc_dom',
+		legend: { kind: 'chips', items: EPC_BANDS, caption: 'EPC rating' }
+	},
+	{
+		t: 62.0,
+		eyebrow: 'Retrofit tool',
+		title: 'Rooftop solar potential',
+		sub: 'Modelled sunlight on every roof and field at 2 m resolution.',
+		layers: { solar: 0.95 },
+		legend: { kind: 'ramp', colours: SOLAR_RAMP, left: '0', right: '2000+',
+		          caption: 'Annual insolation, Wh/m2' },
+		credit: 'Solar model: University of Leeds, from Environment Agency LIDAR and ERA5'
+	},
+	{
+		t: 76.0,
+		eyebrow: 'Transport tool',
+		title: '15-minute neighbourhoods',
+		sub: 'How far you can really get in a quarter of an hour, by every mode.',
+		// No buildings here: the camera climbs through z11 during this scene, and
+		// the buildings layers cut off at z11, so they would blink out halfway.
+		// The isochrones read better over the plain basemap anyway, which is how
+		// the transport tool shows them.
+		layers: { isochrones: 0.62 },
+		legend: { kind: 'chips', items: ISO_MODES, caption: 'Reachable in 15 minutes' }
+	},
+	{
+		t: 90.0,
+		eyebrow: 'Transport tool',
+		title: 'How often the bus comes',
+		sub: 'Daytime average buses per hour, 2025.',
+		layers: { zones_transport: 0.88 },
+		legend: { kind: 'ramp', colours: TPH_RAMP, left: '<1', right: '100+',
+		          caption: 'Buses per hour, 2025' }
+	},
+	{
+		// The closing scene needs room: it has to arrive, be read, and still be on
+		// screen for a beat before the end card starts washing over it. Its run
+		// to ENDCARD_MASTER is the longest of any scene for that reason.
+		t: 104.0,
+		eyebrow: 'Retrofit tool',
+		title: 'Energy bills against income',
+		sub: 'Where the bills are highest relative to what households earn.',
+		layers: { zones_retrofit: 0.16, buildings_retrofit: 0.96 },
+		legend: { kind: 'bivariate', colours: BIVARIATE, x: 'Energy bills', y: 'Income',
+		          caption: 'Bills against income' }
+	}
+];
+
+// Scaled scene boundaries
+STORY.forEach ((s, i) => {
+	s.start = s.t * K;
+	s.end   = (i + 1 < STORY.length ? STORY[i + 1].t * K : DURATION);
+});
+
+// Moments that need a pause even though no scene boundary falls there. The
+// buildings layers cut off at BUILDINGS_MINZOOM, so they arrive partway through
+// a scene as the camera descends through that zoom - a pop like any other, and
+// one the scene-change holds would never catch. The moment is derived from the
+// camera rather than written down, so re-cutting the keyframes cannot leave a
+// stale hold behind. Times are in real seconds, already scaled.
+function findZoomCrossing (target)
+{
+	const step = DURATION / 2000;
+	for (let t = 0; t <= DURATION; t += step) {
+		if (camZoom (warp (t)) >= target) { return t; }
+	}
+	return null;
+}
+
+const buildingsAppearAt = findZoomCrossing (BUILDINGS_MINZOOM);
+const EXTRA_HOLDS = (buildingsAppearAt === null ? [] : [
+	{ t: buildingsAppearAt, label: 'buildings reaching z' + BUILDINGS_MINZOOM }
+]);
+
+// The end card takes over the frame for the closing beat. Four seconds of brand
+// is four seconds whatever length the reel is cut to, so this is a real duration
+// rather than a share of the timeline - it just gets out of the way and leaves
+// the extra time to the data. Clamped so a very short cut is not all end card.
+const ENDCARD_SECONDS = clamp (parseFloat (P.get ('endcard')) || 4, 1, 30);
+
+// ...but never so early that it washes over the closing scene before that scene
+// has been seen. On a short ?duration= a fixed four seconds would otherwise
+// start before the last scene had even begun, and the reel would end on a layer
+// nobody got to look at; there, the end card gives way and runs short instead.
+const lastScene = STORY[STORY.length - 1];
+const ENDCARD_AT = Math.max (
+	lastScene.start + (lastScene.end - lastScene.start) * 0.4,
+	DURATION - clamp (ENDCARD_SECONDS, 1, DURATION * 0.25)
+);
+
+// How long the brand wash takes to arrive, and how long the elements it
+// replaces take to leave.
+//
+// This is derived from how long the end card actually gets, NOT from K. The
+// card is a fixed number of real seconds by design, so scaling its fade with
+// the reel length breaks the two apart: at ?duration=600 a K-scaled fade ran to
+// seven seconds over a four second card, and the brand never finished arriving
+// before the video ended. Tying it to the card's own length keeps the two in
+// proportion at every duration.
+const ENDCARD_LENGTH = DURATION - ENDCARD_AT;
+const ENDCARD_FADE = clamp (ENDCARD_LENGTH * 0.35, 0.25, 2.5);
+
+// Earliest moment each layer is needed, so its tiles can be requested early
+const firstNeeded = {};
+LAYERS.forEach (l => {
+	const scene = STORY.find (s => (s.layers[l.id] || 0) > 0);
+	firstNeeded[l.id] = scene ? scene.start : Infinity;
+});
+
+
+/* ==========================================================================
+   6. Stage sizing
+   ========================================================================== */
+
+const shell   = document.getElementById ('shell');
+const stage   = document.getElementById ('stage');
+const overlay = document.getElementById ('reeloverlay');
+const octx    = overlay.getContext ('2d');
+
+let stageW = 0, stageH = 0, dpr = 1, zoomOffset = 0;
+
+function layoutStage ()
+{
+	const availW = shell.clientWidth, availH = shell.clientHeight;
+	let w = availW, h = availH;
+
+	if (ASPECT !== 'fill') {
+		const bits = ASPECT.split (':').map (Number);
+		const ratio = (bits.length === 2 && bits[0] > 0 && bits[1] > 0) ? bits[0] / bits[1] : 16 / 9;
+		if (availW / availH > ratio) { h = availH; w = Math.round (h * ratio); }
+		else                         { w = availW; h = Math.round (w / ratio); }
+	}
+
+	stage.style.width  = w + 'px';
+	stage.style.height = h + 'px';
+	stageW = w; stageH = h;
+
+	dpr = Math.min (window.devicePixelRatio || 1, 2);
+	overlay.width  = Math.round (w * dpr);
+	overlay.height = Math.round (h * dpr);
+
+	// Keep the framing of each keyframe constant regardless of stage size: a
+	// half-height frame needs one zoom level less to show the same ground area
+	zoomOffset = clamp (Math.log2 (h / 1080), -2.5, 1);
+
+	if (map) { map.resize (); }
+}
+
+
+/* ==========================================================================
+   7. Map
+   ========================================================================== */
+
+const protocol = new pmtiles.Protocol ();
+maplibregl.addProtocol ('pmtiles', protocol.tile);
+
+let map = null;
+let layersAdded = false;
+let cameraUnclamped = false;	// true once the camera has been freed from the terrain
+const visible = {};	// layer id -> currently 'visible'?
+
+layoutStage ();
+
+map = new maplibregl.Map ({
+	container: 'map',
+	style: '/tiles/style_' + BASEMAP + '.json',
+	center: [CAMERA[0][1], CAMERA[0][2]],
+	zoom: CAMERA[0][3] + zoomOffset,
+	pitch: CAMERA[0][4],
+	bearing: CAMERA[0][5],
+	minZoom: 3,
+	maxZoom: 20,
+	maxPitch: 85,
+	hash: false,
+	interactive: INTERACTIVE,
+	attributionControl: false,	// drawn on the overlay instead, so it is recorded
+	fadeDuration: 200,
+
+	// Tile cache. These two have to be raised TOGETHER, which is not obvious:
+	// MapLibre sizes the out-of-view cache as
+	//     min(maxTileCacheSize, tilesPerScreen * maxTileCacheZoomLevels)
+	// so maxTileCacheSize on its own is silently overruled. At 1080p with 512px
+	// tiles that is about 20 tiles per screen, and the default of a handful of
+	// zoom levels caps the cache near 100 tiles per source - nowhere near enough
+	// for a flight that crosses nine zoom levels, so the preload sweep's tiles
+	// were being evicted before playback reached them. That was the remaining
+	// source of pop-in. The caps below are ceilings, not allocations: each
+	// source only ever holds the tiles the flight actually touches - though
+	// FAR_DETAIL below raises that number for the buildings, which is why this
+	// has headroom rather than being trimmed to the bone.
+	maxTileCacheSize: 2000,
+	maxTileCacheZoomLevels: 80,
+	canvasContextAttributes: {
+		antialias: true,
+		// The in-page recorder needs this to read the map canvas outside its own
+		// render pass, but it makes the driver preserve the whole framebuffer
+		// every frame, which costs real performance. Only pay for it when
+		// recording in-page was actually asked for.
+		preserveDrawingBuffer: RECORDABLE
+	}
+});
+
+map.on ('style.load', function () {
+
+	// More haze than the tools use. Detail has to give out somewhere however far
+	// the far field is pushed, and aerial haze both hides that boundary and
+	// reads as distance rather than as a rendering artefact. fog-ground-blend
+	// is where the fog starts, from the map centre (0) to the horizon (1), so
+	// lowering it brings the haze closer in.
+	map.setSky ({
+		'sky-color': '#00a2ff',
+		'sky-horizon-blend': 0.4,
+		'horizon-color': '#e3fbfc',
+		'horizon-fog-blend': 0.65,
+		'fog-color': '#e6f6f8',
+		'fog-ground-blend': 0.55
+	});
+
+	try {
+		map.setLight ({ anchor: 'viewport', color: '#ffffff', intensity: 0.35, position: [1.6, 200, 32] });
+	} catch (e) { /* light spec is advisory only */ }
+
+	// The DEM source is already declared by the site basemap styles
+	if (USE_TERRAIN && map.getSource ('terrainSource')) {
+		map.setTerrain ({ source: 'terrainSource', exaggeration: EXAGGERATION });
+
+		// By default MapLibre clamps the camera target to the ground, so flying
+		// over the Pennines makes the camera rise and fall with every hill - and
+		// jitter again each time a finer DEM tile arrives and changes the
+		// elevation under it. Unclamping it and pinning the target to sea level
+		// makes the flight path exactly the smooth curve the keyframes describe.
+		// The terrain still renders; only the camera stops riding it.
+		if (typeof map.setCenterClampedToGround === 'function') {
+			map.setCenterClampedToGround (false);
+			map.setCenterElevation (0);
+			cameraUnclamped = true;
+		}
+	}
+
+	addDataLayers ();
+	addPlacenames ();
+});
+
+/* --------------------------------------------------------------------------
+   Far-field detail
+
+   MapLibre picks a tile zoom per tile from how far that tile is from the camera:
+   roughly centreZoom + log2(distanceToCentre / distanceToTile), so a tile twice
+   as far away drops a whole zoom level. At the pitches this reel flies at, that
+   is what makes the 3D buildings stop partway to the horizon while the distance
+   flattens into bare low-zoom ground.
+
+   coveringTiles() takes a per-source calculateTileZoom override, and with
+   terrain enabled the variable-zoom path is always active, so replacing it lets
+   the far field keep more detail. FAR_DETAIL is how much of that falloff to
+   cancel: 0 leaves MapLibre's behaviour exactly as it was, 1 would flatten it
+   completely.
+
+   The result is still floored and clamped to the source's own maxzoom by the
+   caller, so this can only ever ask for detail the tileset actually has.
+   -------------------------------------------------------------------------- */
+
+function farDetailTileZoom (centreZoom, distanceToTile2d, distanceToTileZ, distanceToCentre, fov)
+{
+	const distanceToTile = Math.max (Math.hypot (distanceToTile2d, distanceToTileZ), 1e-7);
+	const standard = centreZoom + Math.log2 (distanceToCentre / distanceToTile);
+	return centreZoom - (centreZoom - standard) * (1 - FAR_DETAIL);
+}
+
+// Data layers sit below the basemap label layers, as in the tools
+function addDataLayers ()
+{
+	const before = map.getLayer ('placeholder_name') ? 'placeholder_name' : undefined;
+
+	LAYERS.forEach (function (def) {
+		if (!map.getSource (def.id)) { map.addSource (def.id, def.source); }
+
+		// Hold the horizon open for the buildings only; doing it to every source
+		// would multiply the tile load across the whole reel for no visible gain
+		if (def.farDetail && FAR_DETAIL > 0) {
+			const source = map.getSource (def.id);
+			if (source) { source.calculateTileZoom = farDetailTileZoom; }
+		}
+		if (map.getLayer (def.id)) { return; }
+		const layer = Object.assign ({ id: def.id, source: def.id }, def.layer);
+		layer.layout = Object.assign ({ visibility: 'none' }, def.layer.layout || {});
+		map.addLayer (layer, before);
+		visible[def.id] = false;
+	});
+
+	layersAdded = true;
+}
+
+// Settlement names, from the same partial style the tools load
+function addPlacenames ()
+{
+	fetch ('/tiles/partial-style_oszoom_names.json')
+		.then (r => r.json ())
+		.then (function (layers) {
+			if (!map.getSource ('placenames')) {
+				map.addSource ('placenames', {
+					type: 'vector',
+					url: 'pmtiles://' + TILES + '/oszoom_names.pmtiles'
+				});
+			}
+			Object.values (layers).forEach (function (layer) {
+				if (!map.getLayer (layer.id)) { map.addLayer (layer); }	// on top of everything
+			});
+		})
+		.catch (function () { /* placenames are decorative; carry on without them */ });
+}
+
+
+/* ==========================================================================
+   8. Layer state
+   ========================================================================== */
+
+let currentScene = -1;
+const currentOpacity = {};	// what each layer is currently fading towards
+let sceneSeq = 0;			// guards a delayed fade-in against a later scene change
+let pendingIn = null;
+
+// Every opacity property a layer fades on: the main one, plus any companion
+// such as the EPC points' halo
+const opacityProps = def => [def.opacityProp].concat (def.extraOpacity || []);
+
+function setLayerOpacity (def, value)
+{
+	if (!map.getLayer (def.id)) { return; }
+
+	if (value > 0 && !visible[def.id]) {
+		map.setLayoutProperty (def.id, 'visibility', 'visible');
+		visible[def.id] = true;
+	}
+	opacityProps (def).forEach (prop => map.setPaintProperty (def.id, prop, value));
+	currentOpacity[def.id] = value;
+
+	// Deliberately no hiding here. Setting visibility back to 'none' would make
+	// MapLibre discard the layer's buckets and re-run layout the next time it
+	// is shown, which is exactly the stutter the preload sweep exists to
+	// prevent. A layer at zero opacity costs almost nothing to leave in place.
+}
+
+function applyScene (index, immediate)
+{
+	// Opacity only. Nothing here may touch a data-driven paint property - see the
+	// note on the buildings layer for what that costs mid-flight.
+	//
+	// The change runs in two beats rather than as a cross-dissolve: whatever the
+	// new scene does not want fades out first, and only once it has gone does the
+	// incoming layer fade up. Overlapping them meant two half-transparent data
+	// layers on screen at once, which muddies both and misreads as one layer
+	// showing through the other. A layer that merely changes opacity between
+	// scenes - the buildings dimming under the EPC points - is not an arrival, so
+	// it just moves, without waiting.
+	const scene = STORY[index];
+	const seq = ++sceneSeq;
+	if (pendingIn) { clearTimeout (pendingIn); pendingIn = null; }
+
+	let anyOutgoing = false;
+	const incoming = [];
+
+	LAYERS.forEach (function (def) {
+		const target = scene.layers[def.id] || 0;
+		const current = currentOpacity[def.id] || 0;
+		if (target === 0) {
+			if (current > 0) { anyOutgoing = true; }
+			setLayerOpacity (def, 0);
+		} else if (current > 0) {
+			setLayerOpacity (def, target);	// already on screen, just changing level
+		} else {
+			incoming.push ([def, target]);
+		}
+	});
+
+	const bringIn = function () {
+		pendingIn = null;
+		if (seq !== sceneSeq) { return; }	// a later scene change has taken over
+		incoming.forEach (pair => setLayerOpacity (pair[0], pair[1]));
+	};
+
+	if (anyOutgoing && !immediate && incoming.length) {
+		pendingIn = setTimeout (bringIn, FADE + 80);
+	} else {
+		bringIn ();
+	}
+
+	// Popups belong to one scene. Arm it here; tickPopup runs the cards in turn
+	// off the reel clock, so they stay in step with scrubbing and pausing.
+	clearPopup ();
+	if (scene.popup && !immediate) {
+		popupScene = { layerId: scene.popup, start: scene.start, end: scene.end };
+		popupNextAt = clock + (anyOutgoing ? FADE * 2 : FADE) / 1000 + 0.5 * K;
+	}
+
+	currentScene = index;
+}
+
+// Switch on any layer whose scene is approaching, so its tiles are requested
+// while there is still time to fetch them. One-way: once a layer is on it stays
+// on for the rest of the reel, hidden by opacity alone.
+function preload (t)
+{
+	if (!layersAdded) { return; }
+	LAYERS.forEach (function (def) {
+		if (visible[def.id]) { return; }
+		const need = firstNeeded[def.id];
+		if (need !== Infinity && t >= need - PRELOAD) {
+			map.setLayoutProperty (def.id, 'visibility', 'visible');
+			opacityProps (def).forEach (prop => map.setPaintProperty (def.id, prop, 0));
+			currentOpacity[def.id] = 0;
+			visible[def.id] = true;
+		}
+	});
+}
+
+function sceneAt (t)
+{
+	let index = 0;
+	for (let i = 0; i < STORY.length; i++) { if (t >= STORY[i].start) { index = i; } }
+	return index;
+}
+
+// Seeking backwards has to rebuild state from scratch, since scenes are applied
+// as one-way transitions. Opacity and colour are reset; visibility is not
+// touched, so a scrub never throws away the preloaded tiles.
+function resetLayers ()
+{
+	if (!layersAdded) { return; }
+	sceneSeq++;
+	if (pendingIn) { clearTimeout (pendingIn); pendingIn = null; }
+	clearPopup ();
+	LAYERS.forEach (function (def) {
+		if (!map.getLayer (def.id)) { return; }
+		opacityProps (def).forEach (prop => map.setPaintProperty (def.id, prop, 0));
+		currentOpacity[def.id] = 0;
+	});
+	currentScene = -1;
+}
+
+
+/* ==========================================================================
+   9. Overlay
+   --------------------------------------------------------------------------
+   Everything the viewer reads is drawn here rather than in HTML, so that the
+   recorder can composite it into the video frame by frame.
+   ========================================================================== */
+
+const BRAND       = '#ac1a40';
+const BRAND_LIGHT = '#ff849f';
+const FONT        = 'system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+
+const ATTRIBUTION = 'Contains OS data © Crown copyright  ·  © OpenStreetMap contributors  ·  © ESRI  ·  carbon.place';
+
+// The site wordmark, if it happens to be there; the end card falls back to
+// type-only if it is not, so the file stays standalone
+const logo = new Image ();
+let logoOk = false;
+logo.onload = () => { logoOk = true; };
+logo.src = '/images/ui/logo.webp';
+
+const ease     = t => t * t * (3 - 2 * t);
+const fadeIn   = (t, at, len) => clamp ((t - at) / len, 0, 1);
+const font     = (weight, px) => weight + ' ' + px + 'px ' + FONT;
+
+function roundRect (ctx, x, y, w, h, r)
+{
+	ctx.beginPath ();
+	ctx.moveTo (x + r, y);
+	ctx.arcTo (x + w, y,     x + w, y + h, r);
+	ctx.arcTo (x + w, y + h, x,     y + h, r);
+	ctx.arcTo (x,     y + h, x,     y,     r);
+	ctx.arcTo (x,     y,     x + w, y,     r);
+	ctx.closePath ();
+}
+
+function wrap (ctx, text, maxWidth)
+{
+	const words = text.split (' ');
+	const lines = [];
+	let line = '';
+	words.forEach (function (word) {
+		const test = line ? line + ' ' + word : word;
+		if (ctx.measureText (test).width > maxWidth && line) { lines.push (line); line = word; }
+		else { line = test; }
+	});
+	if (line) { lines.push (line); }
+	return lines;
+}
+
+// Draws the legend and returns the height it used. Called twice per frame: once
+// with measureOnly to size the caption panel, once to actually paint it - which
+// keeps the panel exactly as tall as its contents however many rows of chips a
+// legend happens to wrap onto.
+function drawLegend (ctx, legend, x, y, w, S, measureOnly)
+{
+	const paint = !measureOnly;
+	ctx.save ();
+	ctx.textAlign = 'left';
+	ctx.textBaseline = 'alphabetic';
+	ctx.font = font (600, 12 * S);
+	if (paint) {
+		ctx.fillStyle = 'rgba(255,255,255,.62)';
+		ctx.fillText (legend.caption, x, y);
+	}
+	const top = y - 12 * S;	// the caption baseline sits below its own cap height
+	y += 12 * S;
+
+	if (legend.kind === 'ramp') {
+		const h = 11 * S, n = legend.colours.length, cell = w / n;
+		if (paint) {
+			legend.colours.forEach (function (colour, i) {
+				ctx.fillStyle = colour;
+				ctx.fillRect (x + i * cell, y, Math.ceil (cell) + 0.5, h);
+			});
+			ctx.strokeStyle = 'rgba(255,255,255,.30)';
+			ctx.lineWidth = Math.max (1, 0.8 * S);
+			ctx.strokeRect (x, y, w, h);
+
+			ctx.fillStyle = 'rgba(255,255,255,.86)';
+			ctx.fillText (legend.left, x, y + h + 15 * S);
+			ctx.textAlign = 'right';
+			ctx.fillText (legend.right, x + w, y + h + 15 * S);
+		}
+		ctx.restore ();
+		return (y + h + 15 * S) - top;
+	}
+
+	if (legend.kind === 'bivariate') {
+		// The 5x5 grid the retrofit tool draws: x is the first digit of the code,
+		// y the second, and rows run top-down from y=5 so high income sits at the
+		// top, matching createBivariateLegend() in js/ui-common.js
+		const colours = {};
+		legend.colours.forEach (pair => { colours[pair[0]] = pair[1]; });
+
+		const cell = 17 * S, grid = cell * 5;
+		const gx = x + 34 * S;			// leave a column for the rotated y label
+		const gy = y + 4 * S;
+
+		if (paint) {
+			for (let row = 5; row >= 1; row--) {
+				for (let col = 1; col <= 5; col++) {
+					ctx.fillStyle = colours[parseInt (String (col) + String (row), 10)] || '#cccccc';
+					ctx.fillRect (gx + (col - 1) * cell, gy + (5 - row) * cell, cell + 0.5, cell + 0.5);
+				}
+			}
+			ctx.strokeStyle = 'rgba(255,255,255,.30)';
+			ctx.lineWidth = Math.max (1, 0.8 * S);
+			ctx.strokeRect (gx, gy, grid, grid);
+
+			ctx.font = font (600, 11.5 * S);
+			ctx.fillStyle = 'rgba(255,255,255,.80)';
+
+			// x axis, beneath the grid
+			ctx.textAlign = 'center';
+			ctx.fillText (legend.x + '  →', gx + grid / 2, gy + grid + 15 * S);
+
+			// y axis, rotated up the left-hand side
+			ctx.save ();
+			ctx.translate (gx - 10 * S, gy + grid / 2);
+			ctx.rotate (-Math.PI / 2);
+			ctx.textAlign = 'center';
+			ctx.fillText (legend.y + '  →', 0, 0);
+			ctx.restore ();
+			ctx.textAlign = 'left';
+		}
+		ctx.restore ();
+		return (gy + grid + 15 * S) - top;
+	}
+
+	// chips, wrapping onto as many rows as they need
+	const rowH = 21 * S;
+	let cx = x, cy = y + 2 * S;
+	ctx.font = font (600, 12.5 * S);
+	legend.items.forEach (function (item) {
+		const label = item[0], colour = item[1];
+		const chipW = 11 * S + 6 * S + ctx.measureText (label).width + 15 * S;
+		if (cx + chipW > x + w && cx > x) { cx = x; cy += rowH; }
+		if (paint) {
+			ctx.fillStyle = colour;
+			roundRect (ctx, cx, cy + 2 * S, 11 * S, 11 * S, 3 * S);
+			ctx.fill ();
+			ctx.fillStyle = 'rgba(255,255,255,.90)';
+			ctx.fillText (label, cx + 17 * S, cy + 11.5 * S);
+		}
+		cx += chipW;
+	});
+	ctx.restore ();
+	return (cy + 13 * S) - top;
+}
+
+// Laying out the caption means measuring every line of text, twice, plus a dry
+// run of the legend. That is pure CPU and the answer only changes when the scene
+// or the frame size does, so it is computed once and kept. Measuring it on every
+// frame was adding avoidable jitter to the animation.
+const captionCache = new Map ();
+
+function measureCaption (ctx, scene, S)
+{
+	const key = scene.title + '|' + S.toFixed (4);
+	const cached = captionCache.get (key);
+	if (cached) { return cached; }
+
+	const maxText = 560 * S;
+
+	ctx.save ();
+	ctx.font = font (700, 40 * S);
+	const titleLines = wrap (ctx, scene.title, maxText);
+	ctx.font = font (400, 19 * S);
+	const subLines = wrap (ctx, scene.sub, maxText);
+
+	let textW = 0;
+	ctx.font = font (700, 13 * S);
+	textW = Math.max (textW, ctx.measureText (scene.eyebrow.toUpperCase ()).width + 40 * S);
+	ctx.font = font (700, 40 * S);
+	titleLines.forEach (l => { textW = Math.max (textW, ctx.measureText (l).width); });
+	ctx.font = font (400, 19 * S);
+	subLines.forEach (l => { textW = Math.max (textW, ctx.measureText (l).width); });
+	textW = Math.min (Math.max (textW, 320 * S), maxText);
+
+	const legendW = Math.min (textW, 340 * S);
+	const legendH = scene.legend
+		? 20 * S + drawLegend (ctx, scene.legend, 0, 0, legendW, S, true)
+		: 0;
+	const bodyH = 22 * S + titleLines.length * 47 * S + 6 * S + subLines.length * 27 * S + legendH;
+	ctx.restore ();
+
+	const measured = { titleLines, subLines, textW, legendW, bodyH };
+	captionCache.set (key, measured);
+	return measured;
+}
+
+function drawCaption (ctx, scene, t, W, H, S)
+{
+	// Fade the panel in as the scene starts and out as it ends
+	const inA  = ease (fadeIn (t, scene.start, 1.9 * K));
+	const outA = 1 - ease (fadeIn (t, scene.end - 1.5 * K, 1.5 * K));
+	const endA = 1 - ease (fadeIn (t, ENDCARD_AT - ENDCARD_FADE, ENDCARD_FADE));
+	const alpha = Math.min (inA, outA, endA);
+	if (alpha <= 0.001) { return; }
+
+	const pad = 26 * S;
+
+	ctx.save ();
+	ctx.globalAlpha = alpha;
+	ctx.translate (0, (1 - inA) * 18 * S);
+
+	const m = measureCaption (ctx, scene, S);
+	const titleLines = m.titleLines, subLines = m.subLines;
+	const textW = m.textW, legendW = m.legendW, bodyH = m.bodyH;
+	const panelW = textW + pad * 2 + 10 * S;
+	const panelH = bodyH + pad * 1.6;
+	// Top right. The left half of the frame belongs to the report card during the
+	// descent, and keeping the description in one place for the whole reel is
+	// steadier than having it move out of the way and back again.
+	const px = W - panelW - 64 * S;
+	const py = 64 * S;
+
+	ctx.fillStyle = 'rgba(11,12,17,.72)';
+	roundRect (ctx, px, py, panelW, panelH, 18 * S);
+	ctx.fill ();
+	ctx.strokeStyle = 'rgba(255,255,255,.09)';
+	ctx.lineWidth = Math.max (1, S);
+	ctx.stroke ();
+
+	// Brand rule down the left edge
+	ctx.fillStyle = BRAND;
+	roundRect (ctx, px, py + 22 * S, 4 * S, panelH - 44 * S, 2 * S);
+	ctx.fill ();
+
+	const tx = px + pad;
+	let ty = py + pad * 0.8;
+
+	ctx.textBaseline = 'top';
+	if (ctx.letterSpacing !== undefined) { ctx.letterSpacing = (1.6 * S) + 'px'; }
+	ctx.font = font (700, 13 * S);
+	ctx.fillStyle = BRAND_LIGHT;
+	ctx.fillText (scene.eyebrow.toUpperCase (), tx, ty);
+	if (ctx.letterSpacing !== undefined) { ctx.letterSpacing = '0px'; }
+	ty += 22 * S;
+
+	ctx.font = font (700, 40 * S);
+	ctx.fillStyle = '#ffffff';
+	titleLines.forEach (function (line) { ctx.fillText (line, tx, ty); ty += 47 * S; });
+
+	ty += 6 * S;
+	ctx.font = font (400, 19 * S);
+	ctx.fillStyle = 'rgba(255,255,255,.78)';
+	subLines.forEach (function (line) { ctx.fillText (line, tx, ty); ty += 27 * S; });
+
+	if (scene.legend) {
+		ctx.textBaseline = 'alphabetic';
+		drawLegend (ctx, scene.legend, tx, ty + 32 * S, legendW, S, false);
+	}
+
+	ctx.restore ();
+}
+
+function drawWordmark (ctx, t, W, H, S)
+{
+	const alpha = Math.min (ease (fadeIn (t, 1.0 * K, 3.0 * K)),
+	                        1 - ease (fadeIn (t, ENDCARD_AT - ENDCARD_FADE, ENDCARD_FADE)));
+	if (alpha <= 0.001) { return; }
+
+	ctx.save ();
+	ctx.globalAlpha = alpha;
+	ctx.textBaseline = 'middle';
+
+	// Bottom right, above the attribution: the top left is under the report card
+	// for the first quarter of the reel, and the top right carries the
+	// description panel
+	if (ctx.letterSpacing !== undefined) { ctx.letterSpacing = (2.4 * S) + 'px'; }
+	ctx.font = font (700, 17 * S);
+	const width = ctx.measureText ('CARBON & PLACE').width;
+	const y = H - 74 * S;
+	const x = W - 30 * S - width;
+
+	ctx.fillStyle = 'rgba(255,255,255,.95)';
+	ctx.shadowColor = 'rgba(0,0,0,.55)';
+	ctx.shadowBlur = 14 * S;
+	ctx.fillText ('CARBON & PLACE', x, y + 1 * S);
+	if (ctx.letterSpacing !== undefined) { ctx.letterSpacing = '0px'; }
+
+	ctx.shadowBlur = 0;
+	ctx.fillStyle = BRAND;
+	ctx.beginPath ();
+	ctx.arc (x - 16 * S, y, 8 * S, 0, Math.PI * 2);
+	ctx.fill ();
+
+	ctx.restore ();
+}
+
+function drawCredits (ctx, scene, t, W, H, S)
+{
+	const alpha = 1 - ease (fadeIn (t, ENDCARD_AT - ENDCARD_FADE, ENDCARD_FADE));
+	if (alpha <= 0.001) { return; }
+
+	ctx.save ();
+	ctx.globalAlpha = alpha * 0.72;
+	ctx.textAlign = 'right';
+	ctx.textBaseline = 'bottom';
+	ctx.font = font (500, 11.5 * S);
+	ctx.fillStyle = '#ffffff';
+	ctx.shadowColor = 'rgba(0,0,0,.75)';
+	ctx.shadowBlur = 8 * S;
+
+	let y = H - 22 * S;
+	if (scene && scene.credit) {
+		ctx.fillText (scene.credit, W - 30 * S, y - 16 * S);
+	}
+	ctx.fillText (ATTRIBUTION, W - 30 * S, y);
+	ctx.restore ();
+}
+
+function drawEndCard (ctx, t, W, H, S)
+{
+	const a = ease (fadeIn (t, ENDCARD_AT, ENDCARD_FADE));
+	if (a <= 0.001) { return; }
+
+	ctx.save ();
+	ctx.globalAlpha = a;
+
+	const g = ctx.createLinearGradient (0, 0, W, H);
+	g.addColorStop (0, '#7d1130');
+	g.addColorStop (0.55, BRAND);
+	g.addColorStop (1, '#5d0c23');
+	ctx.fillStyle = g;
+	ctx.fillRect (0, 0, W, H);
+
+	// A little vignette so the type sits forward
+	const v = ctx.createRadialGradient (W / 2, H / 2, H * 0.15, W / 2, H / 2, H * 0.85);
+	v.addColorStop (0, 'rgba(0,0,0,0)');
+	v.addColorStop (1, 'rgba(0,0,0,.35)');
+	ctx.fillStyle = v;
+	ctx.fillRect (0, 0, W, H);
+
+	const rise = (1 - a) * 26 * S;
+	ctx.translate (0, rise);
+	ctx.textAlign = 'center';
+	ctx.textBaseline = 'middle';
+
+	let cy = H / 2;
+
+	if (logoOk) {
+		const lh = 86 * S, lw = lh * (logo.width / logo.height || 3);
+		ctx.drawImage (logo, W / 2 - lw / 2, cy - 118 * S, lw, lh);
+	} else {
+		ctx.font = font (700, 62 * S);
+		ctx.fillStyle = '#ffffff';
+		ctx.fillText ('Carbon & Place', W / 2, cy - 74 * S);
+	}
+
+	ctx.font = font (400, 24 * S);
+	ctx.fillStyle = 'rgba(255,255,255,.88)';
+	ctx.fillText ('Neighbourhood carbon, energy, transport, land and more, mapped', W / 2, cy + 4 * S);
+
+	ctx.font = font (700, 46 * S);
+	ctx.fillStyle = '#ffffff';
+	ctx.fillText ('carbon.place', W / 2, cy + 74 * S);
+
+	ctx.font = font (500, 15 * S);
+	ctx.fillStyle = 'rgba(255,255,255,.62)';
+	ctx.fillText ('Free to use  ·  Open data  ·  Energy Demand Research Centre', W / 2, cy + 124 * S);
+
+	ctx.restore ();
+}
+
+/* --------------------------------------------------------------------------
+   Report card - the tool's own report, not a copy of it
+
+   This does not draw a lookalike. It fetches the real #zones-chartsmodal markup
+   out of pbcc/index.html, drops it into this page, loads the tool's own
+   pbcc/ui.js, and lets that build the charts. The stylesheets are the tool's
+   too (main.css, map.css, map-new.css, Font Awesome), linked in the head ahead
+   of this page's own <style> so the demo chrome still wins where they overlap.
+   What you see is therefore the tool's markup, CSS, Chart.js config and chart
+   code, not a reconstruction that has to be kept in step by hand.
+
+   pbcc/ui.js turns out to need almost nothing from its host page: capUi appears
+   only in a comment, every datasets.* reference is a local array rather than the
+   global from datasets.js, and its single top-level statement clicks the default
+   tab. So the whole dependency list is Chart.js, a capBin, a lsoaHeadlineData,
+   and the markup being present before it loads.
+
+   capBin is shimmed rather than real. The live one range-requests brotli-
+   compressed binaries, and NO browser can decompress brotli - DecompressionStream
+   implements gzip, deflate and deflate-raw only, so new DecompressionStream
+   ('brotli') throws. The seven records the tool asks for are embedded below
+   instead, captured from those same binaries.
+
+   TO REFRESH: re-read those seven records and paste them back in. They will
+   drift from the live tool as the datasets are rebuilt.
+
+   NOTE FOR RECORDING: this card is DOM, not canvas, so the in-page recorder
+   (?record=1) will not capture it. Use a screen recorder, which is the better
+   route for a final master anyway.
+   -------------------------------------------------------------------------- */
+
+// Piccadilly, Manchester - the neighbourhood the descent is aimed at
+const REPORT = {
+	lsoa: 'E01033658',
+	from: 4.0,		// real seconds, on the master clock
+	to: 25.0,
+	// Six of the tool's seven tabs, sharing the same window the first four had:
+	// tickReport divides from..to by tabs.length, so adding tabs shortens each
+	// turn rather than keeping the card up any longer. Future Scenarios is left
+	// out - it is a projection, not a picture of the place.
+	tabs: ['overview', 'history', 'housing', 'transport', 'consumption', 'demographics']
+};
+
+let reportHost = null;		// the wrapper holding the injected modal
+let reportReady = false;
+let reportTab = -1;
+
+// Stand in for js/databin.js, serving the embedded records
+function installBinShim ()
+{
+	window.capBin = {
+		register: function () {},
+		primeRange: function () {},
+		hasRecord: function (name, id) { return Promise.resolve (!!REPORT_RECORDS[name + '/' + id]); },
+		fetchRecord: function (name, id) {
+			const record = REPORT_RECORDS[name + '/' + id];
+			if (!record) { return Promise.reject (new Error ('No embedded record for ' + name + '/' + id)); }
+			// Cloned, because the tool's code is free to mutate what it is given
+			return Promise.resolve (JSON.parse (JSON.stringify (record)));
+		}
+	};
+
+	// Normally set by capUi.manageLSOAOverview; pbcc/ui.js reads it for the
+	// pen portraits
+	window.lsoaHeadlineData = REPORT_RECORDS['lsoa_overview/' + REPORT.lsoa];
+}
+
+function loadScript (src)
+{
+	return new Promise (function (resolve, reject) {
+		const el = document.createElement ('script');
+		el.src = src;
+		el.onload = resolve;
+		el.onerror = () => reject (new Error ('Could not load ' + src));
+		document.head.appendChild (el);
+	});
+}
+
+// The title and header colour that capUi.manageLSOAOverview would apply
+function applyReportHeading (modal)
+{
+	const overview = REPORT_RECORDS['lsoa_overview/' + REPORT.lsoa][0];
+	const label = REPORT.lsoa.startsWith ('S') ? 'Data Zone' : 'LSOA';
+	const title = REPORT.lsoa + ' a "' + overview.lsoa_class_name + '" ' + label + ' in ' + overview.WD25NM;
+
+	const titleEl = modal.querySelector ('.modal-title');
+	if (titleEl) { titleEl.innerHTML = title; }
+
+	// capUi.colourModalHeader's palette and its luminance test
+	const palette = {
+		'1a': '#955123',
+		'2a': '#007f42', '2b': '#3ea456', '2c': '#8aca8e', '2d': '#cfe8d1',
+		'3a': '#00498d', '3b': '#2967ad', '3c': '#7b99c7', '3d': '#b9c8e1',
+		'4a': '#e3ac20', '4b': '#edca1a', '4c': '#f6e896', '4d': '#fcf5d8',
+		'5a': '#e64c2b', '5b': '#ec773c', '5c': '#faa460', '5d': '#fcc9a0', '5e': '#fee4ce',
+		'6a': '#f79ff0',
+		'7a': '#6a339a', '7b': '#9f84bd',
+		'8a': '#576362', '8b': '#a1a2a1', '8c': '#e5e4e3'
+	};
+	const header = modal.querySelector ('.modal-header');
+	const background = palette[overview.lsoa_class_code];
+	if (!header || !background) { return; }
+
+	const lin = function (c) { return (c <= 0.03928 ? c / 12.92 : Math.pow ((c + 0.055) / 1.055, 2.4)); };
+	const luminance = 0.2126 * lin (parseInt (background.substr (1, 2), 16) / 255)
+	                + 0.7152 * lin (parseInt (background.substr (3, 2), 16) / 255)
+	                + 0.0722 * lin (parseInt (background.substr (5, 2), 16) / 255);
+	const foreground = (luminance > 0.4 ? '#000000' : '#ffffff');
+
+	header.style.backgroundColor = background;
+	const t = header.querySelector ('.modal-title');
+	const c = header.querySelector ('.modal-close');
+	if (t) { t.style.color = foreground; }
+	if (c) { c.style.color = foreground; }
+}
+
+async function buildReport ()
+{
+	// The tool's own modal markup, straight out of its page
+	const response = await fetch ('/pbcc/index.html');
+	if (!response.ok) { throw new Error ('pbcc/index.html ' + response.status); }
+	const parsed = new DOMParser ().parseFromString (await response.text (), 'text/html');
+	const modal = parsed.getElementById ('zones-chartsmodal');
+	if (!modal) { throw new Error ('no #zones-chartsmodal in pbcc/index.html'); }
+
+	reportHost = document.createElement ('div');
+	reportHost.id = 'reporthost';
+	reportHost.appendChild (document.importNode (modal, true));
+	document.getElementById ('stage').appendChild (reportHost);
+
+	const injected = reportHost.querySelector ('#zones-chartsmodal');
+	injected.style.display = 'block';
+	applyReportHeading (injected);
+
+	installBinShim ();
+
+	// Chart.js first, then the tool's code - which clicks the default tab as its
+	// last statement, so the markup has to be in the document by now
+	await loadScript ('https://cdn.jsdelivr.net/npm/chart.js@4.4.1');
+	await loadScript ('/pbcc/ui.js');
+
+	// The tool's own chart builder, fed by the shimmed capBin
+	if (typeof manageCharts !== 'function') { throw new Error ('pbcc/ui.js did not define manageCharts'); }
+	await manageCharts (REPORT.lsoa);
+
+	trimReport ();
+	reportReady = true;
+	showReportTab (0);
+}
+
+// The tool's report is built to be read and scrolled. On screen for a few
+// seconds it must fit instead, so everything below the fold goes: the tabs the
+// reel does not visit, the data warnings, and the explanatory prose and tables
+// that sit under each chart. Done AFTER manageCharts, so every element it
+// populates by id was present while it ran.
+function trimReport ()
+{
+	const modal = reportHost.querySelector ('#zones-chartsmodal');
+
+	// Only the tab buttons go, not their content: the panes are hidden anyway,
+	// and leaving them means Chart.js keeps the canvases it already owns
+	modal.querySelectorAll ('.tab .tablinks').forEach (function (button) {
+		const match = /modalTab\(event,\s*'([\w]+)'\)/.exec (button.getAttribute ('onclick') || '');
+		if (match && REPORT.tabs.indexOf (match[1]) === -1) { button.remove (); }
+	});
+
+	const warnings = modal.querySelector ('.warningbox');
+	if (warnings) { warnings.remove (); }
+}
+
+// Fit one tab to the panel, once it is visible and laid out.
+//
+// The tool's tabs are built to be scrolled through at leisure: three or four
+// chart blocks each, every one with its own description. The reel gives a tab
+// about five seconds, which is time to take in ONE chart and its text. So each
+// tab keeps its first chart block, drops the rest, and that chart is sized to
+// fill the panel.
+//
+// Everything here is measured rather than assumed. Two earlier attempts at this
+// were written by reading the stylesheets, and both were wrong about which rule
+// won; ?probe=1 prints what the boxes actually come out as.
+const fittedTabs = new Set ();
+const MIN_CHART = 180;
+
+function resizeCharts (pane)
+{
+	if (typeof Chart === 'undefined' || !Chart.getChart) { return; }
+
+	const pass = function () {
+		pane.querySelectorAll ('canvas').forEach (function (canvas) {
+			const chart = Chart.getChart (canvas);
+			// A chart built while its tab was closed has a zero-height canvas until
+			// something resizes it; Chart.js's own observer gets there a frame or
+			// two later, which is a visible jump on a card this brief.
+			if (chart) { chart.resize (); }
+		});
+	};
+
+	// Twice: once now, once after the browser has laid the pane out. Measured
+	// with ?probe=1, the immediate pass alone left the historical chart's canvas
+	// at 0px inside a 400px container.
+	pass ();
+	requestAnimationFrame (pass);
+}
+
+// The pane-level child holding the tab's first chart. On the chart tabs that is
+// a .chart-wrapper; on the overview it is the block pairing the chart with the
+// headline grade.
+function chartBlock (pane)
+{
+	const canvas = pane.querySelector ('canvas');
+	if (!canvas) { return null; }
+	let block = canvas;
+	while (block.parentElement && block.parentElement !== pane) { block = block.parentElement; }
+	return block;
+}
+
+function fitTab (pane)
+{
+	if (!pane) { return; }
+	if (fittedTabs.has (pane.id)) { resizeCharts (pane); return; }
+	fittedTabs.add (pane.id);
+
+	// The long overview tables are the one thing never worth the room
+	pane.querySelectorAll ('.responsive-tables').forEach (el => el.remove ());
+
+	// One chart per tab: keep everything up to and including the block holding
+	// the first chart, and drop what follows.
+	// The overview is the exception: the tool puts three paragraphs explaining the
+	// grade and the bar chart directly underneath, and its chart is not sized to
+	// fill the panel, so there is room for them.
+	const block = chartBlock (pane);
+	if (block && pane.id !== 'overview') {
+		while (block.nextElementSibling) { block.nextElementSibling.remove (); }
+	}
+
+	// The pane's intro paragraph is boilerplate ("Find out more about this tab
+	// ...") and costs about fifty pixels of chart. The h3 stays: on a card this
+	// brief it is worth naming what is being shown.
+	const intro = pane.querySelector (':scope > p');
+	if (intro) { intro.remove (); }
+
+	// Demographics leads with the pen portrait - a montage of about fifty
+	// household photographs - before its chart even starts. At the tool's 70x53
+	// it measured 379px, which left the population pyramid at its 180px floor and
+	// the panel still overflowing by 607. Scaled down (see the stylesheet above)
+	// the montage keeps its shape in a fraction of the height, so both it and the
+	// chart fit.
+	//
+	// Whole rows only: the montage is cropped to a number of rows that fits, so it
+	// never ends on a half-row of clipped faces.
+	const photos = pane.querySelector (':scope > .community_photos');
+	if (photos) {
+		const panel = reportHost.querySelector ('.modal-body');
+		const cap = Math.round ((panel ? panel.clientHeight : 700) * 0.25);
+		cropToWholeRows (photos, cap);
+
+		// The montage is <img> elements. On the first fit they may not have loaded
+		// yet, in which case the grid measures short and the chart is handed room
+		// that vanishes when the pictures arrive - a 128px overflow on a short
+		// panel, found with ?probe=1. Size it again once they are all in.
+		const pending = Array.from (photos.querySelectorAll ('img')).filter (img => !img.complete);
+		let waiting = pending.length;
+		const arrived = function () {
+			if (--waiting > 0) { return; }
+			cropToWholeRows (photos, cap);
+			growCharts (pane);
+		};
+		pending.forEach (function (img) {
+			img.addEventListener ('load', arrived, { once: true });
+			img.addEventListener ('error', arrived, { once: true });
+		});
+	}
+
+	growCharts (pane);
+	if (pane.id === 'overview') { fitOverviewText (pane); }
+
+	// Last resort on a short panel: if the tab still will not fit with the
+	// montage in it - the chart already at its floor, measured 128px over at
+	// 1366x768 - the montage is what gives way. It is the optional extra on this
+	// tab; the chart is the point of it. The tolerance is well clear of the ~25px
+	// of trailing margin that every chart tab carries and that nothing clips.
+	if (photos && photos.isConnected) {
+		const panel = reportHost.querySelector ('.modal-body');
+		if (panel && panel.scrollHeight > panel.clientHeight + 40) {
+			const heading = photos.previousElementSibling;
+			if (heading && heading.tagName === 'H4') { heading.remove (); }
+			photos.remove ();
+			growCharts (pane);
+		}
+	}
+}
+
+// The overview's prose, trimmed to the room under the chart. Whole paragraphs go
+// first, then the last one is cut to a whole number of lines.
+function fitOverviewText (pane)
+{
+	const body = reportHost.querySelector ('.modal-body');
+	const block = chartBlock (pane);
+	if (!body) { return; }
+	const text = block && block.nextElementSibling;
+	if (!text) { return; }
+
+	// The tool ends this block with an "Overview Tables" heading introducing the
+	// tables, which have already gone; the heading would point at nothing
+	text.querySelectorAll ('h3, h4').forEach (el => el.remove ());
+
+	let guard = 20;
+	while (body.scrollHeight > body.clientHeight && text.childElementCount > 1 && guard-- > 0) {
+		text.lastElementChild.remove ();
+	}
+	clampToFit (text.lastElementChild, body);
+
+	// On a short panel the grade and the chart fill it between them, and even a
+	// clamped paragraph will not go in (77px over at 1366x768). The prose is the
+	// addition on this tab, so it is what goes.
+	if (body.scrollHeight > body.clientHeight + 4) { text.remove (); }
+}
+
+// Crop a grid of images to a whole number of rows, so it never ends on a row
+// sliced through the middle. Rows are found from the images' own positions
+// rather than assumed, since how many fit across depends on the panel width.
+function cropToWholeRows (grid, maxHeight)
+{
+	const images = Array.from (grid.querySelectorAll ('img'));
+	if (!images.length) { return; }
+
+	// Measure at full height: this runs again when the pictures finish loading,
+	// and a crop left over from the first pass would corrupt the row arithmetic
+	grid.style.removeProperty ('height');
+	grid.style.removeProperty ('overflow');
+
+	// Distinct row positions, taken from where the images actually sit - how many
+	// fit across depends on the panel width, so it cannot be assumed here
+	const tops = [];
+	images.forEach (function (img) {
+		const top = Math.round (img.offsetTop);
+		if (!tops.some (t => Math.abs (t - top) < 4)) { tops.push (top); }
+	});
+	if (tops.length < 2) { return; }
+	tops.sort ((a, b) => a - b);
+
+	const rowHeight = tops[1] - tops[0];
+	const chrome = grid.offsetHeight - (tops[tops.length - 1] - tops[0] + rowHeight);
+	const rows = Math.max (1, Math.min (tops.length, Math.floor ((maxHeight - chrome) / rowHeight)));
+	if (rows >= tops.length) { return; }		// it already fits: leave it alone
+
+	grid.style.setProperty ('height', (rows * rowHeight + chrome) + 'px', 'important');
+	grid.style.setProperty ('overflow', 'hidden', 'important');
+}
+
+// Cut a paragraph to the whole lines that fit, so it ends on a line rather than
+// being sliced through one by the panel edge.
+function clampToFit (para, body)
+{
+	if (!para) { return; }
+	const over = body.scrollHeight - body.clientHeight;
+	if (over <= 0) { return; }
+	const lineHeight = parseFloat (getComputedStyle (para).lineHeight) || 18;
+	const lines = Math.max (2, Math.floor ((para.offsetHeight - over) / lineHeight));
+	para.style.display = '-webkit-box';
+	para.style.webkitBoxOrient = 'vertical';
+	para.style.overflow = 'hidden';
+	para.style.webkitLineClamp = String (lines);
+}
+
+// Set the chart and the description beside it to the same height, so the block
+// they float in comes out exactly that tall, and trim the description to a whole
+// number of lines.
+//
+// The description is a scrolling box by design (map.css caps
+// .chart-description-tabs at 400px and gives the content overflow-y: auto). Left
+// alone it ends mid-sentence with a scrollbar down the side, which is fine to
+// read and wrong on screen for five seconds, so the text is clamped to the lines
+// that fit and the box is stopped from scrolling.
+function setBlockHeight (block, box, h)
+{
+	// These heights are set with !important in the stylesheet above, so an inline
+	// style only wins if it is marked important too
+	box.style.setProperty ('height', h + 'px', 'important');
+
+	const title = block.querySelector ('.chart-title');
+	const tabs = block.querySelector ('.chart-description-tabs');
+
+	if (!tabs) {
+		// Not every tab uses the description-tabs box. Demographics carries plain
+		// prose in .chart-text instead, and with nothing capping it the text ran to
+		// 695px, pinned the chart at its 180px floor and still overflowed the panel
+		// by 175. Cap it directly, rounded down to whole lines so the last one is
+		// not sliced through, and fade the cut so it reads as deliberate.
+		const prose = block.querySelector ('.chart-text');
+		if (!prose) { return; }
+		const line = parseFloat (getComputedStyle (prose).lineHeight) || 18;
+		const inner = Math.max (line * 3, h - (title ? title.offsetHeight + 8 : 0));
+		const rounded = Math.max (line * 3, Math.floor (inner / line) * line);
+		prose.style.setProperty ('height', rounded + 'px', 'important');
+		prose.style.setProperty ('overflow', 'hidden', 'important');
+		prose.style.setProperty ('mask-image', 'linear-gradient(#000 82%, transparent)');
+		prose.style.setProperty ('-webkit-mask-image', 'linear-gradient(#000 82%, transparent)');
+		return;
+	}
+
+	const room = Math.max (120, h - (title ? title.offsetHeight + 8 : 0));
+	tabs.style.setProperty ('max-height', room + 'px', 'important');
+	tabs.style.setProperty ('height', room + 'px', 'important');
+
+	const content = block.querySelector ('.chart-description-tab-content.active')
+	             || block.querySelector ('.chart-description-tab-content');
+	const para = content && content.querySelector ('p');
+	if (!content || !para) { return; }
+	const lineHeight = parseFloat (getComputedStyle (para).lineHeight) || 18;
+
+	// Measure the paragraph at full length first. Once -webkit-line-clamp is on,
+	// the browser stops laying out the lines beyond the limit, so scrollHeight
+	// collapses to match clientHeight and there is no way to tell afterwards
+	// whether anything was actually cut.
+	para.style.webkitLineClamp = 'unset';
+	const natural = para.offsetHeight;
+
+	const lines = Math.max (3, Math.floor (content.clientHeight / lineHeight));
+	para.style.display = '-webkit-box';
+	para.style.webkitBoxOrient = 'vertical';
+	para.style.overflow = 'hidden';
+	para.style.webkitLineClamp = String (lines);
+
+	// Fade the cut, but only when there is something cut off - the same treatment
+	// the plain-prose tabs get above. Fading a paragraph that ends of its own
+	// accord would just look like a rendering fault.
+	const cut = natural > lines * lineHeight + 2;
+	const fade = cut ? 'linear-gradient(#000 84%, transparent)' : 'none';
+	content.style.setProperty ('mask-image', fade);
+	content.style.setProperty ('-webkit-mask-image', fade);
+}
+
+function growCharts (pane)
+{
+	const body = reportHost.querySelector ('.modal-body');
+	const block = chartBlock (pane);
+	const box = block && block.querySelector ('.chart-container, .chart-container-wide');
+	if (!body || !box) { return; }
+
+	// How much room is left under the block, measured geometrically. scrollHeight
+	// is not usable here: it counts the last child's bottom margin, so it read as
+	// a full panel while ?probe=1's screenshot showed a hundred pixels of white
+	// under the chart.
+	const gap = function () {
+		const limit = body.getBoundingClientRect ().bottom
+			- parseFloat (getComputedStyle (body).paddingBottom || '0');
+		return limit - block.getBoundingClientRect ().bottom;
+	};
+
+	// The chart floats, and the overview's block does not clear its floats - so
+	// its measured bottom ignored the chart entirely and the loop below grew it
+	// without limit (?probe=1 caught a 4264px chart in a 263px block). flow-root
+	// makes every block contain what floats inside it, which is what the loop
+	// assumes when it measures.
+	block.style.setProperty ('display', 'flow-root', 'important');
+
+	// The overview is the exception: its chart shares the row with the headline
+	// grade, and filling the panel made it tower over the grade that is meant to
+	// be the thing you look at. It keeps the stylesheet's height.
+	if (pane.id === 'overview') { resizeCharts (pane); return; }
+
+	let h = box.offsetHeight;
+	for (let pass = 0; pass < 6; pass++) {
+		const spare = gap ();
+		if (spare > -2 && spare < 2) { break; }
+		const next = Math.max (MIN_CHART, Math.round (h + spare - 1));
+		if (next === h) { break; }
+		const before = block.offsetHeight;
+		h = next;
+		setBlockHeight (block, box, h);
+		// If the block will not follow the chart, stop rather than run away
+		if (block.offsetHeight === before) { break; }
+	}
+
+	if (PROBE) {
+		console.log ('  grow ' + pane.id + ' chart=' + box.offsetHeight
+			+ ' block=' + block.offsetHeight + ' gap=' + Math.round (gap ()));
+	}
+
+	resizeCharts (pane);
+}
+
+// Switch tabs exactly as a viewer would, by clicking the tool's own buttons
+function showReportTab (index)
+{
+	if (!reportHost || index === reportTab) { return; }
+	const buttons = reportHost.querySelectorAll ('.tab .tablinks');
+	if (!buttons.length || index >= buttons.length) { return; }
+	reportTab = index;
+	buttons[index].click ();
+
+	// Fit on the frame after the click, so the pane has been laid out
+	requestAnimationFrame (function () {
+		const pane = reportHost.querySelector ('#' + REPORT.tabs[index]);
+		try { fitTab (pane); } catch (e) { console.warn ('Could not trim report tab:', e.message); }
+	});
+}
+
+// Driven from the reel clock, so it stays in step with pausing and scrubbing
+function tickReport (t)
+{
+	if (!reportHost) { return; }
+	const from = REPORT.from * K, to = REPORT.to * K;
+	const showing = reportReady && t >= from && t <= to;
+
+	reportHost.style.opacity = showing ? '1' : '0';
+	if (!showing) { return; }
+
+	const span = (to - from) / REPORT.tabs.length;
+	showReportTab (clamp (Math.floor ((t - from) / span), 0, REPORT.tabs.length - 1));
+}
+
+// ?probe=1 - hold the report open and print what the boxes actually measure.
+//
+// Added because the chart heights were "fixed" twice on the strength of reading
+// the CSS, and both times nothing moved. Reading a stylesheet tells you what a
+// rule says, not which rule won or what the box ended up as, and the report is
+// styled by four of the tool's sheets plus this page's own. This walks each
+// cycled tab and reports the numbers the sizing code is actually working from.
+const PROBE = P.get ('probe') === '1';
+
+async function probeReport ()
+{
+	const body = reportHost.querySelector ('.modal-body');
+	const lines = [];
+	const note = function (text) { lines.push (text); console.log (text); };
+	const frame = () => new Promise (r => requestAnimationFrame (() => requestAnimationFrame (r)));
+
+	note ('host ' + reportHost.clientWidth + 'x' + reportHost.clientHeight
+		+ '  modal ' + reportHost.querySelector ('.modal').clientHeight
+		+ '  body client ' + body.clientHeight + ' scroll ' + body.scrollHeight);
+
+	for (const id of REPORT.tabs) {
+		const i = REPORT.tabs.indexOf (id);
+		reportTab = -1;
+		showReportTab (i);
+		const pane = reportHost.querySelector ('#' + id);
+		fittedTabs.delete (id);
+		fitTab (pane);
+		await frame ();		// let resizeCharts's deferred pass land before measuring
+		const sizes = Array.from (pane.querySelectorAll ('.chart-container, .chart-container-wide'))
+			.map (function (el) {
+				const canvas = el.querySelector ('canvas');
+				return el.offsetHeight + '/' + (canvas ? canvas.offsetHeight : 'nocanvas');
+			});
+		note (id.padEnd (10) + ' body ' + body.clientHeight + '/' + body.scrollHeight
+			+ '  over ' + Math.max (0, body.scrollHeight - body.clientHeight)
+			+ '  charts[container/canvas] ' + (sizes.join (' ') || 'NONE'));
+	}
+
+	document.title = 'PROBE ' + lines.join (' || ');
+}
+
+buildReport ().then (function () {
+	if (!PROBE) { return; }
+	// Two frames, so the first tab has been laid out and fitted as usual
+	requestAnimationFrame (() => requestAnimationFrame (probeReport));
+}).catch (function (error) {
+	console.warn ('Report card unavailable, carrying on without it:', error.message);
+	showChromeNote ('report card: ' + error.message);
+});
+
+const REPORT_RECORDS = {"historical_emission/E01033658":{"year":[2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022],"dom_gas_total_emissions":[829952,792886,764450,864265,854999,856743,778297,754245,708888,836842,872491,773734,615080],"dom_gas_kgco2e_percap":[614,610,561,640,639,608,506,486,448,530,549,555,440],"dom_elec_total_emissions":[3032555,2756995,3030973,2573194,2953664,2630448,2300928,1918257,1492814,1391710,1270658,1145431,1269492],"dom_elec_kgco2e_percap":[2245,2121,2224,1905,2209,1868,1496,1235,944,882,800,822,908],"car_emissions":[507381,537981,476305,427054,398425,419996,340111,303897,309995,300316,248443,240696,237755],"van_emissions":[41646,35767,24835,29376,18585,20076,20176,28268,26011,16127,26623,18629,14181],"company_bike_emissions":[725327,699796,641686,654208,627001,604599,812281,795138,819646,853780,822452,711484,325884],"car_km":[2616713,2941395,2675870,2461406,2405949,2573507,2169075,1960627,1983331,1915548,1600711,1576150,1651024],"van_km":[214778,195553,139520,169316,112228,123014,128675,182372,166416,102863,171533,121987,98473],"company_km":[3740730,3826114,3604978,3770650,3786236,3704653,5180366,5129921,5244057,5445773,5299044,4659011,2263015],"car_kgco2e_percap":[376,414,349,316,298,298,221,196,196,190,156,173,170],"van_kgco2e_percap":[31,28,18,22,14,14,13,18,16,10,17,13,10],"company_bike_kgco2e_percap":[537,538,471,484,469,429,528,512,518,541,518,511,233],"heating_other_emissions_total":[102573,95443,106350,114518,123066,129752,143372,154780,160548,173042,187840,185749,158219],"heating_other_kgco2e_percap":[76,73,78,85,92,92,93,100,102,110,118,133,113],"food_kgco2e_percap":[848,867,808,798,655,744,1228,1191,1255,1217,876,1023,1078],"alcohol_kgco2e_percap":[78,89,93,83,26,43,97,84,95,92,30,35,75],"clothing_kgco2e_percap":[138,141,52,51,336,291,164,165,88,79,175,167,225],"communication_kgco2e_percap":[160,168,97,92,103,125,144,146,166,138,91,105,106],"housing_other_kgco2e_percap":[1151,1245,1428,1418,1374,1277,1785,1019,1220,1240,765,896,1216],"furnish_kgco2e_percap":[238,235,207,196,91,121,570,579,358,309,200,231,120],"recreation_kgco2e_percap":[434,454,434,417,313,326,421,474,342,327,316,415,692],"transport_optranequip_other_kgco2e_percap":[126,120,78,81,56,63,110,98,414,417,156,128,170],"transport_vehiclepurchase_kgco2e_percap":[55,55,397,446,58,85,29,30,242,179,16,22,20],"transport_pt_kgco2e_percap":[875,940,1426,1221,520,566,965,548,528,751,412,308,131],"health_kgco2e_percap":[226,234,41,41,235,221,38,53,287,290,603,851,17],"education_kgco2e_percap":[2,2,0,0,315,305,1175,1132,57,52,2,2,299],"restaurant_kgco2e_percap":[1150,1180,1210,1186,2354,2459,1208,888,940,1076,393,567,830],"misc_kgco2e_percap":[568,594,182,182,454,402,424,451,305,296,198,253,295],"emissions_food":[1146186,1126675,1101985,1077908,876000,1047634,1889145,1850216,1983513,1920734,1391689,1424721,1507372],"emissions_alcohol":[105405,116297,126710,112661,34680,60909,148966,131223,149770,145741,48403,48850,105418],"emissions_clothing":[186672,183728,71297,68434,449062,410182,252110,256462,139672,125005,277904,232360,314460],"emissions_communication":[216365,218788,132523,124852,137884,175541,221449,226635,261980,217907,143912,146779,148093],"emissions_housing_gaselecfuel":[3315954,2883997,3359360,3366775,2677273,2438718,3030828,2785409,2982812,2711848,3236654,3511098,2398752],"emissions_housing_other":[1555001,1618253,1945857,1915052,1836491,1797853,2744910,1582794,1928916,1957286,1214580,1248017,1699945],"emissions_furnish":[321026,306138,281656,265316,121884,170377,876582,899799,566762,487327,317880,322474,167219],"emissions_recreation":[586189,589908,592038,563729,418419,459605,647373,736721,540336,516101,501329,578607,967313],"emissions_transport_optranequip":[672506,673775,507554,506775,879417,874946,1240423,1218212,1541852,1517934,610172,679486,567651],"emissions_transport_optranequip_other":[170689,156077,106419,109128,75346,89035,169659,151999,654470,657839,248505,177926,237148],"emissions_transport_services":[12154011,12811089,5196990,5200916,4510073,4809304,2989958,2580189,4805795,5173425,1106366,1192845,454452],"emissions_transport_pt":[1181746,1222581,1943901,1649203,695885,796587,1483645,850968,835037,1185414,654002,428681,182522],"emissions_transport_vehiclepurchase":[74956,71631,541681,602193,77002,119836,45120,46640,383042,281955,25979,30220,28015],"emissions_health":[305464,304272,55590,55453,313631,311381,59075,83064,454048,458048,957163,1184999,23762],"emissions_education":[2519,2634,396,366,421571,429876,1806550,1758283,90749,81897,3138,3298,417915],"emissions_restaurant":[1554125,1533811,1648716,1601671,3147833,3461973,1857258,1378523,1486354,1697660,624262,790165,1160974],"emissions_misc":[767209,771848,248239,245667,606998,566086,651616,699932,482122,467011,315078,352031,412931],"flights_kgco2e_percap":[2332,2450,2156,2255,2912,2785,2472,2619,2699,2876,967,835,1442],"flights_emissions_total":[3151095,3185093,2938457,3047049,3892994,3921516,3801630,4067322,4267038,4537681,1535025,1163271,2015378],"goods_services_combined_kgco2e_percap":[4993,5210,4552,4464,6256,6315,7253,6184,5113,5117,3649,4546,4954],"goods_services_combined_total":[6746160,6772354,6205006,6031110,8364453,8891416,11155035,9603651,8084222,8074717,5795338,6332301,6925401],"total_kgco2e_percap":[12261,12559,12311,11918,13524,13125,13687,12025,11222,11603,7360,8046,8590],"emissions_total":[17065897,16844303,17181199,16498946,18885490,19265915,22121019,19741379,18629092,19169518,12049022,11709682,12339578],"dom_gas_grade":["A","A-","A","A-","A-","A-","A","A","A","A-","A-","A-","A"],"dom_elec_grade":["F-","F-","F-","F-","F-","F-","F","F","F","F","F","F-","F-"],"heating_other_grade":["D+","D","D+","D","D","D","D+","D+","D+","D+","D","D-","D-"],"car_grade":["A-","B+","A-","A-","A-","A-","A","A","A","A","A","A","A"],"van_grade":["B-","B","B+","B+","A-","A-","A-","B+","B+","A","B+","A-","A-"],"company_bike_grade":["F","F","F","F","F","F","F","F","F","F","F","F","F+"],"transport_optranequip_other_grade":["A","A","A","A","A","A","A","A","D","D","A-","A-","B+"],"transport_vehiclepurchase_grade":["B+","B+","F","F","B+","B+","A","A","C","C","A+","A+","A+"],"transport_pt_grade":["F","F","F-","F-","F+","F+","F","F","F","F","F+","F+","B-"],"flights_grade":["E-","F+","F+","F+","F","F","F","F","F","F","F","F","E"],"food_grade":["C+","C-","B+","B","A","A","B-","B-","B","B","A","B+","B"],"alcohol_grade":["F-","F-","F-","F-","B+","B+","D","D","D-","D-","A","A-","D+"],"clothing_grade":["B","B-","A+","A+","F-","F-","C+","C+","A+","A+","E+","E-","E-"],"communication_grade":["E-","F+","E","E","F+","E-","E-","E+","F","F","A-","B+","B+"],"housing_other_grade":["F","F","F","F","F","F","F","F","F","F","F+","F+","F"],"furnish_grade":["D+","D","C-","D+","A","A","E-","E","B-","B-","A-","A-","A"],"recreation_grade":["D","D-","D-","D-","B-","B","C+","C+","B+","B+","B+","B+","D-"],"health_grade":["F+","F+","B","B+","F","F","B-","B","F","F","F-","F-","A"],"education_grade":["A-","A-","A","A+","F","F","F-","F-","E","E+","B+","B+","F"],"restaurant_grade":["F","F","F","F","F-","F-","F+","F+","F+","F+","C-","D","E-"],"misc_grade":["F","F","A","A","E-","E","E","E","B-","B-","B+","B","B-"],"total_grade":["F","F","F","F","F-","F","F","F+","E-","F+","C-","E+","D"],"goods_services_combined_grade":["F","F","F+","F+","F-","F","F-","F-","E","E-","C-","E+","E-"]},"population/E01033658":{"year":[2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024],"a04":[35,36,40,34,27,27,35,33,31,42,43,13,8,12,11],"a59":[2,4,11,14,18,22,26,26,23,24,24,11,6,12,15],"a1014":[61,54,55,60,48,58,55,43,48,37,37,58,52,51,50],"a1519":[204,156,153,134,159,140,151,141,153,126,145,202,189,174,167],"a2024":[268,205,211,157,132,154,181,196,181,187,181,228,266,273,388],"a2529":[331,352,339,366,338,367,402,408,399,385,383,339,329,330,442],"a3034":[177,205,217,241,246,240,266,262,269,282,283,169,190,189,235],"a3539":[102,97,118,130,124,144,153,167,185,185,182,110,118,108,127],"a4044":[54,58,67,64,72,80,77,74,82,81,83,66,69,73,77],"a4549":[35,42,51,43,55,53,60,58,59,67,74,68,62,61,58],"a5054":[31,25,28,37,42,45,46,56,64,65,55,39,36,39,42],"a5559":[21,27,25,24,21,19,16,17,22,25,27,43,43,34,41],"a6064":[12,15,11,9,15,20,29,21,20,20,19,14,13,15,15],"a6569":[7,14,19,18,11,10,8,13,11,18,15,11,7,9,11],"a7074":[3,5,7,8,18,21,24,23,21,21,25,11,7,5,11],"a7579":[7,2,4,4,4,3,3,5,4,2,3,7,0,2,3],"a8084":[0,2,4,5,4,5,5,5,9,9,8,2,1,4,5],"85+":[1,1,3,3,3,0,1,5,0,2,1,2,2,1,2],"households_est":[714,711,743,743,723,769,837,858,864,874,863,711,729,725,919],"all_properties":[870,870,830,830,840,840,840,880,880,920,930,930,990,1010,1560]},"lsoa_overview/E01033658":[{"WD25CD":"E05011376","WD25NM":"Piccadilly","PAR23CD":"Unparished","PAR23NM":"Unparished","PCON24CD":"E14001352","PCON24NM":"Manchester Central","LAD25CD":"E08000003","LAD25NM":"Manchester","supergroup_code":"1","supergroup_name":"Cosmopolitan student neighbourhoods","lsoa_class_code":"1a","lsoa_class_name":"Cosmopolitan student neighbourhoods","warnings":[]}],"la_emissions/GB":{"year":[2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022],"dom_gas_kgco2e_percap":[1152,1076,1063,1033,1013,997,993,1021,1012,1020,1033,983,847],"dom_elec_kgco2e_percap":[897,817,817,774,858,791,687,577,452,405,388,334,277],"car_kgco2e_percap":[781,765,741,732,720,693,662,644,627,636,599,527,598],"van_kgco2e_percap":[63,62,61,61,60,58,57,56,55,57,53,49,57],"company_bike_kgco2e_percap":[172,167,159,157,155,151,147,143,139,141,130,112,129],"heating_other_kgco2e_percap":[149,138,142,141,142,144,148,155,157,162,169,163,138],"food_kgco2e_percap":[895,870,933,901,891,1061,1354,1317,1396,1332,1231,1277,1213],"alcohol_kgco2e_percap":[39,42,51,45,38,67,86,76,84,81,75,77,73],"clothing_kgco2e_percap":[170,166,151,145,171,154,187,190,193,170,157,132,166],"communication_kgco2e_percap":[135,135,88,82,86,107,126,131,130,105,120,129,136],"housing_other_kgco2e_percap":[508,523,490,476,472,460,498,288,382,389,419,433,402],"furnish_kgco2e_percap":[235,222,228,214,225,315,429,442,439,377,379,406,394],"recreation_kgco2e_percap":[417,411,405,384,412,453,501,572,601,565,516,608,587],"transport_optranequip_other_kgco2e_percap":[290,263,282,287,289,339,374,333,391,391,415,297,374],"transport_vehiclepurchase_kgco2e_percap":[123,118,128,147,147,229,284,291,310,218,181,224,241],"transport_pt_kgco2e_percap":[266,273,307,259,269,305,367,209,227,321,236,155,225],"health_kgco2e_percap":[120,121,88,98,96,98,70,99,101,92,58,78,84],"education_kgco2e_percap":[33,32,37,39,42,42,59,52,57,54,40,43,43],"restaurant_kgco2e_percap":[741,720,768,740,768,826,846,622,663,754,418,538,627],"misc_kgco2e_percap":[387,386,333,328,351,332,348,370,369,354,286,328,369],"flights_kgco2e_percap":[1454,1460,1423,1465,1365,1361,1380,1468,1454,1534,363,275,1093],"goods_services_combined_kgco2e_percap":[3679,3627,3571,3452,3553,3913,4504,4159,4416,4273,3699,4049,4093],"total_kgco2e_percap":[10385,10127,10031,9828,9819,10157,10771,10217,10407,10281,7932,8083,8974],"dom_gas_grade":["NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA"],"dom_elec_grade":["NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA"],"car_grade":["NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA"],"van_grade":["NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA"],"company_bike_grade":["NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA"],"heating_other_grade":["NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA"],"food_grade":["NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA"],"alcohol_grade":["NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA"],"clothing_grade":["NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA"],"communication_grade":["NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA"],"housing_other_grade":["NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA"],"furnish_grade":["NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA"],"recreation_grade":["NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA"],"transport_optranequip_other_grade":["NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA"],"transport_vehiclepurchase_grade":["NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA"],"transport_pt_grade":["NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA"],"health_grade":["NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA"],"education_grade":["NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA"],"restaurant_grade":["NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA"],"misc_grade":["NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA"],"flights_grade":["NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA"],"goods_services_combined_grade":["NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA"],"total_grade":["NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA"]},"oac_emissions/1a":{"year":[2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022],"dom_gas_kgco2e_percap":[942,866,839,814,794,768,755,761,747,747,747,790,678],"dom_elec_kgco2e_percap":[880,782,783,722,798,719,620,519,400,355,336,325,273],"car_kgco2e_percap":[402,383,361,349,341,324,308,298,286,287,265,260,293],"van_kgco2e_percap":[23,23,22,21,21,20,19,19,18,19,17,17,20],"company_bike_kgco2e_percap":[295,242,179,161,175,170,147,106,98,97,86,79,87],"heating_other_kgco2e_percap":[67,61,65,68,71,73,76,81,83,88,93,100,83],"food_kgco2e_percap":[767,727,797,758,740,869,1129,1081,1160,1092,997,1142,1031],"alcohol_kgco2e_percap":[35,38,44,38,29,51,73,64,68,65,55,63,67],"clothing_kgco2e_percap":[159,151,117,112,136,119,146,147,166,144,141,131,151],"communication_kgco2e_percap":[124,120,80,74,80,95,114,119,114,91,98,120,113],"housing_other_kgco2e_percap":[933,938,919,876,962,925,1062,610,784,801,805,915,797],"furnish_kgco2e_percap":[197,181,174,162,155,214,294,300,267,229,257,314,248],"recreation_kgco2e_percap":[334,316,295,277,306,333,365,413,412,382,429,562,399],"transport_optranequip_other_kgco2e_percap":[221,197,183,185,179,207,249,219,200,199,236,186,217],"transport_vehiclepurchase_kgco2e_percap":[84,79,82,99,102,158,145,147,198,134,86,119,118],"transport_pt_kgco2e_percap":[417,421,445,371,375,419,500,281,272,382,374,270,288],"health_kgco2e_percap":[69,70,68,86,65,68,43,62,96,80,48,82,63],"education_kgco2e_percap":[58,51,88,111,209,209,254,191,208,203,122,143,78],"restaurant_kgco2e_percap":[736,692,740,704,747,778,854,617,633,715,390,557,610],"misc_kgco2e_percap":[331,324,253,248,277,261,297,311,284,269,214,274,332],"flights_kgco2e_percap":[1716,1694,1503,1533,1601,1575,1643,1721,1817,1899,524,452,1633],"goods_services_combined_kgco2e_percap":[3744,3609,3575,3446,3705,3921,4632,3915,4193,4072,3556,4303,3890],"total_kgco2e_percap":[9603,9148,8801,8515,8955,9088,9812,8766,8943,8878,6686,7455,8068]},"la_emissions/E08000003":{"year":[2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022],"dom_gas_kgco2e_percap":[1008,923,885,861,838,806,794,826,816,831,843,818,686],"dom_elec_kgco2e_percap":[835,752,752,707,787,711,608,519,405,364,347,310,258],"car_kgco2e_percap":[426,425,403,397,393,380,359,367,361,372,362,337,372],"van_kgco2e_percap":[24,24,23,22,22,21,20,20,20,21,20,19,21],"company_bike_kgco2e_percap":[91,92,87,87,84,79,77,77,75,76,69,65,69],"heating_other_kgco2e_percap":[98,90,93,94,96,97,100,105,108,112,118,115,95],"food_kgco2e_percap":[783,754,809,787,756,885,1119,1088,1153,1106,1001,1032,1019],"alcohol_kgco2e_percap":[34,37,42,37,32,54,62,54,67,64,48,49,48],"clothing_kgco2e_percap":[140,135,129,123,135,121,157,159,167,148,127,107,144],"communication_kgco2e_percap":[127,126,83,78,78,97,116,117,121,100,98,100,103],"housing_other_kgco2e_percap":[658,671,689,674,654,627,693,397,571,574,616,637,606],"furnish_kgco2e_percap":[181,169,169,158,143,196,302,308,313,267,257,263,269],"recreation_kgco2e_percap":[290,285,313,296,268,288,342,386,366,346,400,465,333],"transport_optranequip_other_kgco2e_percap":[218,195,193,196,169,195,267,238,233,232,258,186,211],"transport_vehiclepurchase_kgco2e_percap":[70,66,74,82,84,128,128,131,169,123,104,122,188],"transport_pt_kgco2e_percap":[317,321,459,387,334,374,428,243,256,359,370,244,198],"health_kgco2e_percap":[59,58,60,60,78,75,46,65,96,96,40,49,39],"education_kgco2e_percap":[26,27,65,60,81,81,164,158,66,59,57,61,88],"restaurant_kgco2e_percap":[583,563,669,646,615,663,648,477,537,608,307,391,433],"misc_kgco2e_percap":[318,314,255,251,269,246,264,282,267,256,208,234,256],"flights_kgco2e_percap":[1109,1100,1235,1272,1259,1238,1140,1212,1469,1548,378,284,937],"goods_services_combined_kgco2e_percap":[3199,3139,3285,3171,3109,3334,3914,3491,3724,3624,3160,3389,3339],"total_kgco2e_percap":[8265,7999,8298,8076,7976,8112,8591,7990,8323,8328,6401,6410,6856],"dom_gas_grade":["B","B","B+","B+","B+","B+","B+","B+","B+","B+","B+","B+","B+"],"dom_elec_grade":["C+","B-","B-","B-","B-","B","B+","B","B","B","B","C+","C+"],"car_grade":["A","A","A","A","A","A","A","A","A","A","A","A-","A-"],"van_grade":["A","A","A","A","A","A","A","A","A","A","A","A-","A-"],"company_bike_grade":["A-","A-","A-","A-","A-","A-","A-","A-","A-","B+","B+","B+","A-"],"heating_other_grade":["C-","C-","C-","C-","C","C","C","C","C","C","C","C","C+"],"food_grade":["A+","A+","A+","A+","A","A","A","A","A","A","A","A","A"],"alcohol_grade":["A-","A-","A-","A-","A-","A-","A-","A-","A-","A-","A","A-","A-"],"clothing_grade":["A","A","A-","A-","A","A","A","A","A-","A-","A","A","A"],"communication_grade":["B+","B+","B-","B-","A","B","A-","A-","B+","B","A-","A-","A"],"housing_other_grade":["F+","F+","F+","F+","F+","F+","F+","F+","F+","F+","F+","F+","F+"],"furnish_grade":["A","A","A","A","A","A","A","A+","A","A","A","A","A+"],"recreation_grade":["A","A","A","A","A","A","A","A","A","A","A-","A-","A"],"transport_optranequip_other_grade":["A-","A-","A-","A-","A","A","A","A","A","A","A-","A-","A"],"transport_vehiclepurchase_grade":["A","A","A-","A-","A-","A-","A","A","A-","A-","A","A","B+"],"transport_pt_grade":["E-","E-","F+","F+","E-","E-","E-","E-","E-","E-","F+","F","C"],"health_grade":["A-","A","B+","A","B","B","B+","A","C-","D","A-","A-","A+"],"education_grade":["C","C-","E-","E-","F+","F+","F","F","E","E","E-","E-","F+"],"restaurant_grade":["A","A","B+","B+","A","A","A","A","A","A","A","A","A"],"misc_grade":["A-","A","A+","A+","A","A+","A+","A+","A+","A+","A","A","A+"],"flights_grade":["B+","B+","B-","B-","C","C","B","B","D-","D-","E+","E+","B-"],"goods_services_combined_grade":["A-","A","B+","B+","A-","A","A-","A","A","A","A-","A-","A"],"total_grade":["A+","A+","A","A","A","A+","A+","A+","A+","A","A","A","A+"]},"community_pics/E01033658":{"id":["higher_OnePersonOther_White","higher_CoupleNoChildren_White","intermediate_OnePersonOther_White","routine_OnePersonOther_White","students_OnePersonOther_White","higher_OnePersonOther_Other","higher_OtherIncStudentOrOver66_White","intermediate_CoupleNoChildren_White","routine_CoupleNoChildren_White","students_OnePersonOther_Other","higher_CoupleNoChildren_Other","higher_CoupleChildren_White","intermediate_OnePersonOther_Other","routine_OtherIncStudentOrOver66_White","intermediate_OtherIncStudentOrOver66_White","higher_OtherIncStudentOrOver66_Other","intermediate_OtherIncStudentOrOver66_Other","students_OtherIncStudentOrOver66_White","higher_OtherNoChildren_White","higher_CoupleNoChildren_Black","routine_OtherNoChildren_Other","unemployed_OnePersonOther_Other","students_CoupleNoChildren_Black"],"pic":[11,7,3,3,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1]}};
+
+
+/* --------------------------------------------------------------------------
+   Property popup
+
+   The retrofit tool opens a popup when an EPC point is clicked, so the reel
+   shows one while the EPC scene is running. The property is a REAL one, found
+   with queryRenderedFeatures over whatever is on screen at the time, and the
+   card tracks it as the camera moves - map.project() gives its screen position
+   again on every frame.
+
+   It is drawn on the overlay canvas rather than as a MapLibre Popup for the
+   same reason the captions are: a DOM popup would be missing from any recording
+   the in-page recorder makes, since that composites canvases only.
+
+   The card shows a subset of the tool's popup. The full template runs to thirty
+   rows, which is right for someone reading it and far too much to take in
+   during a few seconds of flight.
+
+   Cards take turns rather than one card lasting the scene. A property picked
+   while the camera is flying over it is out of shot within a couple of seconds,
+   so each card is retired when its dwell runs out OR as soon as its building
+   leaves the frame, whichever comes first, and after a beat the next property
+   is chosen. Properties already used are remembered so the reel does not show
+   the same house twice.
+   -------------------------------------------------------------------------- */
+
+const EPC_COLOUR = {};
+EPC_BANDS.forEach (band => { EPC_COLOUR[band[0]] = band[1]; });
+
+// How the cards take their turns, in reel seconds
+const POPUP_DWELL = 4.5 * K;	// how long one card stays up, at most
+const POPUP_GAP   = 0.9 * K;	// beat between one leaving and the next arriving
+const POPUP_FADE  = 0.7 * K;
+
+let popupScene = null;		// {layerId, start, end} while a scene wants popups
+let epcPopup = null;		// the card currently up
+let popupNextAt = 0;		// clock time at which to pick the next one
+const popupSeen = new Set ();	// UPRNs already used, so the reel does not repeat
+
+function clearPopup ()
+{
+	epcPopup = null;
+	popupScene = null;
+	popupNextAt = 0;
+	popupSeen.clear ();
+}
+
+// EPC addresses arrive shouting in capitals; ease them back for the card
+function titleCase (text)
+{
+	return String (text).toLowerCase ().replace (/\b[a-z]/g, c => c.toUpperCase ());
+}
+
+function popupAddress (props)
+{
+	const raw = titleCase (props.address || '');
+	if (!ANONYMISE) { return raw; }
+	return raw.replace (/^[0-9]+[a-zA-Z]?[,\s]+/, '');	// drop the house number, keep the street
+}
+
+// Where a property currently sits on screen, in CSS pixels, or null if it
+// cannot be projected at all
+function popupScreenPoint (lngLat)
+{
+	if (!map) { return null; }
+	const canvas = map.getCanvas ();
+	if (!canvas.clientWidth || !canvas.clientHeight) { return null; }
+	let p;
+	try { p = map.project (lngLat); } catch (e) { return null; }
+	if (!isFinite (p.x) || !isFinite (p.y)) { return null; }
+	return { x: p.x, y: p.y, w: canvas.clientWidth, h: canvas.clientHeight };
+}
+
+function popupOnScreen (popup)
+{
+	const p = popupScreenPoint (popup.lngLat);
+	if (!p) { return false; }
+	const mx = p.w * 0.05, my = p.h * 0.05;
+	return p.x > mx && p.x < p.w - mx && p.y > my && p.y < p.h - my;
+}
+
+// Choose a property to show. The camera is always flying forwards, so anything
+// picked low in the frame sweeps out of shot within a second or two; sampling
+// high up and then preferring the highest candidate buys the card as much time
+// on screen as the shot allows.
+function pickPopupFeature (layerId, t)
+{
+	if (!map || !map.getLayer (layerId)) { return; }
+
+	const canvas = map.getCanvas ();
+	const w = canvas.clientWidth, h = canvas.clientHeight;
+	if (!w || !h) { return; }
+
+	// Off to the right of centre, well up the frame, keeping clear of the
+	// caption panel in the lower left
+	const cx = w * 0.56, cy = h * 0.30;
+	const r = Math.min (w, h) * 0.20;
+
+	let features = [];
+	try {
+		features = map.queryRenderedFeatures ([[cx - r, cy - r], [cx + r, cy + r]], { layers: [layerId] });
+	} catch (e) { features = []; }
+
+	const candidates = features
+		.filter (f => f.properties && f.properties.address && f.properties.cur_rate && f.geometry)
+		.filter (f => !popupSeen.has (f.properties.UPRN))
+		.map (f => ({ feature: f, point: popupScreenPoint (f.geometry.coordinates) }))
+		.filter (c => c.point && c.point.y > c.point.h * 0.08 && c.point.y < c.point.h * 0.55)
+		.sort ((a, b) => a.point.y - b.point.y);	// highest in frame first
+
+	if (!candidates.length) {
+		popupNextAt = t + 0.4 * K;	// nothing suitable in shot; look again shortly
+		return;
+	}
+
+	const chosen = candidates[0].feature;
+	popupSeen.add (chosen.properties.UPRN);
+	epcPopup = {
+		lngLat: chosen.geometry.coordinates.slice (0, 2),
+		props: chosen.properties,
+		from: t,
+		until: Math.min (t + POPUP_DWELL, popupScene.end - 0.5 * K)
+	};
+}
+
+// Run the cards in turn for as long as the scene lasts: one comes up, holds
+// until its dwell runs out OR its building leaves the frame, fades, and after a
+// beat the next one is chosen.
+function tickPopup (t)
+{
+	if (!popupScene) { return; }
+	if (t < popupScene.start || t > popupScene.end) { clearPopup (); return; }
+
+	if (epcPopup) {
+		if (t > epcPopup.until + POPUP_FADE) {
+			epcPopup = null;
+			popupNextAt = t + POPUP_GAP;
+		} else if (t < epcPopup.until && t > epcPopup.from + 0.8 * K && !popupOnScreen (epcPopup)) {
+			epcPopup.until = t;	// its building has gone; start fading now
+		}
+		return;
+	}
+
+	// Only start another if there is time to read it before the scene ends
+	if (t >= popupNextAt && t < popupScene.end - POPUP_DWELL * 0.6) {
+		pickPopupFeature (popupScene.layerId, t);
+	}
+}
+
+function popupRows (props)
+{
+	const rows = [];
+	const type = [props.b_type, props.p_type].filter (Boolean).join (' ');
+	if (type)       { rows.push (['Type', type]); }
+	if (props.age)  { rows.push (['Built', String (props.age)]); }
+	if (props.area) { rows.push (['Floor area', Math.round (props.area) + ' m²']); }
+	if (props.fuel) { rows.push (['Heating', String (props.fuel)]); }
+	return rows.slice (0, 4);
+}
+
+function drawPropertyPopup (ctx, t, W, H, S)
+{
+	if (!epcPopup || !map) { return; }
+
+	const alpha = Math.min (
+		ease (fadeIn (t, epcPopup.from, POPUP_FADE)),
+		1 - ease (fadeIn (t, epcPopup.until, POPUP_FADE)),
+		1 - ease (fadeIn (t, ENDCARD_AT - ENDCARD_FADE, ENDCARD_FADE))
+	);
+	if (alpha <= 0.001) { return; }
+
+	const screen = popupScreenPoint (epcPopup.lngLat);
+	if (!screen) { return; }
+	const scale = W / screen.w;
+	const px = screen.x * scale, py = screen.y * scale;
+	if (px < -W || px > W * 2 || py < -H || py > H * 2) { return; }	// behind the camera or far off frame
+
+	const props = epcPopup.props;
+	const pad = 18 * S;
+	const cardW = 340 * S;
+	const chip = 44 * S;
+
+	ctx.save ();
+	ctx.globalAlpha = alpha;
+	ctx.textBaseline = 'top';
+	ctx.textAlign = 'left';
+
+	// Layout, measured once and kept on the popup itself
+	if (!epcPopup.lines || epcPopup.lineScale !== S) {
+		ctx.font = font (600, 16 * S);
+		epcPopup.lines = wrap (ctx, popupAddress (props), cardW - pad * 2 - chip - 12 * S).slice (0, 2);
+		epcPopup.rows = popupRows (props);
+		epcPopup.lineScale = S;
+	}
+	const lines = epcPopup.lines, rows = epcPopup.rows;
+
+	const headerH = Math.max (lines.length * 21 * S, chip);
+	const cardH = pad + headerH + 12 * S + rows.length * 23 * S + pad * 0.6;
+
+	// Sit the card up and to the right of the point, then keep it in frame
+	const cardX = clamp (px + 30 * S, 24 * S, Math.max (24 * S, W - cardW - 24 * S));
+	const cardY = clamp (py - cardH - 30 * S, 24 * S, Math.max (24 * S, H - cardH - 24 * S));
+
+	// Leader line first, so the card covers its inner end
+	ctx.strokeStyle = 'rgba(255,255,255,.65)';
+	ctx.lineWidth = Math.max (1, 1.4 * S);
+	ctx.beginPath ();
+	ctx.moveTo (px, py);
+	ctx.lineTo (cardX + cardW / 2, cardY + cardH / 2);
+	ctx.stroke ();
+
+	// The card
+	ctx.fillStyle = 'rgba(11,12,17,.86)';
+	roundRect (ctx, cardX, cardY, cardW, cardH, 14 * S);
+	ctx.fill ();
+	ctx.strokeStyle = 'rgba(255,255,255,.12)';
+	ctx.lineWidth = Math.max (1, S);
+	ctx.stroke ();
+
+	// EPC band chip, top right
+	const band = String (props.cur_rate || '').trim ().toUpperCase ();
+	ctx.fillStyle = EPC_COLOUR[band] || '#7a7a7a';
+	roundRect (ctx, cardX + cardW - pad - chip, cardY + pad, chip, chip, 9 * S);
+	ctx.fill ();
+	ctx.textAlign = 'center';
+	ctx.fillStyle = '#ffffff';
+	ctx.font = font (700, 24 * S);
+	ctx.fillText (band, cardX + cardW - pad - chip / 2, cardY + pad + 7 * S);
+	if (props.cur_ee) {
+		ctx.font = font (600, 10 * S);
+		ctx.fillStyle = 'rgba(255,255,255,.85)';
+		ctx.fillText (String (Math.round (props.cur_ee)), cardX + cardW - pad - chip / 2, cardY + pad + chip - 14 * S);
+	}
+	ctx.textAlign = 'left';
+
+	// Address
+	ctx.font = font (600, 16 * S);
+	ctx.fillStyle = '#ffffff';
+	let ty = cardY + pad;
+	lines.forEach (function (line) { ctx.fillText (line, cardX + pad, ty); ty += 21 * S; });
+
+	// Rows
+	ty = cardY + pad + headerH + 12 * S;
+	rows.forEach (function (row) {
+		ctx.font = font (500, 12 * S);
+		ctx.fillStyle = 'rgba(255,255,255,.55)';
+		ctx.fillText (row[0], cardX + pad, ty + 2 * S);
+		ctx.font = font (600, 13.5 * S);
+		ctx.fillStyle = 'rgba(255,255,255,.92)';
+		ctx.textAlign = 'right';
+		ctx.fillText (row[1], cardX + cardW - pad, ty + 1 * S);
+		ctx.textAlign = 'left';
+		ty += 23 * S;
+	});
+
+	// The point itself
+	ctx.beginPath ();
+	ctx.arc (px, py, 6 * S, 0, Math.PI * 2);
+	ctx.fillStyle = EPC_COLOUR[band] || '#ffffff';
+	ctx.fill ();
+	ctx.lineWidth = Math.max (1, 2 * S);
+	ctx.strokeStyle = '#ffffff';
+	ctx.stroke ();
+
+	ctx.restore ();
+}
+
+
+function drawOverlay (ctx, t, W, H)
+{
+	const S = H / 1080;	// every dimension above is written for a 1080p frame
+	ctx.clearRect (0, 0, W, H);
+
+	const scene = STORY[sceneAt (t)];
+	drawWordmark (ctx, t, W, H, S);
+	drawPropertyPopup (ctx, t, W, H, S);
+	drawCaption (ctx, scene, t, W, H, S);
+	drawCredits (ctx, scene, t, W, H, S);
+	drawEndCard (ctx, t, W, H, S);
+}
+
+
+/* ==========================================================================
+   10. Playback
+   ========================================================================== */
+
+let playing = false;
+let warmAbort = false;
+let holding = false;
+const holdLog = [];		// every pause taken, for cutting the recording afterwards
+
+/* --------------------------------------------------------------------------
+   Load holds
+
+   At each scene change the clock stops, the camera freezes, and the reel waits
+   for the incoming layer's tiles before carrying on. The recording therefore
+   runs longer than DURATION, and the pauses are meant to be cut out in an
+   editor afterwards - holdLog records exactly where they fall.
+
+   The hold is taken BEFORE the new scene is applied, with the previous scene
+   still on screen. The incoming layer is already visible at zero opacity by
+   then (the preload pass switched it on seconds earlier), so its tiles load
+   during the pause; the cross-fade then runs on a moving camera, as designed,
+   with nothing left to fetch.
+   -------------------------------------------------------------------------- */
+
+// Does this scene bring up a layer the previous one was not showing?
+function introducesLayer (index)
+{
+	const now  = STORY[index].layers;
+	const then = (index > 0 ? STORY[index - 1].layers : {});
+	return Object.keys (now).some (id => (now[id] || 0) > 0 && (then[id] || 0) === 0);
+}
+
+function holdThen (index, label)
+{
+	if (holding) { return; }
+	holding = true;
+
+	const entry = {
+		scene: (label || (index === null ? 'opening frame' : STORY[index].title)),
+		reelTime: clock,
+		recordedStart: clock + holdLog.reduce ((sum, h) => sum + (h.seconds || 0), 0),
+		startedAt: performance.now ()
+	};
+	holdLog.push (entry);
+
+	waitForTiles (HOLD_MAX)
+		.then (() => new Promise (resolve => setTimeout (resolve, HOLD_SETTLE)))
+		.then (function () {
+			entry.seconds = (performance.now () - entry.startedAt) / 1000;
+			entry.recordedEnd = entry.recordedStart + entry.seconds;
+			if (index !== null) { applyScene (index); }
+			holding = false;
+			lastFrame = performance.now ();	// do not bill the pause to the next frame
+		});
+}
+
+// Apply the scene due at the current clock, pausing first if it needs to load
+function tickScene ()
+{
+	if (!layersAdded || holding) { return; }
+	const index = sceneAt (clock);
+	if (index === currentScene) { return; }
+	if (HOLDS && (STORY[index].hold || introducesLayer (index))) { holdThen (index); }
+	else { applyScene (index); }
+}
+
+// Pause at any mid-scene moment listed in EXTRA_HOLDS, once each per run
+const extraHoldsTaken = new Set ();
+
+function tickExtraHolds ()
+{
+	if (!HOLDS || holding || !layersAdded) { return; }
+	EXTRA_HOLDS.forEach (function (point, i) {
+		if (extraHoldsTaken.has (i)) { return; }
+		if (clock >= point.t) {
+			extraHoldsTaken.add (i);
+			holdThen (null, point.label);
+		}
+	});
+}
+
+function reportHolds ()
+{
+	if (!holdLog.length) { return; }
+	const total = holdLog.reduce ((sum, h) => sum + (h.seconds || 0), 0);
+	console.log ('Reel ran ' + (DURATION + total).toFixed (1) + 's for ' + DURATION.toFixed (1) +
+	             's of animation. Cut these ' + holdLog.length + ' pauses out of the recording:');
+	console.table (holdLog.map (h => ({
+		'scene': h.scene,
+		'cut from': (h.recordedStart || 0).toFixed (2) + 's',
+		'cut to': (h.recordedEnd || 0).toFixed (2) + 's',
+		'length': (h.seconds || 0).toFixed (2) + 's'
+	})));
+}
+let clock = 0;			// seconds into the reel
+let lastFrame = 0;		// performance.now() of the previous frame
+let smoothDt = 0;		// rolling average frame interval, in seconds
+let ready = false;
+
+function applyCamera (t)
+{
+	const w = warp (t);
+	const view = {
+		center: [camLng (w), camLat (w)],
+		zoom: camZoom (w) + zoomOffset,
+		pitch: camPitch (w),
+		bearing: camBear (w)
+	};
+	// Restate sea level every frame, so a DEM tile arriving mid-flight cannot
+	// quietly drag the camera target back down onto the hills. Only when the
+	// unclamping above actually took effect - otherwise leave elevation alone.
+	if (cameraUnclamped) { view.elevation = 0; }
+	map.jumpTo (view);
+}
+
+function seek (t, force)
+{
+	const target = clamp (t, 0, DURATION);
+	const backwards = target < clock;
+	clock = target;
+
+	applyCamera (clock);
+
+	if (layersAdded) {
+		if (backwards || force) { resetLayers (); }
+		preload (clock);
+		const index = sceneAt (clock);
+		if (index !== currentScene) { applyScene (index, true); }	// scrubbing never holds or waits
+	}
+	updateControls ();
+}
+
+function frame (now)
+{
+	requestAnimationFrame (frame);
+
+	if (playing) {
+		if (holding) {
+			// Freeze the clock: the reel is waiting for tiles, and the pause must
+			// not consume any of the animation's own running time
+			lastFrame = now;
+		} else {
+			const raw = Math.min ((now - lastFrame) / 1000, 0.25);	// ignore long stalls
+			lastFrame = now;
+
+			// The camera is a smooth function of the clock, so any jitter in frame
+			// timing turns straight into jitter in camera speed. Averaging the
+			// frame interval costs a little timing accuracy over the reel and buys
+			// visibly steadier motion whenever frames are not perfectly even.
+			smoothDt = (smoothDt === 0 ? raw : smoothDt * 0.82 + raw * 0.18);
+			clock += smoothDt;
+
+			if (clock >= DURATION) {
+				clock = DURATION;
+				playing = false;
+				onFinished ();
+			}
+		}
+
+		applyCamera (clock);
+		preload (clock);
+		tickExtraHolds ();
+		tickScene ();
+		tickPopup (clock);
+		tickReport (clock);
+		updateControls ();
+	}
+
+	drawOverlay (octx, clock, overlay.width, overlay.height);
+	if (recorder) { composite (); }
+}
+
+function play ()
+{
+	if (!ready || playing) { return; }
+	if (clock >= DURATION) { seek (0, true); }
+	playing = true;
+	lastFrame = performance.now ();
+	smoothDt = 0;
+	document.getElementById ('play').textContent = 'Pause';
+	hideChromeSoon ();
+
+	// Settle the opening frame before anything moves, so a recording never
+	// starts on a half-drawn map
+	if (HOLDS && clock === 0) { holdThen (null); }
+}
+
+function pause ()
+{
+	playing = false;
+	document.getElementById ('play').textContent = 'Play';
+	showChromeNow ();
+}
+
+function restart ()
+{
+	holdLog.length = 0;
+	extraHoldsTaken.clear ();
+	seek (0, true);
+	play ();
+}
+
+function onFinished ()
+{
+	document.getElementById ('play').textContent = 'Play';
+	showChromeNow ();
+	reportHolds ();
+	if (recorder) { setTimeout (stopRecording, 400); }
+}
+
+
+/* ==========================================================================
+   11. Recording
+   --------------------------------------------------------------------------
+   The map canvas and the overlay canvas are composited into a third canvas,
+   which MediaRecorder captures. Real-time capture, so a busy machine will drop
+   frames - a desktop screen recorder is the better route to a final master.
+   ========================================================================== */
+
+let recorder = null, recCanvas = null, recCtx = null, recChunks = [];
+
+function pickMimeType ()
+{
+	const options = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm'];
+	for (const type of options) {
+		if (window.MediaRecorder && MediaRecorder.isTypeSupported (type)) { return type; }
+	}
+	return '';
+}
+
+function composite ()
+{
+	const mapCanvas = map.getCanvas ();
+	recCtx.drawImage (mapCanvas, 0, 0, recCanvas.width, recCanvas.height);
+	recCtx.drawImage (overlay,   0, 0, recCanvas.width, recCanvas.height);
+}
+
+function startRecording ()
+{
+	if (!window.MediaRecorder) { alert ('This browser cannot record video. Use a screen recorder instead.'); return; }
+	if (!RECORDABLE) {
+		alert ('In-page recording is off, because it costs playback smoothness. '
+		     + 'Reload with ?record=1 to enable it, or point a screen recorder at '
+		     + 'this page with ?chrome=0, which gives a better result anyway.');
+		return;
+	}
+
+	const mapCanvas = map.getCanvas ();
+	recCanvas = document.createElement ('canvas');
+	recCanvas.width  = mapCanvas.width;
+	recCanvas.height = mapCanvas.height;
+	recCtx = recCanvas.getContext ('2d');
+
+	const mimeType = pickMimeType ();
+	const stream = recCanvas.captureStream (30);
+	recChunks = [];
+	recorder = new MediaRecorder (stream, mimeType ? { mimeType: mimeType, videoBitsPerSecond: 14000000 } : undefined);
+	recorder.ondataavailable = e => { if (e.data && e.data.size) { recChunks.push (e.data); } };
+	recorder.onstop = function () {
+		const blob = new Blob (recChunks, { type: 'video/webm' });
+		const url = URL.createObjectURL (blob);
+		const a = document.createElement ('a');
+		a.href = url;
+		a.download = 'carbon-place-flythrough-' + Math.round (recCanvas.width) + 'x' + Math.round (recCanvas.height) + '.webm';
+		document.body.appendChild (a);
+		a.click ();
+		a.remove ();
+		setTimeout (() => URL.revokeObjectURL (url), 4000);
+		recorder = null; recCanvas = null; recCtx = null; recChunks = [];
+		document.getElementById ('record').classList.remove ('on');
+		document.getElementById ('record').textContent = 'Record';
+	};
+
+	recorder.start ();
+	document.getElementById ('record').classList.add ('on');
+	document.getElementById ('record').textContent = 'Recording';
+	restart ();
+}
+
+function stopRecording ()
+{
+	if (recorder && recorder.state !== 'inactive') { recorder.stop (); }
+}
+
+
+/* ==========================================================================
+   12. Chrome
+   ========================================================================== */
+
+const controls   = document.getElementById ('controls');
+const hint       = document.getElementById ('hint');
+const scrub      = document.getElementById ('scrub');
+const clockLabel = document.getElementById ('clock');
+const curtain    = document.getElementById ('curtain');
+const playBig    = document.getElementById ('playbig');
+const status     = document.getElementById ('curtainstatus');
+const progress     = document.getElementById ('progress');
+const progressBar  = document.getElementById ('progressbar');
+
+let idleTimer = null;
+let scrubbing = false;
+
+function updateControls ()
+{
+	if (!scrubbing) { scrub.value = Math.round ((clock / DURATION) * 1000); }
+	clockLabel.textContent = holding
+		? 'loading…'
+		: clock.toFixed (1) + ' / ' + DURATION.toFixed (1) + 's';
+}
+
+function showChromeNow ()
+{
+	controls.classList.remove ('idle');
+	hint.classList.remove ('idle');
+	clearTimeout (idleTimer);
+	if (playing) { hideChromeSoon (); }
+}
+
+function hideChromeSoon ()
+{
+	clearTimeout (idleTimer);
+	idleTimer = setTimeout (function () {
+		if (playing) { controls.classList.add ('idle'); hint.classList.add ('idle'); }
+	}, 1600);
+}
+
+// Surface a problem in the page chrome. The hint box is HTML, so it appears on
+// screen while working but never in a recording, which composites canvases only.
+function showChromeNote (message)
+{
+	const note = document.createElement ('div');
+	note.style.color = '#ff8fa6';
+	note.style.marginTop = '6px';
+	note.textContent = message;
+	hint.appendChild (note);
+	console.warn (message);
+}
+
+function applyChromeVisibility ()
+{
+	controls.classList.toggle ('gone', !showChrome);
+	hint.classList.toggle ('gone', !showChrome);
+}
+
+document.getElementById ('play').addEventListener ('click', () => playing ? pause () : play ());
+document.getElementById ('restart').addEventListener ('click', restart);
+document.getElementById ('record').addEventListener ('click', () => recorder ? stopRecording () : startRecording ());
+
+scrub.addEventListener ('pointerdown', () => { scrubbing = true; pause (); });
+scrub.addEventListener ('pointerup',   () => { scrubbing = false; });
+scrub.addEventListener ('input', function () {
+	scrubbing = true;
+	seek ((scrub.value / 1000) * DURATION, true);
+});
+
+// Pressing play during the sweep abandons it and starts anyway; the sweep
+// checks the flag after each stop, so it will not fight the camera
+function beginPlayback ()
+{
+	warmAbort = true;
+	progress.style.display = 'none';
+	curtain.classList.add ('hidden');
+	if (!ready) { markReady (''); }
+	play ();
+}
+
+playBig.addEventListener ('click', beginPlayback);
+
+window.addEventListener ('mousemove', showChromeNow);
+window.addEventListener ('resize', function () { layoutStage (); applyCamera (clock); });
+
+window.addEventListener ('keydown', function (e) {
+	if (e.code === 'Space') {
+		e.preventDefault ();
+		if (!playing) { beginPlayback (); } else { pause (); }
+	} else if (e.key === 'r' || e.key === 'R') {
+		warmAbort = true;
+		curtain.classList.add ('hidden');
+		if (!ready) { markReady (''); }
+		restart ();
+	} else if (e.key === 'h' || e.key === 'H') {
+		showChrome = !showChrome;
+		applyChromeVisibility ();
+	} else if (e.key === 'f' || e.key === 'F') {
+		if (document.fullscreenElement) { document.exitFullscreen (); }
+		else { document.documentElement.requestFullscreen (); }
+	} else if (e.key === 'c' || e.key === 'C') {
+		// Handy when re-cutting the camera path: paste the line into CAMERA
+		const c = map.getCenter ();
+		console.log ('[ ' + clock.toFixed (1) + ', ' + c.lng.toFixed (4) + ', ' + c.lat.toFixed (4) +
+		             ', ' + (map.getZoom () - zoomOffset).toFixed (2) +
+		             ', ' + map.getPitch ().toFixed (0) + ', ' + map.getBearing ().toFixed (0) + ' ],');
+	}
+});
+
+applyChromeVisibility ();
+updateControls ();
+requestAnimationFrame (frame);
+
+
+/* --------------------------------------------------------------------------
+   Preload sweep
+
+   Fly the whole path once, slowly, with every layer already switched on at zero
+   opacity, pausing at each stop until the map says it is idle. By the end the
+   tile cache holds what the flight needs and playback has nothing left to
+   fetch. It can be skipped with ?warmup=0, or by pressing play while it runs.
+   -------------------------------------------------------------------------- */
+
+// Resolves once every source has all the tiles the current view needs.
+//
+// This polls areTilesLoaded() rather than waiting on the 'idle' event, because
+// 'idle' only fires on a transition: if the map happens to be idle already it
+// will not fire again, and the caller would sit out its whole timeout. The
+// opening delay matters too - immediately after a camera jump the map has not
+// yet noticed it moved, so areTilesLoaded() still reports the previous view.
+function waitForTiles (timeout)
+{
+	const deadline = performance.now () + timeout;
+	return new Promise (function (resolve) {
+		const check = function () {
+			if (performance.now () > deadline)              { resolve (false); return; }
+			if (map.areTilesLoaded ())                      { resolve (true);  return; }
+			setTimeout (check, 120);
+		};
+		setTimeout (check, 260);
+	});
+}
+
+function setWarmProgress (fraction)
+{
+	progressBar.style.width = Math.round (fraction * 100) + '%';
+	status.textContent = 'Preloading map data - ' + Math.round (fraction * 100) + '%  ·  press play to skip';
+}
+
+async function warmUp ()
+{
+	if (!WARMUP) { return; }
+
+	progress.style.display = 'block';
+	playBig.disabled = false;
+	playBig.classList.remove ('loading');
+
+	for (let i = 0; i <= WARMUP_STEPS; i++) {
+		if (warmAbort) { return; }
+		const t = (i / WARMUP_STEPS) * DURATION;
+		preload (t);
+		applyCamera (t);
+		await waitForTiles (2600);
+		setWarmProgress ((i + 1) / (WARMUP_STEPS + 2));
+	}
+
+	if (warmAbort) { return; }
+
+	// Back to the top, and let the opening frame settle before handing over
+	applyCamera (0);
+	await waitForTiles (3000);
+	progress.style.display = 'none';
+}
+
+// The reel becomes playable once the first frame of tiles has settled - or after
+// a fallback wait, so that one stalled tile request cannot leave the play button
+// disabled for ever
+function markReady (message)
+{
+	if (ready) { return; }
+	ready = true;
+	playBig.disabled = false;
+	playBig.classList.remove ('loading');
+	status.textContent = message;
+	seek (0, true);
+	if (AUTOPLAY) { curtain.classList.add ('hidden'); play (); }
+}
+
+let sweepStarted = false;
+
+function beginSweep ()
+{
+	if (sweepStarted) { return; }
+	sweepStarted = true;
+
+	warmUp ().then (function () {
+		markReady (DURATION.toFixed (0) + ' seconds  ·  press play, or use Record to save a WebM');
+	});
+}
+
+map.once ('idle', beginSweep);
+
+// If that first idle never arrives - one stalled tile is enough - sweep anyway
+setTimeout (beginSweep, 20000);
+</script>
+
+</body>
+</html>
