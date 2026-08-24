@@ -24,7 +24,7 @@ const datasets_extra = {
 			'type': 'circle',
 			'source': {
 				'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/landowners_20260811.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/landowners_20260824.pmtiles',
 			},
 			'source-layer': 'landowners',
 			'paint': {
