@@ -571,11 +571,13 @@
 								<button onclick="switchChartTab(event, 'descTab-emissionsLSOA-chartrow-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
 								<button onclick="switchChartTab(event, 'descTab-emissionsLSOA-chartrow-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
 							</div>
-							<div id="descTab-emissionsLSOA-chartrow-overview" class="chart-description-tab-content active"><p>This chart shows the annual household emissions from this neighbourhood for gas, electricity, and other heating fuel. We have very limited data on other heating fuels such as oil or wood and so these emissions are estimated.</p></div>
+							<div id="descTab-emissionsLSOA-chartrow-overview" class="chart-description-tab-content active"><p>This chart shows the annual household emissions from this neighbourhood for gas, electricity, and other heating fuel. We have very limited data on other heating fuels such as oil or wood and so these emissions are estimated.</p>
+							<p>Use the drop down menu to select either total, median, or mean consumption.</p>
+							</div>
 							<div id="descTab-emissionsLSOA-chartrow-policy" class="chart-description-tab-content"><p>Neighbourhood-level emissions trends show whether an area is on track: falling emissions may reflect grid decarbonisation rather than local action, so compare gas (heating) trends specifically when judging retrofit progress.</p></div>
 							<div id="descTab-emissionsLSOA-chartrow-methods" class="chart-description-tab-content"><p>As for the postcode chart, but aggregated to the neighbourhood (LSOA): metered consumption multiplied by annual national emissions factors. Metered energy data comes from the DESNZ (formerly BEIS) sub-national gas and electricity consumption statistics. Figures are annual totals that are not weather-corrected, so cold years read high. Areas with very few meters are suppressed for privacy, and non-metered fuels (oil, LPG, solid fuel) are not included. See the <a href="/manual/#retrofitexplorer" class="opentool">manual</a> for details.</p></div>
 						</div>
-							<p>Use the drop down menu to select either total, median, or mean consumption.</p>
+							
 							<p>Chart type: 
 							<select id="select_emissionsLSOA" name="select_emissionsLSOA" onchange="makeChartLSOAEnergy()">
 								<option value="median" selected>Median</option>
@@ -616,11 +618,13 @@
 								<button onclick="switchChartTab(event, 'descTab-gasLSOA-chartrow-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
 								<button onclick="switchChartTab(event, 'descTab-gasLSOA-chartrow-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
 							</div>
-							<div id="descTab-gasLSOA-chartrow-overview" class="chart-description-tab-content active"><p>This chart shows domestic buildings' annual gas consumption in kilowatt hours in this neighbourhood. Note that some areas are off the gas grid, so no emissions are reported. In these places, heating may be provided by some other fuel type, such as coal, wood, or oil.</p></div>
+							<div id="descTab-gasLSOA-chartrow-overview" class="chart-description-tab-content active"><p>This chart shows domestic buildings' annual gas consumption in kilowatt hours in this neighbourhood. Note that some areas are off the gas grid, so no emissions are reported. In these places, heating may be provided by some other fuel type, such as coal, wood, or oil.</p>
+							<p>Use the drop down menu to select either total, median, or mean consumption.</p>
+							</div>
 							<div id="descTab-gasLSOA-chartrow-policy" class="chart-description-tab-content"><p>A sustained fall in neighbourhood gas consumption is the clearest signal of successful fabric retrofit and heat electrification. Flat trends suggest little progress despite national targets.</p></div>
 							<div id="descTab-gasLSOA-chartrow-methods" class="chart-description-tab-content"><p>Metered energy data comes from the DESNZ (formerly BEIS) sub-national gas and electricity consumption statistics. Figures are annual totals that are not weather-corrected, so cold years read high. Areas with very few meters are suppressed for privacy, and non-metered fuels (oil, LPG, solid fuel) are not included. See the <a href="/manual/#retrofitexplorer" class="opentool">manual</a> for details. Figures are neighbourhood totals and averages across mains gas meters only.</p></div>
 						</div>
-							<p>Use the drop down menu to select either total, median, or mean consumption.</p>
+							
 							<p>Chart type: <select id="select_gasLSOA" name="select_gasLSOA" onchange="makeChartLSOAEnergy()">
 								<option value="median" selected>Median</option>
 								<option value="mean">Mean</option>
