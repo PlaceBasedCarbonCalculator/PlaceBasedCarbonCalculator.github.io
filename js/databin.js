@@ -38,6 +38,10 @@
 // fetchRecord() then serves that ID straight from the range, never loading an
 // index. NOTE: such a .bin and the source of its offsets (the pmtiles) must be
 // rebuilt and redeployed in lockstep - stale offsets read the wrong bytes.
+//
+// Brotli is not part of the DecompressionStream spec, so only Firefox can
+// decompress the .bin slices natively. Everywhere else decompress() falls back
+// to js/lib/brotli/brotli-decompress.js, fetched on first use.
 const capBin = (function () {
 
 	'use strict';
@@ -84,12 +88,86 @@ const capBin = (function () {
 		};
 	}
 
-	function decompress(arrayBuffer, format) {
-		if (!('DecompressionStream' in self)) {
-			return Promise.reject(new Error('DecompressionStream unsupported in this browser'));
+	// Native DecompressionStream format names to try for each logical format,
+	// in order of preference. Brotli is not in the DecompressionStream spec:
+	// Firefox accepts 'brotli', Chrome and Safari support neither spelling and
+	// throw on construction, so those fall back to the vendored pure-JS decoder
+	// below. ('br' is probed too in case an engine ships that spelling.)
+	const _FORMAT_ALIASES = { gzip: ['gzip'], brotli: ['brotli', 'br'] };
+
+	// logical format -> supported native name, or null if none (probed once)
+	const _nativeFormat = {};
+
+	function nativeFormatFor(format) {
+		if (!(format in _nativeFormat)) {
+			let found = null;
+			if ('DecompressionStream' in self) {
+				(_FORMAT_ALIASES[format] || [format]).some(function (name) {
+					try {
+						new DecompressionStream(name);
+						found = name;
+						return true;
+					} catch (e) {
+						return false;
+					}
+				});
+			}
+			_nativeFormat[format] = found;
 		}
-		const stream = new Blob([arrayBuffer]).stream().pipeThrough(new DecompressionStream(format));
-		return new Response(stream).arrayBuffer();
+		return _nativeFormat[format];
+	}
+
+	// Where the pure-JS brotli fallback lives, resolved relative to this script
+	// so it works from pages at any depth (/pbcc/, /reports/, the site root).
+	const _FALLBACK_URL = (function () {
+		const self_script = (typeof document !== 'undefined') && document.currentScript;
+		return (self_script && self_script.src)
+			? new URL('lib/brotli/brotli-decompress.js', self_script.src).href
+			: '/js/lib/brotli/brotli-decompress.js';
+	})();
+
+	// Promise<decoderFn>, created on first use so browsers with a native brotli
+	// DecompressionStream never download the ~90KB fallback.
+	let _fallbackLoad = null;
+
+	function loadBrotliFallback() {
+		if (self.brotliDecompressJS) { return Promise.resolve(self.brotliDecompressJS); }
+		if (!_fallbackLoad) {
+			_fallbackLoad = new Promise(function (resolve, reject) {
+				if (typeof document === 'undefined') {
+					throw new Error('No document to load the brotli fallback into');
+				}
+				const el = document.createElement('script');
+				el.src = _FALLBACK_URL;
+				el.async = true;
+				el.onload = function () {
+					if (self.brotliDecompressJS) { resolve(self.brotliDecompressJS); }
+					else { reject(new Error('Brotli fallback loaded but exposed no decoder')); }
+				};
+				el.onerror = function () {
+					_fallbackLoad = null;  // allow a retry
+					reject(new Error('Failed to load brotli fallback from ' + _FALLBACK_URL));
+				};
+				document.head.appendChild(el);
+			});
+		}
+		return _fallbackLoad;
+	}
+
+	function decompress(arrayBuffer, format) {
+		const native = nativeFormatFor(format);
+		if (native) {
+			const stream = new Blob([arrayBuffer]).stream().pipeThrough(new DecompressionStream(native));
+			return new Response(stream).arrayBuffer();
+		}
+		if (format !== 'brotli') {
+			return Promise.reject(new Error('Cannot decompress "' + format + '": unsupported in this browser'));
+		}
+		return loadBrotliFallback().then(function (inflate) {
+			const out = inflate(new Uint8Array(arrayBuffer));
+			if (!out) { throw new Error('Brotli decode failed'); }
+			return out.buffer.slice(out.byteOffset, out.byteOffset + out.byteLength);
+		});
 	}
 
 	// Fetch + gunzip + parse a dataset's index, caching the promise.

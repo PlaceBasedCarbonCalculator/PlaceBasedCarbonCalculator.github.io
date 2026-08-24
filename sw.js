@@ -1,7 +1,7 @@
 // Bump CACHE_VERSION whenever the precache list or caching strategy changes.
 // This is used to derive a single, versioned cache name so old caches are
 // purged on activation and offline behaviour stays consistent.
-const CACHE_VERSION = 'v17';
+const CACHE_VERSION = 'v18';
 const CACHE_NAME = `CAP-cache-${CACHE_VERSION}`;
 
 const OFFLINE_FALLBACK_PAGE = '/offline.html';
@@ -33,6 +33,10 @@ const PRECACHE_ASSETS = [
     '/js/ui-common.js',
     '/js/postcode-search.js',
     '/js/tour.js',
+    // Pure-JS brotli decoder, loaded on demand by databin.js in browsers whose
+    // DecompressionStream has no brotli support (everything except Firefox).
+    // Pre-cached so it isn't a 90KB download on the report-opening critical path.
+    '/js/lib/brotli/brotli-decompress.js',
     // Content pages
     '/about/index.html',
     '/about/faq/index.html',
