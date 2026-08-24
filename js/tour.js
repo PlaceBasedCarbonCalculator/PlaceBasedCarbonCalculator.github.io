@@ -27,8 +27,8 @@ const capTour = (function () {
 			? 'Drag to pan and scroll to zoom. The map colours each neighbourhood by the measure you have selected. <b>Click any neighbourhood</b> to open a detailed report about it.'
 			: 'Drag to pan and scroll to zoom. <b>Click items on the map</b> to see more information about them.');
 		const finalText = (hasReports
-			? 'The web address updates as you explore, capturing your position, layers and any open report. Copy it to share exactly what you are looking at. That\'s it: click a neighbourhood to get started!'
-			: 'The web address updates as you explore, capturing your position and layers. Copy it to share exactly what you are looking at. That\'s it: turn on a layer to get started!');
+			? 'The web address updates as you explore, capturing your position, layers and any open report. Copy it to share exactly what you are looking at. That is all there is to it: click a neighbourhood to begin.'
+			: 'The web address updates as you explore, capturing your position and layers. Copy it to share exactly what you are looking at. That is all there is to it: turn on a layer to begin.');
 		return [
 			{
 				element: null,
@@ -58,7 +58,7 @@ const capTour = (function () {
 			{
 				element: '.helpbutton',
 				title: 'Help buttons',
-				text: 'Every option has a <b>?</b> button that opens a short explanation from the manual, so you never need to guess what something means.'
+				text: 'Every option has a <b>?</b> button that opens a short explanation from the manual if you are unsure what something means.'
 			},
 			{
 				element: 'img.basemap',

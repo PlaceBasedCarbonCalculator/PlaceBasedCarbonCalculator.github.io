@@ -2,13 +2,13 @@
 
 Carbon & Place is a family of free tools that show how carbon footprints, and the things that shape them, vary from neighbourhood to neighbourhood across Great Britain. It is developed at the [University of Leeds](https://www.leeds.ac.uk/) and funded by the [Energy Demand Research Centre](https://www.edrc.ac.uk/).
 
-The manual is written for three groups of readers, and each tool's chapter is arranged so that you can read as much or as little detail as you need:
+The manual is written for three groups of readers, and each tool's chapter is arranged so that you can stop at the level of detail you need:
 
-* **Everyone**: each chapter opens with a plain-language explanation of why the topic matters and what the data means for your community. These sections assume no prior knowledge of carbon accounting, transport planning, or statistics.
+* **Everyone**: each chapter opens with a plain-language account of the subject and of what the data can tell you about your own area. These sections assume no prior knowledge of carbon accounting, transport planning, or statistics.
 * **Policymakers, planners, and community groups**: the middle of each chapter walks through the map layers and report cards, what the numbers can and cannot tell you, and links to the official datasets behind them.
 * **Academics and technical users**: each chapter ends with methods sections describing how the analysis was carried out, the assumptions made, and the known limitations, with links to sources and further reading.
 
-This manual is a living document that is updated as the tools develop. You are welcome to suggest improvements or contribute directly via [GitHub](https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/blob/dev/manual/index.md).
+The manual is revised as the tools develop. You are welcome to suggest improvements or contribute directly via [GitHub](https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/blob/dev/manual/index.md).
 
 Short extracts of this manual can be read within the tools by clicking the <i class="fa fa-question-circle" aria-hidden="true" style="color: #0b38e6;"></i> help buttons.
 
@@ -27,7 +27,7 @@ Carbon & Place is a collection of tools that share a common map interface. Each 
 
 ### Your first visit
 
-If you are new to Carbon & Place, this is the quickest route to something useful:
+If you are new to Carbon & Place, the following steps are the quickest way to begin:
 
 1. **Search for your postcode** on the [homepage](/). This takes you to a report about your own neighbourhood, which is usually the easiest place to start because you can judge the data against your local knowledge.
 2. **Open one of the map tools** and take the short guided tour when offered. The tour highlights the main controls one at a time and can be skipped or restarted at any point.
@@ -37,7 +37,7 @@ If you are new to Carbon & Place, this is the quickest route to something useful
 
 ### Making sense of the numbers
 
-A few ideas will help you interpret everything else in the tools:
+A few points will help you interpret everything else in the tools:
 
 * **Carbon footprints are measured in kilograms of carbon dioxide equivalent (kgCO<sub>2</sub>e)**. Carbon dioxide is the main greenhouse gas, and other gases (such as methane) are converted into the amount of CO<sub>2</sub> that would cause the same warming, so that everything can be added together. A typical UK resident's footprint is measured in thousands of kilograms (tonnes) per year.
 * **Values are usually per person per year**, so that large and small neighbourhoods can be compared fairly.
@@ -140,7 +140,7 @@ A carbon footprint is the total amount of greenhouse gas released to the atmosph
 
 This differs from the **territorial** accounting used in official statistics such as the [UK greenhouse gas emissions statistics](https://www.gov.uk/government/collections/final-uk-greenhouse-gas-emissions-national-statistics), which count emissions physically released within the UK. The UK Government also publishes a national consumption-based estimate, [the UK's carbon footprint](https://www.gov.uk/government/statistics/uks-carbon-footprint), which is consistently higher than the territorial figure because the UK imports more emissions embodied in goods than it exports. Research shows that household consumption drives a large majority of global emissions, and that footprints vary substantially with income, housing, and location ([Ivanova et al. 2020](https://doi.org/10.1088/1748-9326/ab8589)).
 
-Consumption-based accounting matters for fairness: it prevents a country or a neighbourhood from appearing to decarbonise simply by moving its industry elsewhere.
+Consumption-based accounting has one clear advantage: it prevents a country or a neighbourhood from appearing to decarbonise simply by moving its industry elsewhere.
 
 #### Neighbourhood Statistics
 
@@ -148,7 +148,7 @@ The tools mostly present results as neighbourhood statistics, using the Lower la
 
 LSOAs are small statistical areas designed to contain roughly the same number of people (about 1,500 to 3,000). Because population density varies, they vary greatly in size: in cities an LSOA may be a few streets, while in rural areas one can cover many square miles. The ONS created them for the 2001 Census and revised them for 2011 and 2021. Carbon & Place uses the 2021 boundaries but sometimes reports historical data collected on 2001 or 2011 boundaries. Most LSOAs are unchanged between censuses; where boundaries changed, values are interpolated, which can introduce minor errors.
 
-LSOAs are the standard unit for publishing small-area statistics in Britain. Government and academic datasets on income, deprivation, energy, transport, and health are all available at this scale, which makes LSOAs a powerful unit of comparison.
+LSOAs are the standard unit for publishing small-area statistics in Britain. Government and academic datasets on income, deprivation, energy, transport, and health are all available at this scale, which makes LSOAs a useful unit of comparison.
 
 Although LSOAs are small, each still contains hundreds of households, so every statistic is an average of many people rather than a description of any individual. There is variation within every neighbourhood, and you may differ from your neighbours in important ways. Small-area statistics are nevertheless informative because neighbours tend to have much in common: similar homes, the same shops and services, the same schools and transport options. Many of the choices we make are shaped, at least in part, by where we live, so comparing places helps us understand problems that individual data cannot.
 
@@ -166,7 +166,7 @@ The same underlying data is shown in both modes; the difference is purely visual
 
 #### Understanding the grades
 
-Many values in the tools are given a grade from A+ to F- so that a neighbourhood can be compared with the rest of the country at a glance. Grades are relative to the average neighbourhood: A+ to C- is better than average, D+ to F- is worse. Because most areas cluster near the average, the middle grade bands are wide (around 7% of neighbourhoods each), while the extreme bands are narrow, so only about 1% of neighbourhoods receive an A+ or an F-. Where data is missing or suppressed, an NA is shown instead.
+Many values in the tools are given a grade from A+ to F- so that a neighbourhood can be compared quickly with the rest of the country. Grades are relative to the average neighbourhood: A+ to C- is better than average, D+ to F- is worse. Because most areas cluster near the average, the middle grade bands are wide (around 7% of neighbourhoods each), while the extreme bands are narrow, so only about 1% of neighbourhoods receive an A+ or an F-. Where data is missing or suppressed, an NA is shown instead.
 
 A good grade means a neighbourhood performs well compared with the rest of Britain today. It does not mean the area is sustainable: reaching the UK's [net zero target](https://www.legislation.gov.uk/ukpga/2008/27/contents) will require reductions in most places, including many A-graded ones.
 
@@ -248,13 +248,13 @@ Constituency-level statistics are useful for national policy debates because the
 
 The Place-Based Carbon Calculator (PBCC) estimates the consumption-based carbon footprint of every neighbourhood in Great Britain, breaks it down into housing, transport, and consumption, and tracks how it has changed since 2010.
 
-### Why carbon footprints matter
+### The case for local carbon data
 
 The UK is legally committed to reaching [net zero greenhouse gas emissions by 2050](https://www.legislation.gov.uk/uksi/2019/1056/contents/made), and the [Climate Change Committee](https://www.theccc.org.uk/publication/sixth-carbon-budget/) has set out carbon budgets describing how quickly emissions must fall. National statistics tell us how the country as a whole is doing, but they hide enormous local variation. Neighbourhoods differ in their housing, their transport options, their incomes, and their spending, and as a result the highest-footprint neighbourhoods emit several times more per person than the lowest.
 
-That variation matters for policy. A national campaign to promote public transport achieves little in a village with no bus service, and a heat pump subsidy works differently in a conservation area of solid-walled Victorian terraces than on a modern estate. The Climate Change Committee estimates that local authorities have influence over roughly a third of the emissions in their areas ([Local Authorities and the Sixth Carbon Budget](https://www.theccc.org.uk/publication/local-authorities-and-the-sixth-carbon-budget/)), but to use that influence well they need to know what drives emissions in each place. The PBCC exists to provide that evidence.
+That variation matters for policy. A national campaign to promote public transport achieves little in a village with no bus service, and a heat pump subsidy works differently in a conservation area of solid-walled Victorian terraces than on a modern estate. The Climate Change Committee estimates that local authorities have influence over roughly a third of the emissions in their areas ([Local Authorities and the Sixth Carbon Budget](https://www.theccc.org.uk/publication/local-authorities-and-the-sixth-carbon-budget/)), but to use that influence well they need to know what drives emissions in each place. The PBCC is intended to supply that evidence.
 
-### What the calculator means for your community
+### Using the calculator in your area
 
 For any neighbourhood in Great Britain, the PBCC can show you:
 
@@ -361,7 +361,7 @@ Demographics strongly influence emissions. Higher-income households consume more
 <!-- #pbcc-community-photo -->
 ##### Community Photo
 
-The community photo gives an at-a-glance overview of who lives in a neighbourhood. Each photo is a grid of 48 household pictures, distributed in proportion to the household types recorded in the 2021 Census (2022 in Scotland). Images from [Freepik](https://www.magnific.com)
+The community photo gives a quick overview of who lives in a neighbourhood. Each photo is a grid of 48 household pictures, distributed in proportion to the household types recorded in the 2021 Census (2022 in Scotland). Images from [Freepik](https://www.magnific.com)
 
 The pictures are selected automatically from a set of around 200 household archetypes based on three census variables.
 
@@ -457,17 +457,17 @@ The census does publish some multivariate tables (household size by composition,
 
 ## Transport and Accessibility Explorer
 
-The Transport and Accessibility Explorer allows a deep dive into transport provision and access to services: how frequent the buses and trains are, how that has changed over twenty years, how many vehicles people own, and what residents can actually reach.
+The Transport and Accessibility Explorer examines transport provision and access to services in detail: how frequent the buses and trains are, how that has changed over twenty years, how many vehicles people own, and what residents can actually reach.
 
-### Why transport access matters
+### The case for local transport data
 
 Transport is the largest source of greenhouse gas emissions in the UK, and it has decarbonised more slowly than any other major sector ([UK greenhouse gas emissions statistics](https://www.gov.uk/government/collections/final-uk-greenhouse-gas-emissions-national-statistics)). Most transport emissions come from cars, so cutting them means some combination of cleaner vehicles and fewer or shorter car journeys. Whether people can realistically drive less depends on where they live: on how close the shops, schools, and jobs are, and on whether walking, cycling, or public transport are genuine options.
 
-Transport is also a fairness issue. Around a fifth of households have no car ([National Travel Survey](https://www.gov.uk/government/collections/national-travel-survey-statistics)), and where public transport is poor they are effectively cut off from opportunities. Car dependence is expensive for households and carries wider costs for society in congestion, road danger, air pollution, and land take ([Gössling et al. 2024](https://doi.org/10.1016/j.jtrangeo.2024.103817)). Outside London, bus services have declined substantially since 2008 ([DfT bus statistics](https://www.gov.uk/government/collections/bus-statistics)), and this tool makes that decline visible neighbourhood by neighbourhood.
+Transport is also a fairness issue. Around a fifth of households have no car ([National Travel Survey](https://www.gov.uk/government/collections/national-travel-survey-statistics)), and where public transport is poor they are effectively cut off from opportunities. Car dependence is expensive for households and carries wider costs for society in congestion, road danger, air pollution, and land take ([Gössling et al. 2024](https://doi.org/10.1016/j.jtrangeo.2024.103817)). Outside London, bus services have declined substantially since 2008 ([DfT bus statistics](https://www.gov.uk/government/collections/bus-statistics)), and this tool records that decline neighbourhood by neighbourhood.
 
-### What transport data means for your community
+### Using the transport data in your area
 
-The explorer can help you answer questions such as:
+Among the questions the explorer can settle for a particular area:
 
 * Has our bus service got better or worse since 2008, and how does it compare with similar places?
 * Which neighbourhoods have frequent public transport all day, and which are only served at commuter peaks?
@@ -615,15 +615,15 @@ We are grateful to Friends of the Earth, who funded part of this work and publis
 
 The Retrofit Explorer focuses on buildings and the energy they use for heating and power. It maps energy efficiency, energy consumption, bills, and property characteristics from national datasets, down to the level of individual buildings.
 
-### Why home energy matters
+### The case for local building data
 
 Heating and powering homes accounts for around a fifth of the UK's greenhouse gas emissions, and the housing stock is among the oldest and least efficient in Europe ([Climate Change Committee, UK housing: Fit for the future?](https://www.theccc.org.uk/publication/uk-housing-fit-for-the-future/)). Reaching net zero requires insulating millions of homes and replacing gas boilers with low carbon heating such as heat pumps ([Heat and Buildings Strategy](https://www.gov.uk/government/publications/heat-and-buildings-strategy)). Unlike a power station, the building stock cannot be decarbonised by a handful of national decisions: it means physical work on nearly every street in the country.
 
 Energy efficiency is also a cost of living issue. Households in inefficient homes pay hundreds of pounds a year more for the same warmth, and cold homes damage health. Government statistics link fuel poverty directly to the energy efficiency of the dwelling ([fuel poverty statistics](https://www.gov.uk/government/collections/fuel-poverty-statistics)). Knowing which neighbourhoods have the leakiest, most expensive homes shows where retrofit investment would do the most good, for the climate and for the people who live there.
 
-### What retrofit data means for your community
+### Using the retrofit data in your area
 
-The explorer can help you answer questions such as:
+For a given area, the explorer will answer questions of this kind:
 
 * Which neighbourhoods have the least efficient homes, and what is making them inefficient (walls, roofs, heating, windows)?
 * Where are energy bills high relative to incomes, putting households at risk of fuel poverty?
@@ -859,15 +859,15 @@ To protect privacy, DESNZ removes data for postcodes with few properties, and ma
 
 ## Land Ownership Explorer
 
-### Why land ownership matters
+### The case for open ownership data
 
 It is hard to discuss any issue of place without eventually reaching the question of who owns the land. Landowners, through action and inaction, shaped the country into what it is today: they influence where homes and jobs go, what is farmed, and what is left for nature. Land ownership in Britain is highly concentrated, and reliable public information about who owns what has historically been difficult to obtain, despite the existence of an official register.
 
 Land ownership matters for climate and planning policy too. Delivering new housing, woodland creation, renewable energy, and flood management all require negotiating with landowners, and fragmented or opaque ownership can stall all of them. HM Land Registry publishes several open datasets about land ownership in England and Wales, but they are published as spreadsheets and polygons without a convenient public map. The Land Ownership Explorer makes these official datasets visible and explorable.
 
-### What land data means for your community
+### Using the ownership data in your area
 
-The explorer can help you answer questions such as:
+For a particular place, the explorer can address questions such as these:
 
 * Who owns the large sites in and around our town, according to the Land Registry?
 * Which local land is owned by companies, and which by overseas entities?
@@ -976,15 +976,15 @@ The geocoding pipeline described above was developed for Carbon & Place. For con
 
 The Land Use and Planning Explorer maps the designations and constraints that shape what can be built where: flood zones, protected landscapes and habitats, heritage designations, green belt, and environmental hazards such as noise and historic landfill.
 
-### Why planning designations matter
+### The case for mapping designations together
 
 Roughly half the land in England carries some form of designation that constrains development, from green belt to Sites of Special Scientific Interest. These designations exist for good reasons (protecting nature, heritage, and people from hazards such as flooding), but their combined effect determines where new homes, energy infrastructure, and industry can realistically go. Debates about housing supply, onshore wind, and nature recovery are, in large part, debates about these maps.
 
 Most designations are recorded in separate datasets published by different agencies. Bringing them together on one map makes it easier to understand why development happens where it does, and to have informed discussions about the [National Planning Policy Framework](https://www.gov.uk/government/publications/national-planning-policy-framework--2) (NPPF), local plans, and individual planning applications.
 
-### What designations mean for your community
+### Using the designations in your area
 
-The explorer can help you answer questions such as:
+Questions the explorer can help settle for a particular area include:
 
 * Which parts of our area are protected, and by what (green belt, conservation areas, flood zones, protected habitats)?
 * Where could development plausibly go, given the constraints?
@@ -1190,7 +1190,7 @@ Beyond its practical use, this layer is a good proxy for where food businesses c
 
 ## Feedback and contributing
 
-Carbon & Place is developed openly and improves with use. If something is unclear, wrong, or missing:
+Carbon & Place is developed in the open, and we welcome corrections. If something is unclear, wrong, or missing:
 
 * Send us your thoughts through the [feedback form](/about/feedback/).
 * Propose changes to this manual directly on [GitHub](https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/blob/dev/manual/index.md).

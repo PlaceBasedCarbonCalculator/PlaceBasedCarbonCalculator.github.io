@@ -53,7 +53,7 @@ function closewelcome() {
     if (overlay) overlay.style.display = 'none';
 
   } else {
-    alert("You can't view the map until you complete the form");
+    alert("You cannot view the map until you complete the form");
   }
 
 }
