@@ -880,7 +880,7 @@ makeChartLSOA = function(){
   lsoaLocationData.epc_E,
   lsoaLocationData.epc_F,
   lsoaLocationData.epc_G,
-  lsoaLocationData.epc_o,
+  lsoaLocationData.epc_other,
   ];
  
 	epcratingChart = makePieChart(epcratingChart,'epcrating-chart','EPC rating',
@@ -979,14 +979,15 @@ makeChartLSOA = function(){
     lsoaLocationData.floord_suspendeduninsulated,
     lsoaLocationData.floord_suspendedinsualted,
     lsoaLocationData.floord_suspendedlimitedinsulated,
+    lsoaLocationData.floord_external,
     lsoaLocationData.floord_below,
-    lsoaLocationData.floor_other
+    lsoaLocationData.floord_other
   ];
  
   floordChart = makePieChart(floordChart,'floord-chart','',
   floordData,
-  ['#b2e2e2','#66c2a4','#238b45','#fde0ef', '#e9a3c9', '#c51b7d','#225ea8','#c0c0c0'],
-  ['Solid uninsulated','Solid insulated','Solid limited insulation','Suspended uninsulated','Suspended insualted','Suspended limited insulation','Dwelling Below','Other']);
+  ['#b2e2e2','#66c2a4','#238b45','#fde0ef', '#e9a3c9', '#c51b7d','#fdae61','#225ea8','#c0c0c0'],
+  ['Solid uninsulated','Solid insulated','Solid limited insulation','Suspended uninsulated','Suspended insulated','Suspended limited insulation','Exposed to outside air','Dwelling Below','Other']);
   
   // window
   
@@ -1029,7 +1030,7 @@ makeChartLSOA = function(){
     lsoaLocationData.waterd_community,
     lsoaLocationData.waterd_instantaneous,
     lsoaLocationData.waterd_gasmultipoint,
-    lsoaLocationData.walld_other
+    lsoaLocationData.waterd_other
   ];
  
   waterdChart = makePieChart(waterdChart,'waterd-chart','',
@@ -1165,13 +1166,14 @@ makeChartLSOA = function(){
     lsoaLocationData.mainfuel_coal,
     lsoaLocationData.mainfuel_lpg,
     lsoaLocationData.mainfuel_biomass,
-    lsoaLocationData.mainfuel_dualfuel
+    lsoaLocationData.mainfuel_dualfuel,
+    lsoaLocationData.mainfuel_other
   ];
  
   mainfuelChart = makePieChart(mainfuelChart,'mainfuel-chart','',
   mainfuelData,
-  ['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628'],
-  ['Mains gas','Electric','Oil','Coal','LPG','Biomass','Dual fuel']);
+  ['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#c0c0c0'],
+  ['Mains gas','Electric','Oil','Coal','LPG','Biomass','Dual fuel','Other']);
   
   // mainheatcontrol
   
@@ -1252,6 +1254,19 @@ makeChartLSOA = function(){
 makePieChart = function(chartVar, name, label, data, colours, labels){
   if (chartVar) {
     chartVar.destroy();
+  }
+  
+  // Drop any slice whose value is missing from the data, together with its
+  // colour and label. Without this a renamed or not-yet-published field shows
+  // as a legend entry with no wedge, which reads as a real zero.
+  var keep = [];
+  for (var i = 0; i < data.length; i++) {
+    if (data[i] !== undefined && data[i] !== null) { keep.push(i); }
+  }
+  if (keep.length !== data.length) {
+    data    = keep.map(function (i) { return data[i]; });
+    colours = keep.map(function (i) { return colours[i]; });
+    labels  = keep.map(function (i) { return labels[i]; });
   }
   
   chartVar = new Chart(document.getElementById(name).getContext('2d'), {

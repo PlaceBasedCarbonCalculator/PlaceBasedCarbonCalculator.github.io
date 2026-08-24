@@ -885,7 +885,7 @@ retrofitCard_makeChartLSOA = function(){
   retrofitCard_lsoaLocationData.epc_E,
   retrofitCard_lsoaLocationData.epc_F,
   retrofitCard_lsoaLocationData.epc_G,
-  retrofitCard_lsoaLocationData.epc_o,
+  retrofitCard_lsoaLocationData.epc_other,
   ];
  
 	retrofitCard_epcratingChart = retrofitCard_makePieChart(retrofitCard_epcratingChart,'epcrating-chart','EPC rating',
@@ -984,14 +984,15 @@ retrofitCard_makeChartLSOA = function(){
     retrofitCard_lsoaLocationData.floord_suspendeduninsulated,
     retrofitCard_lsoaLocationData.floord_suspendedinsualted,
     retrofitCard_lsoaLocationData.floord_suspendedlimitedinsulated,
+    retrofitCard_lsoaLocationData.floord_external,
     retrofitCard_lsoaLocationData.floord_below,
-    retrofitCard_lsoaLocationData.floor_other
+    retrofitCard_lsoaLocationData.floord_other
   ];
  
   retrofitCard_floordChart = retrofitCard_makePieChart(retrofitCard_floordChart,'floord-chart','',
   floordData,
-  ['#b2e2e2','#66c2a4','#238b45','#fde0ef', '#e9a3c9', '#c51b7d','#225ea8','#c0c0c0'],
-  ['Solid uninsulated','Solid insulated','Solid limited insulation','Suspended uninsulated','Suspended insualted','Suspended limited insulation','Dwelling Below','Other']);
+  ['#b2e2e2','#66c2a4','#238b45','#fde0ef', '#e9a3c9', '#c51b7d','#fdae61','#225ea8','#c0c0c0'],
+  ['Solid uninsulated','Solid insulated','Solid limited insulation','Suspended uninsulated','Suspended insulated','Suspended limited insulation','Exposed to outside air','Dwelling Below','Other']);
   
   // window
   
@@ -1034,7 +1035,7 @@ retrofitCard_makeChartLSOA = function(){
     retrofitCard_lsoaLocationData.waterd_community,
     retrofitCard_lsoaLocationData.waterd_instantaneous,
     retrofitCard_lsoaLocationData.waterd_gasmultipoint,
-    retrofitCard_lsoaLocationData.walld_other
+    retrofitCard_lsoaLocationData.waterd_other
   ];
  
   retrofitCard_waterdChart = retrofitCard_makePieChart(retrofitCard_waterdChart,'waterd-chart','',
@@ -1170,13 +1171,14 @@ retrofitCard_makeChartLSOA = function(){
     retrofitCard_lsoaLocationData.mainfuel_coal,
     retrofitCard_lsoaLocationData.mainfuel_lpg,
     retrofitCard_lsoaLocationData.mainfuel_biomass,
-    retrofitCard_lsoaLocationData.mainfuel_dualfuel
+    retrofitCard_lsoaLocationData.mainfuel_dualfuel,
+    retrofitCard_lsoaLocationData.mainfuel_other
   ];
  
   retrofitCard_mainfuelChart = retrofitCard_makePieChart(retrofitCard_mainfuelChart,'mainfuel-chart','',
   mainfuelData,
-  ['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628'],
-  ['Mains gas','Electric','Oil','Coal','LPG','Biomass','Dual fuel']);
+  ['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#c0c0c0'],
+  ['Mains gas','Electric','Oil','Coal','LPG','Biomass','Dual fuel','Other']);
   
   // mainheatcontrol
   
@@ -1257,6 +1259,19 @@ retrofitCard_makeChartLSOA = function(){
 retrofitCard_makePieChart = function(chartVar, name, label, data, colours, labels){
   if (chartVar) {
     chartVar.destroy();
+  }
+  
+  // Drop any slice whose value is missing from the data, together with its
+  // colour and label. Without this a renamed or not-yet-published field shows
+  // as a legend entry with no wedge, which reads as a real zero.
+  var keep = [];
+  for (var i = 0; i < data.length; i++) {
+    if (data[i] !== undefined && data[i] !== null) { keep.push(i); }
+  }
+  if (keep.length !== data.length) {
+    data    = keep.map(function (i) { return data[i]; });
+    colours = keep.map(function (i) { return colours[i]; });
+    labels  = keep.map(function (i) { return labels[i]; });
   }
   
   chartVar = new Chart(document.getElementById(name).getContext('2d'), {

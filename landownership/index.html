@@ -129,8 +129,6 @@
 			<div class="modal-body">
 				<h1>Land Ownership Explorer</h1>
 				
-				<p class="beta-note"><b>Beta Tool</b>: This tool is still in development and may contain preliminary analysis, bugs, or incomplete features. Beta tools are intended to provide an early look at upcoming features and so results should be treated with care. The tool may change at any time without warning. We are interested in your feedback and you can report issues or bugs on <a href="https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/issues" target="_blank" rel="noopener noreferrer">GitHub</a></p>
-				
 				<p>This map is intended to help the public understand land ownership in England and Wales. It maps data published by the <a href="https://www.gov.uk/government/organisations/land-registry">Land Registry</a>. For more information on data and methods see the <a href="/manual/#landownershipexplorer">Manual</a>. You can also access sections of the manual via the help buttons (<i class="fa fa-question-circle" aria-hidden="true"></i>)</p>
 				
         <div style="background-color: #a5cffa; padding: 5px">
@@ -154,11 +152,12 @@
         <p>This website is for personal, non-commercial use. The information is illustrative and may contain errors or missing data. You must not attempt to scrape or bulk download the data. You cannot embed or reproduce the maps or data without written consent. Any use of this map must be consistent with the <a href="https://use-land-property-data.service.gov.uk/datasets/ccod/licence/view" target="_blank" rel="noopener noreferrer">Land Registry licence</a>. Data within the Land Ownership Explorer is not covered by the Open Data licence that applies to the rest of this site.</p>
         
         <h2>Copyright Notice</h2>
-        <p>This information is subject to Crown copyright and database rights 2022 and is reproduced with the <a href="https://use-land-property-data.service.gov.uk/datasets/inspire#conditions" target="_blank" rel="noopener noreferrer">permission of HM Land Registry</a>.</p>
-        <p>The polygons (including the associated geometry, namely x, y co-ordinates) are subject to Crown copyright and database rights 2022 Ordnance Survey 100026316.</p>
-        <p>Contains OS data © Crown copyright and database right 2022</p>
-        <p>Contains Royal Mail data © Royal Mail copyright and Database right 2022</p>
-        <p>Contains National Statistics data © Crown copyright and database right 2022</p>
+        <p>This information is subject to Crown copyright and database rights 2026 and is reproduced with the <a href="https://use-land-property-data.service.gov.uk/datasets/inspire#conditions" target="_blank" rel="noopener noreferrer">permission of HM Land Registry</a>.</p>
+        <p>The polygons (including the associated geometry, namely x, y co-ordinates) are subject to Crown copyright and database rights 2026 Ordnance Survey 100026316.</p>
+        <p>Contains OS data &copy; Crown copyright and database right 2026</p>
+        <p>Contains Royal Mail data &copy; Royal Mail copyright and database right 2026</p>
+        <p>Contains National Statistics data &copy; Crown copyright and database right 2026</p>
+        <p class="attribution-note">The layers on this map are built from the following extracts: INSPIRE index polygons and the Commercial and Corporate Ownership (CCOD) and Overseas Companies Ownership (OCOD) datasets, HM Land Registry, 2026; OS Open UPRN and Ordnance Survey boundary data, 2026; Royal Mail postcode data, 2026; Office for National Statistics boundaries, 2025. Where an extract is refreshed, this notice is updated to the year of the current extract.</p>
         
         <h2>Cookies Notice</h2>
         <p>We use Google Analytics as part of the requirement to log the usage of Land Registry data. These services may set third-party cookies.</p>
@@ -166,13 +165,13 @@
 				<div class="feedbackbox">
 					<div class="feedback-text">
 						<h2>How can we improve this tool?</h2>
-						<p>We would love to hear how you are using Carbon & Place and how we can make our tools more useful.</p>
+						<p>We would love to hear how you are using Carbon &amp; Place and how we can make our tools more useful. If you have found an error in the data or a bug in the tool, you can also report it on <a href="https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/issues" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
 						<p><a href="/about/feedback" class="opentool">Submit Feedback</a></p>
 					</div>
 					<img src="/images/ui/feedback.webp" alt="Feedback" loading="lazy" class="feedback-image">
 				</div>
 
-        <p>Last updated: <span id="updatedate"></span>. You may need to <a href="https://www.minitool.com/news/f5-vs-ctrl-f5.html" target="_blank" rel="noopener noreferrer">clear your browser cache</a> to see the latest updates.</p>
+        <p>Last updated: <span id="updatedate"></span>. If the page looks out of date, reload it while holding <kbd>Shift</kbd> (or press <kbd>Ctrl</kbd>+<kbd>F5</kbd> on Windows, <kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd> on a Mac) to bypass your browser cache.</p>
 				
 			</div>
 		</div>
@@ -331,17 +330,18 @@
 				<h4>Land Registry Title</h4>
 				<table>
 					<tr><th>Variable</th><th>Value</th></tr>
-					<tr><th>Title</td><td>{title_number}</td></tr>
-					<tr><th>Tenure</td><td>{Tenure}</td></tr>
-					<tr><th>Property Address</td><td>{address}</td></tr>
-					<tr><th>District</td><td>{district}</td></tr>
-					<tr><th>Postcode</td><td>{postcode}</td></tr>
-					<tr><th>Country</td><td>{Country}</td></tr>
-					<tr><th>Category</td><td>{Category}</td></tr>
-					<tr><th>Location confidence</td><td>{match_quality}</td></tr>
-					<tr><th>UPRN</td><td>{uprn}</td></tr>
-					<tr><th>Proprietor</td><td>{Proprietor}</td></tr>
+					<tr><th>Title</th><td>{title_number}</td></tr>
+					<tr><th>Tenure</th><td>{Tenure}</td></tr>
+					<tr><th>Property Address</th><td>{address}</td></tr>
+					<tr><th>District</th><td>{district}</td></tr>
+					<tr><th>Postcode</th><td>{postcode}</td></tr>
+					<tr><th>Country</th><td>{Country}</td></tr>
+					<tr><th>Category</th><td>{Category}</td></tr>
+					<tr><th>Location confidence</th><td>{match_quality}</td></tr>
+					<tr><th>UPRN</th><td>{uprn}</td></tr>
+					<tr><th>Proprietor</th><td>{Proprietor}</td></tr>
 				</table>
+			</div>
 		</template>
 		
 		
@@ -350,13 +350,14 @@
 				<h4>Inspire Record</h4>
 				<table>
 					<tr><th>Variable</th><th>Value</th></tr>
-					<tr><th>ID</td><td>{INSPIREID}</td></tr>
-					<tr><th>Local Authority</td><td>{local_authority}</td></tr>
-					<tr><th>Area (m&sup2;)</td><td>{area}</td></tr>
-					<tr><th>Properties on parcel</td><td>{uprn_class}</td></tr>
-					<tr><th>Estimated value (2025)</td><td>{single_uprn_value}</td></tr>
-					<tr><th>Price per m&sup2;</td><td>{price_per_m2}</td></tr>
+					<tr><th>ID</th><td>{INSPIREID}</td></tr>
+					<tr><th>Local Authority</th><td>{local_authority}</td></tr>
+					<tr><th>Area (m&sup2;)</th><td>{area}</td></tr>
+					<tr><th>Properties on parcel</th><td>{uprn_class}</td></tr>
+					<tr><th>Estimated value (2025)</th><td>{single_uprn_value}</td></tr>
+					<tr><th>Price per m&sup2;</th><td>{price_per_m2}</td></tr>
 				</table>
+			</div>
 		</template>
 		
 		

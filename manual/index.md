@@ -186,7 +186,7 @@ Many values in the tools are given a grade from A+ to F- so that a neighbourhood
 
 A good grade means a neighbourhood performs well compared with the rest of Britain today. It does not mean the area is sustainable: reaching the UK's [net zero target](https://www.legislation.gov.uk/ukpga/2008/27/contents) will require reductions in most places, including many A-graded ones.
 
-Grades are also not a judgement of the people who live somewhere. Much of what determines a footprint, including the age and construction of the housing, the availability of a bus service, and the distance to the nearest shop, is fixed long before any current resident arrives. A neighbourhood graded F for transport is usually one where driving is the only practical option, which is a statement about the place rather than about its residents. Places with poor grades should be viewed as locations that may need additional help or attention while places with high grades are where lessons can be learnt.
+Grades are also not a judgement of the people who live somewhere. Much of what determines a footprint, including the age and construction of the housing, the availability of a bus service, and the distance to the nearest shop, is fixed long before any current resident arrives. A neighbourhood graded F for transport is usually one where driving is the only practical option, which is a statement about the place rather than about its residents.
 <!-- /#grades -->
 
 #### Digital Terrain Model and 3D buildings
@@ -496,7 +496,7 @@ The Transport and Accessibility Explorer examines transport provision and access
 
 Transport is the largest source of greenhouse gas emissions in the UK, and it has decarbonised more slowly than any other major sector ([UK greenhouse gas emissions statistics](https://www.gov.uk/government/collections/final-uk-greenhouse-gas-emissions-national-statistics)). Most transport emissions come from cars, so cutting them means some combination of cleaner vehicles and fewer or shorter car journeys. Whether people can realistically drive less depends on where they live: on how close the shops, schools, and jobs are, and on whether walking, cycling, or public transport are genuine options.
 
-Transport is also a fairness issue. Around a fifth of households have no car ([National Travel Survey](https://www.gov.uk/government/collections/national-travel-survey-statistics)), and where public transport is poor they are effectively cut off from opportunities. Car dependence is expensive for households and carries wider costs for society in congestion, road danger, air pollution, and land take ([Miner et al. 2024](https://doi.org/10.1016/j.jtrangeo.2024.103817)). Outside London, bus services have declined substantially since 2008 ([DfT bus statistics](https://www.gov.uk/government/collections/bus-statistics)), and this tool records that decline neighbourhood by neighbourhood.
+Transport is also a fairness issue. Around a fifth of households have no car ([National Travel Survey](https://www.gov.uk/government/collections/national-travel-survey-statistics)), and where public transport is poor they are effectively cut off from opportunities. Car dependence is expensive for households and carries wider costs for society in congestion, road danger, air pollution, and land take ([Miner et al. 2024, *Car harm: a global review of automobility's harm to people and the environment*](https://doi.org/10.1016/j.jtrangeo.2024.103817)). Outside London, bus services have declined substantially since 2008 ([DfT bus statistics](https://www.gov.uk/government/collections/bus-statistics)), and this tool records that decline neighbourhood by neighbourhood.
 
 ### Using the transport data in your area
 
@@ -518,7 +518,7 @@ This evidence is directly relevant to local transport plans, bus service improve
 
 The Neighbourhoods layer uses Lower layer Super Output Areas (LSOAs) to report a range of transport statistics. Use the drop-down menu to change the measure:
 
-**Change in buses/hour**: the change in bus frequency (daytime average trips per hour) for services stopping in or near each neighbourhood, measured from the best year in 2006 to 2008 up to 2025. This shows where services have been cut and where they have improved. The [Friends of the Earth analysis](https://policy.friendsoftheearth.uk/insight/how-britains-bus-services-have-drastically-declined) was an earlier version of this ending in 2023, but the results had been improved since then.
+**Change in buses/hour**: the change in bus frequency (daytime average trips per hour) for services stopping in or near each neighbourhood, measured from the best year in 2006 to 2008 up to 2025. This shows where services have been cut and where they have improved. The [Friends of the Earth analysis](https://policy.friendsoftheearth.uk/insight/how-britains-bus-services-have-drastically-declined) of bus service decline uses the same measure, ending in 2023.
 
 **Bus/Tram/Subway/Rail/Ferry per hour (daytime average)**: the frequency of each type of public transport stopping in or near the neighbourhood. Not every mode exists everywhere; places with no timetabled service are shown in black.
 
@@ -586,7 +586,7 @@ This section charts the frequency of public transport (trips per hour) serving t
 
 Frequency usually varies through the day, with more services at rush hour and fewer in evenings and weekends. When off-peak frequency drops too low, the service stops being useful for shift workers, hospital visits, or a night out, and a vicious cycle can begin: low frequency leads to low ridership, which justifies further cuts. Much of Britain outside London is somewhere in this cycle, as the charts for most neighbourhoods show.
 
-One caution about what the chart counts. Frequencies are taken from published timetables, so they record the service that was scheduled rather than the service that ran. Cancellations, delays, and unreliability are not included, and in places where reliability is the main complaint the chart will look better than daily experience. The counts also cover services stopping in or near the neighbourhood, without regard to where those services go, so a frequent route that does not serve anywhere useful counts the same as one that does.
+One caution about what the chart counts. Frequencies are taken from published timetables, so they record the service that was scheduled rather than the service that ran. Cancellations, delays, and unreliability are invisible here, and in places where reliability is the main complaint the chart will look better than daily experience. The counts also cover services stopping in or near the neighbourhood, without regard to where those services go, so a frequent route that does not serve anywhere useful counts the same as one that does.
 <!-- /#frequency -->
 
 #### Accessibility & Proximity
@@ -797,6 +797,8 @@ The drop-down menu changes the visualised characteristic:
 
 Clicking any property shows a popup with details from the EPC (descriptions of the roof, walls, floor, heating, and controls) and the most recent Land Registry sale where available.
 
+EPCs are a valuable but imperfect source: they are only created when a home is built, sold, or let, assessments contain errors, and older certificates may not reflect recent improvements ([Hardy & Glew 2019](https://doi.org/10.1016/j.enpol.2019.03.022) analyse errors in the register). A separate weakness matters for anyone using EPCs to predict energy use: modelled EPC energy intensity runs systematically higher than smart-metered consumption in gas-heated homes ([CREDS](https://www.creds.ac.uk/publications/the-over-prediction-of-primary-energy-use-intensity-by-epcs-in-great-britain-a-direct-comparison-of-epc-modelled-and-smart-metered-energy-use-in-gas-heated-homes/)), so an EPC band is a guide to a dwelling's fabric rather than a forecast of its bills. Treat individual certificates as indicative.
+
 The processing behind these layers, including the cleaning of free-text fields, the matching to UPRNs, and the harmonisation of the Scottish and England and Wales registers, is published as [`EPC`](https://github.com/PlaceBasedCarbonCalculator/EPC).
 
 The Scottish EPC register is separate from, and slightly different to, the England and Wales register. Carbon & Place harmonises the two, which can cause small inconsistencies in the Scottish data; for example, Scotland uses different building age bands, which are mapped to the closest England and Wales equivalent.
@@ -807,7 +809,7 @@ Every chart and layer in Carbon & Place that draws on EPCs carries the same thre
 
 **Coverage is partial, and not partial at random.** A certificate is required when a home is built, sold, or let, and lasts ten years. Homes that have changed hands or been rented recently therefore appear; homes owned by the same household for decades often do not. Because tenure and length of residence correlate with age, income, and dwelling type, the sample is biased rather than merely incomplete: rented properties are over-represented, and long-held owner-occupied homes under-represented. The **% of homes with an EPC** layer shows how large the gap is in each neighbourhood, and is the first thing to check before comparing areas. The Dwelling Stock tab, built from council tax records, covers every home and is the better basis for counting.
 
-**Certificates age.** A certificate reflects the home as it was on the day of the assessment, which may be years ago. Improvements made since, including new insulation, a new boiler, or solar panels, are missing until the next assessment. Retrofit is therefore systematically under-counted, and solar PV especially so, since people often improve a home shortly after buying it, which is exactly when its certificate was issued.
+**Certificates age.** A certificate reflects the home as it was on the day of the assessment, which may be years ago. Improvements made since, including new insulation, a new boiler, or solar panels, are invisible until the next assessment. Retrofit is therefore systematically under-counted, and solar PV especially so, since people often improve a home shortly after buying it, which is exactly when its certificate was issued.
 
 **Assessments contain errors, and the model behind them is not a predictor of energy use.** An audit of the register found at least one error in a majority of certificates ([Hardy & Glew 2019](https://doi.org/10.1016/j.enpol.2019.03.022)). Separately, and more fundamentally, the EPC band scores modelled energy *cost* per square metre under standard occupancy. It is not a measurement, and modelled EPC energy intensity runs systematically higher than smart-metered consumption in gas-heated homes ([CREDS](https://www.creds.ac.uk/publications/the-over-prediction-of-primary-energy-use-intensity-by-epcs-in-great-britain-a-direct-comparison-of-epc-modelled-and-smart-metered-energy-use-in-gas-heated-homes/)). Because the band follows cost rather than carbon, a home on an expensive but clean fuel can score below a leakier home burning gas.
 
@@ -860,15 +862,15 @@ Clicking a UPRN shows its ID number, whether the property currently exists, and 
 <!-- #retrofit-solar -->
 #### Solar Potential
 
-The Solar Potential layer maps how much solar energy reaches every 2 metre square of Great Britain over a year, measured in kilowatt-hours per square metre (kWh/m²). It is a photograph of the resource, not a prediction of output: it shows how much sunlight arrives, before any assumptions about panel efficiency, orientation of the panel itself, or shading by anything not in the terrain model.
+The Solar Potential layer maps how much solar energy reaches every 2 metre square of Great Britain over a year, measured in kilowatt hours per square metre per year (kWh/m²/year). For scale, a flat, unshaded site in Great Britain receives somewhere between about 750 and 1,100 kWh/m² a year, with more in the south than the north. It is a photograph of the resource, not a prediction of output: it shows how much sunlight arrives, before any assumptions about panel efficiency, orientation of the panel itself, or shading by anything not in the terrain model.
 
 Because the model works from a surface model that includes buildings and trees, it resolves individual roof pitches. Zoom in far enough and a south-facing slope reads orange or red while the north-facing slope of the same roof reads blue, and the shadow a tall building casts over its neighbours is visible as a cool patch. Zoom out and the pattern is dominated by latitude and by terrain: south-facing valley sides are noticeably brighter than north-facing ones.
 
-Colours run from dark blue (least sunlight) through green and yellow to dark red (most), using the Turbo colour scale. The transparency slider fades the layer so that streets and buildings on the basemap can be seen through it.
+Colours run from dark blue (least sunlight) through green and yellow to dark red (most), using the Turbo colour scale. The scale is fixed from 0 to 2000 kWh/m²/year so that the colours mean the same thing every time the layer is rebuilt. A small number of surfaces, chiefly steep south-facing roofs, exceed 2000, so the darkest red should be read as "2000 or more" rather than as the maximum. The lowest part of the scale is also unused, because the lowest value anywhere in the data is close to 100, so the map in practice uses the middle of the colour range. Areas with no data, including the sea, are transparent.
+
+The transparency slider fades the layer so that streets and buildings on the basemap can be seen through it. At 0% the solar map is solid; drag it up to see the map underneath.
 
 Two limitations are worth keeping in mind. The layer is a visualisation, and the colour is compressed slightly when the tiles are stored, so it should be read to the nearest band rather than as an exact number. And it models sunlight reaching a surface, not electricity: converting to expected generation needs assumptions about panel type, efficiency, and how much of a roof is usable, none of which are applied here.
-
-If you need a detailed solar assessment for a single building we suggest [Solar Wizard](https://solarwizard.org.uk/) which uses additional commercial data to provide more detail but only on a building by building basis.
 
 ##### Data Sources
 
@@ -898,7 +900,9 @@ For households off the gas grid, consumption of other heating fuels (oil, wood, 
 
 ##### EPCs
 
-Summary statistics for the domestic properties in the neighbourhood that have an EPC. Remember that homes without an EPC (typically those not built, sold, or let recently) are not included, and in a few neighbourhoods they are the majority.
+Summary statistics for the domestic properties in the neighbourhood that have an EPC. Remember that homes without an EPC (typically those not built, sold, or let recently) are invisible here, and in some neighbourhoods they are the majority.
+
+Each chart on this tab groups the certificate data twice over, and it is worth knowing that before reading a figure off one. Free-text fields such as the wall, roof, floor, heating, and hot water descriptions are first cleaned into a controlled vocabulary, which for heating alone runs to some 220 distinct systems. That vocabulary is then grouped again into the handful of categories a pie chart can show: six for roofs, seven for walls, nine for floors, eight for heating systems. A great deal of useful detail disappears at the second step, most obviously the depth of loft insulation, which is recorded on the certificate but reduced here to the single category *pitched*. Where you need that detail, the Domestic Properties layer keeps the full description for every individual home. The Methods tab beneath each chart sets out exactly how that chart's categories are built.
 
 ##### Prices
 
@@ -924,7 +928,7 @@ To protect privacy, DESNZ removes data for postcodes with few properties, and ma
 
 ### Further reading
 
-* [Climate Change Committee, *UK housing: fit for the future?*](https://www.theccc.org.uk/publication/uk-housing-fit-for-the-future/).
+* [Climate Change Committee, *UK housing: fit for the future?*](https://www.theccc.org.uk/publication/uk-housing-fit-for-the-future/), still the clearest statement of the scale of the task.
 * [CREDS, *Decarbonisation of heat findings report*](https://www.creds.ac.uk/decarbonisation-of-heat/decarbonisation-of-heat-findings-report/), a synthesis of UK research on heat.
 * [CREDS, *Existing and future technologies for retrofitting the UK housing stock*](https://www.creds.ac.uk/publications/existing-and-future-technologies-for-retrofitting-the-uk-housing-stock/).
 * [CREDS, *The over-prediction of primary energy use intensity by EPCs in Great Britain*](https://www.creds.ac.uk/publications/the-over-prediction-of-primary-energy-use-intensity-by-epcs-in-great-britain-a-direct-comparison-of-epc-modelled-and-smart-metered-energy-use-in-gas-heated-homes/), essential background if you plan to use EPC bands to estimate energy use.
@@ -985,11 +989,11 @@ By default the parcels are drawn as a plain wash, because the usual reason to tu
 * **No properties**: bare land. Fields, gardens, and access strips held on their own title, car parks, yards, and sites where the building has gone. Also, occasionally, a parcel whose address point happens to fall just outside the mapped boundary.
 * **Several**: a block of flats, a terrace held on one title, a farm with several dwellings, or a large mixed site.
 
-The count uses only addresses present in the latest Ordnance Survey release, not every address ever recorded, so a plot whose two flats were long ago knocked through into one house counts as one property rather than two.
+"Current" matters here. The count uses only addresses present in the latest Ordnance Survey release, not every address ever recorded, so a plot whose two flats were long ago knocked through into one house counts as one property rather than two.
 
-**Price per square metre** divides a property's estimated 2025 value by the area of its parcel. It is shown **only** for the one-property parcels.
+**Price per square metre** divides a property's estimated 2025 value by the area of its parcel. It is shown **only** for the one-property parcels, and that restriction is the whole point: only when the parcel is a single property's plot does dividing its value by that area mean anything. For a block of flats the same sum would divide one flat's value by the whole building's footprint.
 
-Treat the result as indicative. The value is a model estimate, extrapolated forward from the property's last recorded sale using local price trends, so it is least reliable for homes that have not changed hands recently and is unavailable for homes never sold since 1995. Also in most cases the buildings on the land will be a significant proportion of the value of property. So while this map shows price per square metre it is on a true measure of land value. The area is the registered parcel, which is not always the same as the garden or the usable land. The measure is most informative compared between neighbouring parcels.
+Treat the result as indicative. The value is a model estimate, extrapolated forward from the property's last recorded sale using local price trends, so it is least reliable for homes that have not changed hands recently and is unavailable for homes never sold since 1995. The area is the registered parcel, which is not always the same as the garden or the usable land. The measure is most informative compared between neighbouring parcels rather than read as a number.
 
 Click any polygon to see its INSPIRE ID (which can be used to purchase the full title from the Land Registry), the local authority name, the area in square metres, how many properties are on it, and where applicable the estimated value and price per square metre.
 <!-- /#landownership-inspire -->

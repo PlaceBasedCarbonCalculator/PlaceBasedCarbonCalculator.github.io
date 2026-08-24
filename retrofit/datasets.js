@@ -178,8 +178,9 @@ const datasets_extra = {
 		// Turbo colour table in GBsolar/METHOD.md section 3 - they are the
 		// definition of what the pixels mean, so they must be changed together
 		// with a re-render of GBsolar.pmtiles, never on their own. The top entry
-		// is a clamp, not a maximum: the measured data maximum is 2288 Wh/m2 but
-		// the ramp domain is 0-2000, so the darkest red means "2000 or more".
+		// is a clamp, not a maximum: the measured data maximum is 2288 kWh/m2/year
+		// but the ramp domain is 0-2000, so the darkest red means "2000 or more".
+		// Values are kWh/m2/year throughout - see GBsolar/METHOD.md section 1.
 		solar: {
 			'insolation': [
 				['0',      '#30123B'],
