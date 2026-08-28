@@ -247,7 +247,7 @@ const datasets_extra = {
 				['Rented (private)','#e31a1c'],
 				['Owner occupied' ,'#33a02c'],
 				['Missing' ,'#000000'],
-				['Unknown','#999898']
+				['Unknown','#c0c0c0']
 			],
 			'age': [
 				['<1900','#9e0142'],
@@ -409,7 +409,8 @@ const datasets_extra = {
 				['Good' ,'#abd9e9'],
 				['Average','#ffffbf'],
 				['Poor','#fdae61'],
-				['Very Poor' ,'#d7191c']
+				['Very Poor' ,'#d7191c'],
+				['Unknown','#c0c0c0']
 			],
 			'modal_roof': [
 				['Very Good','#2c7bb6'],
@@ -417,21 +418,24 @@ const datasets_extra = {
 				['Average','#ffffbf'],
 				['Poor','#fdae61'],
 				['Very Poor' ,'#d7191c'],
-				['Another property above' ,'#4d9221']
+				['Another property above' ,'#4d9221'],
+				['Unknown','#c0c0c0']
 			],
 			'modal_heat': [
 				['Very Good','#2c7bb6'],
 				['Good' ,'#abd9e9'],
 				['Average','#ffffbf'],
 				['Poor','#fdae61'],
-				['Very Poor' ,'#d7191c']
+				['Very Poor' ,'#d7191c'],
+				['Unknown','#c0c0c0']
 			],
 			'modal_window': [
 				['Very Good','#2c7bb6'],
 				['Good' ,'#abd9e9'],
 				['Average','#ffffbf'],
 				['Poor','#fdae61'],
-				['Very Poor' ,'#d7191c']
+				['Very Poor' ,'#d7191c'],
+				['Unknown','#c0c0c0']
 			],
 			'modal_mainheat': [
 				['Community','#377eb8'],
@@ -439,20 +443,24 @@ const datasets_extra = {
 				['Heat pump','#4daf4a'],
 				['Oil boiler','#984ea3'],
 				['Room heater' ,'#ffff33'],
-				['Storage heater' ,'#ff7f00']
+				['Storage heater' ,'#ff7f00'],
+				['Portable heater' ,'#a65628']
 			],
 			'modal_mainfuel': [
 				['Biomass','#4daf4a'],
 				['Electricity' ,'#377eb8'],
 				['LPG','#ff7f00'],
 				['Mains gas','#e41a1c'],
-				['Oil' ,'#984ea3']
+				['Oil' ,'#984ea3'],
+				['Coal','#666666'],
+				['Dual fuel' ,'#a65628']
 			],
 			'modal_floord': [
 				['Another property below','#225ea8'],
 				['Solid insulated' ,'#b2e2e2'],
 				['Solid limited insulation','#66c2a4'],
 				['Solid uninsulated','#238b45'],
+				['Suspended insulated' ,'#f1b6da'],
 				['Suspended limited insulation' ,'#df65b0'],
 				['Suspended uninsulated' ,'#ce1256']
 			],
@@ -473,7 +481,7 @@ const datasets_extra = {
 				['Rented (social)','#1f78b4'],
 				['Rented (private)','#e31a1c'],
 				['Owner occupied' ,'#33a02c'],
-				['Unknown','#999898']
+				['Unknown','#c0c0c0']
 			],
 		  	'percent_EPC': [
 				['<30%','#ffffb2'],
@@ -688,6 +696,7 @@ const datasets_extra = {
 				'average','#ffffbf',
 				'poor','#fdae61',
 				'verypoor' ,'#d7191c',
+				'other','#c0c0c0',
 				'#000000'
 			],
 			'modal_roof': [
@@ -697,6 +706,7 @@ const datasets_extra = {
 				'poor','#fdae61',
 				'verypoor' ,'#d7191c',
 				'above' ,'#4d9221',
+				'other','#c0c0c0',
 				'#000000'
 			],
 			'modal_heat': [
@@ -705,6 +715,7 @@ const datasets_extra = {
 				'average','#ffffbf',
 				'poor','#fdae61',
 				'verypoor' ,'#d7191c',
+				'other','#c0c0c0',
 				'#000000'
 			],
 			'modal_window': [
@@ -713,6 +724,7 @@ const datasets_extra = {
 				'average','#ffffbf',
 				'poor','#fdae61',
 				'verypoor' ,'#d7191c',
+				'other','#c0c0c0',
 				'#000000'
 			],
 			'modal_mainheat': [
@@ -722,6 +734,7 @@ const datasets_extra = {
 				'oilboiler','#984ea3',
 				'roomheater' ,'#ffff33',
 				'storageheater' ,'#ff7f00',
+				'portableheater' ,'#a65628',
 				'#000000'
 			],
 			'modal_mainfuel': [
@@ -730,6 +743,8 @@ const datasets_extra = {
 				'lpg','#ff7f00',
 				'mainsgas','#e41a1c',
 				'oil' ,'#984ea3',
+				'coal','#666666',
+				'dualfuel' ,'#a65628',
 				'#000000'
 			],
 			'modal_floord': [
@@ -737,6 +752,7 @@ const datasets_extra = {
 				'solidinsulated' ,'#b2e2e2',
 				'solidlimitedinsulated','#66c2a4',
 				'soliduninsulated','#238b45',
+				'suspendedinsualted' ,'#f1b6da',
 				'suspendedlimitedinsulated' ,'#df65b0',
 				'suspendeduninsulated' ,'#ce1256',
 				'#000000'
@@ -759,7 +775,7 @@ const datasets_extra = {
 				'socialrent','#1f78b4',
 				'owner' ,'#33a02c',
 				'privaterent','#e31a1c',
-				'unknown','#999898',
+				'unknown','#c0c0c0',
 				'#000000'
 			],
 		  	'percent_EPC': [
@@ -998,7 +1014,7 @@ const datasets_extra = {
 				'rented (social)','#1f78b4',
 				'owner-occupied' ,'#33a02c',
 				'rented (private)','#e31a1c',
-				'unknown','#999898',
+				'unknown','#c0c0c0',
 				'#000000'
 			],
 			'freehold': [

@@ -295,8 +295,10 @@ The Neighbourhoods layer colours each Lower layer Super Output Area (LSOA), or S
 
 * **Total Emissions**: the overall per-person footprint, graded from A+ (low) to F- (high) relative to the national distribution.
 * **Decarbonisation progress**: how far the neighbourhood's per-person footprint has fallen between 2010 and 2022, graded against the rest of the country.
-* **Housing: Gas & Electricity**: emissions from domestic energy use, derived from metered consumption data.
-* **Transport: Car & Van**: emissions from private road transport attributed to the neighbourhood's residents.
+* **Gas**: emissions from domestic gas use, derived from metered consumption data.
+* **Electricity**: emissions from domestic electricity use, derived from metered consumption data.
+* **Car**: emissions from private car transport attributed to the neighbourhood's residents.
+* **Van**: emissions from private van transport attributed to the neighbourhood's residents.
 * **Consumption: Goods & Services**: embodied emissions from household purchases, estimated with a synthetic population model.
 * **Flights**: air travel emissions allocated to neighbourhoods using the synthetic population model.
 * **Area classification**: the Office for National Statistics [area classification](https://www.ons.gov.uk/methodology/geography/geographicalproducts/areaclassifications), which groups neighbourhoods with similar social and economic characteristics, for context rather than emissions.
@@ -707,6 +709,7 @@ The drop-down menu changes the visualised measure:
 * Fuel type (most common)
 * Floor type (most common)
 * Building type (most common)
+* Tenure at EPC issue (most common)
 * % of homes with an EPC
 * Average Property Price (2025)
 * Property Price to Income Ratio

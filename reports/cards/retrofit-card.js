@@ -890,7 +890,7 @@ retrofitCard_makeChartLSOA = function(){
  
 	retrofitCard_epcratingChart = retrofitCard_makePieChart(retrofitCard_epcratingChart,'epcrating-chart','EPC rating',
   epcratingData,
-  ['#0e7e58','#2aa45b','#8cbc42','#f6cc15','#f2a867','#f17e23','#e31d3e','#333333'],
+  ['#0e7e58','#2aa45b','#8cbc42','#f6cc15','#f2a867','#f17e23','#e31d3e','#c0c0c0'],
   ['A','B','C','D','E','F','G','Other']);
   
   // Building type
@@ -912,7 +912,7 @@ retrofitCard_makeChartLSOA = function(){
  
 	retrofitCard_buildingtypeChart = retrofitCard_makePieChart(retrofitCard_buildingtypeChart,'buildingtype-chart','Building type',
   buildingtypeData,
-  ['#c2e699','#78c679','#31a354','#006837','#e31a1c','#fbb4b9','#7a0177','#f768a1','#c51b8a','#1f78b4','#fa7c00','#c0c0c0'],
+  ['#c2e699','#78c679','#006837','#31a354','#e31a1c','#fbb4b9','#f768a1','#7a0177','#c51b8a','#1f78b4','#fa7c00','#c0c0c0'],
   ['Detached house','Semi-detached house','Mid-terrace house','End-terrace house',
 			'Flat','Detached bungalow','Semi-detached bungalow','Mid-terrace bungalow',
 			'End-terrace bungalow','Maisonette','Park home','Other']);
@@ -928,7 +928,7 @@ retrofitCard_makeChartLSOA = function(){
  
   retrofitCard_tenureChart = retrofitCard_makePieChart(retrofitCard_tenureChart,'tenure-chart','Tenure',
   tenureData,
-  ['#c2e699','#78c679','#31a354','#c0c0c0'],
+  ['#33a02c','#e31a1c','#1f78b4','#c0c0c0'],
   ['Owner','Private rent','Social rent','Unknown']);
   
   // Age
@@ -972,7 +972,7 @@ retrofitCard_makeChartLSOA = function(){
  
   retrofitCard_floorChart = retrofitCard_makePieChart(retrofitCard_floorChart,'floor-chart','',
   floorData,
-  ['#2c7bb6','#abd9e9','#ffffbf','#fdae61','#d7191c','#8b21b5','#c0c0c0'],
+  ['#2c7bb6','#abd9e9','#ffffbf','#fdae61','#d7191c','#225ea8','#c0c0c0'],
   ['Very Good','Good','Average','Poor','Very Poor','Dwelling Below','Other']);
   
   // floord
@@ -991,7 +991,7 @@ retrofitCard_makeChartLSOA = function(){
  
   retrofitCard_floordChart = retrofitCard_makePieChart(retrofitCard_floordChart,'floord-chart','',
   floordData,
-  ['#b2e2e2','#66c2a4','#238b45','#fde0ef', '#e9a3c9', '#c51b7d','#fdae61','#225ea8','#c0c0c0'],
+  ['#238b45','#b2e2e2','#66c2a4','#ce1256','#f1b6da','#df65b0','#fdae61','#225ea8','#c0c0c0'],
   ['Solid uninsulated','Solid insulated','Solid limited insulation','Suspended uninsulated','Suspended insulated','Suspended limited insulation','Exposed to outside air','Dwelling Below','Other']);
   
   // window
@@ -1107,7 +1107,7 @@ retrofitCard_makeChartLSOA = function(){
  
   retrofitCard_roofChart = retrofitCard_makePieChart(retrofitCard_roofChart,'roof-chart','',
   roofData,
-  ['#2c7bb6','#abd9e9','#ffffbf','#fdae61','#d7191c','#8b21b5','#c0c0c0'],
+  ['#2c7bb6','#abd9e9','#ffffbf','#fdae61','#d7191c','#4d9221','#c0c0c0'],
   ['Very Good','Good','Average','Poor','Very Poor','Dwelling Above','Other']);
   
   // roofd
@@ -1123,7 +1123,7 @@ retrofitCard_makeChartLSOA = function(){
  
   retrofitCard_roofdChart = retrofitCard_makePieChart(retrofitCard_roofdChart,'roofd-chart','',
   roofdData,
-  ['#e41a1c','#377eb8','#4daf4a','#ffff33','#8b21b5','#c0c0c0'],
+  ['#e41a1c','#377eb8','#4daf4a','#ffff33','#4d9221','#c0c0c0'],
   ['Pitched','Flat roof','Room in roof','Thatched','Dwelling Above','Other']);
   
   // mainheatdesc
@@ -1141,7 +1141,7 @@ retrofitCard_makeChartLSOA = function(){
  
   retrofitCard_mainheatdescChart = retrofitCard_makePieChart(retrofitCard_mainheatdescChart,'mainheatdesc-chart','',
   mainheatdescData,
-  ['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#c0c0c0'],
+  ['#e41a1c','#984ea3','#ff7f00','#a65628','#ffff33','#4daf4a','#377eb8','#c0c0c0'],
   ['Gas boiler','Oil boiler','Storage heater','Portable heater','Room heaters','Heat pump','Community','Other']);
   
   // mainheat
@@ -1157,7 +1157,7 @@ retrofitCard_makeChartLSOA = function(){
   ];
  
   retrofitCard_mainheatChart = retrofitCard_makePieChart(retrofitCard_mainheatChart,'mainheat-chart','',
-  roofdData,
+  mainheatData,
   ['#2c7bb6','#abd9e9','#ffffbf','#fdae61','#d7191c','#c0c0c0'],
   ['Very Good','Good','Average','Poor','Very Poor','Other']);
   
@@ -1177,7 +1177,7 @@ retrofitCard_makeChartLSOA = function(){
  
   retrofitCard_mainfuelChart = retrofitCard_makePieChart(retrofitCard_mainfuelChart,'mainfuel-chart','',
   mainfuelData,
-  ['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#c0c0c0'],
+  ['#e41a1c','#377eb8','#984ea3','#666666','#ff7f00','#4daf4a','#a65628','#c0c0c0'],
   ['Mains gas','Electric','Oil','Coal','LPG','Biomass','Dual fuel','Other']);
   
   // mainheatcontrol

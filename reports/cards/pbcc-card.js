@@ -1928,11 +1928,11 @@ var pbccCard_pp3 = `<p>The population of this supergroup typically live largely 
 
 <p>Unemployment rates are below the national average, and for employed residents, they are more likely to work in the information and communication industries and financial-related industries than nationally, to work full-time, and are more likely to travel to work using public transport, though households owning two or more cars are also more prevalent than nationally.</p>`;
 
-var pbccCard_pp4 = `<p>Of the four groups within the supergroup, this group has the lowest population density (26.3 persons per hectare). Residents belonging to this group are more likely to have been born in the UK or Ireland than for the parent supergroup. Households are also more likely to live in a semi-detached property (36.8% of all households) or terraced property (41.5% of all households).</p>
+var pbccCard_pp4 = `<p>The population of this supergroup typically live largely in either current or former industrial areas, in cities and larger towns across the UK.</p>
 
-<p>Households are also marginally more likely to own or have shared ownership of a property and to live in socially-rented accommodation (41.4% of households).</p>
+<p>Residents are much more likely to live in a terraced property or a flat (over two-thirds of all households) and to live in social rented accommodation. The supergroup has a below average ethnic mix and an above average of UK and Irish born residents. Residents are more likely to be represented in younger age groups than nationally. Rates of divorce or separation are higher than nationally, and the proportion of persons aged 16 years and over with higher qualifications is below the national average.</p>
 
-<p>For residents in employment, they are marginally more likely than the parent supergroup to use private transport to get to work and more likely to work in the energy, water or air conditioning supply industries than the parent supergroup. </p>`;
+<p>Unemployment rates are observably higher than the national average – at 7.5% the highest for any supergroup. Employed residents are more likely to work in the transport or storage industries and administrative or support services industries and marginally more likely to work part-time than nationally and to travel to work using public transport.</p>`;
 
 var pbccCard_pp5 = `<p>The population of this supergroup typically live largely in industrial areas across the UK and is the largest supergroup in terms of resident population – comprising one-fifth of the total UK population.</p>
 
