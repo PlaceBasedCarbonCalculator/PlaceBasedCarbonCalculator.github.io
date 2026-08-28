@@ -444,9 +444,11 @@
 					<p>We look at different time and distance bands because some services are common (like hairdressers) while others are rare (like speech therapists). We measure travel time on foot and by public transport at 15, 30, 45, and 60 minutes (accessibility), and straight-line distance at 0.75, 1.5, 2.25, and 3 miles (proximity). For example, you may have no plasterers within 0.75 miles of your home, but plenty of plasterers within 1.5 miles of your home, and that is probably fine. But if your nearest postbox were 1.5 miles away, you would probably consider that too far.</p> 
 					<p>The chart and table below present the same information in two formats, so that you can either scan the overall pattern or look up a particular kind of service. One caution before drawing conclusions: the scores are relative to the national distribution, so a service that is scarce everywhere in Britain still scores zero here.</p>
 
-					<p><b>This data is based off the <a href="https://geoportal.statistics.gov.uk/datasets/ons::uk-travel-area-isochrones-nov-dec-2022-by-public-transport-and-walking-for-london-east-generalised-to-10m/about" target="_blank" rel="noopener">2022 ONS isochrones</a> and is not available for Scotland.</b></p>
+					<p><b>This data is based off the <a href="https://geoportal.statistics.gov.uk/datasets/ons::uk-travel-area-isochrones-nov-dec-2022-by-public-transport-and-walking-for-london-east-generalised-to-10m/about" target="_blank" rel="noopener">2022 ONS isochrones</a>, which cover England and Wales only.</b></p>
 
+					<p id="access-nodata" style="display: none;"></p>
 
+					<div id="access-content">
 					<div class="chart-text">
 						<h4 class="chart-title">Accessibility &amp; Proximity Summary Table <button aria-label="Help: how accessibility and proximity scores are calculated" class="helpbutton" data-help="accessibility"><i class="fa fa-question-circle" aria-hidden="true"></i></button></h4>
 						<div class="chart-description-tabs">
@@ -479,11 +481,12 @@
 					<div >
 					<h4>Accessibility &amp; Proximity Summary Table <button aria-label="Help: how accessibility and proximity scores are calculated" class="helpbutton" data-help="accessibility"><i class="fa fa-question-circle" aria-hidden="true"></i></button></h4>
 					<div id="access-table"></div>
-					
-					
+
+
 					</div>
+					</div><!-- /#access-content -->
 				</div>
-					
+
 				<div id="ptfreq" class="tabcontent">
 					<div>
 						<h4 class="chart-title">Public Transport Frequency <button aria-label="Help: how public transport frequency is measured" class="helpbutton" data-help="frequency"><i class="fa fa-question-circle" aria-hidden="true"></i></button></h4>

@@ -76,17 +76,55 @@ function transportCard_getAccessBand () {
 		transportCard_ACCESS_BANDS.find(b => b.value === transportCard_ACCESS_BAND_DEFAULT);
 }
 
+// Show or hide the whole Accessibility & Proximity section, swapping in a
+// short explanation in its place. Mirrors voaSetAvailable() in retrofit/ui.js,
+// which does the same for the England-and-Wales-only dwelling stock charts.
+//
+// The analysis is built from the ONS Travel Area Isochrones around 2021 Output
+// Area centroids and straight-line buffers around 2021 LSOA population-weighted
+// centroids, both of which are published for England and Wales only, so the
+// access bin holds no record at all for a Scottish Data Zone and fetchRecord()
+// rejects. That is the expected outcome, not a failure, so say why rather than
+// leaving an empty chart and an empty table on screen.
+function transportCard_accessSetAvailable (available, locationId)
+{
+	const content = document.getElementById('access-content');
+	if (content) { content.style.display = (available ? 'block' : 'none'); }
+
+	const note = document.getElementById('access-nodata');
+	if (!note) { return; }
+	note.style.display = (available ? 'none' : 'block');
+	if (available) { return; }
+
+	// Scottish zone codes start with S. Anything else reaching this branch is a
+	// genuine lookup failure, so don't blame the geography for it.
+	const isScotland = (typeof locationId === 'string' && locationId.charAt(0) === 'S');
+	note.innerHTML = (isScotland
+		? 'Accessibility and proximity scores are not available for Scotland. They are built from the ' +
+		  'ONS travel area isochrones and population-weighted centroids, which are published for ' +
+		  'England and Wales only, and there is no equivalent Scottish dataset. Every other tab on ' +
+		  'this report card does cover Scotland.'
+		: 'Accessibility and proximity scores are not available for this area.');
+}
+
 
 transportCard_manageCharts = function (locationId) {
+  // England and Wales only: a Scottish zone has no record here at all, so this
+  // rejects and the whole section is replaced by a note (see
+  // transportCard_accessSetAvailable). Expected outcome, not an error.
   const p1 = transportCard_fetchJSON(transportCard_endpoint('Access/') + locationId + '.json')
     .then(function (accessData) {
       transportCard_accessLocationData = accessData;
+      transportCard_accessSetAvailable(true, locationId);
       transportCard_makeChartAccess();
       transportCard_makeTableAccess();
     })
     .catch(function (error) {
-      // Keep user-visible alert for backwards compatibility, but don't reject the overall promise
-      //console.warn('Failed to get access data for this location, or to process it correctly. Please try refreshing the page.');
+      transportCard_accessLocationData = {};
+      if (transportCard_accessChart) { transportCard_accessChart.destroy(); transportCard_accessChart = undefined; }
+      const table = document.getElementById('access-table');
+      if (table) { table.innerHTML = ''; }
+      transportCard_accessSetAvailable(false, locationId);
       console.log(error);
     });
 

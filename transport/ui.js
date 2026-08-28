@@ -34,19 +34,57 @@ function getAccessBand () {
 		ACCESS_BANDS.find(b => b.value === ACCESS_BAND_DEFAULT);
 }
 
+// Show or hide the whole Accessibility & Proximity section, swapping in a
+// short explanation in its place. Mirrors voaSetAvailable() in retrofit/ui.js,
+// which does the same for the England-and-Wales-only dwelling stock charts.
+//
+// The analysis is built from the ONS Travel Area Isochrones around 2021 Output
+// Area centroids and straight-line buffers around 2021 LSOA population-weighted
+// centroids, both of which are published for England and Wales only, so the
+// access bin holds no record at all for a Scottish Data Zone and fetchRecord()
+// rejects. That is the expected outcome, not a failure, so say why rather than
+// leaving an empty chart and an empty table on screen.
+function accessSetAvailable (available, locationId)
+{
+	const content = document.getElementById('access-content');
+	if (content) { content.style.display = (available ? 'block' : 'none'); }
+
+	const note = document.getElementById('access-nodata');
+	if (!note) { return; }
+	note.style.display = (available ? 'none' : 'block');
+	if (available) { return; }
+
+	// Scottish zone codes start with S. Anything else reaching this branch is a
+	// genuine lookup failure, so don't blame the geography for it.
+	const isScotland = (typeof locationId === 'string' && locationId.charAt(0) === 'S');
+	note.innerHTML = (isScotland
+		? 'Accessibility and proximity scores are not available for Scotland. They are built from the ' +
+		  'ONS travel area isochrones and population-weighted centroids, which are published for ' +
+		  'England and Wales only, and there is no equivalent Scottish dataset. Every other tab on ' +
+		  'this report card does cover Scotland.'
+		: 'Accessibility and proximity scores are not available for this area.');
+}
+
 
 manageCharts = function (locationId) {
   // Access now comes from the access bin (single binary + range request)
   // instead of one JSON file per zone.
+  // England and Wales only: a Scottish zone has no record here at all, so this
+  // rejects and the whole section is replaced by a note (see
+  // accessSetAvailable). Do NOT alert - it is the expected outcome, not an error.
   const p1 = capBin.fetchRecord('access', locationId)
     .then(function (accessData) {
       accessLocationData = accessData;
+      accessSetAvailable(true, locationId);
       makeChartAccess();
       makeTableAccess();
     })
     .catch(function (error) {
-      // Keep user-visible alert for backwards compatibility, but don't reject the overall promise
-      //alert('Failed to get access data for this location, or to process it correctly. Please try refreshing the page.');
+      accessLocationData = {};
+      if (accessChart) { accessChart.destroy(); accessChart = undefined; }
+      const table = document.getElementById('access-table');
+      if (table) { table.innerHTML = ''; }
+      accessSetAvailable(false, locationId);
       console.log(error);
     });
 
