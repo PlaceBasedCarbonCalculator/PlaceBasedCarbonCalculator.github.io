@@ -409,6 +409,15 @@ body { color: var(--ink); }
 }
 .overviewtable td { text-align: left; }
 .overviewtable td:last-child { text-align: right; color: var(--muted); }
+/* A row that is the sum of the rows above it, not another category alongside
+   them. Set apart so nobody adds it to the others: a rule above, bold, and no
+   bottom border - the usual way a table marks a total. */
+.overviewtable tr.overviewtotal td {
+	border-top: 2px solid var(--line);
+	border-bottom: none;
+	font-weight: 700;
+}
+.overviewtable tr.overviewtotal td:last-child { color: inherit; }
 .responsive-tables > div {
 	background: var(--bg);
 	border: 1px solid var(--line);
