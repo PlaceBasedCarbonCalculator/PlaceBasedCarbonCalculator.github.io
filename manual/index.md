@@ -326,7 +326,7 @@ Below the chart, summary tables give a grade and a per-person value for each com
 
 This tab charts the neighbourhood's per-person footprint for every year since 2010, stacked by sector. It shows whether emissions are falling and which sectors are responsible for the change. Nationally, most of the reduction since 2010 has come from the decarbonisation of electricity generation as coal has left the grid ([DESNZ energy statistics](https://www.gov.uk/government/collections/uk-energy-in-brief)); reductions in transport and heating have been much slower. Comparing your neighbourhood's trend with that national story shows whether local change is genuine or simply reflects a cleaner electricity supply.
 
-Year-to-year movements should be read with care: they can reflect data revisions and modelling noise as well as real change. Trends over several years are more reliable than single-year differences.
+Year-to-year movements should be read with care: they can reflect data revisions and modelling noise as well as real change. Trends over several years are more reliable than single-year differences. To increase the amount of data available in the synthetic population it is built every other year (even years) using two years of data. I.e data from 2020 and 2021 is used to build a 2020 synthetic population, which is then used to produce carbon footprints for 2020 and 2021. This means for the parts of the carbon footprint that are modeled using the synthetic population (such as goods and services) the results for each pair of years are very similar and sudden shifts can occur every two years. 
 
 #### Transport
 
@@ -889,7 +889,7 @@ The neighbourhood report card summarises energy, EPCs, and prices for each area.
 
 ##### Energy Consumption
 
-Historical data, from 2015 to 2024, on domestic gas and electricity consumption, shown three ways:
+Historical data, from 2010 to 2024, on domestic gas and electricity consumption, shown three ways:
 
 * Mean: total consumption divided by the number of homes
 * Median: the middle home (half use more, half use less)
@@ -897,7 +897,7 @@ Historical data, from 2015 to 2024, on domestic gas and electricity consumption,
 
 The mean and median together indicate how skewed consumption is: a mean well above the median suggests a minority of high-consuming homes pulling the average up.
 
-The card also estimates the average household energy bill, combining local (LSOA) consumption with regional unit rates and standing charges. This gives a rough idea of spending but does not account for specialist tariffs, so it may overestimate bills in places with many electric vehicles or heat pumps, whose owners often use cheaper off-peak tariffs.
+The report also estimates the average household energy bill, combining local (LSOA) consumption with regional unit rates and standing charges. This gives a rough idea of spending but does not account for specialist tariffs, so it may overestimate bills in places with many electric vehicles or heat pumps, whose owners often use cheaper off-peak tariffs.
 
 For households off the gas grid, consumption of other heating fuels (oil, wood, solid fuel) must be estimated, otherwise these mostly rural areas would appear to have implausibly low bills. No local measurements of these fuels exist, but the 2011 and 2021/22 censuses record how many households use each fuel in every area, and typical heating demand and prices are applied to produce an approximate estimate.
 
@@ -923,7 +923,7 @@ These four charts have different coverage. Council tax bands are shown for the w
 
 #### Postcodes
 
-The postcode report card provides historical data (2015 to 2024) on domestic gas and electricity consumption, as mean, median, and total.
+The postcode report provides historical data (2015 to 2024) on domestic gas and electricity consumption, as mean, median, and total.
 
 Electricity is further divided by meter type: all, standard, and Economy 7. Economy 7 meters are an older type charging two rates by time of day; they are becoming less common and are being replaced by smart meters (counted in the standard category).
 
