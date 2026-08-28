@@ -76,6 +76,76 @@ function transportCard_getAccessBand () {
 		transportCard_ACCESS_BANDS.find(b => b.value === transportCard_ACCESS_BAND_DEFAULT);
 }
 
+// ---------------------------------------------------------------------------
+// Colours for the accessibility scatter.
+//
+// The chart carries every Points of Interest category (42 of them) with every
+// class inside it (385 in all), which is far more series than any hand-picked
+// qualitative palette covers. The list this replaced was 42 entries long but
+// held only 23 distinct colours, so 34 of the 42 categories shared a swatch
+// with another and the legend could not tell them apart.
+//
+// Two levels instead, generated from the data so the count can change without
+// anyone editing a list:
+//   * each CATEGORY gets its own base hue - hues are spread over the wheel and
+//     re-used only at a clearly different lightness, so no two categories are
+//     the same colour and neighbouring legend entries never sit on the same hue;
+//   * each CLASS within a category is a step along a ramp from that base,
+//     lighter and less saturated, so the points of one category read as a
+//     family without being indistinguishable from each other.
+// ---------------------------------------------------------------------------
+
+const transportCard_ACCESS_HUE_COUNT = 14;    // hues before one is re-used at another lightness
+
+function transportCard_hslToHex (h, s, l) {
+	const a = (s / 100) * Math.min(l / 100, 1 - l / 100);
+	const f = function (n) {
+		const k = (n + h / 30) % 12;
+		const v = l / 100 - a * Math.max(-1, Math.min(k - 3, 9 - k, 1));
+		return Math.round(255 * v).toString(16).padStart(2, '0');
+	};
+	return '#' + f(0) + f(8) + f(4);
+}
+
+// Each tier of categories occupies its own lightness band, and the ramp span is
+// deliberately smaller than the gap between tiers. That matters: two categories
+// sharing a hue always sit in different tiers, so if their ramps could reach
+// into each other's band, a point from one would be indistinguishable from a
+// point of the other. Keeping the bands apart means the closest a cross-category
+// pair can get is within one tier, where every category is a full hue step away.
+// The bands also stay clear of white - a dot much lighter than about L 78
+// vanishes against the chart background.
+const transportCard_ACCESS_TIER_LIGHTNESS = [30, 48, 66];
+const transportCard_ACCESS_TIER_SATURATION = [74, 64, 56];
+const transportCard_ACCESS_RAMP_LIGHTNESS = 12;   // < the 18 between tiers
+const transportCard_ACCESS_RAMP_SATURATION = 20;
+
+// Base colour for category `i` of `n`. Consecutive categories step a whole hue
+// apart; a hue only repeats once every ACCESS_HUE_COUNT categories, and then at
+// a different lightness and saturation.
+function transportCard_accessCategoryBase (i, n) {
+	const tier = Math.floor(i / transportCard_ACCESS_HUE_COUNT) % transportCard_ACCESS_TIER_LIGHTNESS.length;
+	return {
+		h: (i % transportCard_ACCESS_HUE_COUNT) * (360 / transportCard_ACCESS_HUE_COUNT),
+		s: transportCard_ACCESS_TIER_SATURATION[tier],
+		l: transportCard_ACCESS_TIER_LIGHTNESS[tier]
+	};
+}
+
+// One colour per class in a category, walking from the base colour towards a
+// lighter, softer version of it. Index 0 is the base, so the legend swatch
+// (which Chart.js takes from the dataset's first point) is the category colour.
+function transportCard_accessClassRamp (base, count) {
+	const out = [];
+	for (let j = 0; j < count; j++) {
+		const t = count > 1 ? j / (count - 1) : 0;
+		out.push(transportCard_hslToHex(base.h,
+		                  Math.max(28, base.s - t * transportCard_ACCESS_RAMP_SATURATION),
+		                  base.l + t * transportCard_ACCESS_RAMP_LIGHTNESS));
+	}
+	return out;
+}
+
 // Show or hide the whole Accessibility & Proximity section, swapping in a
 // short explanation in its place. Mirrors voaSetAvailable() in retrofit/ui.js,
 // which does the same for the England-and-Wales-only dwelling stock charts.
@@ -204,31 +274,35 @@ transportCard_makeChartAccess = function(){
     lableData[cat].push([labels[i]]);
   }
   
-  // Create the datasets object
+  // Create the datasets object: one dataset per category, coloured from that
+  // category's base, with each class inside it a step along the ramp (see
+  // transportCard_accessCategoryBase / transportCard_accessClassRamp above).
+  const categories = Object.keys(categoryData);
   const data = {
-    datasets: Object.keys(categoryData).map((cat) => ({
-      backgroundColor: '#00000',
-      borderColor: '#00000',
-      label: cat,
-      labels: lableData[cat],
-      data: categoryData[cat],
-    })),
+    datasets: categories.map((cat, i) => {
+      const base = transportCard_accessCategoryBase(i, categories.length);
+      const baseHex = transportCard_hslToHex(base.h, base.s, base.l);
+      const ramp = transportCard_accessClassRamp(base, categoryData[cat].length);
+      return {
+        label: cat,
+        labels: lableData[cat],
+        data: categoryData[cat],
+        // Scalar for the legend swatch and any fallback; the point-level
+        // options below are what actually colour the dots.
+        backgroundColor: baseHex,
+        borderColor: baseHex,
+        pointBackgroundColor: ramp,
+        // Outline every dot in the category's own colour: it keeps the pale end
+        // of a long ramp visible and ties the family together visually.
+        pointBorderColor: baseHex,
+        pointBorderWidth: 1,
+        pointRadius: 4,
+        pointHoverRadius: 6
+      };
+    })
   };
-  
-  // Add colours
-  const colours = ['#FF5733','#4CAF50','#2196F3','#FFC107','#E91E63','#9C27B0',
-                  '#FF9800','#00BCD4','#8BC34A','#673AB7','#F44336','#3F51B5',
-                  '#FFEB3B','#009688','#FF5722','#607D8B','#CDDC39','#795548',
-                  '#FFCDD2','#9E9E9E','#FF9800','#FFC107','#FFEB3B','#4CAF50',
-                  '#03A9F4','#FF4081','#8BC34A','#9C27B0','#FF5252','#00BCD4',
-                  '#FF5722','#607D8B','#CDDC39','#795548','#FFCDD2','#9E9E9E',
-                  '#FF9800','#FFC107','#FFEB3B','#4CAF50','#03A9F4','#FF4081'];
 
-  for (let i = 0; i < data.datasets.length; i++) {
-    data.datasets[i].borderColor = colours[i]
-    data.datasets[i].backgroundColor = colours[i]
-  }                
-  
+
   var accessctx = document.getElementById('access-chart').getContext('2d');
 	transportCard_accessChart = new Chart(accessctx, {
     type: 'scatter',

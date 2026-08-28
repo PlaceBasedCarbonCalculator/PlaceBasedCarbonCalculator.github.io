@@ -318,7 +318,7 @@ The Overview summarises the neighbourhood's footprint using the most recent year
 
 The bar chart shows the total footprint per person for four groups: the selected neighbourhood, the average for its local authority, the national average, and the average for neighbourhoods with the same ONS area classification. The "similar areas" is often the most informative comparison, because it sets the area against places with similar populations and geography rather than the country as a whole.
 
-The horizontal black line is a reference level, obtained by dividing the national emissions allowed under the Climate Change Committee's [Sixth Carbon Budget](https://www.theccc.org.uk/publication/sixth-carbon-budget/) for 2033 to 2037 by the UK population. Two cautions about reading it. It is not a target set for this neighbourhood: an equal per-person share takes no account of income, of the housing stock, or of whether the alternatives to driving exist locally. And it describes the middle of the 2030s, not 2050. It is included to indicate the scale of the change implied by the UK's legal commitment, and almost every neighbourhood in Britain currently sits well above it.
+The horizontal black line is a reference level, obtained by dividing the national emissions allowed under the Climate Change Committee's [Sixth Carbon Budget](https://www.theccc.org.uk/publication/sixth-carbon-budget/) for 2033 to 2037 by the UK population. It is not a target set for this neighbourhood: an equal per-person share takes no account of income, of the housing stock, or of whether the alternatives to driving exist locally. And it describes the middle of the 2030s, not 2050. It is included to indicate the scale of the change implied by the UK's legal commitment, and almost every neighbourhood in Britain currently sits well above it. Note also that the Climate Change Committee's budgets are territorial rather than consumption based (so imports are ignored), thus the CCC's budgets are a but lower than an consumption-based budget.
 
 Below the chart, summary tables give a grade and a per-person value for each component of the footprint, and an explanation of how the grades are calculated.
 
@@ -349,7 +349,7 @@ The Housing tab covers emissions from energy used in the home:
 * **Gas**: from metered domestic gas consumption published by the Department for Energy Security and Net Zero ([sub-national gas consumption statistics](https://www.gov.uk/government/collections/sub-national-gas-consumption-data)).
 * **Electricity**: from metered domestic electricity consumption ([sub-national electricity consumption statistics](https://www.gov.uk/government/collections/sub-national-electricity-consumption-data)).
 * **Other Heating**: heating fuels beyond the gas grid (oil, coal, wood, bottled gas), modelled from census data on central heating types.
-* **Housing Other**: remaining housing-related emissions (such as water supply and housing maintenance), modelled through the synthetic population consumption data.
+* **Housing Other**: remaining housing-related emissions (such as water supply and housing maintenance, actual and imputed rentals), modelled through the synthetic population consumption data.
 
 Gas and electricity are converted to emissions using the [UK government greenhouse gas conversion factors](https://www.gov.uk/government/collections/government-conversion-factors-for-company-reporting) for the relevant year, so falling electricity emissions partly reflect the greening of the national grid rather than reduced consumption. For detail on the building stock behind these numbers, follow the link to the Retrofit Explorer.
 
@@ -408,8 +408,8 @@ A dependent child is aged 0 to 15, or 16 to 18 and in full-time education living
 
 The [National Statistics Socio-economic Classification](https://www.ons.gov.uk/methodology/classificationsandstandards/otherclassifications/thenationalstatisticssocioeconomicclassificationnssecrebasedonsoc2010) (NS-SEC) classifies people by occupation, in six categories:
 
-* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_White.webp) **Higher**: Higher managerial, administrative, and professional occupations
-* ![family_photo](/images/ui/family_photos/intermediate_CoupleChildren_White.webp) **Intermediate**: Intermediate occupations
+* ![family_photo](/images/ui/family_photos/higher_CoupleChildren_White.webp) **Higher**: Higher and lower managerial, administrative, and professional occupations
+* ![family_photo](/images/ui/family_photos/intermediate_CoupleChildren_White.webp) **Intermediate**: Intermediate occupations and small employers and own-account workers
 * ![family_photo](/images/ui/family_photos/routine_CoupleChildren_White.webp) **Routine**: Routine and manual occupations
 * ![family_photo](/images/ui/family_photos/students_OtherIncStudentOrOver66_White.webp) **Students**: Full-time students, including students who also work
 * ![family_photo](/images/ui/family_photos/unemployed_CoupleChildren_White.webp) **Unemployed**: Never worked and long-term unemployed
