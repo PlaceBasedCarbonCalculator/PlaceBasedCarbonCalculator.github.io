@@ -376,13 +376,16 @@
 	function renderFootprint(d) {
 		if (!d || !d.year) { throw new Error('shape'); }
 		var groups = {
-			'Home energy': ['dom_gas_kgco2e_percap', 'dom_elec_kgco2e_percap', 'heating_other_kgco2e_percap'],
+			// Grouped as the pbcc report card's simplified overview groups them
+			// (pbcc/ui.js, OVERVIEW_SIMPLIFIED_GROUPS), so a report page that shows
+			// both charts files every category under the same heading in each.
+			'Housing': ['dom_gas_kgco2e_percap', 'dom_elec_kgco2e_percap', 'heating_other_kgco2e_percap', 'housing_other_kgco2e_percap'],
 			'Travel': ['car_kgco2e_percap', 'van_kgco2e_percap', 'company_bike_kgco2e_percap', 'transport_pt_kgco2e_percap', 'transport_vehiclepurchase_kgco2e_percap', 'transport_optranequip_other_kgco2e_percap'],
 			'Flights': ['flights_kgco2e_percap'],
 			'Food & drink': ['food_kgco2e_percap', 'alcohol_kgco2e_percap', 'restaurant_kgco2e_percap'],
-			'Other goods & services': ['housing_other_kgco2e_percap', 'furnish_kgco2e_percap', 'clothing_kgco2e_percap', 'communication_kgco2e_percap', 'recreation_kgco2e_percap', 'health_kgco2e_percap', 'education_kgco2e_percap', 'misc_kgco2e_percap']
+			'Other goods & services': ['furnish_kgco2e_percap', 'clothing_kgco2e_percap', 'communication_kgco2e_percap', 'recreation_kgco2e_percap', 'health_kgco2e_percap', 'education_kgco2e_percap', 'misc_kgco2e_percap']
 		};
-		var colours = { 'Home energy': '#e6550d', 'Travel': '#3182bd', 'Flights': '#756bb1', 'Food & drink': '#31a354', 'Other goods & services': '#969696' };
+		var colours = { 'Housing': '#e6550d', 'Travel': '#3182bd', 'Flights': '#756bb1', 'Food & drink': '#31a354', 'Other goods & services': '#969696' };
 		var years = d.year;
 		var datasets = Object.keys(groups).map(function (g) {
 			var data = years.map(function (_, i) {
