@@ -516,8 +516,13 @@ pbccCard_makeChartHistorical = function(){
     const [label, field, , , gradeField, valueId, gradeId] = comp;
     const dataset = data.datasets.find(ds => ds.label === label);
     if (!dataset) return;
-    // Set household emissions value
-    document.getElementById(valueId).innerHTML = (dataset.data || [])[yearIndex];
+    // Set the per-person emissions value. A null means the pipeline suppressed
+    // this component for this zone-year - company vehicles in a neighbourhood
+    // where a fleet is registered at one address, for instance. Those are left
+    // out of the total and out of the chart, so print NA rather than "null".
+    const value = (dataset.data || [])[yearIndex];
+    document.getElementById(valueId).innerHTML =
+      (value === null || value === undefined ? 'NA' : value);
 
     // Set grade image and alt text (only if this feed carries grades)
     const grade = (dataset.gradelabel || [])[yearIndex];

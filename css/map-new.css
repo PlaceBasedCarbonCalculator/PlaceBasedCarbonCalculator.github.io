@@ -515,3 +515,20 @@ body { color: var(--ink); }
 @media print {
 	.grades-popup { display: none !important; }
 }
+
+/* Band selector above the accessibility scatter (transport report card). The
+   two axes are always a matched pair, so one control drives both. */
+.chart-band-select {
+	font-size: 14px;
+	margin: 10px 0 4px;
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+.chart-band-select label { font-weight: 700; }
+.chart-band-select select {
+	font-family: inherit;
+	font-size: 14px;
+	padding: 3px 6px;
+}

@@ -52,6 +52,30 @@ var transportCard_accessLocationData = {};
 var transportCard_frequencyLocationData = {};
 var transportCard_vehicleLocationData = {};
 
+// The bands the accessibility scatter can be drawn at. The two axes must
+// always come from the SAME band - a 30-minute isochrone and a 3-mile circle
+// describe different journeys, so plotting one against the other would compare
+// two unrelated catchments. Keeping the pair in one object, selected by one
+// drop-down, makes a mismatched pair impossible to produce.
+// `value` matches the <option value> in the report card markup and the numeric
+// suffix of the access_*/proximity_* fields in the access bin.
+const transportCard_ACCESS_BANDS = [
+	{ value: '15', minutes: 15, miles: '0.75' },
+	{ value: '30', minutes: 30, miles: '1.5' },
+	{ value: '45', minutes: 45, miles: '2.25' },
+	{ value: '60', minutes: 60, miles: '3' }
+];
+const transportCard_ACCESS_BAND_DEFAULT = '30';
+
+// Resolve the drop-down to a band, falling back to the default if the control
+// is missing (report cards render the fragment lazily) or holds a stale value
+function transportCard_getAccessBand () {
+	const select = document.getElementById('access-band');
+	const wanted = (select ? select.value : transportCard_ACCESS_BAND_DEFAULT);
+	return transportCard_ACCESS_BANDS.find(b => b.value === wanted) ||
+		transportCard_ACCESS_BANDS.find(b => b.value === transportCard_ACCESS_BAND_DEFAULT);
+}
+
 
 transportCard_manageCharts = function (locationId) {
   const p1 = transportCard_fetchJSON(transportCard_endpoint('Access/') + locationId + '.json')
@@ -102,12 +126,22 @@ transportCard_makeChartAccess = function(){
 		transportCard_accessChart.destroy();
 	}
 
-  // Get data muliple datasets for each category
+  // Bind the band drop-down the first time we draw. Done here rather than on
+  // page load because the report cards inject this markup lazily; the guard
+  // stops a second listener being added on the next zone click.
+  const bandSelect = document.getElementById('access-band');
+  if (bandSelect && !bandSelect.dataset.bound) {
+    bandSelect.dataset.bound = 'true';
+    bandSelect.addEventListener('change', function () { transportCard_makeChartAccess(); });
+  }
 
+  // Get data muliple datasets for each category. Both axes come from the same
+  // band (see transportCard_ACCESS_BANDS) so the scatter compares like with like.
+  const band = transportCard_getAccessBand();
 
   const category = transportCard_accessLocationData["categoryname"];
-  const datax = transportCard_accessLocationData["proximity_60"];
-	const datay = transportCard_accessLocationData["access_60"];
+  const datax = transportCard_accessLocationData["proximity_" + band.value];
+	const datay = transportCard_accessLocationData["access_" + band.value];
 	const labels = transportCard_accessLocationData["classname"];
 	//const data  = datax.map((xVal, index) => ({ x: xVal, y: datay[index] }));
 	
@@ -172,7 +206,7 @@ transportCard_makeChartAccess = function(){
           max: 3,
           title: {
             display: true,
-            text: 'Proximity'
+            text: 'Proximity: services within ' + band.miles + ' miles (SD from GB average)'
           }
         },
         y: {
@@ -180,7 +214,7 @@ transportCard_makeChartAccess = function(){
           max: 3,
           title: {
             display: true,
-            text: 'Accessibility by public transport'
+            text: 'Accessibility: services within ' + band.minutes + ' minutes (SD from GB average)'
           }
         },
       },

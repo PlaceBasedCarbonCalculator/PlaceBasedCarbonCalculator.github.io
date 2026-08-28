@@ -136,11 +136,21 @@
 								<button onclick="switchChartTab(event, 'descTab-access-chartrow-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
 								<button onclick="switchChartTab(event, 'descTab-access-chartrow-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
 							</div>
-							<div id="descTab-access-chartrow-overview" class="chart-description-tab-content active"><p>This chart shows the 30-minute and 1.5-mile data from the table below. Each dot is a type of service (shops, schools, GPs, and so on): dots towards the top right are well provided both nearby and by public transport, while dots towards the bottom left are hard to reach, meaning longer, more car-dependent journeys for everyday needs.</p></div>
+							<div id="descTab-access-chartrow-overview" class="chart-description-tab-content active"><p>This chart shows one matched pair of columns from the table below; use the drop-down to change which. Each dot is a type of service (shops, schools, GPs, and so on): dots towards the top right are well provided both nearby and by public transport, while dots towards the bottom left are hard to reach, meaning longer, more car-dependent journeys for everyday needs.</p></div>
 							<div id="descTab-access-chartrow-policy" class="chart-description-tab-content"><p>Proximity is a planning outcome: local plans decide whether homes are built near services or far from them. Councils can use under-provision scores to target new services, protect existing local centres, require mixed-use development, and prioritise public transport where accessibility (not proximity) is the gap. This is the reasoning behind the "15-minute" and "20-minute neighbourhood" concepts now appearing in local plans and in <a href="https://www.tcpa.org.uk/resources/20-minute-neighbourhoods/" target="_blank" rel="noopener">TCPA guidance</a>. The concept is contested, and critics argue it can be applied without regard to whether the services counted are ones people actually need or can afford; the summary table below lets you check which categories drive the score in this area.</p></div>
 							<div id="descTab-access-chartrow-methods" class="chart-description-tab-content"><p>Services come from the <a href="https://www.ordnancesurvey.co.uk/products/points-of-interest" target="_blank" rel="noopener">Ordnance Survey Points of Interest</a> dataset (385 types, about 2.5 million destinations). For each neighbourhood we compute the population-to-service ratio within walking/public-transport travel-time bands (15/30/45/60 minutes, from timetable-based routing) and straight-line distance bands (0.75 to 3 miles), and express it as a score in standard deviations from the national average, truncated to the range -3 to +3. Limitations: POI data has classification errors and lags reality; travel times use timetables, not live services; scores are relative, so a service in short supply everywhere in Britain still scores 0 here; and <b>Scotland is not covered</b>. The <a href="/manual/#accessibilityanalysismethod" class="opentool">manual</a> sets out the method in full.</p></div>
 						</div>
 					</div>
+					<p class="chart-band-select">
+						<label for="access-band">Travel time and distance:</label>
+						<select id="access-band" name="access-band">
+							<option value="15">15 minutes / 0.75 miles</option>
+							<option value="30" selected>30 minutes / 1.5 miles</option>
+							<option value="45">45 minutes / 2.25 miles</option>
+							<option value="60">60 minutes / 3 miles</option>
+						</select>
+						<button aria-label="Help travel time and distance bands" class="helpbutton" title="The two axes are always a matched pair: 15 minutes goes with 0.75 miles, 30 with 1.5, and so on, so both measure the same journey. Short bands suit everyday services, long bands suit rarer ones."><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+					</p>
 					<div class="chart-wrapper" id="access-chartrow" style="display: block;">
 						<div class="chart-container-wide">
 							<canvas id="access-chart"></canvas>
