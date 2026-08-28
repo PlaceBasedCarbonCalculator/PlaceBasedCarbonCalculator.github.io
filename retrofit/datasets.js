@@ -392,7 +392,9 @@ const datasets_extra = {
 				['2003-2006','#3288bd'],
 				['2007-2011','#5e4fa2'],
 				['2012-2021','#934fa2'],
-				['>2022','#c259a7']
+				['>2022','#c259a7'],
+				['Unknown','#c0c0c0'],
+				['No data','#000000']
 			],
 			'floor_area_avg': [
 				['<40','#4d9221'],
@@ -410,7 +412,8 @@ const datasets_extra = {
 				['Average','#ffffbf'],
 				['Poor','#fdae61'],
 				['Very Poor' ,'#d7191c'],
-				['Unknown','#c0c0c0']
+				['Unknown','#c0c0c0'],
+				['No data','#000000']
 			],
 			'modal_roof': [
 				['Very Good','#2c7bb6'],
@@ -419,7 +422,8 @@ const datasets_extra = {
 				['Poor','#fdae61'],
 				['Very Poor' ,'#d7191c'],
 				['Another property above' ,'#4d9221'],
-				['Unknown','#c0c0c0']
+				['Unknown','#c0c0c0'],
+				['No data','#000000']
 			],
 			'modal_heat': [
 				['Very Good','#2c7bb6'],
@@ -427,7 +431,8 @@ const datasets_extra = {
 				['Average','#ffffbf'],
 				['Poor','#fdae61'],
 				['Very Poor' ,'#d7191c'],
-				['Unknown','#c0c0c0']
+				['Unknown','#c0c0c0'],
+				['No data','#000000']
 			],
 			'modal_window': [
 				['Very Good','#2c7bb6'],
@@ -435,7 +440,8 @@ const datasets_extra = {
 				['Average','#ffffbf'],
 				['Poor','#fdae61'],
 				['Very Poor' ,'#d7191c'],
-				['Unknown','#c0c0c0']
+				['Unknown','#c0c0c0'],
+				['No data','#000000']
 			],
 			'modal_mainheat': [
 				['Community','#377eb8'],
@@ -444,7 +450,9 @@ const datasets_extra = {
 				['Oil boiler','#984ea3'],
 				['Room heater' ,'#ffff33'],
 				['Storage heater' ,'#ff7f00'],
-				['Portable heater' ,'#a65628']
+				['Portable heater' ,'#a65628'],
+				['Other','#c0c0c0'],
+				['No data','#000000']
 			],
 			'modal_mainfuel': [
 				['Biomass','#4daf4a'],
@@ -453,7 +461,9 @@ const datasets_extra = {
 				['Mains gas','#e41a1c'],
 				['Oil' ,'#984ea3'],
 				['Coal','#666666'],
-				['Dual fuel' ,'#a65628']
+				['Dual fuel' ,'#a65628'],
+				['Other','#c0c0c0'],
+				['No data','#000000']
 			],
 			'modal_floord': [
 				['Another property below','#225ea8'],
@@ -462,7 +472,10 @@ const datasets_extra = {
 				['Solid uninsulated','#238b45'],
 				['Suspended insulated' ,'#f1b6da'],
 				['Suspended limited insulation' ,'#df65b0'],
-				['Suspended uninsulated' ,'#ce1256']
+				['Suspended uninsulated' ,'#ce1256'],
+				['Exposed to outside air','#fdae61'],
+				['Other','#c0c0c0'],
+				['No data','#000000']
 			],
 			'modal_type': [
 				['Flat' ,'#e31a1c'],
@@ -475,13 +488,16 @@ const datasets_extra = {
 				['Bungalow end-terrace' ,'#c51b8a'],
 				['Bungalow mid-terrace','#7a0177'],
 				['Maisonette' ,'#1f78b4'],
-				['Park home' ,'#fa7c00']
+				['Park home' ,'#fa7c00'],
+				['Other','#c0c0c0'],
+				['No data','#000000']
 			],
 			'modal_tenure': [
 				['Rented (social)','#1f78b4'],
 				['Rented (private)','#e31a1c'],
 				['Owner occupied' ,'#33a02c'],
-				['Unknown','#c0c0c0']
+				['Unknown','#c0c0c0'],
+				['No data','#000000']
 			],
 		  	'percent_EPC': [
 				['<30%','#ffffb2'],
@@ -677,6 +693,7 @@ const datasets_extra = {
 				'20072011','#5e4fa2',
 				'20122021','#934fa2',
 				'post2022','#c259a7',
+				'unknown','#c0c0c0',
 				'#000000'
 			],
 			'floor_area_avg': [
@@ -735,6 +752,7 @@ const datasets_extra = {
 				'roomheater' ,'#ffff33',
 				'storageheater' ,'#ff7f00',
 				'portableheater' ,'#a65628',
+				'other','#c0c0c0',
 				'#000000'
 			],
 			'modal_mainfuel': [
@@ -745,6 +763,7 @@ const datasets_extra = {
 				'oil' ,'#984ea3',
 				'coal','#666666',
 				'dualfuel' ,'#a65628',
+				'other','#c0c0c0',
 				'#000000'
 			],
 			'modal_floord': [
@@ -755,6 +774,8 @@ const datasets_extra = {
 				'suspendedinsualted' ,'#f1b6da',
 				'suspendedlimitedinsulated' ,'#df65b0',
 				'suspendeduninsulated' ,'#ce1256',
+				'external','#fdae61',
+				'other','#c0c0c0',
 				'#000000'
 			],
 			'modal_type': [
@@ -769,6 +790,7 @@ const datasets_extra = {
 				'bungalow_midterrace','#7a0177',
 				'maisonette' ,'#1f78b4',
 				'parkhome' ,'#fa7c00',
+				'other','#c0c0c0',
 				'#000000'
 			],
 			'modal_tenure': [
