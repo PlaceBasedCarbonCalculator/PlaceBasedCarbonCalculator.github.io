@@ -140,12 +140,15 @@ const datasets_extra = {
 				'url': 'pmtiles://%tileserverUrl/GBsolar.pmtiles',
 				'tileSize': 512,
 				'minzoom': 5,
-				'maxzoom': 14,
+				// maxzoom 15 from the 2026-08-29 GBsolar rebuild (previously 14) -
+				// must not go live before that rebuild's GBsolar.pmtiles is the one
+				// deployed, or z15 requests hit tiles that don't exist yet.
+				'maxzoom': 15,
 				'attribution': 'Solar model: University of Leeds, from Environment Agency LIDAR and ERA5'
 			},
 			'paint': {
 				'raster-opacity': 0.85,
-				// Keep rendering (upscaled) past the tileset's z14 rather than
+				// Keep rendering (upscaled) past the tileset's z15 rather than
 				// blanking out, since the rest of this tool works to z19
 				'raster-resampling': 'linear'
 			}
@@ -177,21 +180,26 @@ const datasets_extra = {
 		// Static legend for the solar raster. These swatches are read off the
 		// Turbo colour table in GBsolar/METHOD.md section 3 - they are the
 		// definition of what the pixels mean, so they must be changed together
-		// with a re-render of GBsolar.pmtiles, never on their own. The top entry
-		// is a clamp, not a maximum: the measured data maximum is 2288 kWh/m2/year
-		// but the ramp domain is 0-2000, so the darkest red means "2000 or more".
-		// Values are kWh/m2/year throughout - see GBsolar/METHOD.md section 1.
+		// with a re-render of GBsolar.pmtiles, never on their own.
+		//
+		// Domain is 100-1500 kWh/m2/year (changed from 0-2000 on the 2026-08-26
+		// rebuild that uses clear-sky-index-corrected rasters - see
+		// GBsolar/METHOD.md section 3, "Why the domain changed from 0-2000").
+		// BOTH ends are now clamps rather than extremes: the darkest blue means
+		// "100 or less" and the darkest red means "1500 or more", clipping about
+		// 0.009% and 0.1% of pixels respectively. Values are kWh/m2/year
+		// throughout - see GBsolar/METHOD.md section 1.
 		solar: {
 			'insolation': [
-				['0',      '#30123B'],
-				['250',    '#466BE3'],
-				['500',    '#28BBEC'],
-				['750',    '#31F299'],
-				['1000',   '#A2FC3C'],
-				['1250',   '#EDD03A'],
-				['1500',   '#FB8022'],
-				['1750',   '#D23105'],
-				['2000+',  '#7A0403']
+				['<100',   '#30123B'],
+				['275',    '#466BE3'],
+				['450',    '#28BBEC'],
+				['625',    '#31F299'],
+				['800',    '#A2FC3C'],
+				['975',    '#EDD03A'],
+				['1150',   '#FB8022'],
+				['1325',   '#D23105'],
+				['1500+',  '#7A0403']
 			]
 		},
 

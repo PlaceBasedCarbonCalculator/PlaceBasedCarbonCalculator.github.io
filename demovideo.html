@@ -406,7 +406,7 @@ const EPC_BANDS = [
 	['E', '#f2a867'], ['F', '#f17e23'], ['G', '#e31d3e']
 ];
 
-// Annual solar insolation, Wh/m2 per year; retrofit/datasets.js (Turbo ramp)
+// Annual solar insolation, kWh/m2/year, domain 100-1500; retrofit/datasets.js (Turbo ramp)
 const SOLAR_RAMP = ['#30123B', '#466BE3', '#28BBEC', '#31F299', '#A2FC3C',
                     '#EDD03A', '#FB8022', '#D23105', '#7A0403'];
 
@@ -599,8 +599,10 @@ const LAYERS = [
 	// of pre-coloured pixels, so it carries no data-driven styling.
 	{
 		id: 'solar', opacityProp: 'raster-opacity',
+		// maxzoom 15 from the 2026-08-29 GBsolar rebuild - keep in step with the
+		// deployed GBsolar.pmtiles (see retrofit/datasets.js for the same note).
 		source: { type: 'raster', url: 'pmtiles://' + TILES + '/GBsolar.pmtiles',
-		          tileSize: 512, minzoom: 5, maxzoom: 14 },
+		          tileSize: 512, minzoom: 5, maxzoom: 15 },
 		// The layer minzooms below matter: without them the preload pass, which
 		// runs several seconds before a layer's scene and therefore at a much
 		// lower zoom, would fetch nationwide imagery, buildings and points that
@@ -787,8 +789,8 @@ const STORY = [
 		title: 'Rooftop solar potential',
 		sub: 'Modelled sunlight on every roof and field at 2 m resolution.',
 		layers: { solar: 0.95 },
-		legend: { kind: 'ramp', colours: SOLAR_RAMP, left: '0', right: '2000+',
-		          caption: 'Annual insolation, Wh/m2' },
+		legend: { kind: 'ramp', colours: SOLAR_RAMP, left: '<100', right: '1500+',
+		          caption: 'Annual insolation, kWh/m2/year' },
 		credit: 'Solar model: University of Leeds, from Environment Agency LIDAR and ERA5'
 	},
 	{
