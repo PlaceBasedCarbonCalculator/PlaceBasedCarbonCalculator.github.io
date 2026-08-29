@@ -543,6 +543,8 @@ Clicking on any neighbourhood opens the report card with more detail.
 <!-- #isochrones -->
 #### Travel-time isochrones
 
+![Travel-time isochrones](/images/manual/isochrones.webp)
+
 An isochrone shows the area that can be reached from a starting point within a given travel time. Enable the **Travel-time isochrones** toggle in the Neighbourhoods panel, then click any neighbourhood to see how far a resident could travel from its centre.
 
 The coloured areas represent different modes of travel:
@@ -831,6 +833,8 @@ None of this makes EPCs useless. They remain the only national dataset in which 
 <!-- #retrofit-epc-nondom -->
 #### Non-domestic Properties
 
+![Non-domestic Properties](/images/manual/retrofit-epc-nondom.webp)
+
 The Non-domestic Properties layer shows Energy Performance Certificates for commercial and public buildings (England, Scotland, and Wales) combined with Land Registry price data (England and Wales only). The England and Wales certificates come from the 2026 Q1 extract and the Scottish certificates from the 2025 Q2 extract, showing the most recent certificate and sale for each property.
 
 The drop-down menu changes the visualised characteristic:
@@ -855,6 +859,8 @@ As with domestic properties, the Scottish register is separate and slightly diff
 <!-- #retrofit-uprn-unknown -->
 #### Unknown Properties
 
+![Unknown Properties](/images/manual/retrofit-uprn-unknown.webp)
+
 Every addressable location in Great Britain has a Unique Property Reference Number (UPRN), and the locations of UPRNs are [free open data](https://www.ordnancesurvey.co.uk/products/os-open-uprn). Richer information, such as addresses and property characteristics, is mostly commercial and not freely available.
 
 This layer shows every UPRN that does not appear in the Domestic or Non-domestic Properties layers: places we know exist, but about which the public record says nothing, because they have no EPC and (in England and Wales) have not been sold since 1995. In Scotland there is no public record of property sales at all. The layer exists to make this gap visible: public knowledge of the building stock is substantial but far from complete.
@@ -868,6 +874,8 @@ Clicking a UPRN shows its ID number, whether the property currently exists, and 
 
 <!-- #retrofit-solar -->
 #### Solar Potential
+
+![Solar Potential](/images/manual/retrofit-solar.webp)
 
 The Solar Potential layer maps how much solar energy reaches every 2 metre square of Great Britain over a year, measured in kilowatt hours per square metre per year (kWh/m²/year). For scale, a flat, unshaded site in Great Britain receives somewhere between about 750 and 1,100 kWh/m² a year, with more in the south than the north. It is a photograph of the resource, not a prediction of output: it shows how much sunlight arrives, before any assumptions about panel efficiency, orientation of the panel itself, or shading by anything not in the terrain model.
 
@@ -1008,6 +1016,8 @@ Click any polygon to see its INSPIRE ID (which can be used to purchase the full 
 <!-- #landownership-points -->
 #### Property owned by UK and overseas companies
 
+![Property owned by UK and overseas companies](/images/manual/landownership-points.webp)
+
 HM Land Registry publishes two open datasets that explicitly name landowners: [UK companies that own property in England and Wales](https://use-land-property-data.service.gov.uk/datasets/ccod) (CCOD) and [Overseas companies that own property in England and Wales](https://use-land-property-data.service.gov.uk/datasets/ocod) (OCOD). Note that these cover organisations only; property owned by private individuals is not included.
 
 The points are located by matching each title's address text to a known property address wherever possible, and only falling back to geocoding the raw text when no match can be found. The **Location confidence** colouring shows how much to trust each dot's position, from High (matched to a specific property) down through Street (the right street, but not the right building) to Guess. Colour by it before drawing conclusions from a cluster of points: a dense group of low-confidence dots may be one street's worth of titles all snapped to the same place.
@@ -1087,6 +1097,8 @@ Each layer below can be toggled on the map. Click features for details. The laye
 <!-- #landuse-floodzones -->
 #### Flood Zones
 
+![Flood Zones](/images/manual/landuse-floodzones.webp)
+
 Flood zones are areas of England assessed by the [Environment Agency](https://www.gov.uk/check-long-term-flood-risk) as being at risk of flooding from rivers or the sea. They are used in planning to steer development away from the highest-risk land, following the [flood risk and coastal change planning guidance](https://www.gov.uk/guidance/flood-risk-and-coastal-change):
 
 1. **Flood Zone 1 (low risk)**: land with less than a 0.1% chance of flooding in any year (less than 1 in 1,000). Development here faces no flood-related planning restriction in most cases.
@@ -1099,6 +1111,8 @@ Two caveats are important. Flood zones show the risk *ignoring existing flood de
 <!-- #landuse-railnoise -->
 #### Railway noise
 
+![Railway noise](/images/manual/landuse-railnoise.webp)
+
 This layer shows modelled railway noise from [Defra's strategic noise mapping](https://www.gov.uk/government/publications/strategic-noise-mapping-2019), produced every five years for major railways under the Environmental Noise Regulations.
 
 Railway noise comes from wheels on rails, engines, and infrastructure such as bridges and level crossings, and varies with train type, speed, and distance. Long-term exposure to high levels of transport noise is associated with sleep disturbance, annoyance, stress, and cardiovascular disease; the [World Health Organization](https://www.who.int/europe/publications/i/item/9789289053563) recommends keeping average railway noise below 54 dB Lden. Noise also affects wildlife by disturbing behaviour and fragmenting habitats.
@@ -1108,6 +1122,8 @@ Noise is a planning consideration: new homes near railways may require acoustic 
 
 <!-- #landuse-roadnoise -->
 #### Road noise
+
+![Road noise](/images/manual/landuse-roadnoise.webp)
 
 This layer shows modelled road traffic noise from [Defra's strategic noise mapping](https://www.gov.uk/government/publications/strategic-noise-mapping-2019), produced every five years for major roads under the Environmental Noise Regulations.
 
@@ -1119,6 +1135,8 @@ Electric vehicles reduce engine noise but not tyre noise, which dominates above 
 <!-- #landuse-landfill -->
 #### Historic landfills
 
+![Historic landfills](/images/manual/landuse-landfill.webp)
+
 Historic landfills are sites where waste was buried in the past, often before modern environmental regulation. The [Environment Agency's historic landfill dataset](https://environment.data.gov.uk/) records their known locations, though records for the oldest sites are incomplete.
 
 Many were operational in the twentieth century, when waste was poorly documented, and were sited on land considered undesirable at the time: low-lying ground, old quarries, and river edges. Depending on what was buried, they can contain hazardous materials and can generate landfill gas (largely methane, a potent greenhouse gas) and polluting leachate for decades after closure.
@@ -1128,6 +1146,8 @@ Building on or near former landfill is possible but requires investigation and r
 
 <!-- #landuse-aonb -->
 #### National Landscapes (Areas of Outstanding Natural Beauty)
+
+![National Landscapes (Areas of Outstanding Natural Beauty)](/images/manual/landuse-aonb.webp)
 
 Areas of Outstanding Natural Beauty (AONBs), [rebranded as National Landscapes in 2023](https://www.national-landscapes.org.uk/), are landscapes designated for their exceptional natural beauty in England, Wales, and Northern Ireland. The legal designation, under the [Countryside and Rights of Way Act 2000](https://www.gov.uk/guidance/areas-of-outstanding-natural-beauty-aonbs-designation-and-management), gives them the same level of landscape protection as national parks, though unlike national parks they have no dedicated planning authority.
 
@@ -1139,6 +1159,8 @@ Each is managed by a partnership of local authorities, landowners, and other int
 <!-- #landuse-ancientwoodland -->
 #### Ancient woodlands
 
+![Ancient woodlands](/images/manual/landuse-ancientwoodland.webp)
+
 Ancient woodland is land that has been continuously wooded since at least 1600 AD in England and Wales. Centuries of undisturbed development make these woods uniquely rich habitats, with soils, fungi, and species communities that cannot be recreated by planting new trees; they are also historical documents, often preserving medieval boundary banks and coppice structures. Ancient woodland now covers only around 2.5% of England, recorded in Natural England's [Ancient Woodland Inventory](https://www.gov.uk/guidance/ancient-woodland-ancient-trees-and-veteran-trees-advice-for-making-planning-decisions).
 
 The [National Planning Policy Framework](https://www.gov.uk/government/publications/national-planning-policy-framework--2) treats ancient woodland as an irreplaceable habitat: development that would cause its loss or deterioration should be refused unless there are wholly exceptional reasons. Despite this, ancient woods continue to be lost or degraded incrementally through development pressure, and many are damaged by plantation forestry, invasive species, and nitrogen deposition.
@@ -1148,6 +1170,8 @@ Restoration initiatives include the [Woodland Trust's](https://www.woodlandtrust
 
 <!-- #landuse-conservationareas -->
 #### Conservation areas
+
+![Conservation areas](/images/manual/landuse-conservationareas.webp)
 
 Conservation areas are places of special architectural or historic interest whose character and appearance is protected by law. Local authorities designate them under the [Planning (Listed Buildings and Conservation Areas) Act 1990](https://www.legislation.gov.uk/ukpga/1990/9/contents), and there are around 10,000 in England, ranging from historic town centres to Victorian suburbs, model villages, and industrial areas ([Historic England guidance](https://historicengland.org.uk/listing/what-is-designation/local/conservation-areas/)).
 
@@ -1159,6 +1183,8 @@ Conservation areas matter for retrofit and decarbonisation because the controls 
 <!-- #landuse-greenbelt -->
 #### Green Belt
 
+![Green Belt](/images/manual/landuse-greenbelt.webp)
+
 The green belt is a planning policy designed to prevent urban sprawl by keeping a belt of land around certain cities permanently open. It began with London in 1938 and became national policy in 1955; today 14 separate green belts cover around 12.6% of England ([official green belt statistics](https://www.gov.uk/government/collections/green-belt-statistics)).
 
 The [NPPF](https://www.gov.uk/government/publications/national-planning-policy-framework--2) sets out five purposes: checking sprawl, preventing neighbouring towns from merging, safeguarding the countryside from encroachment, preserving the setting of historic towns, and encouraging urban regeneration by recycling derelict land. Within the green belt, most new building is "inappropriate development" permitted only in very special circumstances.
@@ -1168,6 +1194,8 @@ Contrary to a common assumption, green belt is a planning designation rather tha
 
 <!-- #landuse-listedbuildings -->
 #### Listed buildings
+
+![Listed buildings](/images/manual/landuse-listedbuildings.webp)
 
 Listed buildings are buildings of special architectural or historic interest included on the [National Heritage List for England](https://historicengland.org.uk/listing/the-list/), maintained by Historic England. Listing covers around 400,000 entries, from castles and cathedrals to cottages, telephone boxes, and post-war housing estates.
 
@@ -1179,6 +1207,8 @@ Like conservation areas, listing interacts with decarbonisation: listed homes ar
 <!-- #landuse-nationalparks -->
 #### National parks
 
+![National parks](/images/manual/landuse-nationalparks.webp)
+
 National parks are extensive tracts of countryside protected for their natural beauty, wildlife, and cultural heritage, and for the opportunities they offer for open-air recreation. They were created by the [National Parks and Access to the Countryside Act 1949](https://www.legislation.gov.uk/ukpga/Geo6/12-13-14/97), a landmark of post-war reconstruction that followed decades of campaigning for public access to the countryside.
 
 England has ten national parks, from the Lake District to the South Downs, covering around 10% of the country; the Broads has equivalent status under its own legislation ([National Parks](https://www.nationalparks.uk/)). Each is run by a national park authority, which is the planning authority for its area and has statutory purposes to conserve the landscape and promote its enjoyment, together with a duty to foster the economic and social wellbeing of local communities.
@@ -1188,6 +1218,8 @@ Unlike national parks in many other countries, English national parks are lived-
 
 <!-- #landuse-naturereserves -->
 #### Nature reserves
+
+![Nature reserves](/images/manual/landuse-naturereserves.webp)
 
 Nature reserves are areas managed primarily for the conservation of wildlife, habitats, and geology, and usually also for public enjoyment and education. This layer includes statutory reserves in England:
 
@@ -1200,6 +1232,8 @@ Management typically involves maintaining the habitats that make each site speci
 <!-- #landuse-parksandgardens -->
 #### Registered Parks and Gardens
 
+![Registered Parks and Gardens](/images/manual/landuse-parksandgardens.webp)
+
 The [Register of Historic Parks and Gardens](https://historicengland.org.uk/listing/what-is-designation/registered-parks-and-gardens/), maintained by Historic England, identifies designed landscapes of national importance in England: over 1,700 sites ranging from medieval deer parks and great country house landscapes to municipal parks, cemeteries, and post-war designed spaces.
 
 Sites are graded I, II*, and II on the same basis as listed buildings, according to the quality and rarity of the design and its state of survival. Registration does not create a separate consent regime, but it is a material consideration in planning: harm to a registered landscape must be weighed in any planning decision, and Historic England is consulted on proposals affecting the most important sites.
@@ -1209,6 +1243,8 @@ Historic parks face distinctive pressures, including development on their edges,
 
 <!-- #landuse-RAMSAR -->
 #### Ramsar sites
+
+![Ramsar sites](/images/manual/landuse-RAMSAR.webp)
 
 Ramsar sites are wetlands of international importance designated under the [Ramsar Convention](https://www.ramsar.org/), an international treaty signed in 1971 in Ramsar, Iran. Wetlands qualify for their ecology, botany, zoology, limnology, or hydrology, and especially as habitat for waterbirds.
 
@@ -1220,6 +1256,8 @@ In UK planning policy, Ramsar sites receive the same strict protection as the na
 <!-- #landuse-SAC -->
 #### Special Areas of Conservation
 
+![Special Areas of Conservation](/images/manual/landuse-SAC.webp)
+
 Special Areas of Conservation (SACs) protect the habitats and non-bird species considered most in need of conservation at a European scale: sites are selected using scientific criteria for features such as heathlands, blanket bog, estuaries, and species such as otters, bats, and freshwater pearl mussels. They were designated under the EU Habitats Directive, and since EU exit are protected in domestic law by the [Conservation of Habitats and Species Regulations 2017](https://www.legislation.gov.uk/uksi/2017/1012/contents), forming part of the UK's national site network with SPAs.
 
 The UK has over 600 SACs ([JNCC overview](https://sac.jncc.gov.uk/)), covering woodlands, heathlands, grasslands, wetlands, and marine habitats such as reefs and sandbanks.
@@ -1229,6 +1267,8 @@ Protection is among the strongest in the planning system: any plan or project li
 
 <!-- #landuse-scheduledmonuments -->
 #### Scheduled monuments
+
+![Scheduled monuments](/images/manual/landuse-scheduledmonuments.webp)
 
 Scheduled monuments are archaeological and historic sites of national importance protected under the [Ancient Monuments and Archaeological Areas Act 1979](https://www.legislation.gov.uk/ukpga/1979/46). England has nearly 20,000, managed through [Historic England](https://historicengland.org.uk/listing/what-is-designation/scheduled-monuments/); Cadw, Historic Environment Scotland, and the Northern Ireland Environment Agency maintain the equivalent schedules elsewhere in the UK.
 
@@ -1240,6 +1280,8 @@ Unlike listed buildings, scheduled monuments are often not buildings in use, and
 <!-- #landuse-SPA -->
 #### Special Protection Areas
 
+![Special Protection Areas](/images/manual/landuse-SPA.webp)
+
 Special Protection Areas (SPAs) protect the habitats of rare, threatened, and migratory birds: breeding colonies, wintering grounds, and the wetlands and coasts that support them. They were designated under the EU Birds Directive, and since EU exit are protected in domestic law by the [Conservation of Habitats and Species Regulations 2017](https://www.legislation.gov.uk/uksi/2017/1012/contents), forming part of the UK's national site network with SACs.
 
 The UK has over 260 SPAs ([JNCC overview](https://jncc.gov.uk/our-work/special-protection-areas/)), concentrated on estuaries, coasts, wetlands, and uplands. Several are internationally significant, supporting large fractions of the world population of species such as gannets and pink-footed geese.
@@ -1249,6 +1291,8 @@ SPAs receive the same strict planning protection as SACs: plans and projects lik
 
 <!-- #landuse-SSSI -->
 #### Sites of Special Scientific Interest
+
+![Sites of Special Scientific Interest](/images/manual/landuse-SSSI.webp)
 
 Sites of Special Scientific Interest (SSSIs) are the fundamental building block of nature conservation in Great Britain: areas notified for their special flora, fauna, or geological or physiographical features under the [Wildlife and Countryside Act 1981](https://www.legislation.gov.uk/ukpga/1981/69). They are designated by [Natural England](https://www.gov.uk/guidance/protected-areas-sites-of-special-scientific-interest), [NatureScot](https://www.nature.scot/professional-advice/protected-areas-and-species/protected-areas/national-designations/sites-special-scientific-interest-sssis), and [Natural Resources Wales](https://naturalresources.wales/guidance-and-advice/environmental-topics/land-management/protected-areas-of-land-and-seas/find-protected-areas-of-land-and-sea/?lang=en).
 
@@ -1260,6 +1304,8 @@ Designation alone does not guarantee condition: a substantial share of SSSI area
 <!-- #landuse-worldheritagesite -->
 #### World Heritage Sites
 
+![World Heritage Sites](/images/manual/landuse-worldheritagesite.webp)
+
 World Heritage Sites are places of outstanding universal value to humanity, inscribed by [UNESCO](https://whc.unesco.org/) under the 1972 World Heritage Convention. They include natural wonders, cultural landmarks, and cultural landscapes; globally there are over 1,100 sites in more than 160 countries.
 
 The UK has [more than 30 sites](https://whc.unesco.org/en/statesparties/gb), including Stonehenge, the City of Bath, Ironbridge Gorge, the Lake District, and Saltaire. Inscription requires demonstrating outstanding universal value against UNESCO's criteria, together with adequate protection and management arrangements.
@@ -1269,6 +1315,8 @@ Inscription does not create a separate consent regime in England, but World Heri
 
 <!-- #landuse-food_hygiene -->
 #### Food Hygiene Ratings
+
+![Food Hygiene Ratings](/images/manual/landuse-food_hygiene.webp)
 
 A 2023 extract of the [Food Standards Agency food hygiene ratings](https://ratings.food.gov.uk/), which score food businesses from 0 (urgent improvement necessary) to 5 (very good) based on local authority inspections. Click on a dot to see the business name and type.
 
