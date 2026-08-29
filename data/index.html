@@ -220,6 +220,483 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 </div>
 
+
+<h2 id="third-party-data">Third-Party Data Sources</h2>
+<p>Carbon &amp; Place is built almost entirely from other people's data. This section lists the third-party datasets used in the analysis, what each one contributes, and where to find it.</p>
+<p>Each dataset has two links. <strong>Version used</strong> points to the copy of the data held in one of our GitHub repos, so you can see exactly which vintage of a dataset the published results were built from. <strong>Source</strong> points to the original publisher, which is where you should go for the latest version, the full documentation, and the licence terms.</p>
+<p>Most open datasets are republished in the <a href="https://github.com/PlaceBasedCarbonCalculator/inputdata" target="_blank" rel="noopener noreferrer">inputdata</a> repo. Some are too large for GitHub and are held on that repo's <a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/releases" target="_blank" rel="noopener noreferrer">releases page</a>, or are downloaded by the analysis pipeline when it runs. Datasets that cannot be republished, because of licensing or because access is restricted to approved researchers, are described but not held in <a href="https://github.com/PlaceBasedCarbonCalculator/inputdatasecure" target="_blank" rel="noopener noreferrer">inputdatasecure</a>, which records the exact files used and how to obtain them.</p>
+<p>Licence terms vary between datasets. Most are published under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" target="_blank" rel="noopener noreferrer">Open Government Licence</a>, but you should check with the original publisher before reusing anything listed here.</p>
+
+<h3>Geography and boundaries</h3>
+<div class="table-scroll">
+<table>
+<thead><tr><th>Dataset</th><th>What it provides</th><th>Links</th></tr></thead>
+<tbody>
+<tr>
+<td>ONS boundaries and centroids</td>
+<td>Output area, LSOA, MSOA, ward, parish, local authority, Westminster constituency, region and country boundaries for England and Wales, at full, generalised and super-generalised resolutions, plus population-weighted centroids. These define every area used across the site.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/tree/main/boundaries" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://geoportal.statistics.gov.uk/" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>ONS geography lookups</td>
+<td>Postcode, output area, LSOA, MSOA and local authority lookups, together with the 2001 to 2011 and 2011 to 2021 change lookups used to put historical data onto current boundaries.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/tree/main/boundaries" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://geoportal.statistics.gov.uk/" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>Scottish data zone boundaries</td>
+<td>Data zone and intermediate zone boundaries and centroids for 2011 and 2022, and the lookup between them. Data zones are the Scottish equivalent of LSOAs and are used wherever the site shows Scottish neighbourhoods.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/tree/main/boundaries" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.spatialdata.gov.scot/" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>MSOA names</td>
+<td>Plain-English names for MSOAs, used so that areas can be described by a recognisable place name rather than a code.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/tree/main/boundaries" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://houseofcommonslibrary.github.io/msoanames/" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>ONS area classifications</td>
+<td>The 2001, 2011 and 2021 Output Area Classifications, which group neighbourhoods into types with similar demographics. Used to match survey households to areas when estimating consumption footprints.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/tree/main/area_classifications" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.ons.gov.uk/methodology/geography/geographicalproducts/areaclassifications" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>ONS Postcode Directory</td>
+<td>Postcode-level lookup to output areas and other geographies, used to attach the older area classifications to current boundaries.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/tree/main/area_classifications" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://geoportal.statistics.gov.uk/" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>OS British National Grid</td>
+<td>The 10 km grid squares of the British National Grid, used to tile the country for the terrain and building height processing.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/build/blob/main/_targets.R" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://github.com/OrdnanceSurvey/OS-British-National-Grids" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<h3>Population, households and the census</h3>
+<div class="table-scroll">
+<table>
+<thead><tr><th>Dataset</th><th>What it provides</th><th>Links</th></tr></thead>
+<tbody>
+<tr>
+<td>ONS small area population estimates</td>
+<td>Mid-year population estimates for every LSOA in England and Wales from 2002 onwards. These are the denominator for almost every per-person figure on the site.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/tree/main/population" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/lowersuperoutputareamidyearpopulationestimates" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>Census 2021 bulk tables (England and Wales)</td>
+<td>The standard topic summary tables covering population, households, tenure, car ownership, accommodation type, heating, ethnicity and socio-economic classification.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/tree/main/nomis" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.nomisweb.co.uk/sources/census_2021_bulk" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>Census 2021 custom tables (England and Wales)</td>
+<td>Cross-tabulations of household composition, tenure, size, accommodation type, car ownership, ethnicity and NS-SEC that are not in the standard releases. These are the constraints used to build the synthetic households behind the community photo and the consumption footprints.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/tree/main/population" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.ons.gov.uk/datasets/create" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>Census 2011 (England and Wales)</td>
+<td>Accommodation type and central heating tables, used to extend the housing and heating series back before 2021.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/tree/main/nomis/2011" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.nomisweb.co.uk/census/2011/data_finder" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>NRS small area population estimates</td>
+<td>Data zone population estimates for Scotland, the Scottish equivalent of the ONS series above.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/tree/main/population_scotland" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.nrscotland.gov.uk/publications/population-estimates-time-series-data/" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>Scotland's Census 2022</td>
+<td>Household composition, tenure, size, accommodation type, car ownership, ethnicity and NS-SEC tables for Scottish data zones, and the central heating tables for 2011 and 2022.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/tree/main/population_scotland" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.scotlandscensus.gov.uk/" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>NRS household and dwelling estimates</td>
+<td>Annual household counts for Scottish data zones, used to put Scottish totals on a per-household basis.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/tree/main/population_scotland" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.nrscotland.gov.uk/publications/small-area-statistics-on-households-and-dwellings/" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<h3>Energy and emissions</h3>
+<div class="table-scroll">
+<table>
+<thead><tr><th>Dataset</th><th>What it provides</th><th>Links</th></tr></thead>
+<tbody>
+<tr>
+<td>Sub-national gas consumption</td>
+<td>Annual domestic gas consumption for every LSOA and non-domestic consumption for every MSOA in Great Britain, published by the Department for Energy Security and Net Zero. This is the basis of the home heating emissions.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/tree/main/gas_electric" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.gov.uk/government/collections/sub-national-gas-consumption-data" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>Sub-national electricity consumption</td>
+<td>The equivalent annual electricity consumption series, domestic at LSOA level and non-domestic at MSOA level.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/tree/main/gas_electric" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.gov.uk/government/collections/sub-national-electricity-consumption-data" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>Postcode-level domestic gas and electricity</td>
+<td>The most geographically detailed public record of domestic energy use in Great Britain, behind the Postcode Gas &amp; Electric layer in the Retrofit Explorer.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/tree/main/gas_electric/postcode" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.gov.uk/government/publications/postcode-level-domestic-gas-and-electricity-consumption-about-the-data" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>Greenhouse gas conversion factors</td>
+<td>The government conversion factors for company reporting, every annual set from 2010 to 2025. These turn energy, fuel and distance into carbon dioxide equivalent, and using the factors published for each year is what makes the emissions time series consistent.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/tree/main/emission_factors" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.gov.uk/government/collections/government-conversion-factors-for-company-reporting" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>Quarterly energy prices</td>
+<td>Domestic gas, electricity and other heating fuel prices, used to convert energy consumption into estimated household bills.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/tree/main/gas_electric" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.gov.uk/government/collections/quarterly-energy-prices" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>GB distribution network operator areas</td>
+<td>The licence areas of the electricity distribution network operators, used to apply regional electricity prices when estimating bills.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/tree/main/gas_electric" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.neso.energy/data-portal/gis-boundaries-gb-dno-license-areas" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>Energy Performance Certificates (England and Wales)</td>
+<td>The full domestic, non-domestic and display certificate registers. Cleaned and matched to UPRNs by our <a href="https://github.com/PlaceBasedCarbonCalculator/EPC" target="_blank" rel="noopener noreferrer">EPC</a> analysis, they drive most of the Retrofit Explorer.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/releases/tag/epc" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://get-energy-performance-data.communities.gov.uk/" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>Energy Performance Certificates (Scotland)</td>
+<td>The Scottish domestic and non-domestic registers, which are published separately and in a different format, then harmonised with the England and Wales data.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/releases/tag/epc" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.scottishepcregister.org.uk/" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<h3>Housing and property</h3>
+<div class="table-scroll">
+<table>
+<thead><tr><th>Dataset</th><th>What it provides</th><th>Links</th></tr></thead>
+<tbody>
+<tr>
+<td>VOA council tax stock of properties</td>
+<td>Counts of dwellings by council tax band, property type and build period for every LSOA in England and Wales, annually since 1993. This is the only source that covers every home rather than only those with a certificate, so it is used for dwelling counts and for backcasting the housing stock.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/tree/main/voa" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.gov.uk/government/collections/valuation-office-agency-council-tax-statistics" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>Dwellings by council tax band (Scotland)</td>
+<td>The Scottish equivalent of the VOA counts, by data zone and council tax band.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/tree/main/council_tax_scotland" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://statistics.gov.scot/data/dwellings-by-council-tax-band-detailed-current-geographic-boundaries" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>ONS house price statistics for small areas</td>
+<td>Median house prices and transaction counts by small area, used for the neighbourhood house price series.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/tree/main/house_price_age" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.ons.gov.uk/peoplepopulationandcommunity/housing/datasets/hpssadataset2medianhousepricebymsoaquarterlyrollingyear" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>CDRC dwelling ages and prices</td>
+<td>Estimated construction dates for dwellings, used to fill in building age where no certificate exists. Free to download after registering with the Consumer Data Research Centre, but not republishable.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdatasecure/tree/main/CDRC" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://data.cdrc.ac.uk/dataset/dwelling-ages-and-prices" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>HM Land Registry Price Paid Data</td>
+<td>Every residential property sale in England and Wales since 1995. Matched to UPRNs by the <a href="https://github.com/PlaceBasedCarbonCalculator/LandOwnership" target="_blank" rel="noopener noreferrer">LandOwnership</a> analysis and used for the property prices shown in the Retrofit Explorer.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/LandOwnership" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.gov.uk/guidance/about-the-price-paid-data" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>INSPIRE index polygons (England and Wales)</td>
+<td>Land Registry title boundaries, one file per local authority. Used to help define building footprints and land parcels.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/tree/main/INSPIRE" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://use-land-property-data.service.gov.uk/datasets/inspire" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>INSPIRE cadastral parcels (Scotland)</td>
+<td>The Registers of Scotland equivalent of the INSPIRE polygons, covering registered titles in Scotland.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/tree/main/INSPIRE_scotland" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://ros-inspire.themapcloud.com/" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>Corporate and overseas ownership (CCOD and OCOD)</td>
+<td>Land Registry records of land and property owned by UK companies and by overseas companies, behind the Land Ownership Explorer.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/LandOwnership" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://use-land-property-data.service.gov.uk/datasets/ccod" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<h3>Transport</h3>
+<div class="table-scroll">
+<table>
+<thead><tr><th>Dataset</th><th>What it provides</th><th>Links</th></tr></thead>
+<tbody>
+<tr>
+<td>DfT vehicle licensing statistics</td>
+<td>Vehicle registrations by fuel type, body type and area (tables VEH0125, VEH0135 and VEH0145), used to describe the local vehicle fleet and to help extrapolate car mileage.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/tree/main/vehicle_registrations" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.gov.uk/government/collections/vehicles-statistics" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>Historical car emissions by LSOA (CREDS)</td>
+<td>MOT-derived estimates of car mileage and emissions by neighbourhood, produced by the Centre for Research into Energy Demand Solutions. The public version on Mendeley Data is a drop-in replacement for the version we hold.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdatasecure/tree/main/CREDS%20Data" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://data.mendeley.com/datasets/bymzy9xmbc/1" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>RAC Foundation MOT data</td>
+<td>The raw data behind the <em>MOToring Along</em> report, used for car mileage from 2009 to 2011. We have permission to use but not to republish it, so it must be requested from the RAC Foundation.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdatasecure/tree/main/CREDS%20Data" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.racfoundation.org/research/environment/motoring-along-the-lives-of-cars-seen-through-licensing-and-test-data" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>Propensity to Cycle Tool route networks</td>
+<td>The national commuting and travel-to-school route networks and zone data from the Propensity to Cycle Tool.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/tree/main/pct" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.pct.bike" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>National Public Transport Data Repository</td>
+<td>Annual October snapshots of every public transport timetable in Great Britain from 2004 to 2011, the start of the twenty-year service frequency series.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/PublicTransportAnalysis" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.data.gov.uk/dataset/d1f9e79f-d9db-44d0-b7b1-41c216fe5df6/national-public-transport-data-repository-nptdr" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>Bus Archive</td>
+<td>October bus timetables outside London from 2014 to 2017, filling a gap where no official archive exists.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/PublicTransportAnalysis" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.busarchive.org.uk/" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>Traveline National Dataset</td>
+<td>National bus, coach, tram and ferry timetables from 2018 onwards.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/PublicTransportAnalysis" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.data.gov.uk/dataset/0447f8d9-8f1b-4a68-bbc8-246981d02256/traveline-national-dataset" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>Rail Delivery Group timetables</td>
+<td>The national rail timetable, formerly published by ATOC, used for the rail component of public transport frequency.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/PublicTransportAnalysis" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://data.atoc.org/" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>Bus Open Data Service</td>
+<td>The DfT's current bus and coach open data feed, used for coach services from 2024 onwards after they left the Traveline dataset.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/PublicTransportAnalysis" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.bus-data.dft.gov.uk/" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>ONS travel area isochrones</td>
+<td>Public transport and walking travel-time areas for the whole UK, used for the accessibility analysis. Freely downloadable but too large to republish, and the portal does not provide persistent links.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdatasecure/tree/main/ONS%20Isochrones" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://geoportal.statistics.gov.uk/search?q=isochrones" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>Census 2011 travel to work flows</td>
+<td>Commuting flows between LSOAs (table WM12EW, commissioned table CT0489), used for the travel to work analysis.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdatasecure/tree/main/LSOA%20Flow%20Data" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.nomisweb.co.uk/census/2011/data_finder" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>National Travel Survey</td>
+<td>The safeguarded version of the survey, which records the trips households actually make. Access is restricted to approved users of the UK Data Service.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdatasecure/tree/main/National%20Travel%20Survey" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://beta.ukdataservice.ac.uk/datacatalogue/series/series?id=2000037" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>CAA UK airport data</td>
+<td>Passenger numbers and flight destinations for UK airports, the basis of the aviation emissions estimates.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/Flights" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.caa.co.uk/data-and-analysis/uk-aviation-market/airports/uk-airport-data/" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<h3>Consumption, income and surveys</h3>
+<div class="table-scroll">
+<table>
+<thead><tr><th>Dataset</th><th>What it provides</th><th>Links</th></tr></thead>
+<tbody>
+<tr>
+<td>UK carbon footprint (Defra and DESNZ)</td>
+<td>National consumption-based emissions by product group from 1990 onwards, for the UK and for England. This sets the national totals that the neighbourhood consumption footprints are scaled to.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/tree/main/consumption" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.gov.uk/government/statistics/uks-carbon-footprint" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>Local Authority Consumption Accounts</td>
+<td>Consumption-based emissions for local and devolved authorities from 2001 to 2022, produced by the University of Leeds. Used to split the non-England footprint between Scotland, Wales and Northern Ireland.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/tree/main/consumption" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://localfootprint.uk/" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>Living Costs and Food Survey</td>
+<td>The safeguarded version of the survey, covering 2010 to 2022, which records what households spend their money on. Matched to synthetic households to produce the neighbourhood consumption footprints. Access is restricted to approved users of the UK Data Service.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdatasecure/tree/main/Living%20Costs%20and%20Food%20Survey" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://beta.ukdataservice.ac.uk/datacatalogue/series/series?id=2000028" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>ONS small area income estimates</td>
+<td>Modelled household income for every MSOA in England and Wales, for 2012 to 2023. Used to place each neighbourhood on the income scale and to select comparable survey households.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/tree/main/income" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/smallareaincomeestimatesformiddlelayersuperoutputareasenglandandwales" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>Scottish small area income estimates</td>
+<td>Local level household income estimates by data zone, the Scottish equivalent of the ONS series.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/tree/main/income" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.gov.scot/publications/chma-small-area-income-estimates/" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>ONS household disposable income</td>
+<td>National reference tables on household income and inequality, used as context for the income modelling.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdata/tree/main/income" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.ons.gov.uk/peoplepopulationandcommunity/personalandhouseholdfinances/incomeandwealth/datasets/householddisposableincomeandinequality" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<h3>Land, buildings and mapping</h3>
+<div class="table-scroll">
+<table>
+<thead><tr><th>Dataset</th><th>What it provides</th><th>Links</th></tr></thead>
+<tbody>
+<tr>
+<td>OS Open Zoomstack</td>
+<td>A national basemap of buildings, land use, roads and sites. Downloaded automatically by the pipeline and used for building footprints and land use.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/build/blob/main/R/os_zoomstack.R" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.ordnancesurvey.co.uk/products/os-open-zoomstack" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>OS Open Greenspace</td>
+<td>Parks, playing fields, allotments and other public green space, used in the land use analysis.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/build/blob/main/R/land_uses.R" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.ordnancesurvey.co.uk/products/os-open-greenspace" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>OS Open UPRN</td>
+<td>The location of every addressable property in Great Britain. The spine that certificates, sales and ownership records are joined onto.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/LandOwnership" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.ordnancesurvey.co.uk/products/os-open-uprn" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>OS Open USRN</td>
+<td>Unique street reference numbers, used to attach properties to streets when addresses are incomplete.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/LandOwnership" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.ordnancesurvey.co.uk/products/os-open-usrn" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>OS Open Linked Identifiers</td>
+<td>The official links between UPRNs and USRNs, used in the address matching.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/LandOwnership" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.ordnancesurvey.co.uk/products/os-open-linked-identifiers" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>OS OpenMap Local</td>
+<td>Detailed building outlines and other mapping used alongside Zoomstack in the land and building analysis.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/LandOwnership" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.ordnancesurvey.co.uk/products/os-open-map-local" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>National Statistics UPRN Lookup</td>
+<td>The authoritative link from every UPRN to its postcode and local authority, used to fill in missing addresses.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/LandOwnership" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://geoportal.statistics.gov.uk/search?q=NSUL" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>OS Points of Interest</td>
+<td>Around 2.5 million destinations in 385 categories, the basis of the accessibility and proximity analysis. Crown copyright and not freely available, but free to UK academics through Digimap.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdatasecure/tree/main/OS" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.ordnancesurvey.co.uk/products/points-of-interest" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>Code-Point Polygons</td>
+<td>Postcode boundaries for 2015, 2020 and 2024. Copyright of Royal Mail and free to UK academics through Digimap, which is why the postcode data cannot be offered for download.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/inputdatasecure/tree/main/Postcodes" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.ordnancesurvey.co.uk/products/code-point-polygons" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>OpenStreetMap</td>
+<td>The Great Britain extract, used for building footprints and land use where official mapping is missing or less detailed.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/build/blob/main/R/osm.R" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://download.geofabrik.de/europe/united-kingdom.html" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>Environment Agency National LIDAR Programme</td>
+<td>High resolution terrain and surface models for England, the main input to our 2 m digital terrain and surface models and to the solar potential analysis.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/GBDEM" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.data.gov.uk/dataset/f0db0249-f17b-4036-9e65-309148c97ce4/national-lidar-programme" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>Welsh Government LiDAR</td>
+<td>The equivalent elevation data for Wales.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/GBDEM" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://datamap.gov.wales/maps/lidar-viewer/" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>Scottish Remote Sensing Portal</td>
+<td>The equivalent elevation data for Scotland.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/GBDEM" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://remotesensingdata.gov.scot/" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>ECMWF ERA5 reanalysis</td>
+<td>Historical cloud and radiation data, used to adjust the modelled solar resource for real weather.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/GBsolar" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>PVGIS</td>
+<td>The European Commission's solar radiation database, used to validate the solar potential model.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/GBsolar" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://re.jrc.ec.europa.eu/pvg_tools/en/" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>Get Information About Schools</td>
+<td>The DfE register of education establishments, used to identify schools among the properties with no other public record.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/LandOwnership" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://get-information-schools.service.gov.uk/" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+<tr>
+<td>London Cultural Infrastructure Map</td>
+<td>The Greater London Authority's register of cultural venues, used in the same way to identify buildings that would otherwise be unknown.</td>
+<td class="links"><a href="https://github.com/PlaceBasedCarbonCalculator/LandOwnership" target="_blank" rel="noopener noreferrer">Version used</a> &middot; <a href="https://data.london.gov.uk/dataset/cultural-infrastructure-map" target="_blank" rel="noopener noreferrer">Source</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<h2 id="legal">Copyright and Licensing of Source Data</h2>
+<p>The Open Data Commons licence described at the top of this page applies only to the bulk data that Carbon &amp; Place is free to relicense. Much of the source data listed above carries its own copyright and its own conditions, and those conditions survive into the tools and into anything you build from them. This section sets out the notices we are required to carry, the conditions that restrict what we and you can do, and the datasets we are not permitted to redistribute.</p>
+<p>We are not the licensor of any third-party dataset. Before reusing anything from Carbon &amp; Place, check the terms with the original publisher using the Source links above. Where the notices below give a year, it is the year of the data extract currently in use, and it is updated when an extract is refreshed.</p>
+
+<h3 id="legal-notices">Required attribution and copyright notices</h3>
+<p>The following notices apply to data used across the Carbon &amp; Place tools. If you reuse our data or screenshots, you must carry the notices relevant to the part you use.</p>
+<div class="table-scroll">
+<table>
+<thead><tr><th>Applies to</th><th>Required notice</th></tr></thead>
+<tbody>
+<tr><td>Ordnance Survey open data: boundaries, Open Zoomstack basemap, Open UPRN, Open USRN, OpenMap Local, Open Greenspace, Open Linked Identifiers</td><td>Contains OS data &copy; Crown copyright and database right 2026</td></tr>
+<tr><td>Ordnance Survey data supplied through Digimap under the Educational User Licence: Points of Interest, Code-Point Polygons</td><td>&copy; Crown copyright and database rights 2026 Ordnance Survey (AC0000851941)</td></tr>
+<tr><td>Postcode boundaries</td><td>Contains Royal Mail data &copy; Royal Mail copyright and database right 2026</td></tr>
+<tr><td>ONS, Nomis, census, National Records of Scotland and other official statistics</td><td>Contains National Statistics data &copy; Crown copyright and database right 2026. Source: Office for National Statistics licensed under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" target="_blank" rel="noopener noreferrer">Open Government Licence v3.0</a></td></tr>
+<tr><td>HM Land Registry Price Paid Data</td><td>Contains HM Land Registry data &copy; Crown copyright and database right 2026. This data is licensed under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" target="_blank" rel="noopener noreferrer">Open Government Licence v3.0</a></td></tr>
+<tr><td>INSPIRE index polygons and the CCOD and OCOD ownership datasets</td><td>This information is subject to Crown copyright and database rights 2026 and is reproduced with the <a href="https://use-land-property-data.service.gov.uk/datasets/inspire#conditions" target="_blank" rel="noopener noreferrer">permission of HM Land Registry</a>. The polygons (including the associated geometry, namely x, y co-ordinates) are subject to Crown copyright and database rights 2026 Ordnance Survey 100026316</td></tr>
+<tr><td>Government data published under the Open Government Licence: DESNZ energy and emissions data, DfT vehicle statistics, VOA council tax statistics, Defra carbon footprint, EPC registers, Environment Agency LIDAR, DfE school records</td><td>Contains public sector information licensed under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" target="_blank" rel="noopener noreferrer">Open Government Licence v3.0</a></td></tr>
+<tr><td>OpenStreetMap</td><td>&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a>, available under the <a href="https://opendatacommons.org/licenses/odbl/" target="_blank" rel="noopener noreferrer">Open Database Licence</a></td></tr>
+<tr><td>ERA5 reanalysis used in the solar potential model</td><td>Generated using Copernicus Climate Change Service information 2026</td></tr>
+<tr><td>Electricity distribution network operator areas</td><td>Supported by National Energy SO Open Data</td></tr>
+<tr><td>MSOA names</td><td>Contains information from the House of Commons Library, licensed under the <a href="https://www.parliament.uk/site-information/copyright-parliament/open-parliament-licence/" target="_blank" rel="noopener noreferrer">Open Parliament Licence</a></td></tr>
+<tr><td>Basemaps and historical maps</td><td>&copy; <a href="https://www.arcgis.com/home/item.html?id=10df2279f9684e4a9f6a7f08febac2a9" target="_blank" rel="noopener noreferrer">Esri</a>, &copy; <a href="https://www.thunderforest.com/terms/" target="_blank" rel="noopener noreferrer">Thunderforest</a>, &copy; <a href="https://maps.nls.uk/copyright.html" target="_blank" rel="noopener noreferrer">National Library of Scotland</a></td></tr>
+</tbody>
+</table>
+</div>
+
+<h3 id="legal-address">Address data: Ordnance Survey and Royal Mail</h3>
+<p>Address data is the most heavily restricted data in Carbon &amp; Place, and the restrictions do not come from the government departments that publish the datasets. They come from Ordnance Survey and Royal Mail, whose address products sit underneath.</p>
+<p>The property addresses shown in the Retrofit Explorer come from two places. Most come from the Energy Performance Certificate registers, which are published under the Open Government Licence. Others are matched from HM Land Registry Price Paid Data, and those carry an additional condition. Price Paid Data contains address data processed against Ordnance Survey's AddressBase Premium product, which incorporates Royal Mail's PAF database. HM Land Registry sets out the condition as follows:</p>
+<blockquote><p>Royal Mail and Ordnance Survey permit your use of Address Data in the Price Paid Data: for personal and/or non-commercial use; to display for the purpose of providing residential property price information services. If you want to use the Address Data in any other way, you must contact Royal Mail.</p></blockquote>
+<p>Carbon &amp; Place displays this data for the purpose of providing residential property price and energy performance information, on a free, non-commercial research website. If you want to use the address data for anything else, that permission does not pass to you, and you must contact <a href="https://www.poweredbypaf.com/" target="_blank" rel="noopener noreferrer">Royal Mail</a> directly.</p>
+<p>Two related points are worth stating plainly:</p>
+<ul>
+<li><strong>UPRNs are open, addresses are not.</strong> <a href="https://www.ordnancesurvey.co.uk/products/os-open-uprn" target="_blank" rel="noopener noreferrer">OS Open UPRN</a> gives the location and identifier of every addressable property as open data. The address text that goes with a UPRN is a commercial product, so we publish the UPRN and the location, and the address only where it reaches us through an open register.</li>
+<li><strong>Postcode boundaries cannot be redistributed.</strong> The polygons behind the Postcode Gas &amp; Electric layer are <a href="https://www.ordnancesurvey.co.uk/products/code-point-polygons" target="_blank" rel="noopener noreferrer">Code-Point Polygons</a>, which are copyright of Royal Mail and supplied to us through Digimap for academic use. This is why postcode data is shown on the map but is not offered anywhere on this page for download.</li>
+</ul>
+
+<h3 id="legal-landregistry">Land Registry data and the Land Ownership Explorer</h3>
+<p>The Commercial and Corporate Ownership (CCOD) and Overseas Companies Ownership (OCOD) datasets are not open data. They are published under a <a href="https://use-land-property-data.service.gov.uk/datasets/ccod/licence/view" target="_blank" rel="noopener noreferrer">Land Registry licence</a> that permits use for research and for personal and non-commercial use only, and that requires the licensee to keep records of end users for audit and crime prevention purposes.</p>
+<p>Because of this, the <a href="/landownership/">Land Ownership Explorer</a> works differently from the rest of the site. It asks for your name before showing the map, it records visits through Google Analytics as a condition of the licence, and its data is not covered by the Open Data Commons licence that applies elsewhere. You must not scrape or bulk download it, and you cannot embed or reproduce its maps or data without written consent. The full terms are set out on the <a href="/landownership/">Land Ownership Explorer</a> page, and the <a href="/privacy/">privacy notice</a> explains the record keeping.</p>
+<p>INSPIRE index polygons are published by HM Land Registry under their own <a href="https://use-land-property-data.service.gov.uk/datasets/inspire#conditions" target="_blank" rel="noopener noreferrer">conditions</a> rather than the Open Government Licence, and the geometry remains Ordnance Survey copyright. We use them to help define building footprints and land parcels, and we do not republish them.</p>
+
+<h3 id="legal-restricted">Data we cannot redistribute</h3>
+<p>Some datasets reach the analysis under licences that do not permit us to pass the data on. The results derived from them are published, but the underlying data is not, and the <a href="https://github.com/PlaceBasedCarbonCalculator/inputdatasecure" target="_blank" rel="noopener noreferrer">inputdatasecure</a> repo records what to obtain and from whom.</p>
+<div class="table-scroll">
+<table>
+<thead><tr><th>Dataset</th><th>Why it is restricted</th><th>How to get it</th></tr></thead>
+<tbody>
+<tr><td>OS Points of Interest</td><td>Crown copyright, supplied under the Ordnance Survey <a href="https://digimap.edina.ac.uk/help/copyright-and-licensing/os_eula/" target="_blank" rel="noopener noreferrer">Educational User Licence</a>, which limits use to teaching, learning, academic work, research and private study, and does not permit the data to be passed to third parties or used commercially.</td><td>Free to UK academics through <a href="https://digimap.edina.ac.uk/os" target="_blank" rel="noopener noreferrer">Digimap</a>, otherwise licensed from <a href="https://www.ordnancesurvey.co.uk/products/points-of-interest" target="_blank" rel="noopener noreferrer">Ordnance Survey</a></td></tr>
+<tr><td>Code-Point Polygons (postcode boundaries)</td><td>Royal Mail copyright and database right, supplied under the same Educational User Licence.</td><td>Free to UK academics through <a href="https://digimap.edina.ac.uk/os" target="_blank" rel="noopener noreferrer">Digimap</a>, otherwise licensed from <a href="https://www.ordnancesurvey.co.uk/products/code-point-polygons" target="_blank" rel="noopener noreferrer">Ordnance Survey</a></td></tr>
+<tr><td>Living Costs and Food Survey</td><td>Safeguarded microdata about identifiable households. Access is limited to registered users who have accepted the UK Data Service End User Licence, which prohibits redistribution and any attempt to identify individuals.</td><td><a href="https://beta.ukdataservice.ac.uk/datacatalogue/series/series?id=2000028" target="_blank" rel="noopener noreferrer">UK Data Service</a></td></tr>
+<tr><td>National Travel Survey</td><td>Safeguarded microdata under the same UK Data Service terms.</td><td><a href="https://beta.ukdataservice.ac.uk/datacatalogue/series/series?id=2000037" target="_blank" rel="noopener noreferrer">UK Data Service</a></td></tr>
+<tr><td>CDRC dwelling ages and prices</td><td>Published for research use under a CDRC licence that requires registration and does not permit republication.</td><td><a href="https://data.cdrc.ac.uk/dataset/dwelling-ages-and-prices" target="_blank" rel="noopener noreferrer">Consumer Data Research Centre</a></td></tr>
+<tr><td>RAC Foundation MOT data</td><td>We have permission to use the data but not to reproduce it.</td><td>By request from the <a href="https://www.racfoundation.org/research/environment/motoring-along-the-lives-of-cars-seen-through-licensing-and-test-data" target="_blank" rel="noopener noreferrer">RAC Foundation</a></td></tr>
+<tr><td>ONS travel area isochrones</td><td>Freely available but too large to republish, and the source portal does not provide persistent links.</td><td><a href="https://geoportal.statistics.gov.uk/search?q=isochrones" target="_blank" rel="noopener noreferrer">ONS Open Geography Portal</a></td></tr>
+<tr><td>Basemap and historical map tiles</td><td>Served under commercial agreements with Thunderforest and MapTiler, and under Esri's terms of use. They are licensed for display within Carbon &amp; Place only.</td><td>Direct from the respective providers</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3 id="legal-personal">Personal data</h3>
+<p>Carbon &amp; Place is built from statistics about places, not records about people, and we do not hold personal data about the people who live in the areas we map. Three parts of the site touch data that relates to identifiable properties, and are worth being clear about.</p>
+<ul>
+<li><strong>Energy Performance Certificates</strong> describe individual buildings and are published as open data by the government, which operates its own <a href="https://www.gov.uk/government/collections/energy-performance-of-buildings-certificates" target="_blank" rel="noopener noreferrer">opt-out process</a> for householders who do not want their address included. We show certificates as they appear in the register at the time of our extract. If you have opted out since then, your certificate will disappear from our tools when we next rebuild. We do not publish postcodes with certificate records, and property points are randomly displaced by a small distance so that a point on the map is not an exact location.</li>
+<li><strong>Property sale prices</strong> come from the public Price Paid register and relate to transactions, not to named individuals. Price Paid Data does not identify buyers or sellers, and users of it have an obligation under the Open Government Licence to ensure their use does not breach the Data Protection Act 2018.</li>
+<li><strong>Survey microdata</strong> from the Living Costs and Food Survey and the National Travel Survey is used only to build synthetic households. No real household from either survey is published, and no output is traceable to a survey respondent.</li>
+</ul>
+<p>For how this website handles data about you as a visitor, see the <a href="/privacy/">privacy notice</a>.</p>
+
+<h3 id="legal-reuse">If you reuse data from Carbon &amp; Place</h3>
+<ul>
+<li>The <a href="https://opendatacommons.org/licenses/by/" target="_blank" rel="noopener noreferrer">Open Data Commons Attribution License</a> applies to the bulk downloads offered on this page, and to nothing else. It does not apply to the map tiles, the Land Ownership Explorer, or any other part of the site.</li>
+<li>Carry the notices in the table above that are relevant to the data you have taken, and pass the same requirement on to anyone you share it with.</li>
+<li>Our licence cannot grant you rights we do not hold. Where a third party's conditions are stricter than ours, theirs apply, and address data in particular does not become freely reusable by passing through us.</li>
+<li>If your intended use is commercial, or goes beyond displaying property information, go back to the original publisher and license the data directly.</li>
+<li>If you think we have misattributed a dataset or have got a licence condition wrong, please <a href="https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/issues" target="_blank" rel="noopener noreferrer">tell us</a> and we will correct it.</li>
+</ul>
 </div>
 
 

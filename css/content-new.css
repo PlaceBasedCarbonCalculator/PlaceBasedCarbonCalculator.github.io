@@ -124,6 +124,22 @@ body.content-page .content th {
 	letter-spacing: .03em;
 }
 
+/* Quoted licence conditions */
+body.content-page blockquote {
+	margin: 16px 0;
+	padding: 2px 0 2px 16px;
+	border-left: 3px solid var(--line);
+	color: var(--muted);
+	font-style: italic;
+}
+body.content-page blockquote p { margin: 0; }
+
+/* Wide tables scroll inside their own box rather than the page */
+body.content-page .table-scroll { overflow-x: auto; margin: 10px 0 20px; }
+body.content-page .table-scroll table { margin: 0; min-width: 640px; }
+/* Keep each "Version used / Source" pair on one line in the dataset tables */
+body.content-page .table-scroll td.links { white-space: nowrap; }
+
 /* ---------- Pill buttons ---------- */
 body.content-page .btn,
 body.content-page .btn-outline {
