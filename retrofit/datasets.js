@@ -14,16 +14,16 @@
 // and redeploy postcodes.pmtiles together whenever postcode data is rebuilt.
 if (typeof capBin !== 'undefined') {
 	capBin.register({
-		epc_dom: 'index_epc_dom_2026-08-08.json.gz',
-		historical_domestic_gas_elec: 'index_historical_domestic_gas_elec_2026-08-08.json.gz',
+		epc_dom: 'index_epc_dom_2026-08-25.json.gz',
+		historical_domestic_gas_elec: 'index_historical_domestic_gas_elec_2026-08-26.json.gz',
 		prices: 'index_prices_2026-07-25.json.gz',
 		// Dwelling stock from the council tax registers. voa_2010 (bands) is
 		// GB-wide; voa_2020 (type/bedrooms/age) is England and Wales only and
 		// legitimately has no record for a Scottish zone - see the dwelling
 		// stock section of ui.js.
-		voa_2010: 'index_voa_2010_2026-08-11.json.gz',
+		voa_2010: 'index_voa_2010_2026-08-25.json.gz',
 		voa_2020: 'index_voa_2020_2026-07-13.json.gz',
-		postcode: { bin: 'data_postcode_2026-08-08.bin' }
+		postcode: { bin: 'data_postcode_2026-08-25.bin' }
 	});
 }
 
@@ -37,7 +37,7 @@ const datasets_extra = {
 			'type': 'fill',
 			'source': {
 				'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/zones_retrofit_20260808.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/zones_retrofit_20260828.pmtiles',
 				//'url': 'pmtiles://zones_retrofit.pmtiles',
 				},
 			'source-layer': 'zones',
@@ -53,7 +53,7 @@ const datasets_extra = {
 			'type': 'fill',
 			'source': {
 			'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/postcodes_20260809.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/postcodes_20260825.pmtiles',
 				},
 			'source-layer': 'postcodes',
 			'paint': {
@@ -1120,8 +1120,8 @@ const datasets_extra = {
 	  postcodes: {
 	    postcodes : {
 	    // Data fields
-  			// #!# Should use a main server URL setting
-  			dataUrl: 'https://pbcc.blob.core.windows.net/pbcc-data/Postcode/%id.json',
+  			// No dataUrl: served from the postcode bin by range request, using the
+  			// binDataset/binOffsetField/binLengthField below.
   			propertiesField: 'postcode',
   			titleField: 'postcode',
 
@@ -1151,8 +1151,8 @@ const datasets_extra = {
 	  zones: {
 	    zones : {
 	    // Data fields
-  			// #!# Should use a main server URL setting
-  			dataUrl: 'https://pbcc.blob.core.windows.net/pbcc-data/epc_dom/%id.json',
+  			// No dataUrl: this modal's data comes from the bins registered at the
+  			// top of this file, fetched by capBin.fetchRecord() in ui.js.
   			propertiesField: 'LSOA21CD',
   			titleField: 'LSOA21CD',
   			

@@ -1,5 +1,20 @@
 // Data definitions, i.e. layers, charts, etc.
 // Common Datasets used on all maps
+
+// Single-binary datasets used by every map tool (see js/databin.js), as opposed
+// to the per-tool ones registered in each tool's own datasets.js.
+//
+// lsoa_overview lives here because capUi.manageLSOAOverview() in js/ui-common.js
+// reads it for the report modal title, classification colour and data warnings
+// on every tool with a "zones" layer - not just PBCC. It replaces the old
+// pbcc-data/lsoa_overview/v1/ JSON folder, and unlike that folder it carries the
+// ward/parish/constituency ONS codes the report links need.
+if (typeof capBin !== 'undefined') {
+	capBin.register({
+		lsoa_overview: 'index_lsoa_overview_2026-08-29.json.gz'
+	});
+}
+
 const datasets_common = {
 	
 	// Data layers

@@ -616,7 +616,7 @@ const LAYERS = [
 	// PBCC tool: neighbourhood (LSOA) total carbon footprint, graded A+ to F-
 	{
 		id: 'zones_pbcc', opacityProp: 'fill-opacity',
-		source: { type: 'vector', url: 'pmtiles://' + TILES + '/zones_pbcc_20260821.pmtiles' },
+		source: { type: 'vector', url: 'pmtiles://' + TILES + '/zones_pbcc_20260829.pmtiles' },
 		layer: { type: 'fill', 'source-layer': 'zones', paint: {
 			'fill-color': GRADE_MATCH,
 			'fill-opacity': 0,
@@ -630,7 +630,7 @@ const LAYERS = [
 	// tool rather than being fed to the interpolate ramp.
 	{
 		id: 'zones_transport', opacityProp: 'fill-opacity',
-		source: { type: 'vector', url: 'pmtiles://' + TILES + '/zones_transport_20260821.pmtiles' },
+		source: { type: 'vector', url: 'pmtiles://' + TILES + '/zones_transport_20260828.pmtiles' },
 		layer: { type: 'fill', 'source-layer': 'zones', paint: {
 			'fill-color': ['case',
 				['==', ['typeof', ['get', TPH_FIELD]], 'number'],
@@ -646,7 +646,7 @@ const LAYERS = [
 	// Retrofit tool: energy bills against income, by neighbourhood
 	{
 		id: 'zones_retrofit', opacityProp: 'fill-opacity',
-		source: { type: 'vector', url: 'pmtiles://' + TILES + '/zones_retrofit_20260808.pmtiles' },
+		source: { type: 'vector', url: 'pmtiles://' + TILES + '/zones_retrofit_20260828.pmtiles' },
 		layer: { type: 'fill', 'source-layer': 'zones', paint: {
 			'fill-color': matchExpr (BILLS_VS_INCOME, BIVARIATE, '#111111'),
 			'fill-opacity': 0,
@@ -682,7 +682,7 @@ const LAYERS = [
 	// layers by OPACITY alone, which is a uniform and costs nothing.
 	{
 		id: 'buildings', opacityProp: 'fill-extrusion-opacity', farDetail: true,
-		source: { type: 'vector', url: 'pmtiles://' + TILES + '/buildings_pbcc_20260821.pmtiles' },
+		source: { type: 'vector', url: 'pmtiles://' + TILES + '/buildings_pbcc_20260829.pmtiles' },
 		layer: { type: 'fill-extrusion', 'source-layer': 'buildings', minzoom: BUILDINGS_MINZOOM, paint: {
 			'fill-extrusion-color': GRADE_MATCH,
 			'fill-extrusion-height': ['interpolate', ['linear'], ['zoom'], 12, 1, 14.05, ['get', 'height']],
@@ -696,7 +696,7 @@ const LAYERS = [
 	// tileset because each tool bakes only its own fields into its buildings.
 	{
 		id: 'buildings_retrofit', opacityProp: 'fill-extrusion-opacity', farDetail: true,
-		source: { type: 'vector', url: 'pmtiles://' + TILES + '/buildings_retrofit_20260808.pmtiles' },
+		source: { type: 'vector', url: 'pmtiles://' + TILES + '/buildings_retrofit_20260829.pmtiles' },
 		layer: { type: 'fill-extrusion', 'source-layer': 'buildings', minzoom: BUILDINGS_MINZOOM, paint: {
 			'fill-extrusion-color': matchExpr (BILLS_VS_INCOME, BIVARIATE, '#9c9898'),
 			'fill-extrusion-height': ['interpolate', ['linear'], ['zoom'], 12, 1, 14.05, ['get', 'height']],

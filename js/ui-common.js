@@ -1169,7 +1169,11 @@ const capUi = (function () {
 		manageLSOAOverview : function(mapLayerId, locationId)
 		{
 
-			capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/lsoa_overview/v1/' + locationId + '.json')
+			// The overview comes from the lsoa_overview bin (single binary + range
+			// request, see js/databin.js), the same record the tools' own charts
+			// read, rather than the old pbcc-data/lsoa_overview/v1/ JSON folder.
+			// Each tool registers the current index name in its datasets.js.
+			capBin.fetchRecord('lsoa_overview', locationId)
 				.then(function (lsoaData) {
 					// Make the fetched data globally available for other scripts
 					window.lsoaHeadlineData = lsoaData;

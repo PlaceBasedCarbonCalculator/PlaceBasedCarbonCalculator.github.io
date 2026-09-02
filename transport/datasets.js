@@ -10,9 +10,9 @@ var accessChart;
 // re-uploaded - datasets are rebuilt independently, so the dates will diverge.
 if (typeof capBin !== 'undefined') {
 	capBin.register({
-		pt_frequency: 'index_pt_frequency_2026-08-20.json.gz',
-		access: 'index_access_2026-08-08.json.gz',
-		vehicle_summary: 'index_vehicle_summary_2026-08-08.json.gz'
+		pt_frequency: 'index_pt_frequency_2026-08-25.json.gz',
+		access: 'index_access_2026-08-25.json.gz',
+		vehicle_summary: 'index_vehicle_summary_2026-08-26.json.gz'
 	});
 }
 
@@ -154,7 +154,7 @@ const datasets_extra = {
 			'type': 'fill',
 			'source': {
 			'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/zones_transport_20260821.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/zones_transport_20260828.pmtiles',
 				},
 			'source-layer': 'zones',
 			'paint': {
@@ -190,8 +190,8 @@ const datasets_extra = {
 	  zones: {
 	    zones: {
 	      // Data fields
-  			// #!# Should use a main server URL setting
-  			dataUrl: 'https://pbcc.blob.core.windows.net/pbcc-data/Access/%id.json',
+  			// No dataUrl: this modal's data comes from the bins registered at the
+  			// top of this file, fetched by capBin.fetchRecord() in ui.js.
   			propertiesField: 'LSOA21CD',
   			titleField: 'LSOA11CD',
   			
@@ -212,8 +212,7 @@ const datasets_extra = {
 	    PTfrequency: {
   	    
   	    // Data fields
-  			// #!# Should use a main server URL setting
-  			dataUrl: 'https://pbcc.blob.core.windows.net/pbcc-data/PTfrequency/%id.json',
+  			// No dataUrl: served from the pt_frequency bin, as above.
   			propertiesField: 'LSOA21CD',
   			titleField: 'LSOA21CD',
   			
