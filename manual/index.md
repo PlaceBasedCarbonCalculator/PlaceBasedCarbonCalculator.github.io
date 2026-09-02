@@ -23,7 +23,7 @@ Carbon & Place is built in the open, and the analysis behind every map is publis
 
 The pipeline is demanding to run: it is designed for a machine with more than 36 cores and 256&nbsp;GB of memory, takes several days, and produces over 70&nbsp;GB of output. Most people will find the [data downloads](/data/) more practical than rebuilding it. Some inputs are licensed in ways that prevent republication; where that is the case, the repository holds a placeholder describing the dataset and how to obtain it.
 
-Short extracts of this manual can be read within the tools by clicking the <i class="fa fa-question-circle" aria-hidden="true" style="color: #0b38e6;"></i> help buttons.
+Short extracts of this manual can be read within the tools by clicking the <i class="fa fa-question-circle" aria-hidden="true" style="color: #a40125;"></i> help buttons.
 
 ## Getting Started
 
