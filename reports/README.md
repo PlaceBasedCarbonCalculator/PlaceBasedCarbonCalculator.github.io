@@ -112,10 +112,33 @@ Aggregated data is produced by the R pipeline (`../build`):
 
 The pbcc report card also shows an ONS pen portrait / LSOA-classification table.
 These describe a single neighbourhood's 2011 area classification and have no
-area-level aggregate, so `la-report.js` hides those two blocks on the area
+area-level aggregate, so `la-report.js` removes those two blocks on the area
 reports (`hideLsoaOnlyPbccBlocks`); the population chart and community photo,
 which do have `<level>_population` / `<level>_community_pics` bins, remain in the
-demographics tab.
+demographics tab. It finds them by the ids `lsoa-characteristics` and
+`lsoa-penportrait`, which are declared in `pbcc/index.html` so a regenerated card
+carries them across — **keep those ids on the two `.chart-wrapper` divs**, or the
+area reports silently go back to showing a table of NAs under an LSOA heading and
+a pen portrait still captioned "Supergroup Description".
+
+## Card prose must be level-neutral
+
+The cards are written for a neighbourhood but rendered for wards, parishes,
+constituencies and councils too, so **chart descriptions in the tools' modals
+must not name the geography they describe**. Say "this area", not "the LSOA" or
+"this neighbourhood", wherever the phrase means *the area this report is about*;
+an LSOA is still the right word when the sentence is about the published source
+data ("DESNZ publishes gas consumption per LSOA"), which is true at every level.
+For the same reason a description must not refer to anything outside the
+fragment: the card is embedded with no title bar, so "the title at the top of the
+card" names nothing on any report page.
+
+Descriptions must also avoid counting the bars in a chart. The pbcc Overview
+chart draws one bar per comparison that has data for the latest year, so it is
+four bars at LSOA level, three on a ward, parish or constituency report (no
+"Similar Areas"), and two on a local authority report (no parent authority as
+well) - see `overviewSources` in `cards/pbcc-card.js`. Describe the comparisons
+by their labels rather than as "the third column".
 
 **How LSOAs are matched to areas**: wards and parishes are often smaller than
 an LSOA, so each LSOA is *split* between the areas it covers rather than

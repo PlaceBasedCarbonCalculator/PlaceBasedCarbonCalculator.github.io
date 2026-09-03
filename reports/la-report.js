@@ -478,6 +478,7 @@
 			.then(function () {
 				var card = window.reportCards && window.reportCards[tool];
 				if (!card) { throw new Error('module'); }
+				if (tool === 'pbcc') { hideLsoaOnlyPbccBlocks(host); }
 				// Open the card's default tab, then load the data and build all charts
 				var defaultBtn = document.getElementById(card.defaultOpen);
 				if (defaultBtn) { defaultBtn.click(); }
@@ -489,5 +490,24 @@
 					'<a href="/' + tool + '/">Open the ' + tool + ' tool instead</a>.</p>';
 				loadedCards[tool] = false; // allow retry on next expand
 			});
+	}
+
+	// Two blocks in the pbcc card's Demographics tab describe a single
+	// neighbourhood and have no meaning above it: the "LSOA Characteristics"
+	// table (that LSOA's admin areas and its 2011 area classification) and the
+	// ONS pen portrait of that classification. Both are filled from the
+	// lsoa_overview record, which does not exist at this level, so left in place
+	// they render a table of NAs under an LSOA heading and a pen portrait whose
+	// headings still read "Supergroup Description" / "Subgroup Description".
+	// Remove them rather than hiding them, so nothing can reveal them later.
+	//
+	// The card is a generated copy of the tool's modal (see README), so the two
+	// ids are declared in pbcc/index.html as well; keep them there or a
+	// regenerated card silently stops matching here.
+	function hideLsoaOnlyPbccBlocks(host) {
+		['lsoa-characteristics', 'lsoa-penportrait'].forEach(function (blockId) {
+			var el = (host || document).querySelector('#' + blockId);
+			if (el && el.parentNode) { el.parentNode.removeChild(el); }
+		});
 	}
 }());
