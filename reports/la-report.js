@@ -146,21 +146,45 @@
 
 	// Area name for the title, from the same lookup the reports index searches.
 	// A missing lookup is not fatal - the report still works, headed by the code.
-	var pName = CFG.nameJson
+	// The same row also carries `lad`, the code of the local authority this area
+	// belongs to, which is what lets the report cards draw an authority
+	// comparison line (see pbccCard_manageCharts). Wards and parishes nest inside
+	// an authority so their parent is exact; a Westminster constituency can
+	// straddle several, and `lad` is then the one holding most of its residents,
+	// which is why the comparison is labelled with that authority's own name
+	// rather than a bare "Local Authority".
+	var pRow = CFG.nameJson
 		? fetch(CFG.nameJson)
 			.then(function (r) { return r.ok ? r.json() : []; })
 			.then(function (rows) {
-				var hit = (rows || []).filter(function (row) { return row.id === id; })[0];
-				return hit ? hit.name : null;
+				return (rows || []).filter(function (row) { return row.id === id; })[0] || null;
 			})
 			.catch(function () { return null; })
 		: Promise.resolve(null);
+
+	// A local authority report needs no parent: comparing an authority with
+	// itself would draw the same line twice, so `level === 'la'` supplies none
+	// and the card leaves that comparison out altogether.
+	var pName = pRow.then(function (row) { return row ? row.name : null; });
+	var pParent = (level === 'la')
+		? Promise.resolve(null)
+		: Promise.all([pRow, fetch('/reports/la.json').then(function (r) { return r.ok ? r.json() : []; }).catch(function () { return []; })])
+			.then(function (res) {
+				var row = res[0];
+				if (!row || !row.lad) { return null; }
+				var hit = (res[1] || []).filter(function (la) { return la.id === row.lad; })[0];
+				return { code: row.lad, name: (hit ? hit.name : 'Local Authority') };
+			})
+			.catch(function () { return null; });
 
 	// Population is only used to fill two context boxes, so a failure just
 	// leaves them out rather than failing the page.
 	var pPop = capBin.fetchRecord(level + '_population', id).catch(function () { return null; });
 
-	Promise.all([pName, pPop]).then(function (results) {
+	Promise.all([pName, pPop, pParent]).then(function (results) {
+		// Published before the cards are loaded, so the first card to build its
+		// charts already knows which authority to compare against.
+		window.REPORT_CARD_PARENT_LA = results[2];
 		render(results[0], results[1]);
 	});
 

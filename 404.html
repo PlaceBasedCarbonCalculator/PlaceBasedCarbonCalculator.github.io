@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="robots" content="noindex">
+	<meta name="Description" content="That page could not be found. Search for a neighbourhood by postcode, or start from the Carbon &amp; Place mapping tools, manual and open data.">
+	<title>Page not found - Carbon &amp; Place</title>
+
+	<link rel="stylesheet" href="/css/main.css">
+	<link rel="stylesheet" href="/css/content-new.css">
+	<!-- Set Up Icon -->
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+	<!-- Font Awesome -->
+	<link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet">
+	<link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet">
+
+	<!-- PWA support -->
+	<link rel="manifest" href="/manifest.webmanifest">
+	<link rel="apple-touch-icon" href="/images/icons/192.png">
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-title" content="Carbon & Place">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<meta name="theme-color" content="#ac1a40">
+	<script src="/app.js" defer></script>
+
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q11V10CDRV"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag () {dataLayer.push (arguments);}
+		gtag('js', new Date ());
+		gtag('config', 'G-Q11V10CDRV');
+	</script>
+
+	<style>
+	body.content-page .page-lede { max-width: 760px; }
+	body.content-page .card-grid.tool-grid { max-width: 900px; }
+	.postcode-search { max-width: 520px; margin: 0 0 32px; }
+	.postcode-search-form { display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch; }
+	.postcode-search-form input { flex: 1 1 220px; min-width: 0; padding: 12px 14px; font-size: 16px; border: 1px solid #b7b2b3; border-radius: 6px; text-transform: uppercase; }
+	.postcode-search-form input:focus { outline: 2px solid #ac1a40; outline-offset: 1px; }
+	.postcode-search-form button { flex: 0 0 auto; padding: 12px 22px; font-size: 16px; color: #ffffff; background-color: #ac1a40; border: none; border-radius: 6px; cursor: pointer; }
+	.postcode-search-form button:hover { background-color: #8f1535; }
+	.postcode-search-form button:disabled { background-color: #c98a9b; cursor: default; }
+	.postcode-search-error { display: none; margin: 10px 0 0; color: #ac1a40; font-weight: 600; }
+	.notfound-path { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 14px; word-break: break-all; }
+	</style>
+</head>
+<body class="content-page">
+
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TXQZCMJT"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<!-- Menu -->
+<nav>
+	<a href="/"><img src="/images/ui/logo.webp" alt="Carbon & Place Logo" class="logo" /></a>
+	<a href="/about/">About</a>
+	<a href="/data/">Data</a>
+	<a href="/manual/">Manual</a>
+	<a href="/reports/">Reports</a>
+	<a href="#" id="expandtopnav" class="icon" aria-label="Expand menu"><i class="fa fa-bars"></i></a>
+</nav>
+
+<!-- Cookies Warning  -->
+<div id="cookiewarning" class="cookiewarning">
+	<p>We use cookies to measure how you use our website so we can understand how you interact with it, which helps us to make improvements. <a href="/privacy">Find out more.</a></p>
+	<p>
+		<button class="button buttonOK" value="1"><strong>OK</strong></button>
+		<button class="button buttonNO" value=""><strong>No</strong></button>
+	</p>
+</div>
+
+<div class="content">
+
+<h1>Page not found</h1>
+<p class="page-lede">We could not find <span id="notfound-path">that page</span>. It may have moved, or the address may have a typo in it. Everything below still works.</p>
+
+<h2>Find your neighbourhood</h2>
+
+<div class="postcode-search">
+	<p>Enter a postcode in Great Britain to open the combined local report for that neighbourhood.</p>
+	<form id="postcode-search-form" class="postcode-search-form" role="search" aria-label="Postcode search">
+		<label for="postcode-search-input" class="visually-hidden">Postcode</label>
+		<input type="text" id="postcode-search-input" name="postcode" placeholder="E.G. LS2 9JT" autocomplete="postal-code" spellcheck="false" required>
+		<button type="submit">Search</button>
+	</form>
+	<p id="postcode-search-error" class="postcode-search-error" role="alert"></p>
+</div>
+
+<h2>Or start from one of the tools</h2>
+
+<div class="card-grid tool-grid">
+	<div class="card">
+		<h3>Place-Based Carbon Calculator</h3>
+		<p>The carbon footprint of every neighbourhood in Great Britain, and how it has changed.</p>
+		<a class="btn" href="/pbcc/">Open</a>
+	</div>
+	<div class="card">
+		<h3>Transport &amp; Accessibility Explorer</h3>
+		<p>Public transport services, what people can reach, and the vehicles they own.</p>
+		<a class="btn" href="/transport/">Open</a>
+	</div>
+	<div class="card">
+		<h3>Retrofit Explorer</h3>
+		<p>Building energy performance, gas and electricity use, and retrofit opportunities.</p>
+		<a class="btn" href="/retrofit/">Open</a>
+	</div>
+	<div class="card">
+		<h3>Land Use &amp; Planning Explorer</h3>
+		<p>How land is used and what protects it, from green belt to conservation areas.</p>
+		<a class="btn" href="/landuse/">Open</a>
+	</div>
+	<div class="card">
+		<h3>Land Ownership Explorer</h3>
+		<p>Who owns land and property, in England and Wales.</p>
+		<a class="btn" href="/landownership/">Open</a>
+	</div>
+</div>
+
+<h2>Other places to look</h2>
+<p>
+	<a class="btn-outline" href="/reports/">Area reports</a>
+	<a class="btn-outline" href="/manual/">Manual</a>
+	<a class="btn-outline" href="/data/">Open data</a>
+	<a class="btn-outline" href="/about/faq/">FAQs</a>
+</p>
+
+<p>If you followed a link here from elsewhere on this site, please
+	<a href="/about/feedback/">tell us</a> so we can fix it.</p>
+
+</div>
+
+<script type="text/javascript" src="/js/common-nonmap.js"></script>
+<script type="text/javascript" src="/js/postcode-search.js"></script>
+<script>
+	// Show the address that failed, so the reader can see the typo. Written as
+	// text, never as markup, so a crafted URL cannot inject anything.
+	(function () {
+		var el = document.getElementById('notfound-path');
+		if (el && window.location && window.location.pathname && window.location.pathname !== '/404.html') {
+			el.textContent = window.location.pathname;
+			el.className = 'notfound-path';	// monospace only once it holds a real address
+		}
+	})();
+</script>
+</body>
+</html>

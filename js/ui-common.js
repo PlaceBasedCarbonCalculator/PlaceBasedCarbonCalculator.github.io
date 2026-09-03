@@ -1775,9 +1775,15 @@ const capUi = (function () {
 		
 		// Function to convert the loaded Markdown file text to HTML
 		// #!# Copied from manual.js
+		//
+		// customizedHeaderId lets a heading in manual/index.md carry an explicit
+		// "{#id}", which the manual uses where a title repeats (see mdToHtml in
+		// js/manual.js). This converter MUST keep the option in step with that
+		// one: without it showdown does not recognise the syntax and prints the
+		// "{#id}" as part of the heading text in the help popups.
 		mdToHtml: function (mdText)
 		{
-			const converter = new showdown.Converter();
+			const converter = new showdown.Converter({customizedHeaderId: true});
 			const html = converter.makeHtml(mdText);
 			return html;
 		},

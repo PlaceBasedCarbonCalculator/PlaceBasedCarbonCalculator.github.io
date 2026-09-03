@@ -85,6 +85,11 @@ var pbccCard_populationLocationData = {};
 var pbccCard_lsoaOverviewData = {};
 var pbccCard_laHistoricalData = {};
 var pbccCard_oacHistoricalData = {};
+// Legend label for the local authority comparison. Set to the authority's own
+// name where we know it, so a reader can see which one is being compared -
+// this matters most on constituency reports, where a constituency can straddle
+// several authorities and only the largest is shown.
+var pbccCard_laLabel = 'Local Authority';
 var pbccCard_gbHistoricalData = {};
 
 var pbccCard_dwellingsctChart;
@@ -115,16 +120,38 @@ pbccCard_manageCharts = function (locationId) {
 			pbccCard_lsoaOverviewData = (overviewArr ? overviewArr[0] : null);
 			pbccCard_gbHistoricalData = GBData || {};
 
-			if (!pbccCard_lsoaOverviewData) {
-				try { pbccCard_makeChartHistorical(); pbccCard_makeChartPopulation(); } catch (e) { console.warn(e); }
-				return;
-			}
+			// Which comparisons this report can draw.
+			//
+			// "Similar areas" is the area classification of a NEIGHBOURHOOD, so it
+			// only exists at LSOA level and is left out entirely above it.
+			//
+			// The local authority comparison needs a parent authority. At LSOA
+			// level that comes from the overview record; on the area reports there
+			// is no overview record, so the host page supplies it via
+			// window.REPORT_CARD_PARENT_LA (see reports/la-report.js). A local
+			// authority report sets none, because comparing an authority with
+			// itself would just draw the same line twice.
+			const parentLA = window.REPORT_CARD_PARENT_LA || null;
+			const laCode = (pbccCard_lsoaOverviewData && pbccCard_lsoaOverviewData.LAD25CD) ||
+				(parentLA && parentLA.code) || null;
+			// At LSOA level the authority is unambiguous and the generic label
+			// keeps this card matching the tool's own modal. On the area reports
+			// the authority is named, because a constituency can straddle several
+			// and a bare "Local Authority" would imply it had only one.
+			pbccCard_laLabel = (!pbccCard_lsoaOverviewData && parentLA && parentLA.name)
+				? parentLA.name
+				: 'Local Authority';
+
 			const urlsSecondary = [
-				pbccCard_endpoint('oac_emissions/v2/') + pbccCard_lsoaOverviewData.lsoa_class_code + '.json',
-				pbccCard_endpoint('la_emissions/v2/') + pbccCard_lsoaOverviewData.LAD25CD + '.json'
+				pbccCard_lsoaOverviewData
+					? pbccCard_endpoint('oac_emissions/v2/') + pbccCard_lsoaOverviewData.lsoa_class_code + '.json'
+					: null,
+				laCode ? pbccCard_endpoint('la_emissions/v2/') + laCode + '.json' : null
 			];
 
-			return Promise.all(urlsSecondary.map(function (u) { return pbccCard_fetchJSON(u).catch(function () { return null; }); }))
+			return Promise.all(urlsSecondary.map(function (u) {
+					return u ? pbccCard_fetchJSON(u).catch(function () { return null; }) : Promise.resolve(null);
+				}))
 				.then(([oacData, laData]) => {
 					pbccCard_laHistoricalData = laData || {};
 					pbccCard_oacHistoricalData = oacData || {};
@@ -457,12 +484,22 @@ pbccCard_makeChartHistorical = function(){
   function getStandardLabel(stack) {
     switch (stack) {
       case 'Stack 0': return 'This area';
-      case 'Stack 1': return 'Local Authority';
+      case 'Stack 1': return pbccCard_laLabel;
       case 'Stack 2': return 'Similar Areas';
       case 'Stack 3': return 'Great Britain';
       default: return stack;
     }
   }
+
+  // A comparison with no data must not reach the charts. Chart.js still draws a
+  // legend entry for an empty dataset, so leaving them in advertises lines that
+  // are never plotted: before this, every area report promised four comparisons
+  // and drew two.
+  const hasValues = function (ds) {
+    return Array.isArray(ds.data) && ds.data.some(function (v) {
+      return v !== null && v !== undefined && !(typeof v === 'number' && isNaN(v));
+    });
+  };
 
   
 
@@ -475,7 +512,7 @@ pbccCard_makeChartHistorical = function(){
       ...data_la.datasets.map(ds => ({ ...ds, standardLabel: getStandardLabel(ds.stack) })),
       ...data_oac.datasets.map(ds => ({ ...ds, standardLabel: getStandardLabel(ds.stack) })),
       ...data_gb.datasets.map(ds => ({ ...ds, standardLabel: getStandardLabel(ds.stack) }))
-    ]
+    ].filter(hasValues)
   };
 
   //console.log(combinedData);
@@ -624,18 +661,29 @@ pbccCard_makeChartHistorical = function(){
 			const i = (source['year'] || []).indexOf(latestYear);
 			return (i === -1 ? undefined : i);
 		};
-		const laYearIndex = yearIndexIn(pbccCard_laHistoricalData);
-		const oacYearIndex = yearIndexIn(pbccCard_oacHistoricalData);
-		const gbYearIndex = yearIndexIn(pbccCard_gbHistoricalData);
+		// One column per comparison that actually has a figure for the latest
+		// year. A source that is absent at this level (there is no "similar
+		// areas" grouping above LSOA, and a local authority report has no parent
+		// authority) drops out rather than standing as an empty column under a
+		// label, and the labels follow the columns that remain.
+		const overviewSources = [
+			{ label: 'This Area', data: pbccCard_locationData },
+			{ label: pbccCard_laLabel, data: pbccCard_laHistoricalData },
+			{ label: 'Similar Areas', data: pbccCard_oacHistoricalData },
+			{ label: 'Great Britain', data: pbccCard_gbHistoricalData }
+		].map(function (s) {
+			return { label: s.label, data: s.data, idx: yearIndexIn(s.data || {}) };
+		}).filter(function (s) {
+			return s.idx !== undefined && s.data && Object.keys(s.data).length > 0;
+		});
 
 		component.forEach(comp => {
 			data_overview.datasets.push({
 				label: comp[0],
-				// Guard each source: on area reports (la/ward/parish/constituency) there
-			// is no LA/"Similar areas" comparison data, so these objects are empty.
-			// Without the || [] the missing field indexes undefined and throws,
-			// which would abort the whole chart build (consumption, energy, etc.).
-			data: [(pbccCard_locationData[comp[1]] || [])[yearIndex], (pbccCard_laHistoricalData[comp[1]] || [])[laYearIndex], (pbccCard_oacHistoricalData[comp[1]] || [])[oacYearIndex], (pbccCard_gbHistoricalData[comp[1]] || [])[gbYearIndex]],
+				// Each source is still guarded with || []: a feed can carry the
+				// latest year but not every category, and indexing undefined would
+				// throw and abort the whole chart build (consumption, energy, etc.).
+				data: overviewSources.map(function (s) { return (s.data[comp[1]] || [])[s.idx]; }),
 				backgroundColor: comp[2],
 				borderColor: comp[3],
 				borderWidth: 1,
@@ -645,7 +693,7 @@ pbccCard_makeChartHistorical = function(){
 
 		data_overview.datasets = data_overview.datasets.filter(d => !d.label.includes('Goods & Services'));
 
-        data_overview.labels = ['This Area','Local Authority','Similar Areas','Great Britain'];
+        data_overview.labels = overviewSources.map(function (s) { return s.label; });
 
 
 
@@ -1360,7 +1408,11 @@ pbccCard_makeChartPopulation = function(){
 		  ]
   
   
-  var years =  ['2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022']
+  // Year labels come from the record itself, never a hard-coded list. The
+  // population series runs 2010-2024 in England and Wales but only 2010-2022 in
+  // Scotland, and Chart.js pairs data to labels by index: too few labels silently
+  // drop the newest years, too many invent years Scotland has no data for.
+  var years = (pbccCard_populationLocationData['year'] || []).map(String);
   // Assemble the datasets to be shown
   
 	const data = {datasets: []};
@@ -1392,8 +1444,8 @@ pbccCard_makeChartPopulation = function(){
   
   //console.log(data);
   
-  data.labels = ['2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022'];
-  
+  data.labels = years;
+
   var populationctx = document.getElementById('population-chart').getContext('2d');
 	pbccCard_populationChart = new Chart(populationctx, {
     type: 'bar',

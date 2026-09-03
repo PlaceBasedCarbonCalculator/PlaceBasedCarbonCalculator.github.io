@@ -59,6 +59,15 @@
 					var result = data && data.result;
 					var lsoa = result && result.codes && result.codes.lsoa21;
 					if (!lsoa) { throw new Error('nolsoa'); }
+					// Our zones are English, Welsh and Scottish only. postcodes.io
+					// does return an lsoa21 code for Northern Ireland (N-prefixed),
+					// so a truthy code is not on its own proof of coverage: without
+					// this check a BT postcode is sent to a report that cannot
+					// exist and fails there with a generic "try again later".
+					if (lsoa.charAt(0) === 'N' || result.country === 'Northern Ireland') {
+						throw new Error('northernireland');
+					}
+					if (!/^[EWS]/.test(lsoa)) { throw new Error('nolsoa'); }
 					var params = new URLSearchParams();
 					params.set('lsoa', lsoa);
 					params.set('postcode', result.postcode || pc);
@@ -69,6 +78,8 @@
 					button.textContent = originalLabel;
 					if (err && err.message === 'notfound') {
 						showError('We could not find that postcode. Please check it and try again.');
+					} else if (err && err.message === 'northernireland') {
+						showError('Sorry, we don’t cover Northern Ireland yet.');
 					} else if (err && err.message === 'nolsoa') {
 						showError('That postcode is outside our data coverage (Great Britain only).');
 					} else {

@@ -57,29 +57,38 @@ manageCharts =  function (locationId, mapLayerId){
       .catch(err => { console.error('Energy failed:', err); });
 
     // Prices now come from the prices bin instead of one JSON file per zone.
+    // England and Wales only: HM Land Registry Price Paid Data has no Scottish
+    // equivalent we can republish, so a Scottish zone has no record here at all
+    // and this rejects. That is the expected outcome rather than a failure, so
+    // the two charts are replaced by a note saying why (the same treatment the
+    // dwelling stock charts get above) instead of being left blank.
     const pPrices = capBin.fetchRecord('prices', locationId)
-      .then(data => { pricesLocationData = data; makeChartPrices(); })
-      .catch(err => { 
-        console.error('Prices failed:', err);
+      .then(data => {
+        pricesLocationData = data;
+        chartsSetAvailable(['prices','transactions'], 'prices-nodata', true);
+        makeChartPrices();
+      })
+      .catch(err => {
         if(pricesChart){
           pricesChart.destroy();
         }
         if(transactionsChart){
           transactionsChart.destroy();
         }
+        pricesSetUnavailable(locationId);
       });
 
     // Council tax bands, GB-wide (see the dwelling stock section below).
     const pVOABands = capBin.fetchRecord('voa_2010', locationId)
       .then(data => {
         voaBandsLocationData = data;
-        voaSetAvailable(['dwellingsct'], 'dwellingsct-nodata', true);
+        chartsSetAvailable(['dwellingsct'], 'dwellingsct-nodata', true);
         makeChartVOABands();
       })
       .catch(err => {
         console.error('VOA council tax bands failed:', err);
         if(dwellingsctChart){ dwellingsctChart.destroy(); }
-        voaSetAvailable(['dwellingsct'], 'dwellingsct-nodata', false);
+        chartsSetAvailable(['dwellingsct'], 'dwellingsct-nodata', false);
       });
 
     // Dwelling type/bedrooms/build period, England and Wales only. A Scottish
@@ -88,14 +97,14 @@ manageCharts =  function (locationId, mapLayerId){
     const pVOAStock = capBin.fetchRecord('voa_2020', locationId)
       .then(data => {
         voaStockLocationData = data;
-        voaSetAvailable(['dwellingstype','dwellingsbedrooms','dwellingsage'], 'dwellingsstock-nodata', true);
+        chartsSetAvailable(['dwellingstype','dwellingsbedrooms','dwellingsage'], 'dwellingsstock-nodata', true);
         makeChartVOAStock();
       })
       .catch(err => {
         if(dwellingstypeChart){ dwellingstypeChart.destroy(); }
         if(dwellingsbedroomsChart){ dwellingsbedroomsChart.destroy(); }
         if(dwellingsageChart){ dwellingsageChart.destroy(); }
-        voaSetAvailable(['dwellingstype','dwellingsbedrooms','dwellingsage'], 'dwellingsstock-nodata', false);
+        chartsSetAvailable(['dwellingstype','dwellingsbedrooms','dwellingsage'], 'dwellingsstock-nodata', false);
       });
 
     return Promise.all([pEPC, pPrices, pEnergy, pVOABands, pVOAStock]);
@@ -1379,7 +1388,24 @@ var dwellingsageChart;
 // Chart rows in this tool are wrapped in a div whose id is the chart name with
 // '-chartrow' appended, so a whole group can be swapped for one explanation
 // without disturbing the rest of the report card.
-function voaSetAvailable (chartNames, noteId, available)
+// Hide the two price charts and say why. Scottish zone codes start with S;
+// anything else reaching here is a genuine lookup failure, so don't blame the
+// geography for it.
+function pricesSetUnavailable (locationId)
+{
+	const note = document.getElementById ('prices-nodata');
+	if (note) {
+		note.innerHTML = ((typeof locationId === 'string' && locationId.charAt(0) === 'S')
+			? 'Property prices are not available for Scotland. Sales in England and Wales are ' +
+			  'published as <a href="https://www.gov.uk/guidance/about-the-price-paid-data" target="_blank" rel="noopener">HM Land Registry Price Paid Data</a>; ' +
+			  'Scottish sale prices are published separately by Registers of Scotland under different ' +
+			  'terms. Every other tab on this report card does cover Scotland.'
+			: 'Property prices are not available for this area.');
+	}
+	chartsSetAvailable (['prices','transactions'], 'prices-nodata', false);
+}
+
+function chartsSetAvailable (chartNames, noteId, available)
 {
 	chartNames.forEach (function (name) {
 		const row = document.getElementById (name + '-chartrow');

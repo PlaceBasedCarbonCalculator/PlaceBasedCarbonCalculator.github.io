@@ -287,7 +287,7 @@ Community groups have used this kind of evidence to prioritise retrofit projects
 ### Using the carbon calculator
 
 <!-- #pbcc-zones -->
-#### Neighbourhoods
+#### Neighbourhoods {#pbccneighbourhoods}
 
 ![PBCC Neighbouhoods](/images/manual/pbcc-zones.webp)
 
@@ -326,7 +326,7 @@ Below the chart, summary tables give a grade and a per-person value for each com
 
 This tab charts the neighbourhood's per-person footprint for every year since 2010, stacked by sector. It shows whether emissions are falling and which sectors are responsible for the change. Nationally, most of the reduction since 2010 has come from the decarbonisation of electricity generation as coal has left the grid ([DESNZ energy statistics](https://www.gov.uk/government/collections/uk-energy-in-brief)); reductions in transport and heating have been much slower. Comparing your neighbourhood's trend with that national story shows whether local change is genuine or simply reflects a cleaner electricity supply.
 
-Year-to-year movements should be read with care: they can reflect data revisions and modelling noise as well as real change. Trends over several years are more reliable than single-year differences. To increase the amount of data available in the synthetic population it is built every other year (even years) using two years of data. I.e data from 2020 and 2021 is used to build a 2020 synthetic population, which is then used to produce carbon footprints for 2020 and 2021. This means for the parts of the carbon footprint that are modeled using the synthetic population (such as goods and services) the results for each pair of years are very similar and sudden shifts can occur every two years. 
+Year-to-year movements should be read with care: they can reflect data revisions and modelling noise as well as real change. Trends over several years are more reliable than single-year differences. To increase the amount of data available in the synthetic population it is built every other year (even years) using two years of data. I.e data from 2020 and 2021 is used to build a 2020 synthetic population, which is then used to produce carbon footprints for 2020 and 2021. This means for the parts of the carbon footprint that are modelled using the synthetic population (such as goods and services) the results for each pair of years are very similar and sudden shifts can occur every two years. 
 
 #### Transport
 
@@ -471,7 +471,7 @@ Consider a different product: nappies. Households with small children buy a lot 
 
 The census does publish some multivariate tables (household size by composition, for example), which anchor the combinations, and the ONS deliberately adds small amounts of noise to published counts to protect privacy, which the method must tolerate. Synthetic populations are never perfect, but they are usually close to the real population, and they let us pair every synthetic household with a similar LCFS respondent. That matched subsample of the survey is what we use to estimate the spending, and therefore the consumption emissions, of every neighbourhood in Great Britain.
 
-#### Further reading
+#### Further reading {#pbccfurtherreading}
 
 Carbon & Place is one of several strands of UK work on place and energy demand, and it is intended as a starting point rather than a destination. You may be interested in:
 
@@ -514,7 +514,7 @@ This evidence is directly relevant to local transport plans, bus service improve
 ### Using the transport explorer
 
 <!-- #transport-zones -->
-#### Neighbourhoods
+#### Neighbourhoods {#transportneighbourhoods}
 
 ![Transport Zones](/images/manual/transport_zones.webp)
 
@@ -658,7 +658,7 @@ The accessibility and proximity plots are produced as follows. First, the [Ordna
 This measure is relative to the England and Wales average, so the analysis tells you how an area compares with the country, not whether provision is adequate. And it counts destinations without judging them, so a small supermarket and a large one have the same affect on the score but may provide very different services.
 <!-- /#accessibility -->
 
-#### Further reading
+#### Further reading {#transportfurtherreading}
 
 * [Mattioli et al. (2020), *The political economy of car dependence: a systems of provision approach*](https://doi.org/10.1016/j.erss.2020.101486), on why car dependence persists.
 * [Miner et al. (2024), *Car harm: a global review of automobility's harm to people and the environment*](https://doi.org/10.1016/j.jtrangeo.2024.103817), a systematic account of the wider costs.
@@ -696,7 +696,7 @@ Local authorities can use this evidence to target schemes such as area-based ins
 ### Using the retrofit explorer
 
 <!-- #retrofit-zones -->
-#### Neighbourhoods
+#### Neighbourhoods {#retrofitneighbourhoods}
 
 ![Retrofit Neighboughoods](/images/manual/retrofit-zones.webp)
 
@@ -749,7 +749,7 @@ Colour gradients between these extremes represent the intermediate 20% bands.
 
 The map highlights affordability problems: pink areas combine low incomes with high bills, the combination that defines fuel poverty risk ([fuel poverty statistics](https://www.gov.uk/government/collections/fuel-poverty-statistics)). It also reflects housing type, since small flats need less heating than large houses and so tend to have lower bills at any income.
 
-##### Data Sources
+##### Data Sources {#retrofitneighbourhoodsdatasources}
 
 * [EPCs for England and Wales](https://epc.opendatacommunities.org/)
 * [EPCs for Scotland](https://www.scottishepcregister.org.uk/)
@@ -777,7 +777,7 @@ The map has gaps where no data is available, either because all buildings in a p
 
 Clicking any postcode opens its report card. Postcode boundaries are copyright of Royal Mail, which is why the postcode data cannot be offered for download.
 
-##### Data Sources
+##### Data Sources {#retrofitpostcodeenergydatasources}
 
 * [Postcode gas and electricity consumption](https://www.gov.uk/government/publications/postcode-level-domestic-gas-and-electricity-consumption-about-the-data)
 * [Postcode boundaries](https://digimap.edina.ac.uk/) (academic use only)
@@ -824,7 +824,7 @@ Every chart and layer in Carbon & Place that draws on EPCs carries the same thre
 
 None of this makes EPCs useless. They remain the only national dataset in which a trained assessor has visited the building and recorded what it is made of, which is why we use them. But an EPC-based figure for a neighbourhood is a statement about the certificated homes in that neighbourhood, not about all its homes, and it should be quoted that way.
 
-##### Data Sources
+##### Data Sources {#retrofitdomesticdatasources}
 
 * [EPCs for England and Wales](https://epc.opendatacommunities.org/)
 * [EPCs for Scotland](https://www.scottishepcregister.org.uk/)
@@ -850,7 +850,7 @@ Clicking any point shows a popup with more details.
 
 As with domestic properties, the Scottish register is separate and slightly different, and harmonisation can introduce small inconsistencies.
 
-##### Data Sources
+##### Data Sources {#retrofitnondomesticdatasources}
 
 * [EPCs for England and Wales](https://epc.opendatacommunities.org/)
 * [EPCs for Scotland](https://www.scottishepcregister.org.uk/)
@@ -867,7 +867,7 @@ This layer shows every UPRN that does not appear in the Domestic or Non-domestic
 
 Clicking a UPRN shows its ID number, whether the property currently exists, and whether the UPRN was added to the database recently (since 2020).
 
-##### Data Sources
+##### Data Sources {#retrofitunknownpropertiesdatasources}
 
 * [OS Open UPRN](https://www.ordnancesurvey.co.uk/products/os-open-uprn)
 <!-- /#retrofit-uprn-unknown -->
@@ -887,7 +887,7 @@ The transparency slider fades the layer so that streets and buildings on the bas
 
 Two limitations are worth keeping in mind. The layer is a visualisation, and the colour is compressed slightly when the tiles are stored, so it should be read to the nearest band rather than as an exact number. And it models sunlight reaching a surface, not electricity: converting to expected generation needs assumptions about panel type, efficiency, and how much of a roof is usable, none of which are applied here.
 
-##### Data Sources
+##### Data Sources {#retrofitsolardatasources}
 
 * [Environment Agency National LIDAR Programme](https://www.data.gov.uk/dataset/f0db0249-f17b-4036-9e65-309148c97ce4/national-lidar-programme) (surface model, processed by the [GBDEM](https://github.com/PlaceBasedCarbonCalculator/GBDEM) and [GBsolar](https://github.com/PlaceBasedCarbonCalculator/GBsolar) analyses)
 * [ECMWF ERA5](https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5) (cloud and radiation adjustment)
@@ -895,7 +895,7 @@ Two limitations are worth keeping in mind. The layer is a visualisation, and the
 
 ### Retrofit report card
 
-#### Neighbourhoods
+#### Neighbourhoods {#retrofitcardneighbourhoods}
 
 The neighbourhood report card summarises energy, EPCs, and prices for each area.
 
@@ -941,7 +941,7 @@ Electricity is further divided by meter type: all, standard, and Economy 7. Econ
 
 To protect privacy, DESNZ removes data for postcodes with few properties, and may remove one meter type where it is rare, which causes gaps in the data. Postcodes are also not designed for statistics: unlike LSOAs, they change frequently to meet mail delivery needs. Carbon & Place shows data for current postcodes only, so historical data is missing in some places.
 
-### Further reading
+### Further reading {#retrofitfurtherreading}
 
 * [Climate Change Committee, *UK housing: fit for the future?*](https://www.theccc.org.uk/publication/uk-housing-fit-for-the-future/), still the clearest statement of the scale of the task.
 * [CREDS, *Decarbonisation of heat findings report*](https://www.creds.ac.uk/decarbonisation-of-heat/decarbonisation-of-heat-findings-report/), a synthesis of UK research on heat.

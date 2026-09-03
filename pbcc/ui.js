@@ -750,7 +750,11 @@ makeChartPopulation = function(){
 		  ]
   
   
-  var years =  ['2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022']
+  // Year labels come from the record itself, never a hard-coded list. The
+  // population series runs 2010-2024 in England and Wales but only 2010-2022 in
+  // Scotland, and Chart.js pairs data to labels by index: too few labels silently
+  // drop the newest years, too many invent years Scotland has no data for.
+  var years = (populationLocationData['year'] || []).map(String);
   // Assemble the datasets to be shown
   
 	const data = {datasets: []};
@@ -782,8 +786,8 @@ makeChartPopulation = function(){
   
   //console.log(data);
   
-  data.labels = ['2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022'];
-  
+  data.labels = years;
+
   var populationctx = document.getElementById('population-chart').getContext('2d');
 	populationChart = new Chart(populationctx, {
     type: 'bar',

@@ -6,7 +6,7 @@
 // build period) had moved out of the PBCC tool into this one, but the cards were
 // generated before that, so the PBCC card carries them commented out and this
 // card never had them - the charts had silently disappeared from every report
-// page. Ported verbatim from retrofit/ui.js (voaSetAvailable, makeChartVOABands,
+// page. Ported verbatim from retrofit/ui.js (chartsSetAvailable, makeChartVOABands,
 // makeChartVOAStock) and retrofit/index.html (the "stock" tabcontent block) with
 // the generator's usual retrofitCard_ prefixing. Re-running the generator will
 // pick all of it up from the tool and overwrite this note.
@@ -111,16 +111,25 @@ retrofitCard_manageCharts =  function (locationId, mapLayerId){
       .then(data => { retrofitCard_lsoaEnergyData = data; retrofitCard_makeChartLSOAEnergy(); })
       .catch(err => { console.error('Energy failed:', err); });  
     
+    // England and Wales only: HM Land Registry Price Paid Data has no Scottish
+    // equivalent we can republish, so a Scottish area has no record here at all
+    // and this rejects. That is the expected outcome rather than a failure, so
+    // the two charts are replaced by a note saying why (the same treatment the
+    // dwelling stock charts get below) instead of being left blank.
     const pPrices = retrofitCard_fetchJSON(retrofitCard_endpoint('prices/v1/') + locationId + '.json')
-      .then(data => { retrofitCard_pricesLocationData = data; retrofitCard_makeChartPrices(); })
-      .catch(err => { 
-        console.error('Prices failed:', err);
+      .then(data => {
+        retrofitCard_pricesLocationData = data;
+        retrofitCard_chartsSetAvailable(['prices','transactions'], 'prices-nodata', true);
+        retrofitCard_makeChartPrices();
+      })
+      .catch(err => {
         if(retrofitCard_pricesChart){
           retrofitCard_pricesChart.destroy();
         }
         if(retrofitCard_transactionsChart){
           retrofitCard_transactionsChart.destroy();
         }
+        retrofitCard_pricesSetUnavailable(locationId);
       });
 
     // Dwelling stock from the council tax registers. These charts live in the
@@ -137,25 +146,25 @@ retrofitCard_manageCharts =  function (locationId, mapLayerId){
     const pVOABands = retrofitCard_fetchJSON(retrofitCard_endpoint('voa_2010/') + locationId + '.json')
       .then(data => {
         retrofitCard_voaBandsLocationData = data;
-        retrofitCard_voaSetAvailable(['dwellingsct'], 'dwellingsct-nodata', true);
+        retrofitCard_chartsSetAvailable(['dwellingsct'], 'dwellingsct-nodata', true);
         retrofitCard_makeChartVOABands();
       })
       .catch(err => {
         if(retrofitCard_dwellingsctChart){ retrofitCard_dwellingsctChart.destroy(); }
-        retrofitCard_voaSetAvailable(['dwellingsct'], 'dwellingsct-nodata', false);
+        retrofitCard_chartsSetAvailable(['dwellingsct'], 'dwellingsct-nodata', false);
       });
 
     const pVOAStock = retrofitCard_fetchJSON(retrofitCard_endpoint('voa_2020/') + locationId + '.json')
       .then(data => {
         retrofitCard_voaStockLocationData = data;
-        retrofitCard_voaSetAvailable(['dwellingstype','dwellingsbedrooms','dwellingsage'], 'dwellingsstock-nodata', true);
+        retrofitCard_chartsSetAvailable(['dwellingstype','dwellingsbedrooms','dwellingsage'], 'dwellingsstock-nodata', true);
         retrofitCard_makeChartVOAStock();
       })
       .catch(err => {
         if(retrofitCard_dwellingstypeChart){ retrofitCard_dwellingstypeChart.destroy(); }
         if(retrofitCard_dwellingsbedroomsChart){ retrofitCard_dwellingsbedroomsChart.destroy(); }
         if(retrofitCard_dwellingsageChart){ retrofitCard_dwellingsageChart.destroy(); }
-        retrofitCard_voaSetAvailable(['dwellingstype','dwellingsbedrooms','dwellingsage'], 'dwellingsstock-nodata', false);
+        retrofitCard_chartsSetAvailable(['dwellingstype','dwellingsbedrooms','dwellingsage'], 'dwellingsstock-nodata', false);
       });
 
     return Promise.all([pEPC, pPrices, pEnergy, pVOABands, pVOAStock]);
@@ -1378,7 +1387,24 @@ switchChartTab = function (evt, tabName) {
 // Chart rows in this tool are wrapped in a div whose id is the chart name with
 // '-chartrow' appended, so a whole group can be swapped for one explanation
 // without disturbing the rest of the card.
-function retrofitCard_voaSetAvailable (chartNames, noteId, available)
+// Hide the two price charts and say why. Scottish zone codes start with S;
+// anything else reaching here is a genuine lookup failure, so don't blame the
+// geography for it.
+function retrofitCard_pricesSetUnavailable (locationId)
+{
+	const note = document.getElementById ('prices-nodata');
+	if (note) {
+		note.innerHTML = ((typeof locationId === 'string' && locationId.charAt(0) === 'S')
+			? 'Property prices are not available for Scotland. Sales in England and Wales are ' +
+			  'published as <a href="https://www.gov.uk/guidance/about-the-price-paid-data" target="_blank" rel="noopener">HM Land Registry Price Paid Data</a>; ' +
+			  'Scottish sale prices are published separately by Registers of Scotland under different ' +
+			  'terms. Every other tab on this report card does cover Scotland.'
+			: 'Property prices are not available for this area.');
+	}
+	retrofitCard_chartsSetAvailable (['prices','transactions'], 'prices-nodata', false);
+}
+
+function retrofitCard_chartsSetAvailable (chartNames, noteId, available)
 {
 	chartNames.forEach (function (name) {
 		const row = document.getElementById (name + '-chartrow');

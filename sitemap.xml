@@ -4,84 +4,108 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
 
-
+<!-- Home -->
 <url>
   <loc>https://www.carbon.place/</loc>
-  <lastmod>2024-10-16T13:55:48+00:00</lastmod>
+  <lastmod>2026-09-03</lastmod>
   <priority>1.00</priority>
 </url>
+
+<!-- Tools -->
 <url>
-  <loc>https://www.carbon.place/about/</loc>
-  <lastmod>2024-10-16T13:55:48+00:00</lastmod>
+  <loc>https://www.carbon.place/pbcc/</loc>
+  <lastmod>2026-09-03</lastmod>
+  <priority>0.90</priority>
+</url>
+<url>
+  <loc>https://www.carbon.place/transport/</loc>
+  <lastmod>2026-09-03</lastmod>
+  <priority>0.90</priority>
+</url>
+<url>
+  <loc>https://www.carbon.place/retrofit/</loc>
+  <lastmod>2026-09-03</lastmod>
+  <priority>0.90</priority>
+</url>
+<url>
+  <loc>https://www.carbon.place/landuse/</loc>
+  <lastmod>2026-09-03</lastmod>
+  <priority>0.90</priority>
+</url>
+<url>
+  <loc>https://www.carbon.place/landownership/</loc>
+  <lastmod>2026-09-03</lastmod>
+  <priority>0.90</priority>
+</url>
+
+<!-- Reports. The per-area pages are query-string driven and effectively
+     infinite (43,064 neighbourhoods alone), so only the entry points are
+     listed; crawlers reach the rest by following links from here. -->
+<url>
+  <loc>https://www.carbon.place/reports/</loc>
+  <lastmod>2026-09-03</lastmod>
+  <priority>0.80</priority>
+</url>
+
+<!-- Supporting content -->
+<url>
+  <loc>https://www.carbon.place/manual/</loc>
+  <lastmod>2026-09-03</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://www.carbon.place/data/</loc>
-  <lastmod>2024-10-16T13:55:48+00:00</lastmod>
+  <lastmod>2026-09-03</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://www.carbon.place/manual/</loc>
-  <lastmod>2024-10-16T13:55:48+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://www.carbon.place/privacy/</loc>
-  <lastmod>2024-10-16T13:55:48+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://www.carbon.place/legacy/</loc>
-  <lastmod>2024-10-16T13:55:48+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://www.carbon.place/transport/</loc>
-  <lastmod>2024-10-16T13:55:48+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://www.carbon.place/landuse/</loc>
-  <lastmod>2024-10-16T13:55:48+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://www.carbon.place/landownership/</loc>
-  <lastmod>2024-10-16T13:55:48+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://www.carbon.place/retrofit/</loc>
-  <lastmod>2024-10-16T13:55:48+00:00</lastmod>
-  <priority>0.80</priority>
+  <loc>https://www.carbon.place/about/</loc>
+  <lastmod>2026-09-03</lastmod>
+  <priority>0.70</priority>
 </url>
 <url>
   <loc>https://www.carbon.place/about/faq/</loc>
-  <lastmod>2024-10-16T13:55:48+00:00</lastmod>
-  <priority>0.64</priority>
+  <lastmod>2026-09-03</lastmod>
+  <priority>0.60</priority>
+</url>
+<url>
+  <loc>https://www.carbon.place/about/feedback/</loc>
+  <lastmod>2026-09-03</lastmod>
+  <priority>0.40</priority>
+</url>
+<url>
+  <loc>https://www.carbon.place/privacy/</loc>
+  <lastmod>2026-09-03</lastmod>
+  <priority>0.30</priority>
+</url>
+
+<!-- Legacy site. Superseded by the tools above and kept only so old links and
+     citations still resolve, so it is listed at the lowest priority. -->
+<url>
+  <loc>https://www.carbon.place/legacy/</loc>
+  <lastmod>2024-10-16</lastmod>
+  <priority>0.10</priority>
 </url>
 <url>
   <loc>https://www.carbon.place/legacy/about/</loc>
-  <lastmod>2024-10-16T13:55:48+00:00</lastmod>
-  <priority>0.64</priority>
+  <lastmod>2024-10-16</lastmod>
+  <priority>0.10</priority>
 </url>
 <url>
   <loc>https://www.carbon.place/legacy/data/</loc>
-  <lastmod>2024-10-16T13:55:48+00:00</lastmod>
-  <priority>0.64</priority>
+  <lastmod>2024-10-16</lastmod>
+  <priority>0.10</priority>
 </url>
 <url>
   <loc>https://www.carbon.place/legacy/la/</loc>
-  <lastmod>2024-10-16T13:55:48+00:00</lastmod>
-  <priority>0.64</priority>
+  <lastmod>2024-10-16</lastmod>
+  <priority>0.10</priority>
 </url>
 <url>
   <loc>https://www.carbon.place/legacy/privacy/</loc>
-  <lastmod>2024-10-16T13:55:48+00:00</lastmod>
-  <priority>0.64</priority>
+  <lastmod>2024-10-16</lastmod>
+  <priority>0.10</priority>
 </url>
-
 
 </urlset>

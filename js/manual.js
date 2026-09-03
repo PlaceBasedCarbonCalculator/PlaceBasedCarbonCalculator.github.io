@@ -21,9 +21,18 @@ function loadManual ()
 
 
 // Function to convert the loaded Markdown file text to HTML
+//
+// customizedHeaderId lets a heading carry an explicit "{#id}". Without it
+// showdown derives every id from the heading text and, where a title repeats
+// ("Data Sources", "Further reading", "Neighbourhoods"), falls back to a
+// positional suffix - datasources, datasources-1, datasources-2 and so on. Those
+// suffixes track document order, so inserting or moving a section silently
+// repoints every later link. The repeated headings therefore name their own id;
+// keep this option in step with capUi.mdToHtml in js/ui-common.js, which renders
+// the same file for the in-tool help popups.
 function mdToHtml (mdText)
 {
-  const converter = new showdown.Converter ();
+  const converter = new showdown.Converter ({customizedHeaderId: true});
   const html = converter.makeHtml (mdText);
   return html;
 }
