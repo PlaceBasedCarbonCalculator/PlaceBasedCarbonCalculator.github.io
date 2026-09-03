@@ -5,7 +5,6 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="Description" content="A combined local carbon and place report for your neighbourhood, with links into the Carbon & Place tools.">
 	<!-- Per-neighbourhood report is generated from a query parameter; do not index the thin templated variants -->
-	<meta name="robots" content="noindex, follow">
 	<title>Local Report - Carbon &amp; Place</title>
 
 	<link rel="stylesheet" href="/css/main.css">
@@ -42,7 +41,7 @@
 		.local-report .report-lede { color: #555; }
 		.context-list { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
 		.context-list li { background: #f7f3f4; border: 1px solid #e6d9dd; border-radius: 8px; padding: 12px 14px; }
-		.context-list .context-label { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: #8a7d81; }
+		.context-list .context-label { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: #6f6367; }
 		.context-list .context-value { font-size: 16px; font-weight: bold; color: #222; }
 		.context-list a.context-link { display: block; text-decoration: none; }
 		.context-list a.context-link:hover .context-value { color: #ac1a40; }
@@ -95,7 +94,7 @@
 	</p>
 </div>
 
-<div class="content local-report">
+<main class="content local-report">
 	<p><a href="/reports/">&larr; All reports</a></p>
 	<h1 id="report-title">Local Report</h1>
 	<p id="report-lede" class="report-lede"></p>
@@ -151,7 +150,7 @@
 		<p>Each tool opens focused on this neighbourhood.</p>
 		<ul class="card-grid" id="tool-links"></ul>
 	</div>
-</div>
+</main>
 
 <script type="text/javascript" src="/js/common-nonmap.js"></script>
 <script type="text/javascript" src="/js/databin.js"></script>

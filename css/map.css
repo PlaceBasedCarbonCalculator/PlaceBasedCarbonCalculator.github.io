@@ -165,12 +165,20 @@ p.help-end {
   height: auto;
 }
 
+/* 24px is the minimum comfortable touch target; the icon itself stays the same
+   size, the button just claims enough room around it. inline-flex centres the
+   icon in that box, which a plain inline button would not do. */
 .helpbutton {
   cursor: pointer;
   background: transparent;
   border: none !important;
-  min-width: 15px;
-  min-height: 15px;
+  min-width: 24px;
+  min-height: 24px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
 }
 
 .fa-question-circle {

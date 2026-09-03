@@ -157,7 +157,7 @@
 					<div class="feedback-text">
 						<h2>How can we improve this tool?</h2>
 						<p>We would love to hear how you are using Carbon &amp; Place and how we can make our tools more useful. If you have found an error in the data or a bug in the tool, you can also report it on <a href="https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/issues" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
-						<p><a href="/about/feedback" class="opentool">Submit Feedback</a></p>
+						<p><a href="/about/feedback" class="toolbutton">Submit Feedback</a></p>
 					</div>
 					<img src="/images/ui/feedback.webp" alt="Feedback" loading="lazy" class="feedback-image">
 				</div>
@@ -238,7 +238,7 @@
 					</div>
 				</div>
 				
-				<p><label class="switch"><input type="checkbox" name="daysymetricmode" class="updatelayer" data-layer="zones" checked><span class="slider round"></span></label> Dasymetric <button aria-label="Help dasymetric mode" class="helpbutton" data-help="dasymetric"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<p><label class="switch"><input type="checkbox" name="daysymetricmode" class="updatelayer" data-layer="zones" aria-label="Dasymetric mode" checked><span class="slider round"></span></label> Dasymetric <button aria-label="Help dasymetric mode" class="helpbutton" data-help="dasymetric"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 				
 			
 			</div>
@@ -491,11 +491,12 @@
 								<button onclick="switchChartTab(event, 'descTab-meters-chartrow-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
 								<button onclick="switchChartTab(event, 'descTab-meters-chartrow-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
 							</div>
-							<div id="descTab-meters-chartrow-overview" class="chart-description-tab-content active"><p>This chart shows the total number of domestic gas and electricity meters in this postcode, with electricity meters also split into standard and Economy 7. In principle the total should equal the sum of the two categories; in practice reporting differences and privacy suppression produce small discrepancies, so both counts are shown rather than one being derived from the other.</p></div>
+							<div id="descTab-meters-chartrow-overview" class="chart-description-tab-content active"><p>This chart shows the total number of domestic gas and electricity meters in this postcode, with electricity meters also split into standard and Economy 7. In principle the total should equal the sum of the two categories; in practice reporting differences and privacy suppression produce small discrepancies, so both counts are shown rather than one being derived from the other.</p>
+							<p>A change in the number of meters usually indicates house building or demolition, and a gap between the number of gas and electricity meters indicates homes that are not connected to the gas grid.</p>
+							</div>
 							<div id="descTab-meters-chartrow-policy" class="chart-description-tab-content"><p>Meter counts give a rough measure of how many homes a retrofit programme would have to reach in each postcode, and the balance between gas and electricity meters separates gas-heated streets from all-electric ones. The two need different approaches: gas-heated homes face a change of heating system, whereas all-electric homes, which include many flats and off-gas-grid properties, are more often a question of fabric, controls, and tariffs.</p></div>
 							<div id="descTab-meters-chartrow-methods" class="chart-description-tab-content"><p>Meter counts come from the same DESNZ sub-national statistics. Meters do not map one-to-one to households: some homes have multiple meters, some meters serve communal areas, and vacant properties are still counted.</p></div>
 						</div>
-					  <p>A change in the number of meters usually indicates house building or demolition, and a gap between the number of gas and electricity meters indicates homes that are not connected to the gas grid.</p>
 					</div>
 					
 					<div class="chart-container">
@@ -644,11 +645,12 @@
 								<button onclick="switchChartTab(event, 'descTab-electricityLSOA-chartrow-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
 								<button onclick="switchChartTab(event, 'descTab-electricityLSOA-chartrow-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
 							</div>
-							<div id="descTab-electricityLSOA-chartrow-overview" class="chart-description-tab-content active"><p>This chart shows the annual electricity consumption in kilowatt hours by domestic buildings in this area.</p></div>
+							<div id="descTab-electricityLSOA-chartrow-overview" class="chart-description-tab-content active"><p>This chart shows the annual electricity consumption in kilowatt hours by domestic buildings in this area.</p>
+							<p>Use the drop-down menu to select either total, median, or mean consumption.</p></div>
 							<div id="descTab-electricityLSOA-chartrow-policy" class="chart-description-tab-content"><p>National electricity consumption per home has fallen for years as lighting and appliances became more efficient, so a neighbourhood where consumption is rising against that trend is unusual and usually indicates early adoption of heat pumps, electric vehicles, or both. These clusters are of practical interest to distribution network operators planning reinforcement, and to councils deciding where charging and heat pump support will find willing households.</p></div>
 							<div id="descTab-electricityLSOA-chartrow-methods" class="chart-description-tab-content"><p>Figures are totals and averages for this area; Economy 7 consumption is shown separately where present. Source: the sub-national <a href="https://www.gov.uk/government/collections/sub-national-gas-consumption-data" target="_blank" rel="noopener">gas</a> and <a href="https://www.gov.uk/government/collections/sub-national-electricity-consumption-data" target="_blank" rel="noopener">electricity</a> statistics from the Department for Energy Security and Net Zero. Because they come from meter readings these are among the most reliable figures in Carbon &amp; Place, subject to three caveats that apply to every energy chart: totals are not weather-corrected, areas with few meters are suppressed, and unmetered fuels such as oil and solid fuel are absent altogether. See the <a href="/manual/#energyconsumption" class="opentool">manual</a>.</p></div>
 						</div>
-							<p>Use the drop-down menu to select either total, median, or mean consumption.</p>
+							
 							<p>Chart type: <select id="select_electricityLSOA" name="select_electricityLSOA" onchange="makeChartLSOAEnergy()">
 							<option value="median" selected>Median</option>
 							<option value="mean">Mean</option>
@@ -669,11 +671,13 @@
 								<button onclick="switchChartTab(event, 'descTab-metersLSOA-chartrow-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
 								<button onclick="switchChartTab(event, 'descTab-metersLSOA-chartrow-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
 							</div>
-							<div id="descTab-metersLSOA-chartrow-overview" class="chart-description-tab-content active"><p>This chart shows this area's total number of domestic gas and electricity meters.</p></div>
+							<div id="descTab-metersLSOA-chartrow-overview" class="chart-description-tab-content active"><p>This chart shows this area's total number of domestic gas and electricity meters.</p>
+							<p>A change in the number of meters usually indicates house building or demolition, and a gap between the number of gas and electricity meters indicates homes that are not connected to the gas grid.</p>
+							</div>
 							<div id="descTab-metersLSOA-chartrow-policy" class="chart-description-tab-content"><p>The balance between gas and electricity meters sets the retrofit starting point for an area. Neighbourhoods with few gas meters are off the gas grid, and because the fuels they use instead are both expensive and carbon intensive, they are usually the places where a heat pump improves bills and emissions at the same time. Heavily gas-heated areas face a longer transition that depends on national decisions about the future of the gas network as much as on local programmes.</p></div>
 							<div id="descTab-metersLSOA-chartrow-methods" class="chart-description-tab-content"><p>Meter counts from the DESNZ sub-national statistics, aggregated to the area shown here. Meters do not map one-to-one to households.</p></div>
 						</div>
-							<p>A change in the number of meters usually indicates house building or demolition, and a gap between the number of gas and electricity meters indicates homes that are not connected to the gas grid.</p>
+							
 							</div>
 						
 						<div class="chart-container">

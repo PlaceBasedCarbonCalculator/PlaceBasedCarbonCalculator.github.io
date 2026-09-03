@@ -134,16 +134,16 @@
         <div style="background-color: #a5cffa; padding: 5px">
           <p><b>To view the map, please provide the information below:</b></p>
           <form method="POST" action="https://script.google.com/macros/s/AKfycbxNzqg-ewbcHJCqRNgzPPWhCyPXZAdlTNVpepVN6o59oKRTqKj3n-8WR7oG50_CQYOT/exec" target="dummyframe">
-          <label for="Name">Full name </label>
+          <label for="namebox">Full name </label>
           <input id="namebox" name="Name" type="text" placeholder="Full name" required=""><br>
-          <label for="Consent">I agree to the terms of use for this site (see below): </label>
+          <label for="Consentcheckbox">I agree to the terms of use for this site (see below): </label>
           <input id="Consentcheckbox" name="Consent" type="checkbox" required=""><br>
-          <label for="Cookies">I agree to the use of Google Analytics cookies: </label>
+          <label for="Cookiescheckbox">I agree to the use of Google Analytics cookies: </label>
           <input id="Cookiescheckbox" name="Cookies" type="checkbox" required=""><br>
           <button type="submit" onclick="closewelcome()">Take me to the map</button>
         </form></div>
         
-        <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+        <iframe name="dummyframe" id="dummyframe" title="Form submission target" style="display: none;"></iframe>
         
         <h2>Why do you ask for my name?</h2>
         <p>The <a href="https://use-land-property-data.service.gov.uk/datasets/ccod/licence/view" target="_blank" rel="noopener noreferrer">licence</a> for the data published by the Land Registry requires that we <i>"maintain End-User Records ... for the purpose of auditing compliance with the terms of this Licence and/or for the prevention and/or detection of crime"</i>. Therefore we ask for your name and record the time you visited the site. We will not share this data with anybody unless HM Land Registry requires us to as part of an audit. </p>
@@ -166,7 +166,7 @@
 					<div class="feedback-text">
 						<h2>How can we improve this tool?</h2>
 						<p>We would love to hear how you are using Carbon &amp; Place and how we can make our tools more useful. If you have found an error in the data or a bug in the tool, you can also report it on <a href="https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/issues" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
-						<p><a href="/about/feedback" class="opentool">Submit Feedback</a></p>
+						<p><a href="/about/feedback" class="toolbutton">Submit Feedback</a></p>
 					</div>
 					<img src="/images/ui/feedback.webp" alt="Feedback" loading="lazy" class="feedback-image">
 				</div>

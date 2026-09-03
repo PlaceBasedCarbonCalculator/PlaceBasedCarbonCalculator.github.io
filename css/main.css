@@ -195,21 +195,29 @@ a.smaller {
   white-space: nowrap;
 }
 
-/* Homepage tool buttons, also used in modals */
-.opentool {
-  padding: 10px;
-  background-color: green;
-  line-height: 2.3;
-}
+/* .opentool marks a link whose map coordinates are rewritten to the current map
+   view on click (capUi.adjustOpenToolLinks). It is a behaviour hook, not a
+   style: nearly every one of them sits mid-sentence in a chart description
+   ("See the manual", "matched through the synthetic population model"), where
+   the old green button styling broke the line and read as a stray button. They
+   now look like every other link beside them. Anything that really is a button
+   says so with .toolbutton below. */
 
-a.opentool {
+/* A genuine call-to-action link, e.g. "Submit Feedback" on each tool page.
+   Keeps the green the button already had (white on it is 5.14:1). */
+.toolbutton {
+  display: inline-block;
+  padding: 10px 16px;
+  background-color: green;
+  border-radius: 6px;
+}
+a.toolbutton,
+a.toolbutton:hover,
+a.toolbutton:visited {
   color: #ffffff;
 }
-a.opentool:hover{
-  color: #ffffff;
-}
-a.opentool:visited{
-  color: #ffffff;
+a.toolbutton:hover {
+  background-color: #006200;
 }
 
 /* Searchable Location Dropdown */

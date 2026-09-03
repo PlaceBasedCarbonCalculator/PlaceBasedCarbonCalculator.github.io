@@ -216,7 +216,7 @@ Building heights are calculated as the maximum difference between the DSM and DT
 Some map layers are available in every tool. The administrative boundary layers help with navigation and show where responsibility passes from one organisation to another, which is useful when deciding who could act on what the maps show.
 
 <!-- #boundaries-la -->
-##### Lower Tier Local Authority 2024
+#### Lower Tier Local Authority 2024
 
 ![Lower Tier Local Authority](/images/manual/la.webp)
 
@@ -230,7 +230,7 @@ Local authorities matter for climate policy because they control planning, local
 [Original data source](https://geoportal.statistics.gov.uk/search?q=BDY_LAD%202024&sort=Title%7Ctitle%7Casc) (ONS Geoportal)
 <!-- /#boundaries-la -->
 <!-- #boundaries-wards -->
-##### Wards 2024
+#### Wards 2024
 
 ![Ward](/images/manual/ward.webp)
 
@@ -241,7 +241,7 @@ Wards are useful for presenting statistics because people generally know which w
 [Original data source](https://geoportal.statistics.gov.uk/search?q=BDY_WD%202024&sort=Title%7Ctitle%7Casc) (ONS Geoportal)
 <!-- /#boundaries-wards -->
 <!-- #boundaries-parish -->
-##### Parish 2023
+#### Parish 2023
 
 ![Parish](/images/manual/parish.webp)
 
@@ -252,7 +252,7 @@ Although parish councils have few formal climate responsibilities, many lead pra
 [Original data source](https://geoportal.statistics.gov.uk/search?q=BDY_PAR%202023&sort=Title%7Ctitle%7Casc) (ONS Geoportal)
 <!-- /#boundaries-parish -->
 <!-- #boundaries-westminster -->
-##### Westminster Constituencies 2024
+#### Westminster Constituencies 2024
 
 ![Constituencies](/images/manual/constituency.webp)
 

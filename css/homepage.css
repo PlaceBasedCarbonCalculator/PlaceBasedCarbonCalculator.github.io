@@ -248,6 +248,19 @@ a.smaller {
   --hp-landown: #7a0dc7;
   --hp-retrofit: #0d3cc7;
   --hp-legacy: #8a6b71;
+  /* Each tool colour is used three ways: the decorative accent bar, the CTA
+     background under white text, and the badge text on white. The two text uses
+     both need 4.5:1 against white, which the green and the gold do not reach at
+     full brightness (3.52:1 and 2.61:1). They keep their bright value for the
+     accent bar and hand text a deeper variant of the same hue; the other four
+     already pass, so their -deep value is the colour itself. Keep the pairs in
+     step if a tool colour is ever retuned. */
+  --hp-pbcc-deep: #c70d0d;      /* 6.01:1 on white */
+  --hp-transport-deep: #1b8910; /* 4.53:1 on white */
+  --hp-landuse-deep: #8a6b00;   /* 5.02:1 on white */
+  --hp-landown-deep: #7a0dc7;   /* 7.75:1 on white */
+  --hp-retrofit-deep: #0d3cc7;  /* 8.44:1 on white */
+  --hp-legacy-deep: #8a6b71;    /* 4.75:1 on white */
 }
 body { color: var(--hp-ink); }
 #main { background: var(--hp-bg); }
@@ -362,12 +375,20 @@ body { color: var(--hp-ink); }
   background: #efe6e9; color: var(--hp-brand); padding: 3px 8px; border-radius: 6px; margin-left: 8px; vertical-align: middle;
 }
 
-.t-pbcc .accent, .t-pbcc .cta { background: var(--hp-pbcc); } .t-pbcc .badge { color: var(--hp-pbcc); }
-.t-transport .accent, .t-transport .cta { background: var(--hp-transport); } .t-transport .badge { color: var(--hp-transport); }
-.t-landuse .accent, .t-landuse .cta { background: var(--hp-landuse); } .t-landuse .badge { color: #8a6b00; }
-.t-landown .accent, .t-landown .cta { background: var(--hp-landown); } .t-landown .badge { color: var(--hp-landown); }
-.t-retrofit .accent, .t-retrofit .cta { background: var(--hp-retrofit); } .t-retrofit .badge { color: var(--hp-retrofit); }
-.t-legacy .accent, .t-legacy .cta { background: var(--hp-legacy); } .t-legacy .badge { color: var(--hp-legacy); }
+/* Accent bar keeps the bright colour; anything carrying text takes the -deep
+   variant, so every card clears 4.5:1 both ways (see the tokens above). */
+.t-pbcc .accent { background: var(--hp-pbcc); }
+.t-pbcc .cta { background: var(--hp-pbcc-deep); } .t-pbcc .badge { color: var(--hp-pbcc-deep); }
+.t-transport .accent { background: var(--hp-transport); }
+.t-transport .cta { background: var(--hp-transport-deep); } .t-transport .badge { color: var(--hp-transport-deep); }
+.t-landuse .accent { background: var(--hp-landuse); }
+.t-landuse .cta { background: var(--hp-landuse-deep); } .t-landuse .badge { color: var(--hp-landuse-deep); }
+.t-landown .accent { background: var(--hp-landown); }
+.t-landown .cta { background: var(--hp-landown-deep); } .t-landown .badge { color: var(--hp-landown-deep); }
+.t-retrofit .accent { background: var(--hp-retrofit); }
+.t-retrofit .cta { background: var(--hp-retrofit-deep); } .t-retrofit .badge { color: var(--hp-retrofit-deep); }
+.t-legacy .accent { background: var(--hp-legacy); }
+.t-legacy .cta { background: var(--hp-legacy-deep); } .t-legacy .badge { color: var(--hp-legacy-deep); }
 
 /* ---------- Learn more split ---------- */
 .split { display: grid; gap: 22px; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); }

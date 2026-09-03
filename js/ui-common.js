@@ -437,7 +437,17 @@ const capUi = (function () {
 				//encoding : "custom"
 				
 			}), 'top-left');
-				
+
+			// MapLibre's terrain control ships an icon but no accessible name, so
+			// a screen reader announces it as just "button". Every other control
+			// it adds names itself; this one has to be named here, once the
+			// control is in the DOM. Only aria-label is set: the control rewrites
+			// its own title as it toggles, and the label survives that.
+			var terrainBtn = map.getContainer().querySelector('.maplibregl-ctrl-terrain');
+			if (terrainBtn && !terrainBtn.getAttribute('aria-label')) {
+				terrainBtn.setAttribute('aria-label', 'Toggle 3D terrain');
+			}
+
 			// Add placenames support
 			map.once('idle', function () {
 				capUi.placenames(map);
