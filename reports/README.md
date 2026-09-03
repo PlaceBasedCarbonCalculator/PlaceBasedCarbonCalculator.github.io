@@ -108,6 +108,18 @@ reports (`hideLsoaOnlyPbccBlocks`); the population chart and community photo,
 which do have `<level>_population` / `<level>_community_pics` bins, remain in the
 demographics tab.
 
+**How LSOAs are matched to areas**: wards and parishes are often smaller than
+an LSOA, so each LSOA is *split* between the areas it covers rather than
+assigned whole to one of them (`../build/R/area_weights.R`, the `area_weights`
+target). The split is by resident population: each live postcode takes an equal
+share of its 2021 census Output Area population, and an area's weight is the
+share of the LSOA's residents whose postcodes fall inside it. Counts are
+apportioned by that weight and averages are weighted by it, so counts in the
+area bins are no longer whole numbers. Local authorities and constituencies are
+much larger than an LSOA and keep the older whole-LSOA assignment by
+population-weighted centroid (`lsoa_admin`), so their figures are unchanged.
+Weights are a fixed spatial pattern from the 2021 census applied to every year.
+
 **Aggregation methods**: counts are summed; rates and averages are recomputed
 from summed numerators/denominators where possible, otherwise weighted means
 (population weights for PT frequency, accessibility, and vehicle rates; meter or

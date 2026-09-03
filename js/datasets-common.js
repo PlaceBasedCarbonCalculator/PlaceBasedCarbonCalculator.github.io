@@ -11,7 +11,7 @@
 // ward/parish/constituency ONS codes the report links need.
 if (typeof capBin !== 'undefined') {
 	capBin.register({
-		lsoa_overview: 'index_lsoa_overview_2026-08-29.json.gz'
+		lsoa_overview: 'index_lsoa_overview_2026-09-02.json.gz'
 	});
 }
 

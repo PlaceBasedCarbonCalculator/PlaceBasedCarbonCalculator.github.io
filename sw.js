@@ -1,7 +1,7 @@
 // Bump CACHE_VERSION whenever the precache list or caching strategy changes.
 // This is used to derive a single, versioned cache name so old caches are
 // purged on activation and offline behaviour stays consistent.
-const CACHE_VERSION = 'v24';
+const CACHE_VERSION = 'v25';
 const CACHE_NAME = `CAP-cache-${CACHE_VERSION}`;
 
 const OFFLINE_FALLBACK_PAGE = '/offline.html';

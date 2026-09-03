@@ -1,782 +1,426 @@
-// Local Chart Mangement
-var overviewChart;
-var historicalChart;
+// Page driver for the four area report pages: reports/la.html, wards.html,
+// parishes.html and constituencies.html. One script serves all four; each page
+// says which level it is through window.REPORT_CONFIG, set inline just before
+// this file is loaded:
+//
+//   cardLevel     'la' | 'ward' | 'parish' | 'constituency'
+//   emissionsBin  the capBin dataset holding that level's emissions series
+//   level         display name for the level ("Local Authority", "Ward", ...)
+//   nameJson      [{id, name}, ...] lookup, used for the page title
+//
+// This is the area-level counterpart of the inline scripts in reports/lsoa.html
+// and follows the same shape: three headline charts up front, with each tool's
+// full report card fetched only when its section is expanded.
+//
+// It replaces an earlier version of this file that drove a different, older LA
+// page. That version built its charts into elements none of these four pages
+// contain (defaultOpen, population-chart, historical-chart, overview-chart), and
+// because it called document.getElementById('defaultOpen').click() at parse time
+// it threw a TypeError before it finished loading - so initPageWithLocation() was
+// never even defined and the pages rendered nothing but their heading. Its chart
+// code is not lost: it was a copy of what the generated reports/cards/pbcc-card.js
+// draws, which these pages already load when a section is expanded. Its copies of
+// switchChartTab() and modalTab() are likewise supplied by the card modules.
+(function () {
+	'use strict';
 
-var consumptionFoodChart;
-var consumptionAlcoholChart;
-var consumptionFurnishingsChart;
-var consumptionOtherHousingChart;
-var consumptionClothingChart;
-var consumptionCommunicationChart;
-var consumptionRecreationChart;
-var consumptionRestaurantsChart;
-var consumptionHealthChart;
-var consumptionEducationChart;
-var consumptionMiscellaneousChart;
-var consumptionFlightsChart;
-var consumptionVehiclePurchaseChart;
-var consumptionVehicleOtherChart;
-var consumptionTotalChart;
+	var CFG = window.REPORT_CONFIG || {};
+	var level = CFG.cardLevel || 'la';
+	var levelName = CFG.level || 'Area';
+	var emissionsBin = CFG.emissionsBin || (level + '_emissions');
 
-var gasChart;
-var electricChart;
-var carEmissionsChart;
-var vanEmissionsChart;
-var bikeCompanyChart;
-var publicTransportChart;
+	var titleEl = document.getElementById('report-title');
+	var ledeEl = document.getElementById('report-lede');
+	var errorEl = document.getElementById('report-error');
+	var bodyEl = document.getElementById('report-body');
 
-var otherHeatingChart;
-var otherHousingChart;
+	function showError(msg) {
+		if (!errorEl) { return; }
+		errorEl.textContent = msg;
+		errorEl.style.display = 'block';
+	}
 
-var populationChart;
-
-var locationData = {};
-var voa2020LocationData = {};
-var voa2010LocationData = {};
-var communityPicLocationData = {};
-var populationLocationData = {};
-var lsoaOverviewData = {};
-var laHistoricalData = {};
-var oacHistoricalData = {};
-var gbHistoricalData = {};
-
-var dwellingsctChart;
-var dwellingstypeChart;
-var dwellingsbedroomsChart;
-var dwellingsageChart;
-
-manageChartsLA = function (locationId) {
-	console.log('Managing Charts LA');
-
-	// Primary chained requests that feed multiple charts
-	const urlsPrimary = [
-		'https://pbcc.blob.core.windows.net/pbcc-data/la_emissions/v2/' + locationId + '.json',
-        'https://pbcc.blob.core.windows.net/pbcc-data/la_emissions/v2/GB.json'
-	];
-
-	const primary = Promise.all(urlsPrimary.map(capUi.fetchJSON))
-		.then(([laData,GBData]) => {
-			laHistoricalData = laData;
-            gbHistoricalData = GBData;
-	
-			makeChartHistorical();
-			makeChartPopulation();
-			lsoaCharacteristicsTable(lsoaOverviewData);
-		})
-		.catch(error => {
-			console.error('Failed to load primary pbcc datasets:', error);
+	function esc(s) {
+		return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+			return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c];
 		});
-
-	//const pCommunity = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/community_photo/v1/' + locationId + '.json')
-	//	.then(data => { communityPicLocationData = data; makeCommunityPic(); })
-	//	.catch(err => { console.error('Community photo failed:', err); });
-
-    return Promise.all([primary ]); //pCommunity
-};
-
-makeCommunityPic = function(){
-  
-  const names = communityPicLocationData["id"];
-  const numbers = communityPicLocationData["pic"];
-  const repeatedNames = numbers.flatMap((num, index) => Array(num).fill(names[index]));
-  
-  repeatedNames.forEach((name, index) => {
-      const img = document.getElementById(`ff${index}`);
-      if (img) {
-          img.src = `/images/ui/family_photos/${name}.webp`;
-          img.setAttribute('title', `${name}`.replaceAll('_', ' '));
-      }
-  });
-}
+	}
 
 
-makeChartHistorical = function(){
-  
-  	// Destroy old charts
-	if(overviewChart){overviewChart.destroy()}
-	if(historicalChart){historicalChart.destroy()}
-	if(consumptionFoodChart){consumptionFoodChart.destroy()}
-	if(consumptionAlcoholChart){consumptionAlcoholChart.destroy()}
-	if(consumptionFurnishingsChart){consumptionFurnishingsChart.destroy()}
-	if(consumptionClothingChart){consumptionClothingChart.destroy()}
-	if(consumptionCommunicationChart){consumptionCommunicationChart.destroy()}
-	if(consumptionRecreationChart){consumptionRecreationChart.destroy()}
-	if(consumptionRestaurantsChart){consumptionRestaurantsChart.destroy()}
-	if(consumptionHealthChart){consumptionHealthChart.destroy()}
-	if(consumptionEducationChart){consumptionEducationChart.destroy()}
-	if(consumptionMiscellaneousChart){consumptionMiscellaneousChart.destroy()}
-	if(consumptionTotalChart){consumptionTotalChart.destroy()}
-	if(consumptionFlightsChart){consumptionFlightsChart.destroy()}
-	if(consumptionVehiclePurchaseChart){consumptionVehiclePurchaseChart.destroy()}
-	if(consumptionVehicleOtherChart){consumptionVehicleOtherChart.destroy()}
-	if(gasChart){gasChart.destroy()}
-	if(electricChart){electricChart.destroy()}
-	if(otherHeatingChart){otherHeatingChart.destroy()}
-	if(otherHousingChart){otherHousingChart.destroy()}
-	if(carEmissionsChart){carEmissionsChart.destroy()}
-	if(vanEmissionsChart){vanEmissionsChart.destroy()}
-	if(bikeCompanyChart){bikeCompanyChart.destroy()}
-	if(publicTransportChart){publicTransportChart.destroy()}
-  
-   		
-  var component_la = [
-    // Label, field (e.g. Gas => dgkp), background colour, border colour, gradelable, tableValue, tableGrade
-		['Gas LA'                  , 'dom_gas_kgco2e_percap', 'rgb(157,130,255)', 'rgb(0,0,0)'],
-		['Electricity LA'          , 'dom_elec_kgco2e_percap', 'rgb(157,130,255)'   , 'rgb(0,0,0)'],
-		['Other Heating LA'        , 'heating_other_kgco2e_percap', 'rgb(157,130,255)'     , 'rgb(0,0,0)'],
-		['Other Housing LA'        , 'housing_other_kgco2e_percap','rgb(157,130,255)'    , 'rgb(0,0,0)'],
-		['Furnishings LA'          , 'furnish_kgco2e_percap', 'rgb(157,130,255)'  , 'rgb(0,0,0)'],
-		['Food & Drink LA'         , 'food_kgco2e_percap' , 'rgb(157,130,255)', 'rgb(0,0,0)'],
-		['Alcohol & Tobacco LA'    , 'alcohol_kgco2e_percap' , 'rgb(157,130,255)', 'rgb(0,0,0)'],
-		['Clothing LA'             , 'clothing_kgco2e_percap' , 'rgb(157,130,255)'   , 'rgb(0,0,0)'],
-		['Communications LA'       , 'communication_kgco2e_percap', 'rgb(157,130,255)'  , 'rgb(0,0,0)'],
-		['Recreation LA'           , 'recreation_kgco2e_percap' , 'rgb(157,130,255)', 'rgb(0,0,0)'],
-		['Restaurants & Hotels LA' , 'restaurant_kgco2e_percap', 'rgb(157,130,255)' , 'rgb(0,0,0)'],
-		['Health LA'               , 'health_kgco2e_percap' , 'rgb(157,130,255)'  , 'rgb(0,0,0)'],
-		['Education LA'            , 'education_kgco2e_percap' , 'rgb(157,130,255)'  , 'rgb(0,0,0)'],
-		['Miscellaneous LA'        , 'misc_kgco2e_percap', 'rgb(157,130,255)'     , 'rgb(0,0,0)'],
-		['Vehicle Purchase LA'     , 'transport_vehiclepurchase_kgco2e_percap', 'rgb(157,130,255)', 'rgb(0,0,0)'],
-		['Cars LA'                 , 'car_kgco2e_percap' , 'rgb(157,130,255)'      , 'rgb(0,0,0)'],
-		['Vans LA'                 , 'van_kgco2e_percap' , 'rgb(157,130,255)'      , 'rgb(0,0,0)'],
-		['Bikes & Company Vehicles LA' , 'company_bike_kgco2e_percap', 'rgb(157,130,255)'    , 'rgb(0,0,0)'],
-		['Vehicle Maintenance LA'   , 'transport_optranequip_other_kgco2e_percap','rgb(157,130,255)', 'rgb(0,0,0)'  ],
-		['Public Transport LA'     , 'transport_pt_kgco2e_percap', 'rgb(157,130,255)'  , 'rgb(0,0,0)'],
-		['Flights LA'              , 'flights_kgco2e_percap', 'rgb(157,130,255)'   , 'rgb(0,0,0)'],
-		['Goods & Services LA'     , 'goods_services_combined_kgco2e_percap', 'rgb(157,130,255)', 'rgb(0,0,0)']
-  ]
-   
-  
-  var component_GB = [
-    // Label, field (e.g. Gas => dgkp), background colour, border colour, gradelable, tableValue, tableGrade
-		['Gas GB'                  , 'dom_gas_kgco2e_percap', 'rgb(130,255,61)', 'rgb(0,0,0)'],
-		['Electricity GB'          , 'dom_elec_kgco2e_percap', 'rgb(130,255,61)'   , 'rgb(0,0,0)'],
-		['Other Heating GB'        , 'heating_other_kgco2e_percap', 'rgb(130,255,61)'     , 'rgb(0,0,0)'],
-		['Other Housing GB'        , 'housing_other_kgco2e_percap','rgb(130,255,61)'    , 'rgb(0,0,0)'],
-		['Furnishings GB'          , 'furnish_kgco2e_percap', 'rgb(130,255,61)'  , 'rgb(0,0,0)'],
-		['Food & Drink GB'         , 'food_kgco2e_percap' , 'rgb(130,255,61)', 'rgb(0,0,0)'],
-		['Alcohol & Tobacco GB'    , 'alcohol_kgco2e_percap' , 'rgb(130,255,61)', 'rgb(0,0,0)'],
-		['Clothing GB'             , 'clothing_kgco2e_percap' , 'rgb(130,255,61)'   , 'rgb(0,0,0)'],
-		['Communications GB'       , 'communication_kgco2e_percap', 'rgb(130,255,61)'  , 'rgb(0,0,0)'],
-		['Recreation GB'           , 'recreation_kgco2e_percap' , 'rgb(130,255,61)', 'rgb(0,0,0)'],
-		['Restaurants & Hotels GB' , 'restaurant_kgco2e_percap', 'rgb(130,255,61)' , 'rgb(0,0,0)'],
-		['Health GB'               , 'health_kgco2e_percap' , 'rgb(130,255,61)'  , 'rgb(0,0,0)'],
-		['Education GB'            , 'education_kgco2e_percap' , 'rgb(130,255,61)'  , 'rgb(0,0,0)'],
-		['Miscellaneous GB'        , 'misc_kgco2e_percap', 'rgb(130,255,61)'     , 'rgb(0,0,0)'],
-		['Vehicle Purchase GB'     , 'transport_vehiclepurchase_kgco2e_percap', 'rgb(130,255,61)', 'rgb(0,0,0)'],
-		['Cars GB'                 , 'car_kgco2e_percap' , 'rgb(130,255,61)'      , 'rgb(0,0,0)'],
-		['Vans GB'                 , 'van_kgco2e_percap' , 'rgb(130,255,61)'      , 'rgb(0,0,0)'],
-		['Bikes & Company Vehicles GB' , 'company_bike_kgco2e_percap', 'rgb(130,255,61)'    , 'rgb(0,0,0)'],
-		['Vehicle Maintenance GB'   , 'transport_optranequip_other_kgco2e_percap','rgb(130,255,61)', 'rgb(0,0,0)'  ],
-		['Public Transport GB'     , 'transport_pt_kgco2e_percap', 'rgb(130,255,61)'  , 'rgb(0,0,0)'],
-		['Flights GB'              , 'flights_kgco2e_percap', 'rgb(130,255,61)'   , 'rgb(0,0,0)'],
-		['Goods & Services GB'     , 'goods_services_combined_kgco2e_percap', 'rgb(130,255,61)', 'rgb(0,0,0)']
-  ]
-  
-	const data_la = {datasets: []};
-	const data_gb = {datasets: []};
+	// =========================================================================
+	// Data registration
+	// =========================================================================
 
-	
-	//console.log(laHistoricalData);
-	component_la.forEach(comp => {
-		const values = laHistoricalData[comp[1]] || [];
-		
-		data_la.datasets.push({
-		label: comp[0],
-		data: values,
-		gradelabel: Array.isArray(values) ? new Array(values.length).fill('') : [],
-		backgroundColor: comp[2],
-		borderColor: comp[3],
-		borderWidth: 1,
-		stack: 'Stack 1'
-		});
-	});
-  	
-	component_GB.forEach(comp => {
-		const values = gbHistoricalData[comp[1]] || [];
-		
-		data_gb.datasets.push({
-		label: comp[0],
-		data: values,
-		gradelabel: Array.isArray(values) ? new Array(values.length).fill('') : [],
-		backgroundColor: comp[2],
-		borderColor: comp[3],
-		borderWidth: 1,
-		stack: 'Stack 3'
-		});
+	// Emissions bins for all four levels (see js/databin.js). The whole set is
+	// registered because one script serves all four pages; which one is read is
+	// decided by REPORT_CONFIG.emissionsBin. These replace the old
+	// pbcc-data/la_emissions/v2/ JSON folder, which only ever held local
+	// authorities - so before this, a ward report showed its LA's figures.
+	// la_emissions is always needed too: it carries the 'GB' national comparison
+	// row used by the report cards at every level.
+	if (typeof capBin === 'undefined') {
+		showError('Sorry, this report could not be loaded. Please try again later.');
+		return;
+	}
+
+	capBin.register({
+		la_emissions: 'index_la_emissions_2026-08-29.json.gz',
+		ward_emissions: 'index_ward_emissions_2026-09-02.json.gz',
+		parish_emissions: 'index_parish_emissions_2026-09-02.json.gz',
+		constituency_emissions: 'index_constituency_emissions_2026-08-29.json.gz'
 	});
 
-  data_la.labels = laHistoricalData['year'];
-  
-  console.log(data_la);
-  
-  function getStandardLabel(stack) {
-    switch (stack) {
-      case 'Stack 0': return 'This area';
-      case 'Stack 1': return 'Local Authority';
-      case 'Stack 2': return 'Similar Areas';
-      case 'Stack 3': return 'Great Britain';
-      default: return stack;
-    }
-  }
+	// This level's other aggregate bins. Each dataset is rebuilt on its own
+	// schedule, so the dates differ; bump one when that dataset is rebuilt and
+	// re-uploaded.
+	var dates = {
+		access: '2026-09-02',
+		pt_frequency: '2026-09-02',
+		vehicle_summary: '2026-09-02',
+		epc_dom: '2026-09-02',
+		gas_electric: '2026-09-02',
+		prices: '2026-09-02',
+		population: '2026-09-02',
+		community_pics: '2026-09-02'
+	};
 
-  
+	var reg = {};
+	Object.keys(dates).forEach(function (d) {
+		reg[level + '_' + d] = 'index_' + level + '_' + d + '_' + dates[d] + '.json.gz';
+	});
+	capBin.register(reg);
 
- //console.log(data_la);
+	// The full tool cards these pages expand (reports/cards/*.js) default to the
+	// old per-area JSON folders. Point every endpoint they can request at this
+	// level's aggregate bin instead, the same mechanism reports/lsoa.html uses
+	// for LSOAs. Keep this list complete: a card path with no entry falls through
+	// to its built-in pbcc-data/ folder default and requests a file that does not
+	// exist at this level.
+	window.REPORT_CARD_ENDPOINTS = {
+		// transport card
+		'Access/': { bin: level + '_access' },
+		'PTfrequency/v2/': { bin: level + '_pt_frequency' },
+		'vehicle_summary/v1/': { bin: level + '_vehicle_summary' },
+		// pbcc card. This level's own series stands in for the per-LSOA
+		// historical_emission dataset; the 'GB' comparison row is always read
+		// from la_emissions.
+		'historical_emissions/v2/': { bin: level + '_emissions' },
+		'la_emissions/v2/': { bin: 'la_emissions' },
+		'population/': { bin: level + '_population' },
+		'community_photo/v1/': { bin: level + '_community_pics' },
+		// These four LSOA datasets have no area-level equivalent. The pen
+		// portrait and the area classification describe a neighbourhood rather
+		// than a whole local authority, and the council tax registers are only
+		// aggregated to LSOA, so the build produces none of them at this level.
+		// They are still mapped to a bin so the cards cannot fall back to a
+		// per-area JSON folder; because none of these datasets is registered
+		// above, capBin rejects the lookup immediately without any network
+		// request. Each card handles that itself: the pbcc card drops the charts
+		// that depend on the overview, and the retrofit card swaps its Dwelling
+		// Stock charts for the "not available for this area" notes.
+		'lsoa_overview/v1/': { bin: 'lsoa_overview' },
+		'oac_emissions/v2/': { bin: 'oac_emissions' },
+		'voa_2010/': { bin: 'voa_2010' },
+		'voa_2020/': { bin: 'voa_2020' },
+		// retrofit card
+		'epc_dom/v4/': { bin: level + '_epc_dom' },
+		'lsoa_gas_electric/v2/': { bin: level + '_gas_electric' },
+		'prices/v1/': { bin: level + '_prices' }
+		// postcode_energy/v2/ is never requested: the cards are always loaded
+		// with the 'zones' layer (see reportCards.*.load).
+	};
 
-  const combinedData = {
-    labels: laHistoricalData['year'],
-    datasets: [
-      ...data_la.datasets.map(ds => ({ ...ds, standardLabel: getStandardLabel(ds.stack) })),
-      ...data_gb.datasets.map(ds => ({ ...ds, standardLabel: getStandardLabel(ds.stack) }))
-    ]
-  };
 
-  //console.log(combinedData);
+	// =========================================================================
+	// Page
+	// =========================================================================
 
-  // Make Overview table
-  // Find the index of the label '2019' in data.labels
-  
-  const yearIndex = data_la.labels.indexOf(2019);
-  
+	var params = new URLSearchParams(window.location.search);
+	var id = params.get('id') || params.get('code');
 
-  // Headline Grade
-  // Set grade image and alt text - not in the JSON at the moment
-  /*
-  const Totalgrade = laHistoricalData['total_grade'][yearIndex];
-  const TotalgradeImg = document.getElementById('data_total_emissions_grade');
-  TotalgradeImg.src = `/images/grades/${Totalgrade}.webp`;
-  TotalgradeImg.alt = `Grade ${Totalgrade}`;
-  document.getElementById("data_total_emissions_percap").innerHTML = 
-    laHistoricalData['total_kgco2e_percap'][yearIndex] + 
-    ' kgCO<sub>2</sub>e per person per year in ' + 
-    data.labels[yearIndex];
-  */
-  
+	if (!id) {
+		showError('No ' + levelName.toLowerCase() + ' was specified. ' +
+			'Please search for one from the reports home page.');
+		return;
+	}
 
-  // Fill the overview table - diable for now
-  /*
-  component_la.forEach(comp => {
-    const [label, field, , , gradeField, valueId, gradeId] = comp;
-    const dataset = data_la.datasets.find(ds => ds.label === label);
-    if (!dataset) return;
-    // Set household emissions value
-    console.log(valueId);
-    document.getElementById(valueId).innerHTML = dataset.data[yearIndex];
-  
-    // Set grade image and alt text
-    const grade = dataset.gradelabel[yearIndex];
-    const gradeImg = document.getElementById(gradeId);
-    gradeImg.src = `/images/grades/${grade}.webp`;
-    gradeImg.alt = `Grade ${grade}`;
-  });
-    */
-		// We draw the horizontal threshold line via a plugin so it always appears on top
-		// and does not create a legend entry. (No dataset is pushed here.)
-		//console.log(data.datasets);
+	// Area name for the title, from the same lookup the reports index searches.
+	// A missing lookup is not fatal - the report still works, headed by the code.
+	var pName = CFG.nameJson
+		? fetch(CFG.nameJson)
+			.then(function (r) { return r.ok ? r.json() : []; })
+			.then(function (rows) {
+				var hit = (rows || []).filter(function (row) { return row.id === id; })[0];
+				return hit ? hit.name : null;
+			})
+			.catch(function () { return null; })
+		: Promise.resolve(null);
 
-		// Define the threshold plugin here so we can attach it to the historical chart as well.
-		const thresholdLinePlugin = {
-			id: 'thresholdLinePlugin',
-			afterDatasetsDraw(chart, args, options) {
-				const pluginOpts = (chart.options && chart.options.plugins && chart.options.plugins.thresholdLinePlugin) || options || {};
-				const value = pluginOpts.value;
-				if (typeof value !== 'number') return;
-				const ctx = chart.ctx;
-				const yScale = chart.scales['y'];
-				if (!yScale) return;
-				const y = yScale.getPixelForValue(value);
-				ctx.save();
-				ctx.strokeStyle = pluginOpts.color || 'black';
-				ctx.lineWidth = pluginOpts.width || 2;
-				if (Array.isArray(pluginOpts.dash) && pluginOpts.dash.length) ctx.setLineDash(pluginOpts.dash);
-				ctx.beginPath();
-				ctx.moveTo(chart.chartArea.left, y);
-				ctx.lineTo(chart.chartArea.right, y);
-				ctx.stroke();
-				ctx.restore();
+	// Population is only used to fill two context boxes, so a failure just
+	// leaves them out rather than failing the page.
+	var pPop = capBin.fetchRecord(level + '_population', id).catch(function () { return null; });
+
+	Promise.all([pName, pPop]).then(function (results) {
+		render(results[0], results[1]);
+	});
+
+	function render(name, pop) {
+		var heading = (name ? esc(name) : esc(id));
+		titleEl.textContent = heading;
+		document.title = heading + ' - ' + levelName + ' report - Carbon & Place';
+
+		// ONS codes carry the country in their first letter, which is the one
+		// piece of context worth adding to the heading. The code itself goes in
+		// the list below rather than the lede.
+		var country = ({ E: 'England', W: 'Wales', S: 'Scotland' })[id.charAt(0)];
+		ledeEl.textContent = name
+			? (levelName + (country ? ' in ' + country : ''))
+			: ('This ' + levelName.toLowerCase() + ' is identified by the ONS code ' + id + '.');
+
+		// Context. There is no lookup from an area up to its parent areas on the
+		// site, so this describes the area itself rather than linking outwards
+		// the way the neighbourhood report's context list does.
+		var context = [['Area type', levelName], ['ONS code', id]];
+		if (pop && Array.isArray(pop.year) && pop.year.length) {
+			var last = pop.year.length - 1;
+			var total = 0;
+			Object.keys(pop).forEach(function (k) {
+				// Age bands are a04, a59, ... a8084 plus the open-ended '85+'
+				if (/^a\d+$/.test(k) || k === '85+') {
+					var a = pop[k];
+					if (a && typeof a[last] === 'number') { total += a[last]; }
+				}
+			});
+			var yr = pop.year[last];
+			if (total > 0) {
+				context.push(['Population (' + Math.round(yr) + ')', Math.round(total).toLocaleString()]);
 			}
-		};
-
-	historicalChart = new Chart(document.getElementById('historical-chart').getContext('2d'), {
-    type: 'bar',
-    data: {
- 		  labels: data_la.labels.filter(d => d.label != 'Goods & Services'),
- 		  datasets: data_la.datasets.filter(d => d.label != 'Goods & Services')
- 		},
- 		plugins: [thresholdLinePlugin],
- 		options: {
-			scales: {
-				y: {
-					stacked: true,
-						title: {
-									display: true,
-									text: 'kgCO₂e per person'
-								},
-					ticks: {
-						beginAtZero: true,
-					}
-				},
-				x: {
-					stacked: true
-				},
-			},
-			plugins: {
-				// plugin options for thresholdLinePlugin (draws a single line on top)
-				thresholdLinePlugin: {
-					value: 2849,
-					color: 'black',
-					width: 3,
-					dash: []
-				},
-				legend: {
-					position: 'right',
-					reverse: true,
-				labels: {
-						font: { size: 11 },
-						// Reduce spacing between legend items and tighten rows
-						padding: 4,
-						boxWidth: 10
-					}
-				}
-	      },
-			responsive: true,
-			maintainAspectRatio: false
-		}
-		});
-		const data_overview = {datasets: []};
-
-		component_la.forEach(comp => {
-			data_overview.datasets.push({
-				label: comp[0],
-				data: [laHistoricalData[comp[1]][yearIndex], gbHistoricalData[comp[1]][yearIndex]],
-				backgroundColor: comp[2],
-				borderColor: comp[3],
-				borderWidth: 1,
-				stack: 'Stack 0'
-			});
-		});
-
-		data_overview.datasets = data_overview.datasets.filter(d => !d.label.includes('Goods & Services'));
-
-        data_overview.labels = ['Local Authority','Great Britain'];
-
-
-
-overviewChart = new Chart(document.getElementById('overview-chart').getContext('2d'), {
-    type: 'bar',
-		data: data_overview,
-		plugins: [thresholdLinePlugin],
-		options: {
-			scales: {
-				y: {
-					stacked: true,
-						title: {
-									display: true,
-									text: 'kgCO₂e per person'
-								},
-					ticks: {
-						beginAtZero: true,
-					}
-				},
-				x: {
-					stacked: true
-				},
-			},
-			plugins: {
-				// plugin options for thresholdLinePlugin
-				thresholdLinePlugin: {
-					value: 2849,
-					color: 'black',
-					width: 3,
-					dash: []
-				},
-				legend: {
-					position: 'right',
-					reverse: true,
-					labels: {
-						font: { size: 11 },
-						// Reduce spacing between legend items and tighten rows
-						padding: 4,
-						boxWidth: 10
-					}
-				}
-			},
-			responsive: true,
-			maintainAspectRatio: false
-		}
-  });
-  
- 
-  var barChartOptions = {
-						scales: {
-							y: {
-								stacked: true,
-								title: {
-									display: true,
-									text: 'kgCO₂e per person'
-								},
-								ticks: {
-									beginAtZero: true,
-								}
-							},
-							x: {
-								stacked: true
-							},
-						},
-						responsive: true,
-						maintainAspectRatio: false
-					};
-					
-	// Lables above bar plugin
-	const taxLabelPlugin = {
-  id: 'taxLabelPlugin',
-  afterDatasetsDraw(chart, args, options) {
-			const { ctx } = chart;
-			chart.data.datasets.forEach((dataset, datasetIndex) => {
-				const meta = chart.getDatasetMeta(datasetIndex);
-				if (!meta || !Array.isArray(meta.data)) return;
-				meta.data.forEach((bar, index) => {
-					// only draw labels if gradelabel exists for this dataset
-					const hasGradeArray = dataset && Array.isArray(dataset.gradelabel);
-					const value = hasGradeArray ? dataset.gradelabel[index] : undefined;
-					if (value === undefined || value === null || value === '') return;
-					ctx.save();
-					ctx.fillStyle = 'black';
-					ctx.font = '12px sans-serif';
-					ctx.textAlign = 'center';
-					ctx.textBaseline = 'bottom';
-					// Coordinates exist for bars and points as x/y; fallback to center if not present
-					const x = (bar && typeof bar.x === 'number') ? bar.x : ((bar && bar.left && bar.right) ? (bar.left + bar.right) / 2 : 0);
-					const y = (bar && typeof bar.y === 'number') ? bar.y : ((bar && bar.top && bar.bottom) ? (bar.top + bar.bottom) / 2 : 0);
-					ctx.fillText(`${value}`, x, y - 5);
-					ctx.restore();
-				});
-			});
-    }
-  };
-  
-  function makeStandardConsumptionChart(id,filter){
-		// Create options for line charts based on the shared barChartOptions
-		const lineOptions = {
-			...barChartOptions,
-			scales: {
-				y: {
-					// ensure y-axis always starts at zero
-					min: 0,
-					ticks: {
-						beginAtZero: true
-					}
-				},
-				x: {
-					// lines shouldn't be stacked
-					stacked: false
-				}
+			var hh = pop.households_est;
+			if (hh && typeof hh[last] === 'number') {
+				context.push(['Households (' + Math.round(yr) + ')', Math.round(hh[last]).toLocaleString()]);
 			}
-		};
-
-		// fixed colour for the "This area" line across all charts
-		const THIS_AREA_COLOUR = 'rgb(31,120,180)';
-
-		const datasets = combinedData.datasets
-			.filter(d => d.label.includes(filter))
-			.map(d => {
-				// use a consistent colour for 'This area', otherwise use the dataset's background colour
-				const baseColour = (d.standardLabel === 'This area') ? THIS_AREA_COLOUR : (d.backgroundColor || d.borderColor || 'rgb(0,0,0)');
-
-				return {
-					label: d.standardLabel,
-					data: d.data,
-					// preserve gradelabel so the label plugin can draw annotations
-					gradelabel: d.gradelabel,
-					// colour the line itself
-					borderColor: baseColour,
-					// use same colour for points
-					backgroundColor: baseColour,
-					pointBackgroundColor: baseColour,
-					pointBorderColor: baseColour,
-					fill: false,
-					tension: 0.2,
-					borderWidth: 2
-				};
-			});
-
-		// compute max value across all datasets so we can ensure the y-axis max is at least 500
-		let dataMax = -Infinity;
-		datasets.forEach(ds => {
-			if (!Array.isArray(ds.data)) return;
-			ds.data.forEach(v => {
-				const n = Number(v);
-				if (!Number.isNaN(n) && n > dataMax) dataMax = n;
-			});
+		}
+		var ctxHtml = '';
+		context.forEach(function (row) {
+			ctxHtml += '<li><span class="context-label">' + esc(row[0]) +
+				'</span><span class="context-value">' + esc(row[1]) + '</span></li>';
 		});
-		if (dataMax === -Infinity) dataMax = 0;
+		document.getElementById('context-list').innerHTML = ctxHtml;
 
-		// Choose a "nice" rounded max above the data max so axis ticks land on round numbers.
-		// Use approximately 8 intervals (so small charts get steps like 200, larger ones 1000, etc.).
-		const desiredIntervals = 8;
-		let niceMax = dataMax;
-
-		if (dataMax <= 0) {
-			niceMax = 500;
-		} else {
-			// compute a raw step and round it up to a "nice" step (1, 2, 2.5, 5, 10 * 10^exp)
-			const rawStep = dataMax / desiredIntervals;
-			const exp = Math.floor(Math.log10(Math.max(rawStep, 1e-12)));
-			const pow = Math.pow(10, exp);
-			const frac = rawStep / pow;
-
-			let niceFrac;
-			if (frac <= 1) niceFrac = 1;
-			else if (frac <= 2) niceFrac = 2;
-			else if (frac <= 2.5) niceFrac = 2.5;
-			else if (frac <= 5) niceFrac = 5;
-			else niceFrac = 10;
-
-			const niceStep = niceFrac * pow;
-			niceMax = niceStep * Math.ceil(dataMax / niceStep);
-			// ensure we never go below 500
-			if (niceMax < 500) niceMax = 500;
+		// Locator map. The boundary comes from this level's bounds_* bin, which
+		// reports/area-map.js registers; the map hides itself if it is missing.
+		if (typeof capAreaMap !== 'undefined') {
+			capAreaMap.initWithGeojson('area-map', capBin.fetchRecord('bounds_' + level, id));
 		}
 
-		// apply the computed nice max to the line chart options
-		lineOptions.scales.y.max = niceMax;
+		// Tool links. Unlike the neighbourhood report these cannot deep-link:
+		// the tools' ?report= parameter takes an LSOA, not an area code, so each
+		// tool opens at its default view for the user to navigate.
+		var tools = [
+			['Place-Based Carbon Calculator', 'Carbon footprint and how it has changed', '/pbcc/'],
+			['Transport & Accessibility', 'Public transport, accessibility and vehicles', '/transport/'],
+			['Retrofit Explorer', 'Building energy performance and retrofit', '/retrofit/'],
+			['Land Use & Planning', 'How land is used around here', '/landuse/'],
+			['Land Ownership', 'Who owns land in this area', '/landownership/']
+		];
+		var toolHtml = '';
+		tools.forEach(function (t) {
+			toolHtml += '<li><a href="' + t[2] + '">' + esc(t[0]) + '<span>' + esc(t[1]) + '</span></a></li>';
+		});
+		document.getElementById('tool-links').innerHTML = toolHtml;
 
-		const chart = new Chart(document.getElementById(id).getContext('2d'), {
+		bodyEl.style.display = 'block';
+
+		if (typeof getCookie === 'function' && getCookie('analyticstrack') === 'true' && typeof gtag === 'function') {
+			gtag('event', 'view_area_report', { 'level': level, 'area': id });
+		}
+
+		drawHighlights();
+		wireExpandToggles();
+	}
+
+
+	// =========================================================================
+	// Headline charts
+	// =========================================================================
+
+	function ctx(elId) {
+		var c = document.getElementById(elId);
+		return c ? c.getContext('2d') : null;
+	}
+
+	function markMissing(canvasId, message) {
+		var canvas = document.getElementById(canvasId);
+		if (!canvas) { return; }
+		var note = document.createElement('p');
+		note.className = 'card-missing';
+		note.textContent = message || 'No data available for this area.';
+		canvas.parentNode.replaceChild(note, canvas);
+	}
+
+	function lineOpts(yTitle) {
+		return {
+			responsive: true, maintainAspectRatio: false,
+			plugins: { legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } } },
+			scales: { y: { beginAtZero: true, title: { display: true, text: yTitle } } }
+		};
+	}
+
+	function stackedBarOpts(yTitle) {
+		return {
+			responsive: true, maintainAspectRatio: false,
+			plugins: { legend: { position: 'top', labels: { boxWidth: 12, font: { size: 10 } } } },
+			scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, title: { display: true, text: yTitle } } }
+		};
+	}
+
+	// The three headline datasets. The area-level bins carry the same fields as
+	// the per-LSOA ones, so these are the same charts reports/lsoa.html draws.
+	function drawHighlights() {
+		capBin.fetchRecord(emissionsBin, id)
+			.then(renderFootprint).catch(function () { markMissing('chart-footprint'); });
+		capBin.fetchRecord(level + '_vehicle_summary', id)
+			.then(renderVehicles).catch(function () { markMissing('chart-vehicles'); });
+		capBin.fetchRecord(level + '_gas_electric', id)
+			.then(renderEnergy).catch(function () { markMissing('chart-energy'); });
+	}
+
+	function renderFootprint(d) {
+		if (!d || !d.year) { throw new Error('shape'); }
+		var groups = {
+			// Grouped as the pbcc report card's simplified overview groups them
+			// (pbcc/ui.js, OVERVIEW_SIMPLIFIED_GROUPS), so a report page that
+			// shows both charts files every category under the same heading in each.
+			'Housing': ['dom_gas_kgco2e_percap', 'dom_elec_kgco2e_percap', 'heating_other_kgco2e_percap', 'housing_other_kgco2e_percap'],
+			'Travel': ['car_kgco2e_percap', 'van_kgco2e_percap', 'company_bike_kgco2e_percap', 'transport_pt_kgco2e_percap', 'transport_vehiclepurchase_kgco2e_percap', 'transport_optranequip_other_kgco2e_percap'],
+			'Flights': ['flights_kgco2e_percap'],
+			'Food & drink': ['food_kgco2e_percap', 'alcohol_kgco2e_percap', 'restaurant_kgco2e_percap'],
+			'Other goods & services': ['furnish_kgco2e_percap', 'clothing_kgco2e_percap', 'communication_kgco2e_percap', 'recreation_kgco2e_percap', 'health_kgco2e_percap', 'education_kgco2e_percap', 'misc_kgco2e_percap']
+		};
+		var colours = { 'Housing': '#e6550d', 'Travel': '#3182bd', 'Flights': '#756bb1', 'Food & drink': '#31a354', 'Other goods & services': '#969696' };
+		var years = d.year;
+		var datasets = Object.keys(groups).map(function (g) {
+			var data = years.map(function (_, i) {
+				var sum = 0;
+				groups[g].forEach(function (f) { var a = d[f]; if (a && typeof a[i] === 'number') { sum += a[i]; } });
+				return Math.round(sum / 1000 * 100) / 100;
+			});
+			return { label: g, data: data, backgroundColor: colours[g] };
+		});
+		new Chart(ctx('chart-footprint'), { type: 'bar', data: { labels: years, datasets: datasets }, options: stackedBarOpts('tCO2e per person') });
+	}
+
+	// The ownership rates divide the private vehicle count by ONS mid-year
+	// population, adult population and modelled household counts. Those
+	// denominators only run to 2024 for England and Wales and to 2022 for
+	// Scotland, and the build writes a 0 for any year without one, which drew
+	// the lines plunging to zero at the end of the series. Blank out those
+	// years (a rate of zero in a year the area still has vehicles registered)
+	// and trim the trailing years no series can fill, so each line stops at the
+	// last year with a denominator instead of dropping off a cliff.
+	function vehicleRateSeries(d) {
+		var keys = ['vehiclesPPers', 'vehiclesPAdult', 'vehiclesPHousehold'];
+		var labels = d.year;
+		var vehicles = d.vehicles_PRIVATE || [];
+		var out = {};
+		keys.forEach(function (k) {
+			var a = d[k] || [];
+			out[k] = labels.map(function (_, i) {
+				var v = a[i];
+				if (typeof v !== 'number' || !isFinite(v)) { return null; }
+				return (v === 0 && vehicles[i] > 0) ? null : v;
+			});
+		});
+		var end = labels.length;
+		while (end > 0 && keys.every(function (k) { return out[k][end - 1] === null; })) { end--; }
+		out.labels = labels.slice(0, end);
+		keys.forEach(function (k) { out[k] = out[k].slice(0, end); });
+		return out;
+	}
+
+	function renderVehicles(d) {
+		if (!d || !d.year) { throw new Error('shape'); }
+		var r = vehicleRateSeries(d);
+		new Chart(ctx('chart-vehicles'), {
 			type: 'line',
-			data: {
-				labels: combinedData.labels,
-				datasets: datasets
-			},
-			options: lineOptions,
-			plugins: [taxLabelPlugin]
+			data: { labels: r.labels, datasets: [
+				{ label: 'Per person', data: r.vehiclesPPers, borderColor: '#07c220', backgroundColor: '#07c220' },
+				{ label: 'Per adult', data: r.vehiclesPAdult, borderColor: '#0042f7', backgroundColor: '#0042f7' },
+				{ label: 'Per household', data: r.vehiclesPHousehold, borderColor: '#f50c0c', backgroundColor: '#f50c0c' }
+			] },
+			options: lineOpts('Vehicles')
 		});
-
-		return chart;
-	}
-  
-  consumptionTotalChart = makeStandardConsumptionChart('consumptionTotal-chart','Goods & Services');
-  consumptionFoodChart = makeStandardConsumptionChart('consumptionFood-chart','Food & Drink');
-  consumptionAlcoholChart = makeStandardConsumptionChart('consumptionAlcohol-chart','Alcohol & Tobacco');
-  consumptionFurnishingsChart = makeStandardConsumptionChart('consumptionFurnishings-chart','Furnishings');
-  consumptionClothingChart = makeStandardConsumptionChart('consumptionClothing-chart','Clothing');
-  consumptionCommunicationChart = makeStandardConsumptionChart('consumptionCommunication-chart','Communications');
-  consumptionRecreationChart = makeStandardConsumptionChart('consumptionRecreation-chart','Recreation');
-  consumptionRestaurantsChart = makeStandardConsumptionChart('consumptionRestaurants-chart','Restaurants & Hotels');
-  consumptionHealthChart = makeStandardConsumptionChart('consumptionHealth-chart','Health');
-  consumptionEducationChart = makeStandardConsumptionChart('consumptionEducation-chart','Education');
-  consumptionMiscellaneousChart = makeStandardConsumptionChart('consumptionMiscellaneous-chart','Miscellaneous');
-  consumptionFlightsChart = makeStandardConsumptionChart('consumptionFlights-chart','Flights');
-  consumptionVehiclePurchaseChart = makeStandardConsumptionChart('consumptionVehiclePurchase-chart','Vehicle Purchase');
-  consumptionVehicleOtherChart = makeStandardConsumptionChart('consumptionVehicleOther-chart','Vehicle Maintenance');
-  gasChart = makeStandardConsumptionChart('gasEmissions-chart','Gas');
-  electricChart = makeStandardConsumptionChart('electricityEmissions-chart','Electricity');
-  otherHeatingChart = makeStandardConsumptionChart('heatingOther-chart','Other Heating');
-  otherHousingChart = makeStandardConsumptionChart('housingOther-chart','Other Housing');
-  carEmissionsChart = makeStandardConsumptionChart('carEmissions-chart','Cars');
-  vanEmissionsChart = makeStandardConsumptionChart('vanEmissions-chart','Vans');
-  bikeCompanyChart = makeStandardConsumptionChart('bikeCompany-chart','Bikes & Company Vehicles');
-  publicTransportChart = makeStandardConsumptionChart('publicTransport-chart','Public Transport');
-
-}
-
-
-makeChartPopulation = function(){
-  
-  // Destroy old chart
-	if(populationChart){
-		populationChart.destroy();
 	}
 
-  // Create an object to store data for each category
-  var component = [
-		    // Label, field (e.g. Gas => dgkp2020), background colour, border colour
-				['0-4'  , 'a'  , 'rgb(255, 0, 0)', 'rgb(0,0,0)'],
-				['5-9'  , 'Ba' , 'rgb(255, 64, 0)'   , 'rgb(0,0,0)'],
-				['10-14', 'Ca' , 'rgb(255, 128, 0)'     , 'rgb(0,0,0)'],
-				['15-19', 'Da' , 'rgb(255, 192, 0)'    , 'rgb(0,0,0)'],
-				['20-24', 'Ea' , 'rgb(255, 255, 0)'  , 'rgb(0,0,0)'],
-				['25-29', 'Fa' , 'rgb(192, 255, 0)', 'rgb(0,0,0)'],
-				['30-34', 'Ga' , 'rgb(128, 255, 0)', 'rgb(0,0,0)'],
-				['35-39', 'Ha' , 'rgb(64, 255, 0)'   , 'rgb(0,0,0)'],
-				['40-44', 'Ia' , 'rgb(0, 255, 0)'  , 'rgb(0,0,0)'],
-				['45-49', 'Ja' , 'rgb(0, 255, 64)', 'rgb(0,0,0)'],
-				['50-54', 'Ka' , 'rgb(0, 255, 128)' , 'rgb(0,0,0)'],
-				['55-59', 'La' , 'rgb(0, 255, 192)'  , 'rgb(0,0,0)'],
-				['60-64', 'Ma' , 'rgb(0, 255, 255)'  , 'rgb(0,0,0)'],
-				['65-69', 'Na' , 'rgb(0, 192, 255)'     , 'rgb(0,0,0)'],
-				['70-74', 'Oa' , 'rgb(0, 128, 255)'    , 'rgb(0,0,0)'],
-				['75-79', 'Pa' , 'rgb(0, 64, 255)'     , 'rgb(0,0,0)'],
-				['80-84', 'Qa' , 'rgb(0, 0, 255)'     , 'rgb(0,0,0)'],
-				['85+'  , '8'  , 'rgb(128, 0, 255)'    , 'rgb(0,0,0)'],
-				['Households'  , 'he'  , 'rgb(0, 0, 0)'    , 'rgb(0,0,0)'],
-				['Dwellings'  , 'ap'  , 'rgb(255, 0, 0)'    , 'rgb(255,0,0)']
-		  ]
-  
-  
-  var years =  ['2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022']
-  // Assemble the datasets to be shown
-  
-	const data = {datasets: []};
-	
-
-	component_la.forEach(comp => {
-		data.datasets.push({
-			label: comp[0],
-			data: populationLocationData[comp[1]],
-			backgroundColor: comp[2],
-			borderColor: comp[3],
-			borderWidth: 1,
-			order: 3,
-			stack: 'barStack'
+	function renderEnergy(d) {
+		if (!d || !d.year) { throw new Error('shape'); }
+		new Chart(ctx('chart-energy'), {
+			type: 'line',
+			data: { labels: d.year, datasets: [
+				{ label: 'Gas (mean kWh)', data: d.mean_gas_kwh, borderColor: '#e6550d', backgroundColor: '#e6550d' },
+				{ label: 'Electricity (mean kWh)', data: d.mean_elec_kwh, borderColor: '#3182bd', backgroundColor: '#3182bd' }
+			] },
+			options: lineOpts('kWh per meter')
 		});
-	});
-  
-  // Update type property for the last two datasets
-  data.datasets[18].type = 'line';
-  data.datasets[19].type = 'line';
-  data.datasets[18].borderWidth  = 4;
-  data.datasets[19].borderWidth  = 4;
-  
-  data.datasets[18].order  = 1;
-  data.datasets[19].order  = 2;
-  data.datasets[18].stack  = undefined;
-  data.datasets[19].stack  = undefined;
-
-  
-  //console.log(data);
-  
-  data.labels = ['2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022'];
-  
-  var populationctx = document.getElementById('population-chart').getContext('2d');
-	populationChart = new Chart(populationctx, {
-    type: 'bar',
-					data: data,
-					options: {
-						scales: {
-							y: {
-								//stacked: true,
-								title: {
-									display: true,
-									text: 'population'
-								},
-								ticks: {
-									beginAtZero: true,
-								}
-							},
-							x: {
-								stacked: true
-							},
-						},
-						plugins: {
-                legend: {
-                    position: 'right',
-                    reverse: true,
-                    labels: {
-                      font: {
-                          size: 8 // Adjust this value to make the text smaller
-                      }
-                    }
-                }
-            },
-						responsive: true,
-						maintainAspectRatio: false
-					}
-  });
-	
-  
-}
+	}
 
 
+	// =========================================================================
+	// Expandable detail: each tool's real report card
+	// =========================================================================
 
-// Function for modal tabs
-modalTab = function (evt, tabName) {
-  // Declare all variables
-  var i, tabcontent, tablinks;
+	function wireExpandToggles() {
+		document.querySelectorAll('.expand-toggle').forEach(function (btn) {
+			btn.addEventListener('click', function () {
+				var target = document.getElementById(btn.dataset.target);
+				if (!target) { return; }
+				if (target.hasAttribute('hidden')) {
+					if (!btn.dataset.orig) { btn.dataset.orig = btn.textContent; }
+					target.removeAttribute('hidden');
+					btn.textContent = 'Hide charts';
+					loadFullCard(btn.dataset.tool);
+				} else {
+					target.setAttribute('hidden', '');
+					btn.textContent = btn.dataset.orig || 'Show all charts';
+				}
+			});
+		});
+	}
 
-  // Get all elements with class="tabcontent" and hide them
-  tabcontent = document.getElementsByClassName("tabcontent");
-  for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
-  }
-
-  // Get all elements with class="tablinks" and remove the class "active"
-  tablinks = document.getElementsByClassName("tablinks");
-  for (i = 0; i < tablinks.length; i++) {
-    tablinks[i].className = tablinks[i].className.replace(" active", "");
-  }
-
-  // Show the current tab, and add an "active" class to the button that opened the tab
-  document.getElementById(tabName).style.display = "block";
-  evt.currentTarget.className += " active";
-}
-// Click on modal tab open by default
-document.getElementById("defaultOpen").click();
-
-// Function to switch chart description tabs
-switchChartTab = function (evt, tabName) {
-  // Find the parent chart-description-tabs container
-  var tabsContainer = evt.currentTarget.closest('.chart-description-tabs');
-  
-  // Get all tab content divs within this container and hide them
-  var tabContents = tabsContainer.querySelectorAll('.chart-description-tab-content');
-  tabContents.forEach(function(content) {
-    content.classList.remove('active');
-    content.style.display = 'none';
-  });
-  
-  // Get all tab buttons within this container and remove the "active" class
-  var tabButtons = tabsContainer.querySelectorAll('.chart-tab-btn');
-  tabButtons.forEach(function(button) {
-    button.classList.remove('active');
-  });
-  
-  // Show the current tab and add "active" class to button
-  var selectedContent = document.getElementById(tabName);
-  if (selectedContent) {
-    selectedContent.classList.add('active');
-    selectedContent.style.display = 'block';
-    evt.currentTarget.classList.add('active');
-  }
-}
-
-
-// Initialize print button functionality
-function initPrintButtons() {
-  const printButtons = document.querySelectorAll('.print-button');
-  
-  printButtons.forEach(function(button) {
-    button.addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      
-      // Simply trigger the print dialog - CSS handles the rest
-      window.print();
-    });
-  });
-}
-
-// Initialize print buttons when page loads
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initPrintButtons);
-} else {
-  initPrintButtons();
-}
-
-// Initialize page with location ID from URL parameter
-function initPageWithLocation() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const locationId = urlParams.get('id');
-  
-  if (locationId) {
-    manageChartsLA(locationId);
-  } else {
-    console.warn('No location ID provided in URL parameter (?id=locationId)');
-  }
-}
-
-// Call initialization when DOM is ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initPageWithLocation);
-} else {
-  initPageWithLocation();
-}
+	// On first expand, fetch the tool's report-card fragment (every chart from
+	// the tool's popup modal) plus its generated chart module, then load the
+	// data. The card reads this level's bins via REPORT_CARD_ENDPOINTS above.
+	var loadedCards = {};
+	function loadFullCard(tool) {
+		if (loadedCards[tool]) { return; }
+		loadedCards[tool] = true;
+		var host = document.getElementById(tool + '-fullcard-host');
+		if (!host) { return; }
+		fetch('/reports/cards/' + tool + '-card.html')
+			.then(function (r) { if (!r.ok) { throw new Error('fragment'); } return r.text(); })
+			.then(function (html) {
+				host.innerHTML = html;
+				return new Promise(function (resolve, reject) {
+					var s = document.createElement('script');
+					s.src = '/reports/cards/' + tool + '-card.js';
+					s.onload = resolve;
+					s.onerror = reject;
+					document.body.appendChild(s);
+				});
+			})
+			.then(function () {
+				var card = window.reportCards && window.reportCards[tool];
+				if (!card) { throw new Error('module'); }
+				// Open the card's default tab, then load the data and build all charts
+				var defaultBtn = document.getElementById(card.defaultOpen);
+				if (defaultBtn) { defaultBtn.click(); }
+				return card.load(id);
+			})
+			.catch(function (err) {
+				console.warn('Full card failed for ' + tool + ':', err);
+				host.innerHTML = '<p class="card-missing">Sorry, the full chart set could not be loaded. ' +
+					'<a href="/' + tool + '/">Open the ' + tool + ' tool instead</a>.</p>';
+				loadedCards[tool] = false; // allow retry on next expand
+			});
+	}
+}());

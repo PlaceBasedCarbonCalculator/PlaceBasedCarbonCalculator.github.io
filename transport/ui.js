@@ -502,6 +502,33 @@ makeChartFrequency = function(){
 
 }
 
+// The ownership rates divide the private vehicle count by ONS mid-year
+// population, adult population and modelled household counts. Those
+// denominators only run to 2024 for England and Wales and to 2022 for
+// Scotland, and the build writes a 0 for any year without one, which drew the
+// lines plunging to zero at the end of the series. Blank out those years (a
+// rate of zero in a year the area still has vehicles registered) and trim the
+// trailing years no series can fill, so each line stops at the last year with
+// a denominator instead of dropping off a cliff.
+vehicleRateSeries = function(data, labels){
+  const keys = ['vehiclesPPers','vehiclesPAdult','vehiclesPHousehold'];
+  const vehicles = data['vehicles_PRIVATE'] || [];
+  const out = {};
+  keys.forEach(function(k){
+    const a = data[k] || [];
+    out[k] = labels.map(function(_, i){
+      const v = a[i];
+      if(typeof v !== 'number' || !isFinite(v)){ return null; }
+      return (v === 0 && vehicles[i] > 0) ? null : v;
+    });
+  });
+  let end = labels.length;
+  while(end > 0 && keys.every(function(k){ return out[k][end - 1] === null; })){ end--; }
+  out.labels = labels.slice(0, end);
+  keys.forEach(function(k){ out[k] = out[k].slice(0, end); });
+  return out;
+}
+
 makeChartVehicles = function(){
 
   // Guard: do nothing until vehicle data has actually loaded (avoids a crash if
@@ -708,22 +735,23 @@ makeChartVehicles = function(){
       ]
     };
   
+    const ratesVehiclePP = vehicleRateSeries(vehicleLocationData, labels);
     const dataVehiclePP = {
-      labels: labels.slice(0, 15), // Miss last year as no data
+      labels: ratesVehiclePP.labels,
       datasets: [
         {
           label: 'Per Person',
-          data: vehicleLocationData['vehiclesPPers'].slice(0, 15),
+          data: ratesVehiclePP['vehiclesPPers'],
           backgroundColor: '#07c220',
         },
         {
           label: 'Per Adult',
-          data: vehicleLocationData['vehiclesPAdult'].slice(0, 15),
+          data: ratesVehiclePP['vehiclesPAdult'],
           backgroundColor: '#0042f7',
         },
         {
           label: 'Per Household',
-          data: vehicleLocationData['vehiclesPHousehold'].slice(0, 15),
+          data: ratesVehiclePP['vehiclesPHousehold'],
           backgroundColor: '#f50c0c',
         }
       ]
