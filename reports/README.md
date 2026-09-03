@@ -70,9 +70,18 @@ same generated report-card fragments (`cards/`) used by the LSOA report, with
 `REPORT_CARD_ENDPOINTS` redirected to that area's aggregated data. There is no
 per-area context/containment data (the `la.json`/`wards.json`/`parish.json`/
 `westminster.json` name lookups are id/name pairs only), so the context list
-just shows the area type and ONS code, and the tool links open the plain tool
-pages rather than a `?report=` deep link (that deep link only supports the
-LSOA-keyed `zones` map layer).
+just shows the area type and ONS code. The `?report=` deep link only supports
+the LSOA-keyed `zones` map layer, so it can't be used here; instead the tool
+links (both the "Open in `<tool>`" link on each report card and the "Explore
+this area in our tools" list) use the map's own `#/layers/#zoom/lat/lng` hash
+(`js/ui-common.js` `parseUrl()`/`parseMapHash()`, the same format the manual's
+`opentool` links use) to turn on the neighbourhood `zones` layer, where the
+tool has one, plus the boundary layer matching this report's level (`la`,
+`wards`, `parish` or `westminster`), and to centre the map on the area. The
+centre point and zoom are computed from the same `bounds_<level>` boundary
+geometry as the locator map, once it has loaded (`boundsToZoom()` in
+`area-map.js`); until then, or if the boundary fails to load, the links still
+carry the layer flags but open at the tool's default view.
 
 `window.REPORT_CONFIG = { cardLevel, emissionsBin, level, nameJson }`
 configures each page: `cardLevel` (`la`/`ward`/`parish`/`constituency`) drives

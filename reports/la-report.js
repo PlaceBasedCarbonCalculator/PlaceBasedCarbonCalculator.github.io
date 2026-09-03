@@ -209,25 +209,68 @@
 
 		// Locator map. The boundary comes from this level's bounds_* bin, which
 		// reports/area-map.js registers; the map hides itself if it is missing.
+		// The same fetch is reused below to zoom the tool links to this area.
+		var pBoundaryGeojson = capBin.fetchRecord('bounds_' + level, id);
 		if (typeof capAreaMap !== 'undefined') {
-			capAreaMap.initWithGeojson('area-map', capBin.fetchRecord('bounds_' + level, id));
+			capAreaMap.initWithGeojson('area-map', pBoundaryGeojson);
 		}
 
-		// Tool links. Unlike the neighbourhood report these cannot deep-link:
-		// the tools' ?report= parameter takes an LSOA, not an area code, so each
-		// tool opens at its default view for the user to navigate.
+		// Tool links. The ?report= deep link the neighbourhood report uses only
+		// takes an LSOA/Data Zone code, not an area code, so these instead use
+		// the map's own '#/layers/#zoom/lat/lng' hash (js/ui-common.js parseUrl()
+		// / parseMapHash(), the same format the manual's "opentool" links use) to
+		// turn on the neighbourhood ("zones") layer, where the tool has one, plus
+		// the boundary layer matching this report's level, and centre the map on
+		// the area once its extent is known (below).
+		var BOUNDARY_LAYER = { la: 'la', ward: 'wards', parish: 'parish', constituency: 'westminster' };
+		var boundaryLayer = BOUNDARY_LAYER[level];
+
+		function toolHref(basePath, hasZones, geom) {
+			var layers = hasZones ? ['zones'] : [];
+			if (boundaryLayer) { layers.push(boundaryLayer); }
+			if (!layers.length && !geom) { return basePath; }
+			var mapPart = geom ? (geom.zoom + '/' + geom.center[1].toFixed(5) + '/' + geom.center[0].toFixed(5)) : '';
+			return basePath + '#/' + layers.join(',') + '/#' + mapPart;
+		}
+
 		var tools = [
-			['Place-Based Carbon Calculator', 'Carbon footprint and how it has changed', '/pbcc/'],
-			['Transport & Accessibility', 'Public transport, accessibility and vehicles', '/transport/'],
-			['Retrofit Explorer', 'Building energy performance and retrofit', '/retrofit/'],
-			['Land Use & Planning', 'How land is used around here', '/landuse/'],
-			['Land Ownership', 'Who owns land in this area', '/landownership/']
+			['Place-Based Carbon Calculator', 'Carbon footprint and how it has changed', '/pbcc/', true],
+			['Transport & Accessibility', 'Public transport, accessibility and vehicles', '/transport/', true],
+			['Retrofit Explorer', 'Building energy performance and retrofit', '/retrofit/', true],
+			['Land Use & Planning', 'How land is used around here', '/landuse/', false],
+			['Land Ownership', 'Who owns land in this area', '/landownership/', false]
 		];
 		var toolHtml = '';
 		tools.forEach(function (t) {
-			toolHtml += '<li><a href="' + t[2] + '">' + esc(t[0]) + '<span>' + esc(t[1]) + '</span></a></li>';
+			toolHtml += '<li><a href="' + toolHref(t[2], t[3], null) + '" data-base="' + t[2] +
+				'" data-zones="' + (t[3] ? '1' : '0') + '">' + esc(t[0]) + '<span>' + esc(t[1]) + '</span></a></li>';
 		});
 		document.getElementById('tool-links').innerHTML = toolHtml;
+
+		// The three report-card "Open in <tool>" links (reports/la.html etc.)
+		// all point at tools with a zones layer, so turn that layer on too.
+		document.querySelectorAll('.card-tool-link').forEach(function (a) {
+			a.setAttribute('href', toolHref(a.getAttribute('href'), true, null));
+		});
+
+		// Once the boundary geometry loads, upgrade every link above with a
+		// centre point and zoom fitting this area (reports/area-map.js
+		// boundsToZoom()). Left at the tool's default view if it fails to load.
+		pBoundaryGeojson.then(function (geojson) {
+			var bounds = capAreaMap && capAreaMap.geojsonBounds(geojson);
+			if (!bounds) { return; }
+			var geom = {
+				center: [(bounds[0] + bounds[2]) / 2, (bounds[1] + bounds[3]) / 2],
+				zoom: capAreaMap.boundsToZoom(bounds)
+			};
+			document.querySelectorAll('#tool-links a[data-base]').forEach(function (a) {
+				a.setAttribute('href', toolHref(a.dataset.base, a.dataset.zones === '1', geom));
+			});
+			document.querySelectorAll('.card-tool-link').forEach(function (a) {
+				var base = a.getAttribute('href').split('#')[0];
+				a.setAttribute('href', toolHref(base, true, geom));
+			});
+		}).catch(function () { /* locator map's own catch already logs this */ });
 
 		bodyEl.style.display = 'block';
 

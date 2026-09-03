@@ -145,6 +145,39 @@ const capAreaMap = (function () {
 			});
 	}
 
-	return { init: init, initWithGeojson: initWithGeojson };
+	// Rough MapLibre zoom level that fits [minLng,minLat,maxLng,maxLat] in a
+	// typical map viewport. Used to build "Open in <tool>" deep links
+	// (la-report.js) that land the tool's map on this report's area, since the
+	// actual container size on the destination page isn't known at link-build
+	// time - this assumes a generous desktop viewport and pads the fit, so an
+	// area reads slightly under-zoomed rather than cropped at the edges.
+	function boundsToZoom(bounds) {
+		var VIEWPORT = { width: 900, height: 650 };
+		var WORLD = 256;
+		var PADDING = 0.85;
+
+		function latRad(lat) {
+			var sin = Math.sin(lat * Math.PI / 180);
+			var rad = Math.log((1 + sin) / (1 - sin)) / 2;
+			return Math.max(Math.min(rad, Math.PI), -Math.PI) / 2;
+		}
+		function zoomFor(px, worldPx, fraction) {
+			if (fraction <= 0) { return 18; }
+			return Math.log(px / worldPx / fraction) / Math.LN2;
+		}
+
+		var latFraction = (latRad(bounds[3]) - latRad(bounds[1])) / Math.PI;
+		var lngDiff = bounds[2] - bounds[0];
+		var lngFraction = (lngDiff < 0 ? lngDiff + 360 : lngDiff) / 360;
+
+		var z = Math.min(
+			zoomFor(VIEWPORT.height, WORLD, latFraction),
+			zoomFor(VIEWPORT.width, WORLD, lngFraction)
+		);
+		z += Math.log(PADDING) / Math.LN2;
+		return Math.max(3, Math.min(15, Math.floor(z)));
+	}
+
+	return { init: init, initWithGeojson: initWithGeojson, geojsonBounds: geojsonBounds, boundsToZoom: boundsToZoom };
 
 }());
