@@ -1668,8 +1668,12 @@ const capUi = (function () {
 				const popupHtml = processTemplate(options.templateId, feature.properties);
 				
 				// Create the popup
+				// maxWidth is set here rather than in CSS because MapLibre writes it
+				// as an inline style on the popup container, which no stylesheet rule
+				// can override; the vw term keeps the card inside a phone screen.
 				new maplibregl.Popup ({
-						className: 'layerpopup'
+						className: 'layerpopup',
+						maxWidth: 'min(360px, 92vw)'
 					})
 					.setLngLat (coordinates)
 					.setHTML (popupHtml)

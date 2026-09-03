@@ -491,6 +491,120 @@ body { color: var(--ink); }
 }
 .grades-popup-close:hover { background: var(--bg-soft); color: var(--ink); }
 
+/* ---------- Map layer popups ---------- */
+/* Applies to every layer popup (EPC, land ownership, INSPIRE, food hygiene),
+   which capUi.mapPopups builds from a <template> and tags with .layerpopup.
+   MapLibre writes its own inline max-width onto the popup container from the
+   Popup's maxWidth option, and an inline style beats any rule here, so the
+   card's width is set there (see js/ui-common.js) and not in this file. All
+   that is needed here is to relax the fixed 300px floor in map.css so the
+   card can still fit across a narrow phone. */
+.maplibregl-popup.layerpopup {
+	min-width: min(300px, 88vw);
+}
+.maplibregl-popup.layerpopup .maplibregl-popup-content {
+	padding: 0;
+	border-radius: var(--radius);
+	box-shadow: var(--shadow-pop);
+	overflow: hidden;
+}
+
+/* Close button: 36px visible, with a transparent halo taking the tap target to
+   ~48px, since the MapLibre default is a ~20px hit area that is hard to hit on
+   a touchscreen. */
+.maplibregl-popup.layerpopup .maplibregl-popup-close-button {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	width: 36px;
+	height: 36px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: var(--bg);
+	border: 1px solid var(--line);
+	border-radius: var(--radius-sm);
+	color: var(--muted);
+	font-size: 18px;
+	line-height: 1;
+	z-index: 2;
+}
+.maplibregl-popup.layerpopup .maplibregl-popup-close-button::before {
+	content: '';
+	position: absolute;
+	inset: -6px;
+}
+.maplibregl-popup.layerpopup .maplibregl-popup-close-button:hover,
+.maplibregl-popup.layerpopup .maplibregl-popup-close-button:focus-visible {
+	background: var(--bg-soft);
+	color: var(--ink);
+	outline: none;
+}
+
+/* The record scrolls inside the card, so a long popup (a full EPC runs to 20+
+   rows) never grows past the map and never carries its close button out of
+   reach. The line-height overrides the 10px set in map.css, which made wrapped
+   table text overlap. */
+.layerpopup .mappopup {
+	max-height: min(65vh, 480px);
+	overflow-y: auto;
+	line-height: 1.4;
+}
+.layerpopup .mappopup h4 {
+	position: sticky;
+	top: 0;
+	margin: 0;
+	padding: 14px 52px 12px 18px;
+	background: var(--bg);
+	border-bottom: 1px solid var(--line);
+	color: var(--ink);
+	font-size: 15px;
+	line-height: 1.35;
+	z-index: 1;
+}
+.layerpopup .mappopup h5 {
+	margin: 16px 18px 2px;
+	padding: 0;
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: .05em;
+	text-transform: uppercase;
+	color: var(--brand);
+}
+.layerpopup .mappopup > p {
+	margin: 6px 18px;
+	font-size: 13px;
+	color: var(--muted);
+}
+.layerpopup .mappopup table {
+	width: calc(100% - 36px);
+	margin: 6px 18px 16px;
+	border-collapse: collapse;
+}
+.layerpopup .mappopup th,
+.layerpopup .mappopup td {
+	padding: 6px 8px;
+	font-size: 13px;
+}
+/* Column headings, where a template supplies a <thead>. The food hygiene popup
+   has no heading row, so its first row is correctly left as ordinary data.
+   Data rows are matched via tbody, which the HTML parser inserts for us around
+   any <tr> that is not in the <thead>. */
+.layerpopup .mappopup thead th {
+	color: var(--muted);
+	font-size: 11px;
+	text-transform: uppercase;
+	letter-spacing: .03em;
+	padding-bottom: 8px;
+	border-bottom: 1px solid var(--line);
+}
+.layerpopup .mappopup thead th:last-child {
+	text-align: right;	/* Line the heading up with the values, which map.css right-aligns */
+}
+.layerpopup .mappopup tbody tr:nth-child(even) {
+	background: var(--bg-soft);
+}
+
 /* ---------- Standalone report pages (/reports/) ---------- */
 /* Tool sections and expand buttons are given base styles by the inline
    <style> block each report page carries (lsoa.html, la.html and its
