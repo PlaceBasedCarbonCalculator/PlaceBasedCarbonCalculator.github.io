@@ -73,7 +73,12 @@ const settings_common = {
 	
 	// Analytics
 	gaProperty: 'G-Q11V10CDRV',
-	
+
+	// Whether to offer the guided tour from the welcome splash. Set false on a
+	// tool whose splash gates the map behind a form: the button dismisses the
+	// splash to start the tour, which would be a way past that form.
+	welcomeTourButton: true,
+
 	// UI callback
 
 };

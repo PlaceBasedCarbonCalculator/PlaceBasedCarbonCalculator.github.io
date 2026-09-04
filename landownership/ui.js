@@ -79,6 +79,22 @@ function setConsentKnown(known) {
   });
 }
 
+// Reflect the site-wide analytics choice in the splash. Someone who has
+// already accepted cookies in the banner has answered this exact question, so
+// the box is ticked and locked rather than asked again. A disabled checkbox is
+// not submitted, hence the hidden mirror, which keeps the posted End-User
+// Record the same either way.
+function applyAnalyticsGranted(granted) {
+  var checkBox2 = document.getElementById('Cookiescheckbox');
+  var mirror = document.getElementById('cookiesmirror');
+  if (!checkBox2) { return; }
+  if (granted) { checkBox2.checked = true; }
+  checkBox2.disabled = granted;
+  if (mirror) { mirror.disabled = !granted; }
+  var row = checkBox2.closest('.consent-check');
+  if (row) { row.classList.toggle('is-locked', granted); }
+}
+
 // Initialize the welcome form: pre-fill from the stored visit, and collapse
 // the fields to a one-line confirmation if we already have consent
 function welcomeInit() {
@@ -109,6 +125,34 @@ function welcomeInit() {
     });
   }
 
+  // Ticking the box answers the same question the banner is asking at the
+  // bottom of the screen, so take the banner away instead of asking twice.
+  // Unticking brings it back, so there is still a route to a choice for
+  // someone who then abandons the form.
+  if (checkBox2) {
+    checkBox2.addEventListener('change', function () {
+      var banner = document.getElementById('cookiewarning');
+      if (!banner) { return; }
+      // Once analyticstrack is set the banner is already gone for good, and
+      // showCookieWarning is the one that decides that
+      if (capUi.getCookie('analyticstrack') !== '') { return; }
+      banner.style.display = (checkBox2.checked ? 'none' : 'block');
+    });
+  }
+
+  // The other direction: answering the banner while the splash is open settles
+  // the checkbox. This reads the button's own value rather than the cookie,
+  // because ui.js attaches its DOMContentLoaded listener before capUi
+  // .initialise runs, so this fires before manageAnalyticsCookie has written
+  // the cookie.
+  document.querySelectorAll('#cookiewarning button').forEach(function (button) {
+    button.addEventListener('click', function () {
+      applyAnalyticsGranted(!!button.value);
+    });
+  });
+
+  applyAnalyticsGranted(capUi.getCookie('analyticstrack') === 'true');
+
   if (!welcomeCookie || welcomeCookie === '') { return; }
 
   var visitor;
@@ -130,8 +174,14 @@ function welcomeInit() {
     checkBox2.checked = (visitor.analytics === 'true');
   }
 
+  // The wrapper carries the " as ", so only the name itself is emboldened. It
+  // stays hidden when there is no stored name, leaving "Consent already given."
   var nameSpan = box && box.querySelector('.consent-name');
-  if (nameSpan && visitor.name) { nameSpan.textContent = ' as ' + visitor.name; }
+  var nameWrap = box && box.querySelector('.consent-as');
+  if (nameSpan && nameWrap && visitor.name) {
+    nameSpan.textContent = visitor.name;
+    nameWrap.hidden = false;
+  }
 
   setConsentKnown(true);
 }

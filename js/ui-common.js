@@ -143,7 +143,7 @@ const capUi = (function () {
 
 			// Offer the optional guided tour from the welcome screen, if available
 			const modalBody = document.querySelector ('#welcome-modal .modal-body');
-			if (typeof capTour !== 'undefined' && modalBody && !modalBody.querySelector ('.welcome-tour-button')) {
+			if (_settings.welcomeTourButton !== false && typeof capTour !== 'undefined' && modalBody && !modalBody.querySelector ('.welcome-tour-button')) {
 				const tourButton = document.createElement ('button');
 				tourButton.type = 'button';
 				tourButton.className = 'welcome-tour-button';

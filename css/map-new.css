@@ -299,6 +299,15 @@ body { color: var(--ink); }
 	cursor: pointer;
 }
 .welcome-modal .consent-check a { color: var(--brand); font-weight: 700; }
+/* Locked by applyAnalyticsGranted: the cookie banner has already answered
+   this, so the row greys out rather than inviting an answer it will ignore */
+.welcome-modal .consent-locked-note { display: none; }
+.welcome-modal .consent-check.is-locked { color: var(--muted); cursor: default; }
+.welcome-modal .consent-check.is-locked input[type="checkbox"] { cursor: default; }
+.welcome-modal .consent-check.is-locked .consent-locked-note {
+	display: inline;
+	font-style: italic;
+}
 .welcome-modal .consent-submit {
 	display: inline-block;
 	background: var(--brand);

@@ -136,11 +136,16 @@
               </label>
               <label class="consent-check">
                 <input id="Cookiescheckbox" name="Cookies" type="checkbox" required="">
-                <span>I agree to the use of Google Analytics cookies</span>
+                <span>I agree to the use of Google Analytics cookies <span class="consent-locked-note">&ndash; already agreed in the cookie banner</span></span>
               </label>
+              <!-- A disabled checkbox is not submitted, so when the banner has
+                   already settled the question this mirror keeps the End-User
+                   Record identical to a hand-ticked one. Enabled by
+                   applyAnalyticsGranted only while the checkbox is locked. -->
+              <input type="hidden" id="cookiesmirror" name="Cookies" value="on" disabled>
             </div>
             <!-- Shown in place of the fields once welcomeInit finds a stored consent -->
-            <p class="consent-note"><span class="consent-tick" aria-hidden="true">&#10003;</span> <span>Consent already given<span class="consent-name"></span>. <button type="button" class="consent-change">Change</button></span></p>
+            <p class="consent-note"><span class="consent-tick" aria-hidden="true">&#10003;</span> <span>Consent already given<span class="consent-as" hidden> as <span class="consent-name"></span></span>. <button type="button" class="consent-change">Change</button></span></p>
             <button type="submit" class="consent-submit" onclick="closewelcome()">Take me to the map</button>
           </form>
         </div>
