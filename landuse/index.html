@@ -5,7 +5,7 @@
 		
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="Description" content="Visualise land use and planning designations across Great Britain: green spaces, development constraints and how land use shapes local carbon footprints.">
+		<meta name="Description" content="Map the planning designations and environmental constraints that shape what can be built where: flood zones, green belt, protected landscapes and habitats, heritage sites, noise and historic landfill. Most layers cover England.">
 		
 		<!-- Google tag (gtag.js) -->
   	<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q11V10CDRV"></script>
@@ -38,7 +38,7 @@
 		<meta name="twitter:card" content="summary_large_image">
 		<meta property="og:site_name" content="Carbon & Place">
 		<meta name="twitter:image:alt" content="Carbon & Place thumbnail">
-		<title>Land Use Explorer - Planning, Land Cover &amp; Emissions</title>
+		<title>Land Use and Planning Explorer - Designations &amp; Constraints</title>
 		
 		<!-- PWA support -->
 		<link rel="manifest" href="/manifest.webmanifest">
@@ -98,7 +98,7 @@
 		
 	  <link rel="canonical" href="https://www.carbon.place/landuse/">
   <script type="application/ld+json">
-  {"@context": "https://schema.org", "@type": "WebApplication", "name": "Land Use & Planning Explorer", "url": "https://www.carbon.place/landuse/", "description": "Explore how land is used across Great Britain, including planning, land cover and environmental designations.", "isPartOf": {"@type": "WebSite", "name": "Carbon & Place", "url": "https://www.carbon.place/"}, "publisher": {"@type": "Organization", "name": "Carbon & Place", "url": "https://www.carbon.place/", "logo": "https://www.carbon.place/images/ui/logo.webp"}, "applicationCategory": "EducationalApplication", "operatingSystem": "Any (web browser)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "GBP"}}
+  {"@context": "https://schema.org", "@type": "WebApplication", "name": "Land Use & Planning Explorer", "url": "https://www.carbon.place/landuse/", "description": "Map the planning designations and environmental constraints that shape what can be built where. Most layers cover England.", "isPartOf": {"@type": "WebSite", "name": "Carbon & Place", "url": "https://www.carbon.place/"}, "publisher": {"@type": "Organization", "name": "Carbon & Place", "url": "https://www.carbon.place/", "logo": "https://www.carbon.place/images/ui/logo.webp"}, "applicationCategory": "EducationalApplication", "operatingSystem": "Any (web browser)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "GBP"}}
   </script>
   <script type="application/ld+json">
   {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.carbon.place/"}, {"@type": "ListItem", "position": 2, "name": "Land Use & Planning Explorer", "item": "https://www.carbon.place/landuse/"}]}
@@ -114,7 +114,7 @@
 		<!-- Menu -->
 		<nav>
 			<a href="/"><img src="/images/ui/logo.webp" alt="Carbon & Place Logo" class="logo" /></a>
-			<a href="/landuse">Land Use and Planning Explorer</a>
+			<a href="/landuse/">Land Use and Planning Explorer</a>
 			<a href="/about/">About</a>
 			<a href="/data/">Data</a>
 			<a href="/manual/">Manual</a>
@@ -127,13 +127,14 @@
 			<span class="modal-close">&times;</span>
 			<div class="modal-body">
 				<h1>Land Use and Planning Explorer</h1>
-				<p>The Land Use and Planning Explorer maps the designations that shape what can be built where: flood zones, green belt, protected landscapes and habitats, heritage sites, and environmental hazards. For a full explanation of the tool please see the <a href="/manual/#landuseandplanningexplorer">manual</a>. You can also access sections of the manual via the help buttons (<i class="fa fa-question-circle" aria-hidden="true"></i>)</p>
+				<p>The Land Use and Planning Explorer maps the designations that shape what can be built where: flood zones, green belt, protected landscapes and habitats, heritage sites, and environmental hazards. For a full explanation of the tool please see the <a href="/manual/#landuseandplanningexplorer">manual</a>. You can also access sections of the manual via the help buttons (<i class="fa fa-question-circle" aria-hidden="true"></i>).</p>
+				<p><strong>Coverage:</strong> unlike our other tools, this one is mostly England. Planning designations are devolved, and the agencies that publish them differ by country, so most layers here (flood zones, green belt, conservation areas, listed buildings, national parks, nature reserves, registered parks and gardens, noise and historic landfill) are England only. Sites of Special Scientific Interest cover Great Britain, and the international designations (Ramsar sites, Special Areas of Conservation, Special Protection Areas) cover the UK; National Landscapes and ancient woodland cover England and Wales. Each layer's help button states its coverage. See also <a href="/about/faq/#coverage">which areas are covered</a>.</p>
 				
 				<div class="feedbackbox">
 					<div class="feedback-text">
 						<h2>How can we improve this tool?</h2>
 						<p>We would love to hear how you are using Carbon &amp; Place and how we can make our tools more useful. If you have found an error in the data or a bug in the tool, you can also report it on <a href="https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/issues" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
-						<p><a href="/about/feedback" class="toolbutton">Submit Feedback</a></p>
+						<p><a href="/about/feedback/" class="toolbutton">Submit Feedback</a></p>
 					</div>
 					<img src="/images/ui/feedback.webp" alt="Feedback" loading="lazy" class="feedback-image">
 				</div>
@@ -144,7 +145,7 @@
 		
 		<!-- Cookies Warning  -->
 		<div id="cookiewarning" class="cookiewarning">
-			<p>We use cookies to measure how you use our website so we can understand how you interact with it, which helps us to make improvements. <a href="/privacy">Find out more.</a></p>
+			<p>We use cookies to measure how you use our website so we can understand how you interact with it, which helps us to make improvements. <a href="/privacy/">Find out more.</a></p>
 			<p>
 				<button class="button buttonOK" value="1"><strong>OK</strong></button>
 				<button class="button buttonNO" value=""><strong>No</strong></button>

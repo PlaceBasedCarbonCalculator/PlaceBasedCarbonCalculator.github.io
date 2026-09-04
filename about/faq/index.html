@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="Description" content="Frequently Asked Questions | Carbon & Place">
-<title>FAQs | Carbon & Place</title>
+<meta name="Description" content="Answers on what the Carbon &amp; Place tools cover, where the data comes from, how far it can be trusted, and what it cannot tell you.">
+<title>FAQs - Carbon &amp; Place</title>
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q11V10CDRV"></script>
@@ -66,7 +66,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <!-- Cookies Warning  -->
 <div id="cookiewarning" class="cookiewarning">
-	<p>We use cookies to measure how you use our website so we can understand how you interact with it, which helps us to make improvements. <a href="/privacy">Find out more.</a></p>
+	<p>We use cookies to measure how you use our website so we can understand how you interact with it, which helps us to make improvements. <a href="/privacy/">Find out more.</a></p>
 	<p>
 		<button class="button buttonOK" value="1"><strong>OK</strong></button>
 		<button class="button buttonNO" value=""><strong>No</strong></button>
@@ -108,6 +108,52 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <p>Yes, though not on a fixed schedule. Each dataset is rebuilt when its source publishes an update, so the most recent year differs between charts and is stated on each one. Funding for the current phase runs to 2028. We cannot promise indefinite maintenance, which is one reason the analysis code and most of the outputs are published openly: if this project ends, the work can be continued by others.</p>
 </details>
 
+<h2 id="coverage">Which areas are covered</h2>
+
+<details class="faq-item" id="coverage-countries">
+<summary>Which parts of the country do the tools cover?</summary>
+<p>Great Britain, and not evenly. The short version: England has everything; Wales has everything except most planning designations; Scotland has the carbon footprints, energy, transport and buildings data but not accessibility, property prices, dwelling type and age, or planning designations; and Northern Ireland is not covered at all. The table sets out where each dataset stops.</p>
+<table>
+<tr><th>Data</th><th>Coverage</th></tr>
+<tr><td>Carbon footprints, 2010 to 2022</td><td>Great Britain</td></tr>
+<tr><td>Gas and electricity use, bills and meters, 2010 to 2024</td><td>Great Britain</td></tr>
+<tr><td>Energy Performance Certificates</td><td>Great Britain</td></tr>
+<tr><td>Public transport frequency, 2004 to 2025</td><td>Great Britain</td></tr>
+<tr><td>Vehicle ownership</td><td>Great Britain</td></tr>
+<tr><td>Terrain, surface and solar models</td><td>Great Britain</td></tr>
+<tr><td>Accessibility and proximity to services</td><td>England and Wales</td></tr>
+<tr><td>Property prices and sales</td><td>England and Wales</td></tr>
+<tr><td>Dwelling type and build period</td><td>England and Wales</td></tr>
+<tr><td>Land ownership</td><td>England and Wales</td></tr>
+<tr><td>Parish reports</td><td>England and Wales</td></tr>
+<tr><td>Population estimates</td><td>England and Wales to 2024, Scotland to 2022</td></tr>
+<tr><td>Most planning designations</td><td>England (see the Land Use and Planning Explorer for the exceptions)</td></tr>
+</table>
+<p>Where a dataset stops short, the chart or layer says so rather than showing a blank, and every chart's Methods tab names its source and its coverage.</p>
+</details>
+
+<details class="faq-item" id="coverage-scotland">
+<summary>Why is some data missing for Scotland?</summary>
+<p>Because the data is published separately there, on different terms, and in three cases we have not been able to include it.</p>
+<p><strong>Property prices.</strong> Sales in England and Wales come from HM Land Registry <a href="https://www.gov.uk/guidance/about-the-price-paid-data" target="_blank" rel="noopener">Price Paid Data</a>, which is open. Scottish sales are published by Registers of Scotland under different licence terms, so we cannot republish them here.</p>
+<p><strong>Accessibility and proximity.</strong> This analysis counts how many services of each type are reachable from every neighbourhood. It is built on the Ordnance Survey Points of Interest dataset, and our licence for it does not extend to Scotland.</p>
+<p><strong>Dwelling type and build period.</strong> The Valuation Office Agency publishes counts of homes by built form and age for England and Wales. There is no Scottish equivalent, so those two charts are blank for a Scottish neighbourhood. Council tax band counts <em>are</em> available for Scotland and are shown.</p>
+<p><strong>Population after 2022.</strong> Scotland's census was held in 2022 rather than 2021, and National Records of Scotland has not yet published small-area estimates beyond it, so Scottish population series stop at 2022 while England and Wales run to 2024.</p>
+<p>Everything else, including the carbon footprints themselves, energy use, EPCs, public transport and vehicles, covers Scotland in full. Scottish neighbourhoods are 2022 Data Zones rather than LSOAs, which are the equivalent unit and a similar size.</p>
+</details>
+
+<details class="faq-item" id="coverage-ni">
+<summary>Do you cover Northern Ireland?</summary>
+<p>Not at present, and we would like to. Almost every dataset behind Carbon &amp; Place is published for Great Britain only, by bodies whose remit stops at the Irish Sea: the Department for Energy Security and Net Zero publishes sub-national energy statistics for Great Britain, the Driver and Vehicle Licensing Agency's records exclude Northern Ireland, and the census, small-area geography and area classifications are run separately by the Northern Ireland Statistics and Research Agency.</p>
+<p>Covering Northern Ireland would mean rebuilding most of the pipeline against a different set of sources rather than extending the existing one, which we have not had the funding to do. Entering a Northern Irish postcode tells you so rather than failing silently. For Northern Ireland statistics, <a href="https://www.nisra.gov.uk/" target="_blank" rel="noopener">NISRA</a> is the place to start.</p>
+</details>
+
+<details class="faq-item">
+<summary>Why does the Land Use and Planning Explorer only work in England?</summary>
+<p>Because planning is devolved, and the designations it maps are created and published by different agencies in each country. Most layers in that tool (flood zones, green belt, conservation areas, listed buildings, national parks, nature reserves, registered parks and gardens, road and rail noise, historic landfill) come from English bodies and cover England only. Some layers do go wider: Sites of Special Scientific Interest cover Great Britain; Ramsar sites, Special Areas of Conservation and Special Protection Areas are international designations covering the UK; National Landscapes and ancient woodland cover England and Wales.</p>
+<p>Each layer's help button states its coverage. The other four tools are not affected: they cover Great Britain except where the table above says otherwise.</p>
+</details>
+
 <h2>About the data</h2>
 
 <details class="faq-item">
@@ -117,7 +163,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <details class="faq-item">
 <summary>How far back does the data go?</summary>
-<p>It depends on the tool. Carbon footprints run from 2010. Public transport frequency in the Transport and Accessibility Explorer runs from 2004, with gaps in 2012 and 2013 where no timetable archive survives. Energy consumption in the Retrofit Explorer runs from 2015. The end year varies by dataset and is shown on each chart.</p>
+<p>It depends on the tool. Carbon footprints run from 2010. Public transport frequency in the Transport and Accessibility Explorer runs from 2004, with gaps in 2012 and 2013 where no timetable archive survives. Energy consumption in the Retrofit Explorer runs from 2010. The end year varies by dataset and is shown on each chart.</p>
 </details>
 
 <details class="faq-item">

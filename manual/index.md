@@ -23,7 +23,7 @@ Carbon & Place is built in the open, and the analysis behind every map is publis
 
 The pipeline is demanding to run: it is designed for a machine with more than 36 cores and 256&nbsp;GB of memory, takes several days, and produces over 70&nbsp;GB of output. Most people will find the [data downloads](/data/) more practical than rebuilding it. Some inputs are licensed in ways that prevent republication; where that is the case, the repository holds a placeholder describing the dataset and how to obtain it.
 
-Short extracts of this manual can be read within the tools by clicking the <i class="fa fa-question-circle" aria-hidden="true" style="color: #a40125;"></i> help buttons.
+Short extracts of this manual can be read within the tools by clicking the <i class="fa fa-question-circle" aria-hidden="true" style="color: #0b38e6;"></i> help buttons.
 
 ## Getting Started
 
@@ -289,7 +289,7 @@ Community groups have used this kind of evidence to prioritise retrofit projects
 <!-- #pbcc-zones -->
 #### Neighbourhoods {#pbccneighbourhoods}
 
-![PBCC Neighbouhoods](/images/manual/pbcc-zones.webp)
+![PBCC Neighbourhoods](/images/manual/pbcc-zones.webp)
 
 The Neighbourhoods layer colours each Lower layer Super Output Area (LSOA), or Scottish Data Zone, by its carbon footprint and related indicators. Values are per person per year (kgCO<sub>2</sub>e) so that areas of different sizes can be compared. Use the drop-down menu to change which measure is shown; the map colours and legend update to match. The map shows 2022, the most recent year in the data. The available measures are:
 
@@ -599,7 +599,7 @@ Accessibility and proximity are two core concepts in sustainable transport plann
 
 Accessibility can be improved either by bringing destinations closer (proximity) or by moving people faster (mobility). Improving proximity is generally considered more sustainable: when shops and services are nearby, people can walk, cycle, or take short bus trips, all of which are cheaper and less resource-intensive than driving. When services are distant, people default to cars, which are costly for households and [for society as a whole](https://doi.org/10.1016/j.jtrangeo.2024.103817), and the space cars require spreads places further apart, making the problem worse. This thinking underpins planning concepts such as the 20-minute neighbourhood ([TCPA guidance](https://www.tcpa.org.uk/resources/20-minute-neighbourhoods/)).
 
-The Accessibility & Proximity analysis measures whether a neighbourhood has enough of the shops and services people need within a reasonable distance and travel time. The purpose of this analysis is to contrast with other accessability measures such as the [DfT's Connectivity Tool](https://www.gov.uk/guidance/connectivity-tool) which typically focus on a small selection of key destinations types such as jobs, schools, and hospitals. While these are important they miss the diversity of destinations that real people wish to travel to. So this analysis is intended to draw attention to those other types of places that also matter to people.
+The Accessibility & Proximity analysis measures whether a neighbourhood has enough of the shops and services people need within a reasonable distance and travel time. The purpose of this analysis is to contrast with other accessibility measures such as the [DfT's Connectivity Tool](https://www.gov.uk/guidance/connectivity-tool) which typically focus on a small selection of key destination types such as jobs, schools, and hospitals. While these are important they miss the diversity of destinations that real people wish to travel to. So this analysis is intended to draw attention to those other types of places that also matter to people.
 
 **Summary table**: lists 385 categories of destination from the [Ordnance Survey Points of Interest](https://www.ordnancesurvey.co.uk/products/points-of-interest) dataset. Each destination type gets four accessibility scores (the number reachable by public transport within 15, 30, 45, and 60 minutes) and four proximity scores (the number within 0.75, 1.5, 2.25, and 3 miles). Every score is expressed in [standard deviations](https://en.wikipedia.org/wiki/Standard_deviation) from the national average, on a scale truncated at -3 to +3. Scores above 0 (better than the national average) are highlighted green; scores below 0 are red.
 
@@ -607,7 +607,7 @@ The Accessibility & Proximity analysis measures whether a neighbourhood has enou
 
 **Summary chart**: plots the same information, with a proximity score on the x-axis and an accessibility score on the y-axis. The **Travel time and distance** drop-down above the chart chooses which band is shown: 15 minutes / 0.75 miles, 30 minutes / 1.5 miles (the default), 45 minutes / 2.25 miles, or 60 minutes / 3 miles. The two axes are always a matched pair, because the distance bands are those same travel times converted at a 3 mph walking speed; pairing a 30-minute isochrone with a 3-mile circle would set two different journeys against each other. Short bands suit everyday services such as a corner shop or a primary school; long bands suit rarer ones such as a hospital or a college. Click any dot to see the destination type. Points far above the diagonal are places where transport outperforms geography (good services despite distant destinations); points far below suggest nearby destinations that are hard to reach without a car.
 
-Destinations types with no services are allocated to a value of -3 and other values are truncated to the -2.9 to +3 range. For some types of destination it is reasonable for there to be no local provision (e.g. theme parks) and others it is reasonable for there only to be local provision at the higher distance bands (e.g. tattoo artist) because there is not enough demand to provide a local service for everyone.
+Destination types with no services are allocated to a value of -3 and other values are truncated to the -2.9 to +3 range. For some types of destination it is reasonable for there to be no local provision (e.g. theme parks) and others it is reasonable for there only to be local provision at the higher distance bands (e.g. tattoo artist) because there is not enough demand to provide a local service for everyone.
 
 ### Transport methods and data
 
@@ -655,7 +655,9 @@ In most of the country, the weekday rush hour bus service is worse than a Sunday
 
 The accessibility and proximity plots are produced as follows. First, the [Ordnance Survey Points of Interest](https://www.ordnancesurvey.co.uk/products/points-of-interest) dataset provides 2,477,906 destinations in 385 categories, a much broader set than accessibility studies usually consider. Second, public transport isochrones (15, 30, 45, and 60 minutes) and circular buffers (0.75, 1.5, 2.25, and 3 miles, equivalent to walking at 3 mph) are generated around each centroid. Third, the number of each destination type within each isochrone and buffer is counted and divided by the resident population of the measured area to give a per-capita rate (for example, Great Britain has 6.46 restaurants per 10,000 people). Finally, scores are normalised to standard deviations from the national average; 89% of neighbourhoods fall within three standard deviations, and more extreme values are truncated to the -3 to +3 range.
 
-This measure is relative to the England and Wales average, so the analysis tells you how an area compares with the country, not whether provision is adequate. And it counts destinations without judging them, so a small supermarket and a large one have the same affect on the score but may provide very different services.
+This measure is relative to the England and Wales average, so the analysis tells you how an area compares with the country, not whether provision is adequate. And it counts destinations without judging them, so a small supermarket and a large one have the same effect on the score but may provide very different services.
+
+**Scotland is not covered by this analysis.** Our licence for the Ordnance Survey Points of Interest dataset does not extend to Scotland, so the accessibility and proximity layers and charts are blank for a Scottish neighbourhood. Every other part of the Transport and Accessibility Explorer, including public transport frequency and vehicle ownership, covers Great Britain in full. See [which areas are covered](/about/faq/#coverage).
 <!-- /#accessibility -->
 
 #### Further reading {#transportfurtherreading}
@@ -698,7 +700,7 @@ Local authorities can use this evidence to target schemes such as area-based ins
 <!-- #retrofit-zones -->
 #### Neighbourhoods {#retrofitneighbourhoods}
 
-![Retrofit Neighboughoods](/images/manual/retrofit-zones.webp)
+![Retrofit Neighbourhoods](/images/manual/retrofit-zones.webp)
 
 The Neighbourhoods layer summarises the domestic Energy Performance Certificates (EPCs) registered in England, Wales, and Scotland, alongside property prices and energy consumption. For individual buildings, use the Domestic Properties layer instead.
 
@@ -959,6 +961,8 @@ To protect privacy, DESNZ removes data for postcodes with few properties, and ma
 It is hard to discuss any issue of place without eventually reaching the question of who owns the land. Landowners, through action and inaction, shaped the country into what it is today: they influence where homes and jobs go, what is farmed, and what is left for nature. Land ownership in Britain is highly concentrated, and reliable public information about who owns what has historically been difficult to obtain, despite the existence of an official register.
 
 Land ownership matters for climate and planning policy too. Delivering new housing, woodland creation, renewable energy, and flood management all require negotiating with landowners, and fragmented or opaque ownership can stall all of them. HM Land Registry publishes several open datasets about land ownership in England and Wales, but they are published as spreadsheets and polygons without a convenient public map. The Land Ownership Explorer makes these official datasets visible and explorable.
+
+**This tool covers England and Wales only.** Land registration is devolved: titles in Scotland are held by [Registers of Scotland](https://www.ros.gov.uk/) rather than HM Land Registry, in a separate register published under different terms, and Northern Ireland is administered separately again. There is no Scottish or Northern Irish equivalent of the INSPIRE, CCOD and OCOD extracts this tool is built from, so the map is blank outside England and Wales. See [which areas are covered](/about/faq/#coverage).
 
 ### Using the ownership data in your area
 
@@ -1322,6 +1326,37 @@ A 2023 extract of the [Food Standards Agency food hygiene ratings](https://ratin
 
 Beyond its practical use, this layer is a good proxy for where food businesses cluster, which complements the accessibility analysis in the Transport and Accessibility Explorer.
 <!-- /#landuse-food_hygiene -->
+
+## Area Reports
+
+Every map tool answers one question across the whole country. The [area reports](/reports/) do the opposite: they gather every tool's data for a single place into one page you can read, print, or send to somebody else. There is a report for every neighbourhood, local authority, ward, parish, and Westminster constituency in the areas we cover.
+
+### Finding a report
+
+Enter a postcode on the [homepage](/) or the [reports page](/reports/) to open the report for that neighbourhood. From there, the "Where is this?" list links to the reports for the local authority, ward, constituency, and parish that contain it. You can also search directly for an area by name on the [reports page](/reports/).
+
+Each report opens with a locator map and three headline charts (carbon footprint, vehicle ownership, and household energy). Below them, a "Show all charts" button for each tool loads the full report card, which is the same set of charts you would see by clicking that area in the tool itself.
+
+### How area figures are produced
+
+The data behind Carbon & Place is published for neighbourhoods: Lower Super Output Areas in England and Wales, and Data Zones in Scotland, each holding roughly 1,500 to 3,000 residents. Figures for anything larger are built up from those neighbourhoods, and how that is done affects how much confidence to place in the result.
+
+* **Local authorities** are much larger than a neighbourhood, and neighbourhood boundaries are drawn so as not to cross council boundaries. Each neighbourhood therefore falls wholly inside one authority and is counted once, in the right place. These figures are the most reliable of the area reports, and are properly comparable between authorities.
+* **Westminster constituencies** are also much larger than a neighbourhood, holding roughly seventy of them. Each neighbourhood is assigned whole to the constituency containing the centre of its population. The 2024 constituency boundaries follow ward lines rather than neighbourhood lines, so a neighbourhood cut by a boundary is credited entirely to one side, moving a small number of residents between neighbouring seats.
+* **Wards and parishes** are often *smaller* than a neighbourhood, so assigning each neighbourhood whole to one of them would be badly wrong. Instead each neighbourhood is **split** between the areas it covers, in proportion to where its residents live: every live postcode takes an equal share of its 2021 census Output Area population, and an area's weight is the share of the neighbourhood's residents whose postcodes fall inside it. Counts are apportioned by that weight, which is why a count in a ward or parish report is not a whole number. Scottish wards use a simpler method, with each Data Zone counted whole in the ward containing its population centre, because the Output Area counts behind the split cover England and Wales only.
+
+Counts are summed. Rates and averages are recomputed from summed numerators and denominators where possible, and otherwise are weighted means, using population weights for public transport frequency, accessibility and vehicle rates, and meter or dwelling weights for energy and EPC averages.
+
+### What to be careful about
+
+* **Medians at area level are approximations.** A true median needs records for individual households or meters, which we do not hold at this scale, so area medians are weighted approximations and are labelled as such wherever they appear.
+* **Small areas carry the most uncertainty.** A parish holding a fraction of one neighbourhood is described partly by the wider area around it. Read small parishes and small wards with caution; the report page says so at the top.
+* **The population split is fixed at 2021.** The pattern of where residents live within each neighbourhood comes from the 2021 census and is applied to every year, so it does not capture new housing built since.
+* **Comparisons on the report card change with the level.** The carbon footprint Overview chart compares this area with its local authority and with Great Britain. The "Similar Areas" comparison is a classification of *neighbourhoods*, so it appears only on neighbourhood reports; and a local authority report has no parent authority to compare with, so it shows two bars rather than four.
+* **Some blocks are neighbourhood-only.** The ONS pen portrait and the area classification table describe a single neighbourhood and have no meaning for a larger area, so they are omitted from the area reports rather than shown empty.
+* **Isochrones are excluded.** Travel-time isochrones are calculated from a single point and cannot be meaningfully aggregated, so they appear in the tools but not in area reports.
+
+Parish reports exist for England and Wales only, as parishes are not a Scottish geography. See [which areas are covered](/about/faq/#coverage) for the rest of the coverage picture.
 
 ## Feedback and contributing
 
