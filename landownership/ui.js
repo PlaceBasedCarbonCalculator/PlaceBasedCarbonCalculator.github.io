@@ -64,68 +64,76 @@ function closewelcome() {
 
 }
 
-// Initialize the welcome form: pre-fill and hide if cookie present
+// Show the consent box's "already given" state, or return it to the form.
+// The fields keep their values either way, so the visit is still posted and
+// logged as the licence requires; only 'required' moves, because a hidden
+// unticked required checkbox (anyone who declined analytics last time) makes
+// the browser silently refuse to submit with nothing on screen to explain it.
+function setConsentKnown(known) {
+  var box = document.getElementById('consentbox');
+  if (!box) { return; }
+  box.classList.toggle('consent-known', known);
+  ['namebox', 'Consentcheckbox', 'Cookiescheckbox'].forEach(function (id) {
+    var input = document.getElementById(id);
+    if (input) { input.required = !known; }
+  });
+}
+
+// Initialize the welcome form: pre-fill from the stored visit, and collapse
+// the fields to a one-line confirmation if we already have consent
 function welcomeInit() {
   var welcomeCookie = capUi.getCookie('landown_welcome');
   var namebox = document.getElementById('namebox');
   var checkBox1 = document.getElementById('Consentcheckbox');
   var checkBox2 = document.getElementById('Cookiescheckbox');
-  var form = document.querySelector('#welcome-modal form');
+  var box = document.getElementById('consentbox');
 
-  if (welcomeCookie && welcomeCookie !== '') {
-    try {
-      var visitor = JSON.parse(decodeURIComponent(welcomeCookie));
-      if (visitor.name) namebox.value = visitor.name;
-      if (visitor.consent === 'true') checkBox1.checked = true;
-      // Analytics state prefer the analyticstrack cookie if present
-      var analytic = capUi.getCookie('analyticstrack');
-      if (analytic !== '') {
-        checkBox2.checked = (analytic === 'true');
-      } else if (visitor.analytics) {
-        checkBox2.checked = (visitor.analytics === 'true');
-      }
-    } catch (e) {
-      // ignore parse errors
-    }
-
-    // Hide the form fields (labels and inputs) but keep the submit button
-    if (form) {
-      var labels = form.querySelectorAll('label[for="Name"], label[for="Consent"], label[for="Cookies"]');
-      labels.forEach(function(l) { l.style.display = 'none'; });
-      var inputs = [document.getElementById('namebox'), document.getElementById('Consentcheckbox'), document.getElementById('Cookiescheckbox')];
-      inputs.forEach(function(i) { if (i) i.style.display = 'none'; });
-
-      // Remove <br> elements left behind so the box can collapse
-      form.querySelectorAll('br').forEach(function(b) { b.parentNode && b.parentNode.removeChild(b); });
-
-      // Replace the header text in the blue wrapper rather than inserting a new message
-      var wrapper = form.parentElement;
-      if (wrapper) {
-        // Find the bold header (<p><b>...</b></p>) and replace its text
-        var boldHeader = wrapper.querySelector('p > b');
-        if (boldHeader) {
-          boldHeader.textContent = 'Consent already granted';
-        } else {
-          // Fallback: replace first paragraph text
-          var firstP = wrapper.querySelector('p');
-          if (firstP) firstP.textContent = 'Consent already granted';
-        }
-
-        // Compact the wrapper so it shrinks to its content
-        wrapper.style.display = 'inline-block';
-        wrapper.style.width = '100%';
-        wrapper.style.padding = '6px';
-      }
-
-      // Ensure submit button remains visible and nicely spaced
-      var button = form.querySelector('button[type="submit"]');
-      if (button) {
-        button.style.display = 'inline-block';
-        button.style.marginTop = '6px';
-      }
-    }
-
+  // Let the "terms of use" link in the consent box open the collapsed section
+  // it points at, rather than jumping to a closed <details> and doing nothing
+  var termsLink = box && box.querySelector('a[href^="#"]');
+  if (termsLink) {
+    termsLink.addEventListener('click', function (e) {
+      var target = document.getElementById(termsLink.getAttribute('href').slice(1));
+      if (!target) { return; }
+      e.preventDefault();
+      target.open = true;
+      target.scrollIntoView({behavior: 'smooth', block: 'start'});
+    });
   }
+
+  var changeButton = box && box.querySelector('.consent-change');
+  if (changeButton) {
+    changeButton.addEventListener('click', function () {
+      setConsentKnown(false);
+      if (namebox) { namebox.focus(); }
+    });
+  }
+
+  if (!welcomeCookie || welcomeCookie === '') { return; }
+
+  var visitor;
+  try {
+    visitor = JSON.parse(decodeURIComponent(welcomeCookie));
+  } catch (e) {
+    return;   // Unreadable cookie: leave the blank form up and ask again
+  }
+
+  if (visitor.name) { namebox.value = visitor.name; }
+  if (visitor.consent === 'true') { checkBox1.checked = true; }
+
+  // Analytics state: prefer the analyticstrack cookie, since the site-wide
+  // banner may have changed it since this visitor last opened this tool
+  var analytic = capUi.getCookie('analyticstrack');
+  if (analytic !== '') {
+    checkBox2.checked = (analytic === 'true');
+  } else if (visitor.analytics) {
+    checkBox2.checked = (visitor.analytics === 'true');
+  }
+
+  var nameSpan = box && box.querySelector('.consent-name');
+  if (nameSpan && visitor.name) { nameSpan.textContent = ' as ' + visitor.name; }
+
+  setConsentKnown(true);
 }
 
 document.addEventListener('DOMContentLoaded', function () {

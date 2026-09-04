@@ -122,36 +122,58 @@
 				
 				<p>This map is intended to help the public understand land ownership in England and Wales. It maps data published by the <a href="https://www.gov.uk/government/organisations/land-registry">Land Registry</a>. For more information on data and methods see the <a href="/manual/#landownershipexplorer">Manual</a>. You can also access sections of the manual via the help buttons (<i class="fa fa-question-circle" aria-hidden="true"></i>).</p>
 				
-        <div style="background-color: #a5cffa; padding: 5px">
-          <p><b>To view the map, please provide the information below:</b></p>
+        <div class="consent-box" id="consentbox">
           <form method="POST" action="https://script.google.com/macros/s/AKfycbxNzqg-ewbcHJCqRNgzPPWhCyPXZAdlTNVpepVN6o59oKRTqKj3n-8WR7oG50_CQYOT/exec" target="dummyframe">
-          <label for="namebox">Full name </label>
-          <input id="namebox" name="Name" type="text" placeholder="Full name" required=""><br>
-          <label for="Consentcheckbox">I agree to the terms of use for this site (see below): </label>
-          <input id="Consentcheckbox" name="Consent" type="checkbox" required=""><br>
-          <label for="Cookiescheckbox">I agree to the use of Google Analytics cookies: </label>
-          <input id="Cookiescheckbox" name="Cookies" type="checkbox" required=""><br>
-          <button type="submit" onclick="closewelcome()">Take me to the map</button>
-        </form></div>
-        
+            <p class="consent-title">To view the map, please provide the information below</p>
+            <div class="consent-fields">
+              <div class="consent-field">
+                <label for="namebox">Full name</label>
+                <input id="namebox" name="Name" type="text" placeholder="Full name" autocomplete="name" required="">
+              </div>
+              <label class="consent-check">
+                <input id="Consentcheckbox" name="Consent" type="checkbox" required="">
+                <span>I agree to the <a href="#termsofuse">terms of use</a> for this site</span>
+              </label>
+              <label class="consent-check">
+                <input id="Cookiescheckbox" name="Cookies" type="checkbox" required="">
+                <span>I agree to the use of Google Analytics cookies</span>
+              </label>
+            </div>
+            <!-- Shown in place of the fields once welcomeInit finds a stored consent -->
+            <p class="consent-note"><span class="consent-tick" aria-hidden="true">&#10003;</span> <span>Consent already given<span class="consent-name"></span>. <button type="button" class="consent-change">Change</button></span></p>
+            <button type="submit" class="consent-submit" onclick="closewelcome()">Take me to the map</button>
+          </form>
+        </div>
+
         <iframe name="dummyframe" id="dummyframe" title="Form submission target" style="display: none;"></iframe>
-        
-        <h2>Why do you ask for my name?</h2>
+
+        <!-- The licence, terms and copyright notices all have to be on this
+             screen, but presented as headings they buried the consent form.
+             They collapse the same way as the FAQ items on /about/faq/. -->
+        <details class="welcome-details" id="whyname">
+        <summary>Why do you ask for my name?</summary>
         <p>The <a href="https://use-land-property-data.service.gov.uk/datasets/ccod/licence/view" target="_blank" rel="noopener noreferrer">licence</a> for the data published by the Land Registry requires that we <i>"maintain End-User Records ... for the purpose of auditing compliance with the terms of this Licence and/or for the prevention and/or detection of crime"</i>. Therefore we ask for your name and record the time you visited the site. We will not share this data with anybody unless HM Land Registry requires us to as part of an audit. </p>
-        
-        <h2>Terms of use</h2>
+        </details>
+
+        <details class="welcome-details" id="termsofuse">
+        <summary>Terms of use</summary>
         <p>This website is for personal, non-commercial use. The information is illustrative and may contain errors or missing data. You must not attempt to scrape or bulk download the data. You cannot embed or reproduce the maps or data without written consent. Any use of this map must be consistent with the <a href="https://use-land-property-data.service.gov.uk/datasets/ccod/licence/view" target="_blank" rel="noopener noreferrer">Land Registry licence</a>. Data within the Land Ownership Explorer is not covered by the Open Data licence that applies to the rest of this site.</p>
-        
-        <h2>Copyright Notice</h2>
+        </details>
+
+        <details class="welcome-details" id="copyrightnotice">
+        <summary>Copyright notice</summary>
         <p>This information is subject to Crown copyright and database rights 2026 and is reproduced with the <a href="https://use-land-property-data.service.gov.uk/datasets/inspire#conditions" target="_blank" rel="noopener noreferrer">permission of HM Land Registry</a>.</p>
         <p>The polygons (including the associated geometry, namely x, y co-ordinates) are subject to Crown copyright and database rights 2026 Ordnance Survey 100026316.</p>
         <p>Contains OS data &copy; Crown copyright and database right 2026</p>
         <p>Contains Royal Mail data &copy; Royal Mail copyright and database right 2026</p>
         <p>Contains National Statistics data &copy; Crown copyright and database right 2026</p>
         <p class="attribution-note">The layers on this map are built from the following extracts: INSPIRE index polygons and the Commercial and Corporate Ownership (CCOD) and Overseas Companies Ownership (OCOD) datasets, HM Land Registry, 2026; OS Open UPRN and Ordnance Survey boundary data, 2026; Royal Mail postcode data, 2026; Office for National Statistics boundaries, 2025. Where an extract is refreshed, this notice is updated to the year of the current extract.</p>
-        
-        <h2>Cookies Notice</h2>
+        </details>
+
+        <details class="welcome-details" id="cookiesnotice">
+        <summary>Cookies notice</summary>
         <p>We use Google Analytics as part of the requirement to log the usage of Land Registry data. These services may set third-party cookies.</p>
+        </details>
 
 				<div class="feedbackbox">
 					<div class="feedback-text">
