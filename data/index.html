@@ -52,6 +52,835 @@
   <script type="application/ld+json">
   {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.carbon.place/"}, {"@type": "ListItem", "position": 2, "name": "Data Downloads", "item": "https://www.carbon.place/data/"}]}
   </script>
+  <!-- Dataset structured data for the downloads below, one Dataset per
+       .dataset-card, each pointing at that card's anchor on this page.
+       Building Heights is deliberately absent: it has no download yet. Keep
+       the contentUrl, version, and datePublished in step with the download
+       links whenever a dataset is rebuilt. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "DataCatalog",
+        "@id": "https://www.carbon.place/data/#catalog",
+        "name": "Carbon & Place data downloads",
+        "url": "https://www.carbon.place/data/",
+        "description": "Bulk downloads of the data behind the Carbon & Place mapping tools, covering neighbourhood carbon footprints, public transport frequency and accessibility, building energy performance, and terrain, together with the archived outputs of the original 2020 Place-Based Carbon Calculator.",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Carbon & Place",
+          "url": "https://www.carbon.place/"
+        },
+        "license": "https://opendatacommons.org/licenses/by/1-0/",
+        "isAccessibleForFree": true,
+        "dataset": [
+          {
+            "@id": "https://www.carbon.place/data/#lsoa-carbon-footprints"
+          },
+          {
+            "@id": "https://www.carbon.place/data/#household-clusters"
+          },
+          {
+            "@id": "https://www.carbon.place/data/#public-transport-frequency"
+          },
+          {
+            "@id": "https://www.carbon.place/data/#access-proximity"
+          },
+          {
+            "@id": "https://www.carbon.place/data/#epc-domestic-summary"
+          },
+          {
+            "@id": "https://www.carbon.place/data/#epc-domestic"
+          },
+          {
+            "@id": "https://www.carbon.place/data/#epc-non-domestic"
+          },
+          {
+            "@id": "https://www.carbon.place/data/#digital-terrain-model"
+          },
+          {
+            "@id": "https://www.carbon.place/data/#digital-surface-model"
+          },
+          {
+            "@id": "https://www.carbon.place/data/#creds-lsoa-data"
+          },
+          {
+            "@id": "https://www.carbon.place/data/#creds-transit-stops"
+          },
+          {
+            "@id": "https://www.carbon.place/data/#creds-isochrones"
+          },
+          {
+            "@id": "https://www.carbon.place/data/#creds-pct-route-network"
+          }
+        ]
+      },
+      {
+        "@type": "Dataset",
+        "@id": "https://www.carbon.place/data/#lsoa-carbon-footprints",
+        "name": "LSOA Carbon Footprints",
+        "description": "Annual carbon footprint estimates for every neighbourhood in Great Britain, covering 2010 to 2022. Figures are given for Lower layer Super Output Areas in England and Wales and for Data Zones in Scotland, and are broken down into housing, transport, and consumption emissions. The values are modelled estimates produced for the Place-Based Carbon Calculator rather than measurements, so they describe the typical household in an area rather than any particular home. Supplied as a zipped CSV file.",
+        "url": "https://www.carbon.place/data/#lsoa-carbon-footprints",
+        "license": "https://opendatacommons.org/licenses/by/1-0/",
+        "isAccessibleForFree": true,
+        "creator": {
+          "@type": "Organization",
+          "name": "Carbon & Place",
+          "url": "https://www.carbon.place/"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Carbon & Place",
+          "url": "https://www.carbon.place/"
+        },
+        "includedInDataCatalog": {
+          "@id": "https://www.carbon.place/data/#catalog"
+        },
+        "spatialCoverage": {
+          "@type": "Place",
+          "name": "Great Britain",
+          "geo": {
+            "@type": "GeoShape",
+            "box": "49.86 -8.65 60.86 1.77"
+          }
+        },
+        "temporalCoverage": "2010-01-01/2022-12-31",
+        "keywords": [
+          "carbon footprint",
+          "greenhouse gas emissions",
+          "housing",
+          "transport",
+          "consumption",
+          "LSOA",
+          "neighbourhood",
+          "Great Britain"
+        ],
+        "variableMeasured": "Carbon footprint in tonnes of carbon dioxide equivalent",
+        "version": "20260828",
+        "datePublished": "2026-08-28",
+        "creativeWorkStatus": "Experimental release: a bulk version of the data in the Carbon & Place tools, which may contain errors.",
+        "citation": {
+          "@type": "ScholarlyArticle",
+          "name": "Carbon & Place: Data and tools to understand the spatial variation in carbon footprints",
+          "author": {
+            "@type": "Person",
+            "name": "Malcolm Morgan"
+          },
+          "datePublished": "2026",
+          "identifier": "https://doi.org/10.1177/23998083251401613",
+          "url": "https://doi.org/10.1177/23998083251401613"
+        },
+        "distribution": {
+          "@type": "DataDownload",
+          "encodingFormat": [
+            "application/zip",
+            "text/csv"
+          ],
+          "contentUrl": "https://pbcc.blob.core.windows.net/pbcc-data/bulk/pbcc_lsoa_20260828.zip"
+        }
+      },
+      {
+        "@type": "Dataset",
+        "@id": "https://www.carbon.place/data/#household-clusters",
+        "name": "Household Clusters",
+        "description": "Synthetic household data for every neighbourhood in Great Britain, used to build the community photo in the Place-Based Carbon Calculator. For each area it gives the number of households in each combination of National Statistics Socio-economic Classification, household composition, and ethnicity. The households are generated by spatial microsimulation so that they are consistent with the published 2021 Census tables (2022 in Scotland); they are plausible artificial households, not records of real ones. Supplied as a zipped CSV file.",
+        "url": "https://www.carbon.place/data/#household-clusters",
+        "license": "https://opendatacommons.org/licenses/by/1-0/",
+        "isAccessibleForFree": true,
+        "creator": {
+          "@type": "Organization",
+          "name": "Carbon & Place",
+          "url": "https://www.carbon.place/"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Carbon & Place",
+          "url": "https://www.carbon.place/"
+        },
+        "includedInDataCatalog": {
+          "@id": "https://www.carbon.place/data/#catalog"
+        },
+        "spatialCoverage": {
+          "@type": "Place",
+          "name": "Great Britain",
+          "geo": {
+            "@type": "GeoShape",
+            "box": "49.86 -8.65 60.86 1.77"
+          }
+        },
+        "temporalCoverage": "2021",
+        "keywords": [
+          "synthetic population",
+          "spatial microsimulation",
+          "census",
+          "household composition",
+          "ethnicity",
+          "NS-SEC",
+          "LSOA"
+        ],
+        "variableMeasured": "Number of households by socio-economic classification, household composition, and ethnicity",
+        "version": "20260414",
+        "datePublished": "2026-04-14",
+        "creativeWorkStatus": "Experimental release: a bulk version of the data in the Carbon & Place tools, which may contain errors.",
+        "citation": {
+          "@type": "ScholarlyArticle",
+          "name": "Carbon & Place: Data and tools to understand the spatial variation in carbon footprints",
+          "author": {
+            "@type": "Person",
+            "name": "Malcolm Morgan"
+          },
+          "datePublished": "2026",
+          "identifier": "https://doi.org/10.1177/23998083251401613",
+          "url": "https://doi.org/10.1177/23998083251401613"
+        },
+        "distribution": {
+          "@type": "DataDownload",
+          "encodingFormat": [
+            "application/zip",
+            "text/csv"
+          ],
+          "contentUrl": "https://pbcc.blob.core.windows.net/pbcc-data/bulk/household_clusters_20260414.zip"
+        }
+      },
+      {
+        "@type": "Dataset",
+        "@id": "https://www.carbon.place/data/#public-transport-frequency",
+        "name": "Public Transport Frequency",
+        "description": "Public transport frequency, measured as trips per hour, for every neighbourhood in Great Britain for most years between 2004 and 2025. There is no data for 2012 or 2013. Frequencies are broken down by GTFS mode of travel, time of day, and weekday or weekend, and count services stopping in or near each neighbourhood. They are taken from published timetables, so they record the service that was scheduled rather than the service that ran. Supplied as a zipped CSV file.",
+        "url": "https://www.carbon.place/data/#public-transport-frequency",
+        "license": "https://opendatacommons.org/licenses/by/1-0/",
+        "isAccessibleForFree": true,
+        "creator": {
+          "@type": "Organization",
+          "name": "Carbon & Place",
+          "url": "https://www.carbon.place/"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Carbon & Place",
+          "url": "https://www.carbon.place/"
+        },
+        "includedInDataCatalog": {
+          "@id": "https://www.carbon.place/data/#catalog"
+        },
+        "spatialCoverage": {
+          "@type": "Place",
+          "name": "Great Britain",
+          "geo": {
+            "@type": "GeoShape",
+            "box": "49.86 -8.65 60.86 1.77"
+          }
+        },
+        "temporalCoverage": "2004-01-01/2025-12-31",
+        "keywords": [
+          "public transport",
+          "bus",
+          "rail",
+          "timetable",
+          "GTFS",
+          "service frequency",
+          "LSOA",
+          "Great Britain"
+        ],
+        "variableMeasured": "Public transport trips per hour",
+        "version": "20260825",
+        "datePublished": "2026-08-25",
+        "creativeWorkStatus": "Experimental release: a bulk version of the data in the Carbon & Place tools, which may contain errors.",
+        "citation": {
+          "@type": "ScholarlyArticle",
+          "name": "Carbon & Place: Data and tools to understand the spatial variation in carbon footprints",
+          "author": {
+            "@type": "Person",
+            "name": "Malcolm Morgan"
+          },
+          "datePublished": "2026",
+          "identifier": "https://doi.org/10.1177/23998083251401613",
+          "url": "https://doi.org/10.1177/23998083251401613"
+        },
+        "distribution": {
+          "@type": "DataDownload",
+          "encodingFormat": [
+            "application/zip",
+            "text/csv"
+          ],
+          "contentUrl": "https://pbcc.blob.core.windows.net/pbcc-data/bulk/pt_frequency_20260825.zip"
+        }
+      },
+      {
+        "@type": "Dataset",
+        "@id": "https://www.carbon.place/data/#access-proximity",
+        "name": "Access Proximity",
+        "description": "Access and proximity scores for every 2021 Lower layer Super Output Area in England and Wales. For each class of point of interest, such as fish and chip shops, the data gives the population access and proximity scores at 15, 30, 45, and 60 minutes by public transport. Accessibility measures how long it takes to reach a destination using the transport available; proximity measures how physically close those destinations are. Supplied as a zipped CSV file.",
+        "url": "https://www.carbon.place/data/#access-proximity",
+        "license": "https://opendatacommons.org/licenses/by/1-0/",
+        "isAccessibleForFree": true,
+        "creator": {
+          "@type": "Organization",
+          "name": "Carbon & Place",
+          "url": "https://www.carbon.place/"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Carbon & Place",
+          "url": "https://www.carbon.place/"
+        },
+        "includedInDataCatalog": {
+          "@id": "https://www.carbon.place/data/#catalog"
+        },
+        "spatialCoverage": {
+          "@type": "Place",
+          "name": "England and Wales",
+          "geo": {
+            "@type": "GeoShape",
+            "box": "49.86 -6.42 55.81 1.77"
+          }
+        },
+        "keywords": [
+          "accessibility",
+          "proximity",
+          "points of interest",
+          "public transport",
+          "15-minute neighbourhood",
+          "LSOA",
+          "England",
+          "Wales"
+        ],
+        "variableMeasured": "Population access and proximity scores by travel time threshold",
+        "version": "20260414",
+        "datePublished": "2026-04-14",
+        "creativeWorkStatus": "Experimental release: a bulk version of the data in the Carbon & Place tools, which may contain errors.",
+        "citation": {
+          "@type": "ScholarlyArticle",
+          "name": "Carbon & Place: Data and tools to understand the spatial variation in carbon footprints",
+          "author": {
+            "@type": "Person",
+            "name": "Malcolm Morgan"
+          },
+          "datePublished": "2026",
+          "identifier": "https://doi.org/10.1177/23998083251401613",
+          "url": "https://doi.org/10.1177/23998083251401613"
+        },
+        "distribution": {
+          "@type": "DataDownload",
+          "encodingFormat": [
+            "application/zip",
+            "text/csv"
+          ],
+          "contentUrl": "https://pbcc.blob.core.windows.net/pbcc-data/bulk/access_proximity_20260414.zip"
+        }
+      },
+      {
+        "@type": "Dataset",
+        "@id": "https://www.carbon.place/data/#epc-domestic-summary",
+        "name": "Domestic Energy Performance Certificates Summary",
+        "description": "Summary statistics describing domestic Energy Performance Certificates in each neighbourhood in Great Britain, covering energy efficiency ratings and the characteristics of the assessed homes. A certificate exists only for a home that has been built, sold, or let since 2008, roughly two thirds of the housing stock, so these summaries describe the assessed subset rather than every dwelling. The England and Wales register and the separate Scottish register are harmonised into one dataset. Supplied as a zipped CSV file.",
+        "url": "https://www.carbon.place/data/#epc-domestic-summary",
+        "license": "https://opendatacommons.org/licenses/by/1-0/",
+        "isAccessibleForFree": true,
+        "creator": {
+          "@type": "Organization",
+          "name": "Carbon & Place",
+          "url": "https://www.carbon.place/"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Carbon & Place",
+          "url": "https://www.carbon.place/"
+        },
+        "includedInDataCatalog": {
+          "@id": "https://www.carbon.place/data/#catalog"
+        },
+        "spatialCoverage": {
+          "@type": "Place",
+          "name": "Great Britain",
+          "geo": {
+            "@type": "GeoShape",
+            "box": "49.86 -8.65 60.86 1.77"
+          }
+        },
+        "temporalCoverage": "2008-01-01/2026-08-25",
+        "keywords": [
+          "energy performance certificate",
+          "EPC",
+          "housing",
+          "energy efficiency",
+          "retrofit",
+          "LSOA",
+          "Great Britain"
+        ],
+        "variableMeasured": "Domestic energy efficiency rating",
+        "version": "20260825",
+        "datePublished": "2026-08-25",
+        "creativeWorkStatus": "Experimental release: a bulk version of the data in the Carbon & Place tools, which may contain errors.",
+        "citation": {
+          "@type": "ScholarlyArticle",
+          "name": "Carbon & Place: Data and tools to understand the spatial variation in carbon footprints",
+          "author": {
+            "@type": "Person",
+            "name": "Malcolm Morgan"
+          },
+          "datePublished": "2026",
+          "identifier": "https://doi.org/10.1177/23998083251401613",
+          "url": "https://doi.org/10.1177/23998083251401613"
+        },
+        "distribution": {
+          "@type": "DataDownload",
+          "encodingFormat": [
+            "application/zip",
+            "text/csv"
+          ],
+          "contentUrl": "https://pbcc.blob.core.windows.net/pbcc-data/bulk/epc_dom_summary_20260825.zip"
+        }
+      },
+      {
+        "@type": "Dataset",
+        "@id": "https://www.carbon.place/data/#epc-domestic",
+        "name": "Domestic Energy Performance Certificates",
+        "description": "Record-level domestic Energy Performance Certificate data for Great Britain, cleaned and geolocated so that each certificate sits on a building point. The England and Wales register and the separate Scottish register are harmonised, which can introduce small inconsistencies in the Scottish records because Scotland uses different building age bands. A certificate exists only for a home built, sold, or let since 2008, roughly two thirds of the housing stock. Supplied as a zipped GeoPackage.",
+        "url": "https://www.carbon.place/data/#epc-domestic",
+        "license": "https://opendatacommons.org/licenses/by/1-0/",
+        "isAccessibleForFree": true,
+        "creator": {
+          "@type": "Organization",
+          "name": "Carbon & Place",
+          "url": "https://www.carbon.place/"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Carbon & Place",
+          "url": "https://www.carbon.place/"
+        },
+        "includedInDataCatalog": {
+          "@id": "https://www.carbon.place/data/#catalog"
+        },
+        "spatialCoverage": {
+          "@type": "Place",
+          "name": "Great Britain",
+          "geo": {
+            "@type": "GeoShape",
+            "box": "49.86 -8.65 60.86 1.77"
+          }
+        },
+        "temporalCoverage": "2008-01-01/2026-08-29",
+        "keywords": [
+          "energy performance certificate",
+          "EPC",
+          "housing",
+          "energy efficiency",
+          "retrofit",
+          "buildings",
+          "Great Britain"
+        ],
+        "variableMeasured": "Domestic energy efficiency rating and building characteristics",
+        "version": "20260829",
+        "datePublished": "2026-08-29",
+        "creativeWorkStatus": "Experimental release: a bulk version of the data in the Carbon & Place tools, which may contain errors.",
+        "citation": {
+          "@type": "ScholarlyArticle",
+          "name": "Carbon & Place: Data and tools to understand the spatial variation in carbon footprints",
+          "author": {
+            "@type": "Person",
+            "name": "Malcolm Morgan"
+          },
+          "datePublished": "2026",
+          "identifier": "https://doi.org/10.1177/23998083251401613",
+          "url": "https://doi.org/10.1177/23998083251401613"
+        },
+        "distribution": {
+          "@type": "DataDownload",
+          "encodingFormat": [
+            "application/zip",
+            "application/geopackage+sqlite3"
+          ],
+          "contentUrl": "https://pbcc.blob.core.windows.net/pbcc-data/bulk/epc_domestic_20260829.zip"
+        }
+      },
+      {
+        "@type": "Dataset",
+        "@id": "https://www.carbon.place/data/#epc-non-domestic",
+        "name": "Non-Domestic Energy Performance Certificates",
+        "description": "Building points carrying non-domestic Energy Performance Certificates in Great Britain, cleaned, geolocated, and summarised. Non-domestic certificates cover commercial, industrial, and public buildings rather than homes, and are required when such a building is constructed, sold, or let. Supplied as a zipped GeoPackage.",
+        "url": "https://www.carbon.place/data/#epc-non-domestic",
+        "license": "https://opendatacommons.org/licenses/by/1-0/",
+        "isAccessibleForFree": true,
+        "creator": {
+          "@type": "Organization",
+          "name": "Carbon & Place",
+          "url": "https://www.carbon.place/"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Carbon & Place",
+          "url": "https://www.carbon.place/"
+        },
+        "includedInDataCatalog": {
+          "@id": "https://www.carbon.place/data/#catalog"
+        },
+        "spatialCoverage": {
+          "@type": "Place",
+          "name": "Great Britain",
+          "geo": {
+            "@type": "GeoShape",
+            "box": "49.86 -8.65 60.86 1.77"
+          }
+        },
+        "keywords": [
+          "energy performance certificate",
+          "EPC",
+          "non-domestic buildings",
+          "commercial property",
+          "energy efficiency",
+          "Great Britain"
+        ],
+        "variableMeasured": "Non-domestic energy efficiency rating and building characteristics",
+        "version": "20260725",
+        "datePublished": "2026-07-25",
+        "creativeWorkStatus": "Experimental release: a bulk version of the data in the Carbon & Place tools, which may contain errors.",
+        "citation": {
+          "@type": "ScholarlyArticle",
+          "name": "Carbon & Place: Data and tools to understand the spatial variation in carbon footprints",
+          "author": {
+            "@type": "Person",
+            "name": "Malcolm Morgan"
+          },
+          "datePublished": "2026",
+          "identifier": "https://doi.org/10.1177/23998083251401613",
+          "url": "https://doi.org/10.1177/23998083251401613"
+        },
+        "distribution": {
+          "@type": "DataDownload",
+          "encodingFormat": [
+            "application/zip",
+            "application/geopackage+sqlite3"
+          ],
+          "contentUrl": "https://pbcc.blob.core.windows.net/pbcc-data/bulk/epc_nondomestic_20260725.zip"
+        }
+      },
+      {
+        "@type": "Dataset",
+        "@id": "https://www.carbon.place/data/#digital-terrain-model",
+        "name": "2 m Digital Terrain Model of Great Britain",
+        "description": "A two metre resolution digital terrain model of Great Britain, giving the elevation of the bare ground surface. It was built as an open data terrain model at a higher resolution than commonly available open sources such as OS Terrain 50, and is distributed as RGB encoded WebP raster tiles in a single PMTiles archive. Methods and source data are documented in the GBDEM repository.",
+        "url": "https://www.carbon.place/data/#digital-terrain-model",
+        "license": "https://opendatacommons.org/licenses/by/1-0/",
+        "isAccessibleForFree": true,
+        "creator": {
+          "@type": "Organization",
+          "name": "Carbon & Place",
+          "url": "https://www.carbon.place/"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Carbon & Place",
+          "url": "https://www.carbon.place/"
+        },
+        "includedInDataCatalog": {
+          "@id": "https://www.carbon.place/data/#catalog"
+        },
+        "spatialCoverage": {
+          "@type": "Place",
+          "name": "Great Britain",
+          "geo": {
+            "@type": "GeoShape",
+            "box": "49.86 -8.65 60.86 1.77"
+          }
+        },
+        "keywords": [
+          "digital terrain model",
+          "DTM",
+          "elevation",
+          "topography",
+          "raster",
+          "PMTiles",
+          "Great Britain"
+        ],
+        "variableMeasured": "Ground surface elevation in metres",
+        "creativeWorkStatus": "Experimental release: a bulk version of the data in the Carbon & Place tools, which may contain errors.",
+        "citation": {
+          "@type": "ScholarlyArticle",
+          "name": "Carbon & Place: Data and tools to understand the spatial variation in carbon footprints",
+          "author": {
+            "@type": "Person",
+            "name": "Malcolm Morgan"
+          },
+          "datePublished": "2026",
+          "identifier": "https://doi.org/10.1177/23998083251401613",
+          "url": "https://doi.org/10.1177/23998083251401613"
+        },
+        "sameAs": "https://github.com/PlaceBasedCarbonCalculator/GBDEM/",
+        "distribution": {
+          "@type": "DataDownload",
+          "encodingFormat": "PMTiles",
+          "contentUrl": "https://pbcc.blob.core.windows.net/pbcc-pmtiles/DTM.pmtiles"
+        }
+      },
+      {
+        "@type": "Dataset",
+        "@id": "https://www.carbon.place/data/#digital-surface-model",
+        "name": "2 m Digital Surface Model of Great Britain",
+        "description": "A two metre resolution digital surface model of Great Britain, giving the elevation of the ground together with the buildings, trees, and other objects standing on it. Subtracting the matching digital terrain model gives the height of those objects above ground. It is distributed as RGB encoded WebP raster tiles in a single PMTiles archive.",
+        "url": "https://www.carbon.place/data/#digital-surface-model",
+        "license": "https://opendatacommons.org/licenses/by/1-0/",
+        "isAccessibleForFree": true,
+        "creator": {
+          "@type": "Organization",
+          "name": "Carbon & Place",
+          "url": "https://www.carbon.place/"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Carbon & Place",
+          "url": "https://www.carbon.place/"
+        },
+        "includedInDataCatalog": {
+          "@id": "https://www.carbon.place/data/#catalog"
+        },
+        "spatialCoverage": {
+          "@type": "Place",
+          "name": "Great Britain",
+          "geo": {
+            "@type": "GeoShape",
+            "box": "49.86 -8.65 60.86 1.77"
+          }
+        },
+        "keywords": [
+          "digital surface model",
+          "DSM",
+          "elevation",
+          "building heights",
+          "raster",
+          "PMTiles",
+          "Great Britain"
+        ],
+        "variableMeasured": "Surface elevation in metres",
+        "creativeWorkStatus": "Experimental release: a bulk version of the data in the Carbon & Place tools, which may contain errors.",
+        "citation": {
+          "@type": "ScholarlyArticle",
+          "name": "Carbon & Place: Data and tools to understand the spatial variation in carbon footprints",
+          "author": {
+            "@type": "Person",
+            "name": "Malcolm Morgan"
+          },
+          "datePublished": "2026",
+          "identifier": "https://doi.org/10.1177/23998083251401613",
+          "url": "https://doi.org/10.1177/23998083251401613"
+        },
+        "distribution": {
+          "@type": "DataDownload",
+          "encodingFormat": "PMTiles",
+          "contentUrl": "https://pbcc.blob.core.windows.net/pbcc-pmtiles/DSM.pmtiles"
+        }
+      },
+      {
+        "@type": "Dataset",
+        "@id": "https://www.carbon.place/data/#creds-lsoa-data",
+        "name": "LSOA Data (original CREDS calculator)",
+        "description": "The full neighbourhood dataset from the original 2020 Place-Based Carbon Calculator, produced with the Centre for Research into Energy Demand Solutions. It covers Lower layer Super Output Areas in England and is kept so that published work citing it still resolves. It is not updated, and current figures should be taken from the newer releases on the same page. Supplied as a zipped CSV file.",
+        "url": "https://www.carbon.place/data/#creds-lsoa-data",
+        "license": "https://opendatacommons.org/licenses/by/1-0/",
+        "isAccessibleForFree": true,
+        "creator": {
+          "@type": "Organization",
+          "name": "Carbon & Place",
+          "url": "https://www.carbon.place/"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Carbon & Place",
+          "url": "https://www.carbon.place/"
+        },
+        "includedInDataCatalog": {
+          "@id": "https://www.carbon.place/data/#catalog"
+        },
+        "spatialCoverage": {
+          "@type": "Place",
+          "name": "England",
+          "geo": {
+            "@type": "GeoShape",
+            "box": "49.86 -6.42 55.81 1.77"
+          }
+        },
+        "keywords": [
+          "carbon footprint",
+          "greenhouse gas emissions",
+          "LSOA",
+          "England",
+          "archive",
+          "CREDS"
+        ],
+        "version": "1.0",
+        "datePublished": "2020",
+        "creativeWorkStatus": "Archived release, no longer updated.",
+        "distribution": {
+          "@type": "DataDownload",
+          "encodingFormat": [
+            "application/zip",
+            "text/csv"
+          ],
+          "contentUrl": "https://github.com/creds2/CarbonCalculator/releases/download/1.0/PBCC_LSOA_data.zip"
+        }
+      },
+      {
+        "@type": "Dataset",
+        "@id": "https://www.carbon.place/data/#creds-transit-stops",
+        "name": "Transit Stops (original CREDS calculator)",
+        "description": "Public transport stop frequency data for Great Britain from the original 2020 Place-Based Carbon Calculator, recording how often services called at each stop. It is archived and no longer updated; the Transport and Accessibility Explorer publishes a newer and more detailed frequency dataset covering 2004 to 2025. Supplied as a zipped CSV file.",
+        "url": "https://www.carbon.place/data/#creds-transit-stops",
+        "license": "https://opendatacommons.org/licenses/by/1-0/",
+        "isAccessibleForFree": true,
+        "creator": {
+          "@type": "Organization",
+          "name": "Carbon & Place",
+          "url": "https://www.carbon.place/"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Carbon & Place",
+          "url": "https://www.carbon.place/"
+        },
+        "includedInDataCatalog": {
+          "@id": "https://www.carbon.place/data/#catalog"
+        },
+        "spatialCoverage": {
+          "@type": "Place",
+          "name": "Great Britain",
+          "geo": {
+            "@type": "GeoShape",
+            "box": "49.86 -8.65 60.86 1.77"
+          }
+        },
+        "temporalCoverage": "2020",
+        "keywords": [
+          "public transport",
+          "transit stops",
+          "service frequency",
+          "Great Britain",
+          "archive",
+          "CREDS"
+        ],
+        "variableMeasured": "Public transport service frequency by stop",
+        "version": "1.0",
+        "datePublished": "2020",
+        "creativeWorkStatus": "Archived release, no longer updated.",
+        "distribution": {
+          "@type": "DataDownload",
+          "encodingFormat": [
+            "application/zip",
+            "text/csv"
+          ],
+          "contentUrl": "https://github.com/creds2/CarbonCalculator/releases/download/1.0/PBCC_transit_stop_frequency_2020.zip"
+        }
+      },
+      {
+        "@type": "Dataset",
+        "@id": "https://www.carbon.place/data/#creds-isochrones",
+        "name": "15-minute isochrones (original CREDS calculator)",
+        "description": "Fifteen minute travel time isochrones for every Lower layer Super Output Area in England, from the original 2020 Place-Based Carbon Calculator. Each area has isochrones for walking, cycling, public transport, and cycling combined with public transport, measured from the population weighted centroid using weekday morning peak timetables. Supplied as a zipped GeoJSON file.",
+        "url": "https://www.carbon.place/data/#creds-isochrones",
+        "license": "https://opendatacommons.org/licenses/by/1-0/",
+        "isAccessibleForFree": true,
+        "creator": {
+          "@type": "Organization",
+          "name": "Carbon & Place",
+          "url": "https://www.carbon.place/"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Carbon & Place",
+          "url": "https://www.carbon.place/"
+        },
+        "includedInDataCatalog": {
+          "@id": "https://www.carbon.place/data/#catalog"
+        },
+        "spatialCoverage": {
+          "@type": "Place",
+          "name": "England",
+          "geo": {
+            "@type": "GeoShape",
+            "box": "49.86 -6.42 55.81 1.77"
+          }
+        },
+        "keywords": [
+          "isochrones",
+          "accessibility",
+          "travel time",
+          "walking",
+          "cycling",
+          "public transport",
+          "England",
+          "archive"
+        ],
+        "variableMeasured": "Area reachable within 15 minutes by mode of travel",
+        "version": "1.0",
+        "datePublished": "2020",
+        "creativeWorkStatus": "Archived release, no longer updated.",
+        "distribution": {
+          "@type": "DataDownload",
+          "encodingFormat": [
+            "application/zip",
+            "application/geo+json"
+          ],
+          "contentUrl": "https://github.com/creds2/CarbonCalculator/releases/download/1.0/PBCC_15min_isochrones.zip"
+        }
+      },
+      {
+        "@type": "Dataset",
+        "@id": "https://www.carbon.place/data/#creds-pct-route-network",
+        "name": "PCT combined route network (original CREDS calculator)",
+        "description": "The combined commuting and travel to school cycling route networks from the Propensity to Cycle Tool, as used in the Place-Based Carbon Calculator. Each road segment carries the estimated number of people cycling along it on a typical day under three scenarios: the 2011 census baseline, the Government Target, and Go Dutch. The estimates are built from 2011 census travel data and cover England. Supplied as a zipped GeoJSON file.",
+        "url": "https://www.carbon.place/data/#creds-pct-route-network",
+        "license": "https://opendatacommons.org/licenses/by/1-0/",
+        "isAccessibleForFree": true,
+        "creator": {
+          "@type": "Organization",
+          "name": "Carbon & Place",
+          "url": "https://www.carbon.place/"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Carbon & Place",
+          "url": "https://www.carbon.place/"
+        },
+        "includedInDataCatalog": {
+          "@id": "https://www.carbon.place/data/#catalog"
+        },
+        "spatialCoverage": {
+          "@type": "Place",
+          "name": "England",
+          "geo": {
+            "@type": "GeoShape",
+            "box": "49.86 -6.42 55.81 1.77"
+          }
+        },
+        "temporalCoverage": "2011",
+        "keywords": [
+          "cycling",
+          "Propensity to Cycle Tool",
+          "route network",
+          "active travel",
+          "commuting",
+          "travel to school",
+          "England",
+          "archive"
+        ],
+        "variableMeasured": "Estimated daily cyclists per road segment by scenario",
+        "version": "1.0",
+        "datePublished": "2020",
+        "creativeWorkStatus": "Archived release, no longer updated.",
+        "sameAs": "https://www.pct.bike",
+        "distribution": {
+          "@type": "DataDownload",
+          "encodingFormat": [
+            "application/zip",
+            "application/geo+json"
+          ],
+          "contentUrl": "https://github.com/creds2/CarbonCalculator/releases/download/1.0/PBCC_PCT_rnet_commute_school.zip"
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 <body class="content-page">
 
@@ -121,12 +950,12 @@
 
 <h3>New Place-Based Carbon Calculator</h3>
 <div class="card-grid">
-<div class="card dataset-card">
+<div class="card dataset-card" id="lsoa-carbon-footprints">
 <h4>LSOA Carbon Footprints</h4>
 <p>A zipped CSV providing the carbon footprints for each LSOA, from 2010 to 2022.</p>
 <a class="btn" href="https://pbcc.blob.core.windows.net/pbcc-data/bulk/pbcc_lsoa_20260828.zip" target="_blank" rel="noopener noreferrer"><i class="fa fa-download" aria-hidden="true"></i> Download</a>
 </div>
-<div class="card dataset-card">
+<div class="card dataset-card" id="household-clusters">
 <h4>Household Clusters</h4>
 <p>A zipped CSV providing the synthetic data used to produce the community photo in the PBCC. For each LSOA, the number of households has been categorised by NS-SEC, Household Composition, and Ethnicity.</p>
 <a class="btn" href="https://pbcc.blob.core.windows.net/pbcc-data/bulk/household_clusters_20260414.zip" target="_blank" rel="noopener noreferrer"><i class="fa fa-download" aria-hidden="true"></i> Download</a>
@@ -135,12 +964,12 @@
 
 <h3>Transport and Accessibility Explorer</h3>
 <div class="card-grid">
-<div class="card dataset-card">
+<div class="card dataset-card" id="public-transport-frequency">
 <h4>Public Transport Frequency</h4>
 <p>A zipped CSV providing the frequency of public transport (trips per hour) for each LSOA in Great Britain for most years from 2004 to 2025 (there is no data for 2012 and 2013). Data is broken down by GTFS mode of travel and time of day and weekday/weekend.</p>
 <a class="btn" href="https://pbcc.blob.core.windows.net/pbcc-data/bulk/pt_frequency_20260825.zip" target="_blank" rel="noopener noreferrer"><i class="fa fa-download" aria-hidden="true"></i> Download</a>
 </div>
-<div class="card dataset-card">
+<div class="card dataset-card" id="access-proximity">
 <h4>Access Proximity</h4>
 <p>A zipped CSV of the Access-Proximity data. For each 2021 LSOA in England and Wales and each class of Point of Interest (e.g. "Fish and Chip Shops"), it provides the population access and proximity scores for 15, 30, 45, and 60 minutes by public transport.</p>
 <a class="btn" href="https://pbcc.blob.core.windows.net/pbcc-data/bulk/access_proximity_20260414.zip" target="_blank" rel="noopener noreferrer"><i class="fa fa-download" aria-hidden="true"></i> Download</a>
@@ -149,17 +978,17 @@
 
 <h3>Retrofit Explorer</h3>
 <div class="card-grid">
-<div class="card dataset-card">
+<div class="card dataset-card" id="epc-domestic-summary">
 <h4>Domestic Energy Performance Certificates Summary</h4>
 <p>A zipped CSV with summary data about domestic EPC certificates in each LSOA in Great Britain.</p>
 <a class="btn" href="https://pbcc.blob.core.windows.net/pbcc-data/bulk/epc_dom_summary_20260825.zip" target="_blank" rel="noopener noreferrer"><i class="fa fa-download" aria-hidden="true"></i> Download</a>
 </div>
-<div class="card dataset-card">
+<div class="card dataset-card" id="epc-domestic">
 <h4>Domestic Energy Performance Certificates</h4>
 <p>A zipped GeoPackage of full record-level domestic EPC data for Great Britain, geolocated and cleaned.</p>
 <a class="btn" href="https://pbcc.blob.core.windows.net/pbcc-data/bulk/epc_domestic_20260829.zip" target="_blank" rel="noopener noreferrer"><i class="fa fa-download" aria-hidden="true"></i> Download</a>
 </div>
-<div class="card dataset-card">
+<div class="card dataset-card" id="epc-non-domestic">
 <h4>Non-Domestic Energy Performance Certificates</h4>
 <p>A zipped GeoPackage of building points with Non-Domestic Energy Performance Certificates, geolocated, cleaned, and summarised.</p>
 <a class="btn" href="https://pbcc.blob.core.windows.net/pbcc-data/bulk/epc_nondomestic_20260725.zip" target="_blank" rel="noopener noreferrer"><i class="fa fa-download" aria-hidden="true"></i> Download</a>
@@ -174,18 +1003,18 @@
 
 <h3>General</h3>
 <div class="card-grid">
-<div class="card dataset-card">
+<div class="card dataset-card" id="building-heights">
 <h4>Building Heights</h4>
 <p>A zipped GeoPackage of building polygons with height estimates. Polygons are produced by combining OS Open Data, OpenStreetMap and INSPIRE Polygons.</p>
 <p><em>Not yet published for download. The heights are visible in the 3D buildings layer of the map tools in the meantime.</em></p>
 </div>
-<div class="card dataset-card">
+<div class="card dataset-card" id="digital-terrain-model">
 <h4>2 m Digital Terrain Model of Great Britain</h4>
 <p>A <a href="https://github.com/protomaps/PMTiles" target="_blank" rel="noopener noreferrer">PMtiles</a> file containing RGB encoded webp raster tiles. A DTM is a raster map containing the elevation of the ground. This version was constructed to be an Open Data terrain map with a higher resolution than commonly available sources like <a href="https://www.ordnancesurvey.co.uk/products/os-terrain-50" target="_blank" rel="noopener noreferrer">OS Terrain 50</a>. For more details on methods and data see the <a href="https://github.com/PlaceBasedCarbonCalculator/GBDEM/" target="_blank" rel="noopener noreferrer">GitHub repo</a>.</p>
 <a class="btn" href="https://pbcc.blob.core.windows.net/pbcc-pmtiles/DTM.pmtiles" target="_blank" rel="noopener noreferrer"><i class="fa fa-download" aria-hidden="true"></i> Download</a>
 </div>
 
-<div class="card dataset-card">
+<div class="card dataset-card" id="digital-surface-model">
 <h4>2 m Digital Surface Model of Great Britain</h4>
 <p>A <a href="https://github.com/protomaps/PMTiles" target="_blank" rel="noopener noreferrer">PMtiles</a> file containing RGB encoded webp raster tiles.</p>
 <a class="btn" href="https://pbcc.blob.core.windows.net/pbcc-pmtiles/DSM.pmtiles" target="_blank" rel="noopener noreferrer"><i class="fa fa-download" aria-hidden="true"></i> Download</a>
@@ -197,22 +1026,22 @@
 
 <h3>Data from the original CREDS Place-Based Carbon Calculator</h3>
 <div class="card-grid">
-<div class="card dataset-card">
+<div class="card dataset-card" id="creds-lsoa-data">
 <h4>LSOA Data</h4>
 <p>This is a zipped CSV file containing all the data for each LSOA in England.</p>
 <a class="btn" href="https://github.com/creds2/CarbonCalculator/releases/download/1.0/PBCC_LSOA_data.zip" target="_blank" rel="noopener noreferrer"><i class="fa fa-download" aria-hidden="true"></i> Download</a>
 </div>
-<div class="card dataset-card">
+<div class="card dataset-card" id="creds-transit-stops">
 <h4>Transit Stops</h4>
 <p>This is a zipped CSV containing all the data from the Transit Stops layer for Great Britain.</p>
 <a class="btn" href="https://github.com/creds2/CarbonCalculator/releases/download/1.0/PBCC_transit_stop_frequency_2020.zip" target="_blank" rel="noopener noreferrer"><i class="fa fa-download" aria-hidden="true"></i> Download</a>
 </div>
-<div class="card dataset-card">
+<div class="card dataset-card" id="creds-isochrones">
 <h4>15-minute isochrones</h4>
 <p>A zipped GeoJSON file containing all the 15-minute isochrones for each LSOA in England.</p>
 <a class="btn" href="https://github.com/creds2/CarbonCalculator/releases/download/1.0/PBCC_15min_isochrones.zip" target="_blank" rel="noopener noreferrer"><i class="fa fa-download" aria-hidden="true"></i> Download</a>
 </div>
-<div class="card dataset-card">
+<div class="card dataset-card" id="creds-pct-route-network">
 <h4>PCT combined route network</h4>
 <p>A zipped GeoJSON file containing the combined route networks for commuting and travel to school based on the <a href="https://www.pct.bike" target="_blank" rel="noopener noreferrer">Propensity to Cycle Tool</a>.</p>
 <a class="btn" href="https://github.com/creds2/CarbonCalculator/releases/download/1.0/PBCC_PCT_rnet_commute_school.zip" target="_blank" rel="noopener noreferrer"><i class="fa fa-download" aria-hidden="true"></i> Download</a>

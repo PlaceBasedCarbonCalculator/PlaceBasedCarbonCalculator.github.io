@@ -40,6 +40,52 @@
     "logo": "https://www.carbon.place/images/ui/logo.webp"
   }
   </script>
+  <!-- Carousel (ItemList) for the tool card deck below. This is the
+       summary-page form: each ListItem carries only its position and the
+       canonical URL of the tool page, and each of those pages holds its own
+       WebApplication markup. Keep the order in step with .tool-grid. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Carbon & Place tools",
+    "description": "The interactive mapping tools published by Carbon & Place, in the order shown on the home page.",
+    "url": "https://www.carbon.place/",
+    "numberOfItems": 6,
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "url": "https://www.carbon.place/pbcc/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "url": "https://www.carbon.place/transport/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "url": "https://www.carbon.place/retrofit/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "url": "https://www.carbon.place/landownership/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 5,
+        "url": "https://www.carbon.place/landuse/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 6,
+        "url": "https://www.carbon.place/legacy/"
+      }
+    ]
+  }
+  </script>
   
   <title>Carbon &amp; Place - Neighbourhood Carbon Mapping &amp; Tools</title>
   <link rel="canonical" href="https://www.carbon.place/">
@@ -165,7 +211,7 @@
 
         <div class="tool-grid">
           <article class="tool-card t-pbcc">
-            <div class="shot"><img src="/images/ui/pbcc.webp" alt="Place-Based Carbon Calculator map" loading="lazy"></div>
+            <a class="shot" href="/pbcc/"><img src="/images/ui/pbcc.webp" alt="Place-Based Carbon Calculator map" loading="lazy"></a>
             <div class="accent"></div>
             <div class="content">
               <span class="badge">Carbon footprints</span>
@@ -176,7 +222,7 @@
           </article>
 
           <article class="tool-card t-transport">
-            <div class="shot"><img src="/images/ui/transport.webp" alt="Transport and accessibility map" loading="lazy"></div>
+            <a class="shot" href="/transport/#/zones/#8/51.482/-0.151"><img src="/images/ui/transport.webp" alt="Transport and accessibility map" loading="lazy"></a>
             <div class="accent"></div>
             <div class="content">
               <span class="badge">Travel &amp; access</span>
@@ -187,7 +233,7 @@
           </article>
 
           <article class="tool-card t-retrofit">
-            <div class="shot"><img src="/images/ui/retrofit.webp" alt="Retrofit explorer map" loading="lazy"></div>
+            <a class="shot" href="/retrofit/#/zones/#8/51.482/-0.151"><img src="/images/ui/retrofit.webp" alt="Retrofit explorer map" loading="lazy"></a>
             <div class="accent"></div>
             <div class="content">
               <span class="badge">Buildings &amp; energy</span>
@@ -198,7 +244,7 @@
           </article>
 
           <article class="tool-card t-landown">
-            <div class="shot"><img src="/images/ui/landownership.webp" alt="Land ownership map" loading="lazy"></div>
+            <a class="shot" href="/landownership/#/landowners/#8/51.482/-0.151"><img src="/images/ui/landownership.webp" alt="Land ownership map" loading="lazy"></a>
             <div class="accent"></div>
             <div class="content">
               <span class="badge">Ownership</span>
@@ -209,7 +255,7 @@
           </article>
 
           <article class="tool-card t-landuse">
-            <div class="shot"><img src="/images/ui/landuse.webp" alt="Land use and planning map" loading="lazy"></div>
+            <a class="shot" href="/landuse/"><img src="/images/ui/landuse.webp" alt="Land use and planning map" loading="lazy"></a>
             <div class="accent"></div>
             <div class="content">
               <span class="badge">Land &amp; planning</span>
@@ -221,7 +267,7 @@
          
 
           <article class="tool-card t-legacy">
-            <div class="shot"><img src="/images/ui/legacy.webp" alt="Legacy Place-Based Carbon Calculator" loading="lazy"></div>
+            <a class="shot" href="/legacy/"><img src="/images/ui/legacy.webp" alt="Legacy Place-Based Carbon Calculator" loading="lazy"></a>
             <div class="accent"></div>
             <div class="content">
               <span class="badge">Archive</span>

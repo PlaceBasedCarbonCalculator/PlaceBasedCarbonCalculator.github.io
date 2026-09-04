@@ -557,6 +557,24 @@ The coloured areas represent different modes of travel:
 Isochrones illustrate how accessible a neighbourhood is and how much difference each mode makes. Clicking a different neighbourhood replaces the isochrone; turning the toggle off removes it. Isochrones are indicative, based on representative timetables and typical travel speeds.
 <!-- /#isochrones -->
 
+<!-- #pct -->
+#### PCT route network
+
+![PCT route network](/images/manual/pct.webp)
+
+The [Propensity to Cycle Tool](https://www.pct.bike) (PCT) estimates how much cycling each road in England could carry if more people chose to cycle. The **PCT route network** layer draws those roads, coloured by the number of people who would be cycling along them on a typical day, combining travel to work and travel to school. Thick corridors of colour show where cycle provision would serve the most people, which is why the tool is used to prioritise investment in local cycling and walking infrastructure plans.
+
+The drop-down menu chooses the scenario:
+
+* **Baseline (2011)**: the level of cycling recorded in the 2011 census, before any change in behaviour.
+* **Government Target**: the level implied by the government's ambition to double cycling, applied to each area according to how cyclable its journeys are.
+* **Go Dutch**: the level that would be reached if people in England cycled as readily as people in the Netherlands do for trips of the same distance and hilliness. This is not a forecast; it is a measure of the potential a place has.
+
+Numbers rise sharply between the scenarios, so a road showing a handful of riders today may show several hundred under Go Dutch. Roads with fewer than one rider under the chosen scenario are not drawn.
+
+Two limits are worth keeping in mind. The estimates are built from 2011 census commuting and school travel data, so they describe the pattern of journeys at that time rather than today's, and they cover only those two journey purposes, leaving out shopping, leisure, and personal business. The PCT also routes each journey directly, which caps how far a cyclist is assumed to travel, so trips that combine cycling with public transport are not counted. The method is set out in [Lovelace et al. (2017)](https://www.jtlu.org/index.php/jtlu/article/view/862).
+<!-- /#pct -->
+
 ### Transport report card
 
 Clicking on any neighbourhood opens the report card, which has three main sections.

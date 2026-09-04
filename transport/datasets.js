@@ -122,6 +122,35 @@ const vehiclesColourRamp = [
 	2,'#b2182b'
 ];
 
+// PCT route network. The Propensity to Cycle Tool estimates how many people
+// could cycle a road under each scenario; the legacy tool coloured the network
+// with a step ramp on the selected scenario's rider count, drawing anything
+// below one rider fully transparent. The same bands and colours are kept here so
+// the two tools agree, and all three scenarios share one scale so they can be
+// compared with each other as well as between places.
+const pctScenarios = ['bicycle', 'govtarget_slc', 'dutch_slc'];
+const pctLegendRamp = [
+	['1-9','#9C9C9C'],
+	['10-49','#FFFF73'],
+	['50-99','#AFFF00'],
+	['100-249','#00FFFF'],
+	['250-499','#30B0FF'],
+	['500-999','#2E5FFF'],
+	['1000-1999','#0000FF'],
+	['2000+','#FF00C5']
+];
+const pctColourRamp = [
+	1,'#9C9C9C',
+	10,'#FFFF73',
+	50,'#AFFF00',
+	100,'#00FFFF',
+	250,'#30B0FF',
+	500,'#2E5FFF',
+	1000,'#0000FF',
+	2000,'#FF00C5'
+];
+
+
 // Expand the ramps over every field the tiles actually contain.
 const zoneLegends = {};
 const zoneColours = {};
@@ -143,6 +172,14 @@ transportTphModes.forEach (function (mode) {
 zoneLegends['vehiclesPHousehold'] = vehiclesLegendRamp;
 zoneColours['vehiclesPHousehold'] = vehiclesColourRamp;
 
+const pctLegends = {};
+const pctColours = {};
+
+pctScenarios.forEach (function (field) {
+	pctLegends[field] = pctLegendRamp;
+	pctColours[field] = pctColourRamp;
+});
+
 
 const datasets_extra = {
 
@@ -162,6 +199,23 @@ const datasets_extra = {
 				'fill-opacity': 0.8,
 				'fill-outline-color': '#000000'
 			}
+		},
+
+		// Propensity to Cycle Tool route network, carried over from the legacy tool.
+		// The tiles hold one rider count per scenario (bicycle / govtarget_slc /
+		// dutch_slc); pctStyling() below picks the one the layer menu asks for.
+		pct: {
+			'id': 'pct',
+			'type': 'line',
+			'source': {
+			'type': 'vector',
+				'url': 'pmtiles://%tileserverUrl/pct_legacy.pmtiles',
+				},
+			'source-layer': 'pct',
+			'paint': {
+				'line-color': '#9C9C9C',
+				'line-width': 2
+			}
 		}
 
 
@@ -170,16 +224,19 @@ const datasets_extra = {
 	// Layer styling callbacks functions, each defined below
 	layerStyling: {
 	  zones:			zonesStyling,
+	  pct:				pctStyling,
 	},
 
 
 	// #!# These need to be merged with lineColours
 	legends: {
 		zones: zoneLegends,
+		pct: pctLegends,
 	},
 
 	lineColours: {
 		zones: zoneColours,
+		pct: pctColours,
 	},
 
 
@@ -256,6 +313,33 @@ function getStyleColumn (layerId, datasets)
 function getTransportField ()
 {
 	return document.querySelector ('select.updatelayer[data-layer="zones"][name="field"]').value;
+}
+
+
+// The PCT scenario to colour by, taken straight from the layer menu: each
+// option's value is the full column name in the tiles.
+function getPctField ()
+{
+	return document.querySelector ('select.updatelayer[data-layer="pct"][name="field"]').value;
+}
+
+
+// Styling callback for the PCT route network
+function pctStyling (layerId, map, settings, datasets, createLegend /* callback */)
+{
+	// Update the legend (even if map layer is off)
+	const field = getPctField ();
+	createLegend (datasets.legends.pct, field, 'pctlegend');
+	
+	// Colour by the selected scenario. Roads carrying less than one rider are
+	// drawn transparent rather than in the lowest band, as in the legacy tool, and
+	// a missing value is treated the same way so 'step' is never handed a null.
+	const ramp = (datasets.lineColours.pct[field] || pctColourRamp);
+	map.setPaintProperty (layerId, 'line-color', ['case',
+		['==', ['typeof', ['get', field]], 'number'],
+		['step', ['get', field], 'rgba(0,0,0,0)', ...ramp],
+		'rgba(0,0,0,0)'
+	]);
 }
 
 

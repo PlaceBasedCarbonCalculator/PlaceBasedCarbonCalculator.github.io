@@ -227,6 +227,25 @@
 				at the other end of your journey.</p>
 			</div>
 
+			<button class="accordion">PCT route network</button>
+			<div class="panel">
+				<p><label><input type="checkbox" class="showlayer" data-layer="pct" value="false">Show layer</label></p>
+				<p>
+					<select name="field" class="updatelayer" data-layer="pct" aria-label="PCT scenario">
+						<option value="bicycle" selected>Baseline (2011)</option>
+						<option value="govtarget_slc">Government Target</option>
+						<option value="dutch_slc">Go Dutch</option>
+					</select>
+					<button aria-label="Help PCT route network" class="helpbutton" data-help="pct"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+				</p>
+				<div id="pctlegend" class="legendContextual">
+					<div class="l_rHorizontal">
+						<div class="lb"><span style="background-color: #ffffff"></span>&nbsp;</div>
+					</div>
+				</div>
+				<p>The <abbr title="Propensity to Cycle Tool">PCT</abbr> shows the roads where cycling could grow. The colours give the number of people who could be cycling along each road on a typical day, combining commuting and travel to school, under the scenario chosen above. See the <a href="https://www.pct.bike" target="_blank" rel="noopener">PCT website</a> or <a href="https://www.jtlu.org/index.php/jtlu/article/view/862" target="_blank" rel="noopener">Lovelace et al. (2017)</a> for how the estimates are made.</p>
+			</div>
+
 			<button class="accordion">Boundaries</button>
 			<div class="panel">
 				<p><label><input type="checkbox" data-layer="wards" class="showlayer" value="false">Wards</label>
