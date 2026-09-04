@@ -4,8 +4,27 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="Description" content="A combined local carbon and place report for your neighbourhood, with links into the Carbon & Place tools.">
-	<!-- Per-neighbourhood report is generated from a query parameter; do not index the thin templated variants -->
+	<!-- Per-neighbourhood report is generated from a ?lsoa= query parameter. The
+	     canonical URL below points at the bare page so every variant consolidates
+	     into one indexable entry rather than thousands of near-identical ones. -->
 	<title>Local Report - Carbon &amp; Place</title>
+	<link rel="canonical" href="https://www.carbon.place/reports/lsoa.html">
+
+	<!-- Social media / Open Graph. og:title and og:description mirror the
+	     page title and meta description above, so there is one source. -->
+	<meta property="og:type" content="website">
+	<meta property="og:site_name" content="Carbon &amp; Place">
+	<meta property="og:locale" content="en_GB">
+	<meta property="og:title" content="Local Report - Carbon &amp; Place">
+	<meta property="og:description" content="A combined local carbon and place report for your neighbourhood, with links into the Carbon &amp; Place tools.">
+	<meta property="og:url" content="https://www.carbon.place/reports/lsoa.html">
+	<meta property="og:image" content="https://www.carbon.place/images/thumbnail.jpg">
+	<meta property="og:image:width" content="1200">
+	<meta property="og:image:height" content="630">
+	<meta property="og:image:alt" content="Carbon &amp; Place: a map of Great Britain shaded by neighbourhood carbon footprint">
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:image" content="https://www.carbon.place/images/thumbnail.jpg">
+	<meta name="twitter:image:alt" content="Carbon &amp; Place: a map of Great Britain shaded by neighbourhood carbon footprint">
 
 	<link rel="stylesheet" href="/css/main.css">
 	<link rel="stylesheet" href="/css/map.css"><!-- chart card styles shared with the map tools -->
@@ -27,14 +46,8 @@
 	<script src="/app.js" defer></script>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
 
-	<!-- Google tag (gtag.js) -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q11V10CDRV"></script>
-	<script>
-		window.dataLayer = window.dataLayer || [];
-		function gtag () {dataLayer.push (arguments);}
-		gtag('js', new Date());
-		gtag('config', 'G-Q11V10CDRV');
-	</script>
+	<!-- Google Analytics, loaded only after the visitor accepts cookies -->
+	<script src="/js/analytics.js"></script>
 
 	<style>
 		.local-report { max-width: 900px; margin: 0 auto; padding: 20px; }

@@ -143,18 +143,29 @@ a.smaller {
 	}
 }
 
-/* Cookie Wanring Box */
+/* Cookie Warning Box */
 .cookiewarning {
   position: fixed;
   bottom: 0;
   left: 0;
-  padding: 10px;
+  /* border-box is essential here: with the default content-box the 10px padding
+     was added to the 100% width, making the bar 20px wider than the viewport and
+     pushing the message off the right-hand edge on narrow screens */
+  box-sizing: border-box;
+  padding: 12px 16px;
   width: 100%;
+  max-width: 100%;
   z-index: 5000;
   background-color: #AC1A40;
   font-size: 12px;
   color: #fff;
   display: none;
+}
+.cookiewarning p {
+  margin: 0 0 10px;
+  /* Nothing in the message may force a sideways scroll, however narrow the
+     screen: long words and the "Find out more" link wrap instead */
+  overflow-wrap: break-word;
 }
 .cookiewarning a{
    color:#fff;
@@ -162,27 +173,34 @@ a.smaller {
 .cookiewarning a.hover{
    color:#fff;
 }
+/* The buttons sit in their own paragraph. Laying that out as a flex row lets OK
+   take all the space the No button does not need, without either being given a
+   percentage width that stops making sense on a phone. */
+.cookiewarning p:last-child {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+  margin-bottom: 0;
+}
 .cookiewarning button {
+  box-sizing: border-box;
   border: none;
-  padding: 15px 32px;
+  padding: 15px 16px;
   text-align: center;
   text-decoration: none;
-  display: inline-block;
   font-size: 16px;
+  cursor: pointer;
 }
 .buttonOK {
   background-color: white;
   color: black;
-  width:60%;
-  max-width: 500px;
+  flex: 1 1 auto;	/* fill whatever is left of the row */
+  min-width: 0;		/* allow it to shrink below its content width */
 }
 .buttonNO {
   background-color: black;
   color: white;
-  position: absolute;
-  right:10%;
-  width:20%;
-  max-width: 200px;
+  flex: 0 0 auto;	/* only as wide as the word "No" plus its padding */
 }
 
 /* Responvie image widths*/

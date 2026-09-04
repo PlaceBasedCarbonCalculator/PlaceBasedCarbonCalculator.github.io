@@ -1,7 +1,7 @@
 // Bump CACHE_VERSION whenever the precache list or caching strategy changes.
 // This is used to derive a single, versioned cache name so old caches are
 // purged on activation and offline behaviour stays consistent.
-const CACHE_VERSION = 'v31';
+const CACHE_VERSION = 'v32';
 const CACHE_NAME = `CAP-cache-${CACHE_VERSION}`;
 
 const OFFLINE_FALLBACK_PAGE = '/offline.html';
@@ -24,6 +24,7 @@ const PRECACHE_ASSETS = [
     '/css/map-new.css',
     '/css/modal.css',
     // Shared scripts
+    '/js/analytics.js',
     '/js/common-nonmap.js',
     '/js/databin.js',
     '/js/datasets-common.js',

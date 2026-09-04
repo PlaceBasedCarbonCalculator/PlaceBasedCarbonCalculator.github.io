@@ -7,37 +7,33 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="Description" content="Explore neighbourhood carbon footprints across Great Britain, visualise emissions by sector, compare areas and support local decarbonisation planning.">
 		
-		<!-- Google tag (gtag.js) -->
-  	<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q11V10CDRV"></script>
-  	<script>
-  		window.dataLayer = window.dataLayer || [];
-  		function gtag () {dataLayer.push (arguments);}
-  		gtag('js', new Date ());
-  		gtag('config', 'G-Q11V10CDRV');
-  	</script>
+		<!-- Google Analytics, loaded only after the visitor accepts cookies -->
+		<script src="/js/analytics.js"></script>
   	
-  	<!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-TXQZCMJT');</script>
-    <!-- End Google Tag Manager -->
   		
 		<!-- Favicon -->
 		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 		<link rel="icon" href="/favicon.ico" type="image/x-icon">
 		
 		<!-- Social media -->
-		<meta property="og:title" content="Carbon & Place">
-		<meta property="og:description" content="An interactive map of carbon footprints">
-		<meta property="og:image" content="/images/thumbnail.jpg">
-		<meta property="twitter:image" content="/images/thumbnail.jpg">
-		<meta property="og:url" content="https://www.carbon.place">
-		<meta name="twitter:card" content="summary_large_image">
-		<meta property="og:site_name" content="Carbon & Place">
-		<meta name="twitter:image:alt" content="Carbon & Place thumbnail">
 		<title>Place-Based Carbon Calculator - Neighbourhood Emissions Explorer</title>
+		<link rel="canonical" href="https://www.carbon.place/pbcc/">
+
+		<!-- Social media / Open Graph. og:title and og:description mirror the
+		     page title and meta description above, so there is one source. -->
+		<meta property="og:type" content="website">
+		<meta property="og:site_name" content="Carbon &amp; Place">
+		<meta property="og:locale" content="en_GB">
+		<meta property="og:title" content="Place-Based Carbon Calculator - Neighbourhood Emissions Explorer">
+		<meta property="og:description" content="Explore neighbourhood carbon footprints across Great Britain, visualise emissions by sector, compare areas and support local decarbonisation planning.">
+		<meta property="og:url" content="https://www.carbon.place/pbcc/">
+		<meta property="og:image" content="https://www.carbon.place/images/thumbnail.jpg">
+		<meta property="og:image:width" content="1200">
+		<meta property="og:image:height" content="630">
+		<meta property="og:image:alt" content="Carbon &amp; Place: a map of Great Britain shaded by neighbourhood carbon footprint">
+		<meta name="twitter:card" content="summary_large_image">
+		<meta name="twitter:image" content="https://www.carbon.place/images/thumbnail.jpg">
+		<meta name="twitter:image:alt" content="Carbon &amp; Place: a map of Great Britain shaded by neighbourhood carbon footprint">
 		
 		<!-- PWA support -->
 		<link rel="manifest" href="/manifest.webmanifest">
@@ -98,7 +94,6 @@
 		<!-- Charts -->
 		<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1" defer></script>
 		
-	  <link rel="canonical" href="https://www.carbon.place/pbcc/">
   <script type="application/ld+json">
   {"@context": "https://schema.org", "@type": "WebApplication", "name": "Place-Based Carbon Calculator", "url": "https://www.carbon.place/pbcc/", "description": "Explore the carbon footprint of every neighbourhood in Great Britain and how it has changed over time.", "isPartOf": {"@type": "WebSite", "name": "Carbon & Place", "url": "https://www.carbon.place/"}, "publisher": {"@type": "Organization", "name": "Carbon & Place", "url": "https://www.carbon.place/", "logo": "https://www.carbon.place/images/ui/logo.webp"}, "applicationCategory": "EducationalApplication", "operatingSystem": "Any (web browser)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "GBP"}}
   </script>
@@ -108,10 +103,6 @@
 </head>
 	
 	<body>
-		<!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TXQZCMJT"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->  
     
 		<!-- Menu -->
 		<nav>

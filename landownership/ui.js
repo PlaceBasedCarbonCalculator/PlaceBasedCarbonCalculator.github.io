@@ -32,6 +32,12 @@ function closewelcome() {
       var disableStr = 'ga-disable-' + 'G-Q11V10CDRV';
       document.cookie = disableStr + '=true; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/; SameSite=None; Secure';
       window[disableStr] = true;
+      if (window.capAnalytics) { capAnalytics.deny(); }
+    } else if (window.capAnalytics) {
+      // gtag.js is not requested until consent exists (see js/analytics.js), so
+      // load it here rather than leaving this visit unmeasured until the next
+      // page view.
+      capAnalytics.grant();
     }
 
     // Save a compact visitor cookie with name and consent flags

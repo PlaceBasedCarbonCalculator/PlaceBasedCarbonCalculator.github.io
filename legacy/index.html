@@ -5,17 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="Description" content="Legacy PBCC maps neighbourhood carbon footprints across England, showing sector breakdowns, trends and contextual information to support local decarbonisation planning and research.">
   
-  <!--  Social Media Tags -->
-  <meta property="og:title" content="Place-based carbon calculator">
-  <meta property="og:description" content="An interactive map showing the carbon footprint of each neighbourhood in England">
-  <meta property="og:image" content="/images/thumbnail.jpg">
-  <meta property="twitter:image" content="http://www.carbon.place/images/thumbnail.jpg">
-  <meta property="og:url" content="https://www.carbon.place">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta property="og:site_name" content="Place-based carbon calculator">
-  <meta name="twitter:image:alt" content="PBCC thumbnail">
   
 	<title>Place-Based Carbon Calculator — Legacy Neighbourhood Emissions</title>
+	<link rel="canonical" href="https://www.carbon.place/legacy/">
+
+	<!-- Social media / Open Graph. og:title and og:description mirror the
+	     page title and meta description above, so there is one source. -->
+	<meta property="og:type" content="website">
+	<meta property="og:site_name" content="Carbon &amp; Place">
+	<meta property="og:locale" content="en_GB">
+	<meta property="og:title" content="Place-Based Carbon Calculator — Legacy Neighbourhood Emissions">
+	<meta property="og:description" content="Legacy PBCC maps neighbourhood carbon footprints across England, showing sector breakdowns, trends and contextual information to support local decarbonisation planning and research.">
+	<meta property="og:url" content="https://www.carbon.place/legacy/">
+	<meta property="og:image" content="https://www.carbon.place/images/thumbnail.jpg">
+	<meta property="og:image:width" content="1200">
+	<meta property="og:image:height" content="630">
+	<meta property="og:image:alt" content="Carbon &amp; Place: a map of Great Britain shaded by neighbourhood carbon footprint">
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:image" content="https://www.carbon.place/images/thumbnail.jpg">
+	<meta name="twitter:image:alt" content="Carbon &amp; Place: a map of Great Britain shaded by neighbourhood carbon footprint">
   <!-- PWA support -->
 	<link rel="manifest" href="/manifest.webmanifest">
 	<link rel="apple-touch-icon" href="/images/icons/192.png">
@@ -28,15 +36,8 @@
   
   <!-- Third Party Scrips -->
   <script src="https://kit.fontawesome.com/1f7357bc14.js" crossorigin="anonymous" async></script>
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q11V10CDRV"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-  
-    gtag('config', 'G-Q11V10CDRV');
-  </script>
+  <!-- Google Analytics, loaded only after the visitor accepts cookies -->
+  <script src="/js/analytics.js"></script>
   
   <!-- Set Up Icon -->
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">

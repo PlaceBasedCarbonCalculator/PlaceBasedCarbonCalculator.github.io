@@ -5,6 +5,23 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="Description" content="A combined carbon and place report for this ward, with links into the Carbon & Place tools.">
 	<title>Ward Report - Carbon &amp; Place</title>
+	<link rel="canonical" href="https://www.carbon.place/reports/wards.html">
+
+	<!-- Social media / Open Graph. og:title and og:description mirror the
+	     page title and meta description above, so there is one source. -->
+	<meta property="og:type" content="website">
+	<meta property="og:site_name" content="Carbon &amp; Place">
+	<meta property="og:locale" content="en_GB">
+	<meta property="og:title" content="Ward Report - Carbon &amp; Place">
+	<meta property="og:description" content="A combined carbon and place report for this ward, with links into the Carbon &amp; Place tools.">
+	<meta property="og:url" content="https://www.carbon.place/reports/wards.html">
+	<meta property="og:image" content="https://www.carbon.place/images/thumbnail.jpg">
+	<meta property="og:image:width" content="1200">
+	<meta property="og:image:height" content="630">
+	<meta property="og:image:alt" content="Carbon &amp; Place: a map of Great Britain shaded by neighbourhood carbon footprint">
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:image" content="https://www.carbon.place/images/thumbnail.jpg">
+	<meta name="twitter:image:alt" content="Carbon &amp; Place: a map of Great Britain shaded by neighbourhood carbon footprint">
 
 	<link rel="stylesheet" href="/css/main.css">
 	<link rel="stylesheet" href="/css/map.css"><!-- chart card styles shared with the map tools -->
@@ -26,22 +43,9 @@
 	<script src="/app.js" defer></script>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
 
-	<!-- Google tag (gtag.js) -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q11V10CDRV"></script>
-	<script>
-		window.dataLayer = window.dataLayer || [];
-		function gtag () {dataLayer.push (arguments);}
-		gtag('js', new Date());
-		gtag('config', 'G-Q11V10CDRV');
-	</script>
+	<!-- Google Analytics, loaded only after the visitor accepts cookies -->
+	<script src="/js/analytics.js"></script>
 
-	<!-- Google Tag Manager -->
-	<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-	new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-	j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-	'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-	})(window,document,'script','dataLayer','GTM-TXQZCMJT');</script>
-	<!-- End Google Tag Manager -->
 
 	<style>
 		.local-report { max-width: 900px; margin: 0 auto; padding: 20px; }
