@@ -97,6 +97,9 @@
             "@id": "https://www.carbon.place/data/#epc-non-domestic"
           },
           {
+            "@id": "https://www.carbon.place/data/#building-heights"
+          },
+          {
             "@id": "https://www.carbon.place/data/#digital-terrain-model"
           },
           {
@@ -559,6 +562,69 @@
       },
       {
         "@type": "Dataset",
+        "@id": "https://www.carbon.place/data/#building-heights",
+        "name": "Building Heights",
+        "description": "Building polygons for Great Britain, each carrying an estimated height. The polygons are built by combining OS Open Data, OpenStreetMap, and INSPIRE polygons. Heights are extracted from the difference between the two metre digital surface and terrain models, giving a minimum height, a maximum height, and a volume for every building, so they are remotely sensed estimates rather than surveyed measurements. These are the heights behind the 3D buildings layer in the Carbon & Place map tools. Supplied as a zipped GeoPackage of 3.9 GB, which unpacks to 10.3 GB.",
+        "url": "https://www.carbon.place/data/#building-heights",
+        "license": "https://opendatacommons.org/licenses/by/1-0/",
+        "isAccessibleForFree": true,
+        "creator": {
+          "@type": "Organization",
+          "name": "Carbon & Place",
+          "url": "https://www.carbon.place/"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Carbon & Place",
+          "url": "https://www.carbon.place/"
+        },
+        "includedInDataCatalog": {
+          "@id": "https://www.carbon.place/data/#catalog"
+        },
+        "spatialCoverage": {
+          "@type": "Place",
+          "name": "Great Britain",
+          "geo": {
+            "@type": "GeoShape",
+            "box": "49.86 -8.65 60.86 1.77"
+          }
+        },
+        "keywords": [
+          "building heights",
+          "building footprints",
+          "LiDAR",
+          "digital surface model",
+          "3D buildings",
+          "OpenStreetMap",
+          "INSPIRE",
+          "Great Britain"
+        ],
+        "variableMeasured": "Building height in metres and building volume in cubic metres",
+        "version": "20260825",
+        "datePublished": "2026-08-25",
+        "creativeWorkStatus": "Experimental release: a bulk version of the data in the Carbon & Place tools, which may contain errors.",
+        "citation": {
+          "@type": "ScholarlyArticle",
+          "name": "Carbon & Place: Data and tools to understand the spatial variation in carbon footprints",
+          "author": {
+            "@type": "Person",
+            "name": "Malcolm Morgan"
+          },
+          "datePublished": "2026",
+          "identifier": "https://doi.org/10.1177/23998083251401613",
+          "url": "https://doi.org/10.1177/23998083251401613"
+        },
+        "distribution": {
+          "@type": "DataDownload",
+          "encodingFormat": [
+            "application/zip",
+            "application/geopackage+sqlite3"
+          ],
+          "contentUrl": "https://pbcc.blob.core.windows.net/pbcc-data/bulk/buildings_heights_20260825.zip"
+        }
+      },
+      {
+        "@type": "Dataset",
         "@id": "https://www.carbon.place/data/#digital-terrain-model",
         "name": "2 m Digital Terrain Model of Great Britain",
         "description": "A two metre resolution digital terrain model of Great Britain, giving the elevation of the bare ground surface. It was built as an open data terrain model at a higher resolution than commonly available open sources such as OS Terrain 50, and is distributed as RGB encoded WebP raster tiles in a single PMTiles archive. Methods and source data are documented in the GBDEM repository.",
@@ -1005,8 +1071,8 @@
 <div class="card-grid">
 <div class="card dataset-card" id="building-heights">
 <h4>Building Heights</h4>
-<p>A zipped GeoPackage of building polygons with height estimates. Polygons are produced by combining OS Open Data, OpenStreetMap and INSPIRE Polygons.</p>
-<p><em>Not yet published for download. The heights are visible in the 3D buildings layer of the map tools in the meantime.</em></p>
+<p>A zipped GeoPackage of building polygons with height estimates. Polygons are produced by combining OS Open Data, OpenStreetMap and INSPIRE Polygons. Each building carries a minimum height, a maximum height, and a volume, taken from the difference between the digital surface and terrain models. This is a large file: 3.9 GB zipped, and 10.3 GB once unpacked.</p>
+<a class="btn" href="https://pbcc.blob.core.windows.net/pbcc-data/bulk/buildings_heights_20260825.zip" target="_blank" rel="noopener noreferrer"><i class="fa fa-download" aria-hidden="true"></i> Download</a>
 </div>
 <div class="card dataset-card" id="digital-terrain-model">
 <h4>2 m Digital Terrain Model of Great Britain</h4>
