@@ -256,7 +256,11 @@ const datasets_extra = {
 			templateId: 'inspire-popup',
 			preprocessingCallback: popupCallback,	// Defined below
 			smallValuesThreshold: 10,
-			literalFields: ['Gradient', 'Quietness'] // #!# Gradient and Quietness are capitalised unlike other
+			// n_uprn_active is listed as literal because smallValuesThreshold is a
+			// blanket rule over every numeric field, and it would rewrite the count
+			// as '<10' for almost every parcel - exactly the range where the number
+			// is worth showing, and where uprn_class already says 0 / 1 / 2+.
+			literalFields: ['Gradient', 'Quietness', 'n_uprn_active'] // #!# Gradient and Quietness are capitalised unlike other
 		}
 
 	}
