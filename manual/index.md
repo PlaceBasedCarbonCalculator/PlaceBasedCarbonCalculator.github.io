@@ -901,7 +901,7 @@ The Solar Potential layer maps how much solar energy reaches every 2 metre squar
 
 Because the model works from a surface model that includes buildings and trees, it resolves individual roof pitches. Zoom in far enough and a south-facing slope reads orange or red while the north-facing slope of the same roof reads blue, and the shadow a tall building casts over its neighbours is visible as a cool patch. Zoom out and the pattern is dominated by latitude and by terrain: south-facing valley sides are noticeably brighter than north-facing ones.
 
-Colours run from dark blue (least sunlight) through green and yellow to dark red (most), using the Turbo colour scale. The scale is fixed from 0 to 2000 kWh/m²/year so that the colours mean the same thing every time the layer is rebuilt. A small number of surfaces, chiefly steep south-facing roofs, exceed 2000, so the darkest red should be read as "2000 or more" rather than as the maximum. The lowest part of the scale is also unused, because the lowest value anywhere in the data is close to 100, so the map in practice uses the middle of the colour range. Areas with no data, including the sea, are transparent.
+Colours run from dark blue (least sunlight) through green and yellow to dark red (most), using the Turbo colour scale. The scale is fixed from <100 to >1500 kWh/m²/year. Areas with no data, including the sea, are transparent.
 
 The transparency slider fades the layer so that streets and buildings on the basemap can be seen through it. At 0% the solar map is solid; drag it up to see the map underneath.
 
