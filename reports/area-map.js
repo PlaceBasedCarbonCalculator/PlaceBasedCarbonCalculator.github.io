@@ -24,9 +24,9 @@ const capAreaMap = (function () {
 		});
 	}
 
-	const MAPLIBRE_MJS = 'https://unpkg.com/maplibre-gl@6.4.1/dist/maplibre-gl.mjs';
-	const MAPLIBRE_CSS = 'https://unpkg.com/maplibre-gl@6.4.1/dist/maplibre-gl.css';
-	const PMTILES_JS = 'https://unpkg.com/pmtiles@4.5.0/dist/pmtiles.js';
+	const MAPLIBRE_MJS = '/js/lib/maplibre-gl-6.4.1/maplibre-gl.mjs';
+	const MAPLIBRE_CSS = '/js/lib/maplibre-gl-6.4.1/maplibre-gl.css';
+	const PMTILES_JS = '/js/lib/pmtiles-4.5.0/pmtiles.js';
 
 	let _depsPromise = null;
 

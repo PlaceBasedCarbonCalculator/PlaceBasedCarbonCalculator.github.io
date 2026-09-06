@@ -1,7 +1,7 @@
 // Bump CACHE_VERSION whenever the precache list or caching strategy changes.
 // This is used to derive a single, versioned cache name so old caches are
 // purged on activation and offline behaviour stays consistent.
-const CACHE_VERSION = 'v37';
+const CACHE_VERSION = 'v38';
 const CACHE_NAME = `CAP-cache-${CACHE_VERSION}`;
 
 const OFFLINE_FALLBACK_PAGE = '/offline.html';
@@ -38,6 +38,13 @@ const PRECACHE_ASSETS = [
     // DecompressionStream has no brotli support (everything except Firefox).
     // Pre-cached so it isn't a 90KB download on the report-opening critical path.
     '/js/lib/brotli/brotli-decompress.js',
+    // The vendored map and chart libraries (js/lib/maplibre-gl-*, chartjs-*,
+    // pmtiles-*, showdown-*, tippy-*, popperjs-*) are deliberately NOT listed.
+    // They are 1.5MB, and pre-caching them would charge that to every visitor on
+    // install, including someone who only reads the About page. Now that they are
+    // same-origin they fall under the stale-while-revalidate fetch handler below,
+    // so they are cached the first time a tool page is opened, and the homepage
+    // prefetch hints warm them earlier still.
     // Content pages
     '/about/index.html',
     '/about/faq/index.html',

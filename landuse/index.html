@@ -47,15 +47,15 @@
 		<script src="/app.js" defer></script>
 		
 		<!-- Map dependencies -->
-		<script src="https://unpkg.com/pmtiles@4.5.0/dist/pmtiles.js"></script>
+		<script src="/js/lib/pmtiles-4.5.0/pmtiles.js"></script>
 		<script src="/js/lib/geocoder/maplibre-gl-geocoder.min.js"></script>
 		<link rel="stylesheet" href="/js/lib/geocoder/maplibre-gl-geocoder-small.css" type="text/css"/>
-		<link href="https://unpkg.com/maplibre-gl@6.4.1/dist/maplibre-gl.css" rel="stylesheet" />
+		<link href="/js/lib/maplibre-gl-6.4.1/maplibre-gl.css" rel="stylesheet" />
 		<!-- MapLibre GL JS 6 is ESM-only (no UMD maplibre-gl.js any more), so import it
 		     and publish the global that ui-common.js and the geocoder expect. Module
 		     scripts are deferred, so this runs before ui.js and before DOMContentLoaded. -->
 		<script type="module">
-			import * as maplibregl from 'https://unpkg.com/maplibre-gl@6.4.1/dist/maplibre-gl.mjs';
+			import * as maplibregl from '/js/lib/maplibre-gl-6.4.1/maplibre-gl.mjs';
 			window.maplibregl = {...maplibregl};	// Copied, as a module namespace object is frozen
 		</script>
 		
@@ -83,14 +83,14 @@
 		<link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet" defer>
 		
 		<!-- Markdown conversion -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js" defer></script>
+		<script src="/js/lib/showdown-2.1.0/showdown.min.js" defer></script>
 		
 		<!-- Tooltips -->
-		<script src="https://unpkg.com/@popperjs/core@2" defer></script>
-		<script src="https://unpkg.com/tippy.js@6" defer></script>
+		<script src="/js/lib/popperjs-2.11.8/popper.min.js" defer></script>
+		<script src="/js/lib/tippy-6.3.7/tippy-bundle.umd.min.js" defer></script>
 		
 		<!-- Charts -->
-		<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1" defer></script>
+		<script src="/js/lib/chartjs-4.4.1/chart.umd.js" defer></script>
 		
   <script type="application/ld+json">
   {"@context": "https://schema.org", "@type": "WebApplication", "name": "Land Use & Planning Explorer", "url": "https://www.carbon.place/landuse/", "description": "Map the planning designations and environmental constraints that shape what can be built where. Most layers cover England.", "isPartOf": {"@type": "WebSite", "name": "Carbon & Place", "url": "https://www.carbon.place/"}, "publisher": {"@type": "Organization", "name": "Carbon & Place", "url": "https://www.carbon.place/", "logo": "https://www.carbon.place/images/ui/logo.webp"}, "applicationCategory": "EducationalApplication", "operatingSystem": "Any (web browser)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "GBP"}}
