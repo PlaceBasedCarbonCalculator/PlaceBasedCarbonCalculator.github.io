@@ -474,7 +474,7 @@ const datasets_extra = {
 				['No data','#000000']
 			],
 			'modal_floord': [
-				['Another property below','#225ea8'],
+				['Another property below','#6a3d9a'],
 				['Solid insulated' ,'#b2e2e2'],
 				['Solid limited insulation','#66c2a4'],
 				['Solid uninsulated','#238b45'],
@@ -775,7 +775,7 @@ const datasets_extra = {
 				'#000000'
 			],
 			'modal_floord': [
-				'below','#225ea8',
+				'below','#6a3d9a',
 				'solidinsulated' ,'#b2e2e2',
 				'solidlimitedinsulated','#66c2a4',
 				'soliduninsulated','#238b45',

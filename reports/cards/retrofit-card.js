@@ -1032,7 +1032,7 @@ retrofitCard_makeChartLSOA = function(){
  
   retrofitCard_floorChart = retrofitCard_makePieChart(retrofitCard_floorChart,'floor-chart','',
   floorData,
-  ['#2c7bb6','#abd9e9','#ffffbf','#fdae61','#d7191c','#225ea8','#c0c0c0'],
+  ['#2c7bb6','#abd9e9','#ffffbf','#fdae61','#d7191c','#6a3d9a','#c0c0c0'],
   ['Very Good','Good','Average','Poor','Very Poor','Dwelling Below','Other']);
   
   // floord
@@ -1051,7 +1051,7 @@ retrofitCard_makeChartLSOA = function(){
  
   retrofitCard_floordChart = retrofitCard_makePieChart(retrofitCard_floordChart,'floord-chart','',
   floordData,
-  ['#238b45','#b2e2e2','#66c2a4','#ce1256','#f1b6da','#df65b0','#fdae61','#225ea8','#c0c0c0'],
+  ['#238b45','#b2e2e2','#66c2a4','#ce1256','#f1b6da','#df65b0','#fdae61','#6a3d9a','#c0c0c0'],
   ['Solid uninsulated','Solid insulated','Solid limited insulation','Suspended uninsulated','Suspended insulated','Suspended limited insulation','Exposed to outside air','Dwelling Below','Other']);
   
   // window
