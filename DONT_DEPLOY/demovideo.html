@@ -84,7 +84,7 @@
 	?chrome=0 will always beat real-time browser capture on a loaded machine.
 -->
 
-<link href="https://unpkg.com/maplibre-gl@6.4.1/dist/maplibre-gl.css" rel="stylesheet">
+<link href="/js/lib/maplibre-gl-6.4.1/maplibre-gl.css" rel="stylesheet">
 
 <!-- The PBCC tool's own stylesheets, so the injected report card is styled by
      the real thing rather than a copy of it. Loaded BEFORE this page's <style>
@@ -94,7 +94,7 @@
 <link rel="stylesheet" href="/css/map-new.css">
 <link rel="stylesheet" href="/assets/fontawesome/css/fontawesome.css">
 <link rel="stylesheet" href="/assets/fontawesome/css/solid.min.css">
-<script src="https://unpkg.com/pmtiles@4.5.0/dist/pmtiles.js"></script>
+<script src="/js/lib/pmtiles-4.5.0/pmtiles.js"></script>
 
 <style>
 	:root {
@@ -304,7 +304,7 @@
 
 <script type="module">
 // MapLibre GL JS 6 is ESM-only, as on the rest of the site
-import * as maplibregl from 'https://unpkg.com/maplibre-gl@6.4.1/dist/maplibre-gl.mjs';
+import * as maplibregl from '/js/lib/maplibre-gl-6.4.1/maplibre-gl.mjs';
 
 
 /* ==========================================================================
@@ -1725,7 +1725,7 @@ async function buildReport ()
 
 	// Chart.js first, then the tool's code - which clicks the default tab as its
 	// last statement, so the markup has to be in the document by now
-	await loadScript ('https://cdn.jsdelivr.net/npm/chart.js@4.4.1');
+	await loadScript ('/js/lib/chartjs-4.4.1/chart.umd.js');
 	await loadScript ('/pbcc/ui.js');
 
 	// The tool's own chart builder, fed by the shimmed capBin
