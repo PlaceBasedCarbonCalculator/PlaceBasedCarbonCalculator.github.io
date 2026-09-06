@@ -104,7 +104,7 @@
 		access: '2026-09-02',
 		pt_frequency: '2026-09-02',
 		vehicle_summary: '2026-09-02',
-		epc_dom: '2026-09-03',
+		epc_dom: '2026-09-06',
 		gas_electric: '2026-09-02',
 		prices: '2026-09-02',
 		population: '2026-09-02',

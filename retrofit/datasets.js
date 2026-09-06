@@ -14,7 +14,7 @@
 // and redeploy postcodes.pmtiles together whenever postcode data is rebuilt.
 if (typeof capBin !== 'undefined') {
 	capBin.register({
-		epc_dom: 'index_epc_dom_2026-08-25.json.gz',
+		epc_dom: 'index_epc_dom_2026-09-06.json.gz',
 		historical_domestic_gas_elec: 'index_historical_domestic_gas_elec_2026-08-26.json.gz',
 		prices: 'index_prices_2026-07-25.json.gz',
 		// Dwelling stock from the council tax registers. voa_2010 (bands) is
