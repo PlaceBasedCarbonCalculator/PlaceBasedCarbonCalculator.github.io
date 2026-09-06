@@ -962,8 +962,7 @@ makeChartLSOA = function(){
   
   
   // floor
-  // TODO: Data looks wrong
-  
+   
   floorData = [
     lsoaLocationData.floor_verygood,
     lsoaLocationData.floor_good,
