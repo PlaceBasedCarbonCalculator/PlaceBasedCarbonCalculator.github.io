@@ -1019,8 +1019,7 @@ retrofitCard_makeChartLSOA = function(){
   
   
   // floor
-  // TODO: Data looks wrong
-  
+   
   floorData = [
     retrofitCard_lsoaLocationData.floor_verygood,
     retrofitCard_lsoaLocationData.floor_good,

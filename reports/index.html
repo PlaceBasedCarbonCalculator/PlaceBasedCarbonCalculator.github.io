@@ -75,6 +75,12 @@
 	.card-grid.area-grid .location-nav-button:hover { background-color: #8f1535; }
 	.card-grid.area-grid .location-dropdown { border-color: #b7b2b3; border-radius: 0 0 6px 6px; }
 	.area-note { margin: 12px 0 0; font-size: 13px; line-height: 1.55; color: #555; border-left: 3px solid #ac1a40; padding-left: 10px; }
+	/* Full A-Z listings. These are the only crawlable path to the report pages,
+	   which are otherwise reachable only through the JavaScript searches above. */
+	.index-links { list-style: none; padding: 0; margin: 12px 0 0; max-width: 760px; }
+	.index-links li { margin: 0 0 10px; }
+	.index-links a { font-weight: bold; }
+	.index-count { display: block; font-size: 13px; color: #555; }
 </style>
 </head>
 <body class="content-page">
@@ -196,6 +202,16 @@
 </div>
 
 </div>
+
+<h2>Browse every area</h2>
+<p class="page-lede">The searches above are the quickest way to one place. These are the full lists, if you would rather look down them, or want to link to a report from somewhere else.</p>
+<ul class="index-links">
+	<li><a href="/reports/la/">Local authorities</a> <span class="index-count">350 councils across Great Britain</span></li>
+	<li><a href="/reports/wards/">Wards</a> <span class="index-count">7,943 electoral wards, grouped by council</span></li>
+	<li><a href="/reports/parishes/">Parishes</a> <span class="index-count">11,332 civil parishes, grouped by council</span></li>
+	<li><a href="/reports/constituencies/">Westminster constituencies</a> <span class="index-count">632 seats on the 2024 boundaries</span></li>
+	<li><a href="/reports/lsoa/">Neighbourhoods</a> <span class="index-count">43,064 LSOAs and Data Zones, listed by code</span></li>
+</ul>
 
 </main>
 

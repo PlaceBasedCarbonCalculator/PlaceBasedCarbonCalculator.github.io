@@ -5,8 +5,11 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="Description" content="A combined local carbon and place report for your neighbourhood, with links into the Carbon & Place tools.">
 	<!-- Per-neighbourhood report is generated from a ?lsoa= query parameter. The
-	     canonical URL below points at the bare page so every variant consolidates
-	     into one indexable entry rather than thousands of near-identical ones. -->
+	     canonical below is the fallback for the bare page; once a neighbourhood is
+	     known the script rewrites it to that neighbourhood's own URL, so each
+	     report is its own indexable page. Pointing every variant at the bare page
+	     consolidated them into one entry reading "No neighbourhood was specified",
+	     which kept the whole of /reports/ out of the index. -->
 	<title>Local Report - Carbon &amp; Place</title>
 	<link rel="canonical" href="https://www.carbon.place/reports/lsoa.html">
 
@@ -50,7 +53,10 @@
 	<script src="/js/analytics.js"></script>
 
 	<style>
-		.local-report { max-width: 900px; margin: 0 auto; padding: 20px; }
+		/* .content in main.css is content-box, so this 20px padding is added
+		   outside its calc(100% - 30px) width and pushes the page 10px wider
+		   than a 390px phone viewport. Keep the padding inside the width. */
+		.local-report { max-width: 900px; margin: 0 auto; padding: 20px; box-sizing: border-box; }
 		.local-report .report-lede { color: #555; }
 		.context-list { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
 		.context-list li { background: #f7f3f4; border: 1px solid #e6d9dd; border-radius: 8px; padding: 12px 14px; }
@@ -186,6 +192,25 @@
 		errorEl.style.display = 'block';
 	}
 
+	// Give this neighbourhood's report its own canonical URL (and og:url, which
+	// must agree). See the note in the head: the bare-page canonical shipped in
+	// the markup is only correct when no neighbourhood was asked for.
+	//
+	// `?id=` is the one canonical spelling, so the `?lsoa=` alias consolidates
+	// here, and a postcode arriving via the home page search drops out of the
+	// canonical entirely: every postcode in a neighbourhood should point at the
+	// single report for it, not at one URL each.
+	function setCanonical(code) {
+		var url = 'https://www.carbon.place' + window.location.pathname +
+			'?id=' + encodeURIComponent(code);
+		var link = document.querySelector('link[rel="canonical"]');
+		if (link) { link.setAttribute('href', url); }
+		var ogUrl = document.querySelector('meta[property="og:url"]');
+		if (ogUrl) { ogUrl.setAttribute('content', url); }
+	}
+
+	if (lsoa) { setCanonical(lsoa); }
+
 	function esc(s) {
 		return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
 			return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c];
@@ -229,6 +254,11 @@
 		var heading = (postcode ? esc(postcode) + ' - ' : '') + areaWord + ' ' + esc(lsoa);
 		titleEl.textContent = heading;
 		document.title = heading + ' - Carbon & Place';
+		// og:title ships as the generic page title, so a shared link previewed as
+		// a bare "Local Report" whichever neighbourhood it pointed at. The code is
+		// already in the heading, so this needs no separate handling for it.
+		var ogTitle = document.querySelector('meta[property="og:title"]');
+		if (ogTitle) { ogTitle.setAttribute('content', document.title); }
 		ledeEl.textContent = className ? ('This is a "' + className + '" neighbourhood.') : '';
 
 		// Context cards. Each links to the corresponding area report, using the

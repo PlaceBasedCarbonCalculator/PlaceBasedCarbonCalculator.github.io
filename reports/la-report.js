@@ -40,6 +40,33 @@
 		errorEl.style.display = 'block';
 	}
 
+	// Point the canonical URL (and og:url, which must agree with it) at the area
+	// actually being reported. The markup ships a canonical for the bare page,
+	// which is right when no area is given but wrong once one is: left alone it
+	// declares every area a duplicate of an empty template, so a crawler that
+	// reaches this report consolidates it into a page reading "No local authority
+	// was specified" and nothing under /reports/ can ever be indexed.
+	//
+	// Query-string form, because nothing rewrites URLs on the server. `?id=` is
+	// the one canonical spelling, so the `?code=` alias and any extra parameters
+	// consolidate here rather than splitting one area across several URLs.
+	function setCanonical(areaId) {
+		var url = 'https://www.carbon.place' + window.location.pathname +
+			'?id=' + encodeURIComponent(areaId);
+		var link = document.querySelector('link[rel="canonical"]');
+		if (link) { link.setAttribute('href', url); }
+		var ogUrl = document.querySelector('meta[property="og:url"]');
+		if (ogUrl) { ogUrl.setAttribute('content', url); }
+	}
+
+	// og:title ships as the generic page title, so every shared area link
+	// previewed as a bare "Local Authority Report" whatever area it pointed at.
+	// Kept in step with the real title once the area is known.
+	function setSocialTitle(title) {
+		var og = document.querySelector('meta[property="og:title"]');
+		if (og) { og.setAttribute('content', title); }
+	}
+
 	function esc(s) {
 		return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
 			return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c];
@@ -144,6 +171,10 @@
 		return;
 	}
 
+	// Done here rather than in render(), so the URL is still declared correctly
+	// if the name lookup or the data fetch behind it fails.
+	setCanonical(id);
+
 	// Area name for the title, from the same lookup the reports index searches.
 	// A missing lookup is not fatal - the report still works, headed by the code.
 	// The same row also carries `lad`, the code of the local authority this area
@@ -189,9 +220,26 @@
 	});
 
 	function render(name, pop) {
-		var heading = (name ? esc(name) : esc(id));
+		// Deliberately not esc()aped. Both destinations below are text, not
+		// markup, and neither textContent nor document.title decodes entities, so
+		// escaping here printed a literal "&amp;" on screen and in the browser tab
+		// for the 1,324 wards and parishes whose names contain an ampersand
+		// ("Adel & Wharfedale"). esc() belongs at the innerHTML boundaries further
+		// down, where it is still applied.
+		var heading = (name || id);
 		titleEl.textContent = heading;
-		document.title = heading + ' - ' + levelName + ' report - Carbon & Place';
+
+		// The ONS code goes in the title as well as the context list below, so a
+		// search for the bare code ("E08000035") can match this page. Name and
+		// code lead: a title much over 60 characters is truncated from the end in
+		// search results, so what gets dropped is the boilerplate rather than the
+		// two things someone actually searched for. The word "report" is dropped
+		// from "<level> report" to buy that room back.
+		// When the name lookup misses, the heading is already the code, so adding
+		// it again would title the page "E08000035 (E08000035)".
+		document.title = (name ? heading + ' (' + id + ')' : heading) +
+			' - ' + levelName + ' - Carbon & Place';
+		setSocialTitle(document.title);
 
 		// ONS codes carry the country in their first letter, which is the one
 		// piece of context worth adding to the heading. The code itself goes in

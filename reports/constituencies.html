@@ -48,7 +48,10 @@
 
 
 	<style>
-		.local-report { max-width: 900px; margin: 0 auto; padding: 20px; }
+		/* .content in main.css is content-box, so this 20px padding is added
+		   outside its calc(100% - 30px) width and pushes the page 10px wider
+		   than a 390px phone viewport. Keep the padding inside the width. */
+		.local-report { max-width: 900px; margin: 0 auto; padding: 20px; box-sizing: border-box; }
 		.local-report .report-lede { color: #555; }
 		.context-list { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
 		.context-list li { background: #f7f3f4; border: 1px solid #e6d9dd; border-radius: 8px; padding: 12px 14px; }
