@@ -29,7 +29,7 @@ Specifically:
 
 | Directory | Version | Source | Notes |
 |---|---|---|---|
-| `maplibre-gl-6.4.1/` | 6.4.1 | unpkg | `.mjs`, its `-shared.mjs` chunk, and the CSS |
+| `maplibre-gl-6.4.1/` | 6.4.1 | unpkg | `.mjs`, `-worker.mjs`, `-shared.mjs`, and the CSS |
 | `pmtiles-4.5.0/` | 4.5.0 | unpkg | latest release |
 | `chartjs-4.4.1/` | 4.4.1 | unpkg | `chart.umd.js` |
 | `showdown-2.1.0/` | 2.1.0 | cdnjs | latest release, but see below |
@@ -37,9 +37,31 @@ Specifically:
 | `popperjs-2.11.8/` | 2.11.8 | unpkg | what `@2` resolved to |
 | `geocoder/`, `noUiSlider_15_7_0/`, `brotli/`, `pmtiles/` | | | pre-existing, unchanged |
 
-`maplibre-gl.mjs` imports its shared chunk as `from "./maplibre-gl-shared.mjs"`,
-so **those two files must stay siblings** and keep their names. The version lives
+### MapLibre needs all four files, and three of them are not in the markup
+
+`maplibre-gl.mjs` is the only one the HTML mentions. The other two `.mjs` files
+are pulled in at runtime, so **you cannot work out the file list by grepping the
+pages for what they reference** — that mistake shipped a broken map stack once
+already and is worth not repeating:
+
+- `maplibre-gl-shared.mjs` is imported statically, `from "./maplibre-gl-shared.mjs"`,
+  by both of the other two modules.
+- `maplibre-gl-worker.mjs` is fetched by the library at runtime for its Web
+  Worker. It computes its own URL from `import.meta.url`:
+  `e.endsWith('-dev.mjs') ? 'maplibre-gl-worker-dev.mjs' : 'maplibre-gl-worker.mjs'`.
+  We load the production build, so only the non-dev worker is ever requested.
+  Without it Firefox fails the module fetch with `NS_ERROR_CORRUPTED_CONTENT`
+  (the 404 page is HTML where a module was expected), and the map never finishes
+  loading in any browser.
+
+So all four files **must stay siblings** and keep their names. The version lives
 in the directory name for exactly that reason.
+
+Note when testing: a Worker's own script fetch is made by the worker target, not
+the page, so it does **not** appear in page-level devtools Network events or CDP
+`Network.*` events. A missing worker is invisible to a request-level check.
+Assert on the outcome instead: `map.loaded()` must become true and
+`map.queryRenderedFeatures().length` must be greater than zero.
 
 Source maps are deliberately not vendored: the four that exist come to about
 6MB. Each library therefore has a `//# sourceMappingURL=` comment pointing at a
