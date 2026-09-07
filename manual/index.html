@@ -2,10 +2,28 @@
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="Description" content="Comprehensive manual explaining methods, data sources, and instructions for using Carbon & Place tools, including PBCC, retrofit and transport modules, for practitioners and policymakers.">
-<title>Carbon &amp; Place Manual — Methodology &amp; User Guide</title>
+<meta name="Description" content="How to use the Carbon & Place tools: reading the maps and charts, plus the methods and data behind the PBCC, transport, retrofit, and land tools.">
+<title>Carbon &amp; Place Manual - Methodology &amp; User Guide</title>
+<link rel="canonical" href="https://www.carbon.place/manual/">
+
+<!-- Social media / Open Graph. og:title and og:description mirror the
+     page title and meta description above, so there is one source. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Carbon &amp; Place">
+<meta property="og:locale" content="en_GB">
+<meta property="og:title" content="Carbon &amp; Place Manual - Methodology &amp; User Guide">
+<meta property="og:description" content="How to use the Carbon &amp; Place tools: reading the maps and charts, plus the methods and data behind the PBCC, transport, retrofit, and land tools.">
+<meta property="og:url" content="https://www.carbon.place/manual/">
+<meta property="og:image" content="https://www.carbon.place/images/thumbnail.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Carbon &amp; Place: a map of Great Britain shaded by neighbourhood carbon footprint">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.carbon.place/images/thumbnail.jpg">
+<meta name="twitter:image:alt" content="Carbon &amp; Place: a map of Great Britain shaded by neighbourhood carbon footprint">
 
 <link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/content-new.css">
 <link rel="stylesheet" href="/css/manual.css">
 <!-- Set Up Icon -->
 <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
@@ -14,44 +32,34 @@
 <!-- PWA support -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/images/icons/192.png">
-<meta name="apple-mobile-web-app-status-bar" content="#ac1a40">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Carbon & Place">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#ac1a40">
 <script src="/app.js" defer></script>
 
 <!-- Third Party Scrips -->
-<link rel="stylesheet" href="/css/main.css">
-<link rel="stylesheet" href="/css/manual.css">
 <link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet">
 <link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet">
 
 <!-- Markdown conversion -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
+<script src="/js/lib/showdown-2.1.0/showdown.min.js"></script>
 
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q11V10CDRV"></script>
-<script>
-	window.dataLayer = window.dataLayer || [];
-	function gtag () {dataLayer.push (arguments);}
-	gtag('js', new Date ());
-	gtag('config', 'G-Q11V10CDRV');
-</script>
-
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-TXQZCMJT');</script>
-<!-- End Google Tag Manager -->
+<!-- Google Analytics, loaded only after the visitor accepts cookies -->
+<script src="/js/analytics.js"></script>
 
 
+
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "WebPage", "name": "Carbon & Place Manual", "url": "https://www.carbon.place/manual/", "description": "How to use each Carbon & Place tool, read the maps and charts, and the methods behind the calculations.", "isPartOf": {"@type": "WebSite", "name": "Carbon & Place", "url": "https://www.carbon.place/"}, "publisher": {"@type": "Organization", "name": "Carbon & Place", "url": "https://www.carbon.place/", "logo": "https://www.carbon.place/images/ui/logo.webp"}}
+  </script>
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.carbon.place/"}, {"@type": "ListItem", "position": 2, "name": "Carbon & Place Manual", "item": "https://www.carbon.place/manual/"}]}
+  </script>
 </head>
-<body>
-  
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TXQZCMJT"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->  
+<body class="content-page manual-page">
+
 
 <!-- Menu -->
 <nav>
@@ -59,12 +67,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 	<a href="/about/">About</a>
 	<a href="/data/">Data</a>
 	<a href="/manual/">Manual</a>
+	<a href="/reports/">Reports</a>
 	<a href="#" id="expandtopnav" class="icon" aria-label="Expand menu"><i class="fa fa-bars"></i></a>
 </nav> 
 
 <!-- Cookies Warning  -->
 <div id="cookiewarning" class="cookiewarning">
-	<p>We use cookies to measure how you use our website so we can understand how you interact with it, which helps us to make improvements. <a href="/privacy">Find out more.</a></p>
+	<p>We use cookies to measure how you use our website so we can understand how you interact with it, which helps us to make improvements. <a href="/privacy/">Find out more.</a></p>
 	<p>
 		<button class="button buttonOK" value="1"><strong>OK</strong></button>
 		<button class="button buttonNO" value=""><strong>No</strong></button>
@@ -72,9 +81,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 
 
+<main>
+<div class="content">
+  <h1>Carbon &amp; Place Manual</h1>
+  <p class="page-lede">How to use each tool, how to read the maps and charts, and the methods and data behind the calculations.</p>
+</div>
 <div id="content" class="content">
   <!-- Content from .md will be loaded here -->
 </div>
+</main>
 
 
 <script src="/js/common-nonmap.js"></script>

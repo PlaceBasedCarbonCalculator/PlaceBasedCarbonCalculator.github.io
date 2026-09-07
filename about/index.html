@@ -2,9 +2,27 @@
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="Description" content="About Carbon & Place">
-<title>About</title>
+<meta name="Description" content="How Carbon & Place maps neighbourhood carbon footprints across Great Britain, and the research, partners, and funding behind the tools.">
+<title>About Carbon &amp; Place - Neighbourhood Carbon Mapping</title>
+<link rel="canonical" href="https://www.carbon.place/about/">
+
+<!-- Social media / Open Graph. og:title and og:description mirror the
+     page title and meta description above, so there is one source. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Carbon &amp; Place">
+<meta property="og:locale" content="en_GB">
+<meta property="og:title" content="About Carbon &amp; Place - Neighbourhood Carbon Mapping">
+<meta property="og:description" content="How Carbon &amp; Place maps neighbourhood carbon footprints across Great Britain, and the research, partners, and funding behind the tools.">
+<meta property="og:url" content="https://www.carbon.place/about/">
+<meta property="og:image" content="https://www.carbon.place/images/thumbnail.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Carbon &amp; Place: a map of Great Britain shaded by neighbourhood carbon footprint">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.carbon.place/images/thumbnail.jpg">
+<meta name="twitter:image:alt" content="Carbon &amp; Place: a map of Great Britain shaded by neighbourhood carbon footprint">
 <link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/content-new.css">
 <!-- Set Up Icon -->
 <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 <link rel="icon" href="/favicon.ico" type="image/x-icon">
@@ -16,34 +34,26 @@
 <!-- PWA support -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/images/icons/192.png">
-<meta name="apple-mobile-web-app-status-bar" content="#ac1a40">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Carbon & Place">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#ac1a40">
 <script src="/app.js" defer></script>
 
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q11V10CDRV"></script>
-<script>
-	window.dataLayer = window.dataLayer || [];
-	function gtag () {dataLayer.push (arguments);}
-	gtag('js', new Date ());
-	gtag('config', 'G-Q11V10CDRV');
-</script>
-
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-TXQZCMJT');</script>
-<!-- End Google Tag Manager -->
+<!-- Google Analytics, loaded only after the visitor accepts cookies -->
+<script src="/js/analytics.js"></script>
 
 
+
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "AboutPage", "name": "About Carbon & Place", "url": "https://www.carbon.place/about/", "description": "About Carbon & Place: how we map neighbourhood carbon footprints, and the research and funding behind it.", "isPartOf": {"@type": "WebSite", "name": "Carbon & Place", "url": "https://www.carbon.place/"}, "publisher": {"@type": "Organization", "name": "Carbon & Place", "url": "https://www.carbon.place/", "logo": "https://www.carbon.place/images/ui/logo.webp"}}
+  </script>
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.carbon.place/"}, {"@type": "ListItem", "position": 2, "name": "About Carbon & Place", "item": "https://www.carbon.place/about/"}]}
+  </script>
 </head>
-<body>
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TXQZCMJT"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->  
+<body class="content-page">
 
 <!-- Menu -->
 <nav>
@@ -51,12 +61,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 	<a href="/about/">About</a>
 	<a href="/data/">Data</a>
 	<a href="/manual/">Manual</a>
+	<a href="/reports/">Reports</a>
 	<a href="#" id="expandtopnav" class="icon" aria-label="Expand menu"><i class="fa fa-bars"></i></a>
 </nav> 
 
 <!-- Cookies Warning  -->
 <div id="cookiewarning" class="cookiewarning">
-	<p>We use cookies to measure how you use our website so we can understand how you interact with it, which helps us to make improvements. <a href="/privacy">Find out more.</a></p>
+	<p>We use cookies to measure how you use our website so we can understand how you interact with it, which helps us to make improvements. <a href="/privacy/">Find out more.</a></p>
 	<p>
 		<button class="button buttonOK" value="1"><strong>OK</strong></button>
 		<button class="button buttonNO" value=""><strong>No</strong></button>
@@ -64,66 +75,108 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 
 
-<div class="content">
+<main class="content">
 <h1>About Carbon & Place</h1>
-
-<p>Carbon & Place is a family of tools developed as part of the <a href="https://www.edrc.ac.uk/" target="_blank" rel="noopener">Energy Demand Research Centre</a>.</p>
+<p class="page-lede">Carbon &amp; Place is a family of tools developed at the University of Leeds as part of the <a href="https://www.edrc.ac.uk/" target="_blank" rel="noopener">Energy Demand Research Centre</a>, within its <a href="https://www.edrc.ac.uk/research/place/" target="_blank" rel="noopener">Place theme</a>. The centre maintains a <a href="https://www.edrc.ac.uk/research/projects/carbon-place/" target="_blank" rel="noopener">project page</a> describing the work.</p>
 
 <h2>A new name, the same mission</h2>
-<p>In 2020, with the support of the <a href="https://www.creds.ac.uk/" target="_blank" rel="noopener">Centre for Research into Energy Demand Solutions</a> (CREDS), we launched the Place-Based Carbon Calculator, the PBCC. The tool was intended to help communities, planners, and policymakers understand how carbon footprints vary from place to place and what can be done to reduce them. The PBBC was a big success, widely used by people across England, and received several updates. Unfortunately, all good things must come to an end and in 2023 CREDS reached the end of its funding period and closed down. Fortunately, the newly established Energy Demand Research Centre (EDRC) agreed to take on and expand the PBCC for the next five years. The PBCC became part of the <a href="https://www.edrc.ac.uk/research/place/" target="_blank" rel="noopener">EDRC Place Theme</a>, and in 2024 this website was relaunched as Carbon & Place.</p> 
-<p>The rebrand was more than cosmetic, the PBCC became one of many tools offered by Carbon & Place. This allows us to go into more detail about specific topics, such as transport or retrofits, while also expanding and improving upon the original PBCC. Carbon & Place will be updated regularly with new features and improvements.</p>
+<p>In 2020, with the support of the <a href="https://www.creds.ac.uk/" target="_blank" rel="noopener">Centre for Research into Energy Demand Solutions</a> (CREDS), we launched the Place-Based Carbon Calculator, the PBCC. The tool was intended to help communities, planners, and policymakers understand how carbon footprints vary from place to place and what can be done to reduce them. The PBCC was a big success, widely used by people across England, and received several updates. In 2023 CREDS reached the end of its funding period and closed down, and the newly established Energy Demand Research Centre (EDRC) agreed to take on and expand the PBCC for the next five years. The PBCC became part of the <a href="https://www.edrc.ac.uk/research/place/" target="_blank" rel="noopener">EDRC Place Theme</a>, and in 2024 this website was relaunched as Carbon & Place.</p> 
+<p>The rebrand was more than cosmetic: the PBCC became one of many tools offered by Carbon & Place. This allows us to go into more detail about specific topics, such as transport or retrofits, while also expanding and improving upon the original PBCC. Carbon & Place will be updated regularly with new features and improvements.</p>
 
 <h2>How do you use Carbon & Place?</h2>
-<p>Most of the tools are interactive maps of the UK. You can pan and zoom around the country and change the data shown on the map using the menu bar on the right of the screen. Clicking on any of the <abbr title="Lower Super Output Area">LSOA</abbr>s shown on the map will bring up a local report card. The report card contains more information on how the carbon footprints were calculated, as well as comparisons with other areas.
+<p>Most of the tools are interactive maps of Great Britain. You can pan and zoom around the country and change the data shown on the map using the menu bar on the right of the screen. Clicking on any of the neighbourhoods shown on the map will bring up a local report card. The report card contains more information on how the carbon footprints were calculated, as well as comparisons with other areas.
 The report card also gives useful information about contributing factors such as how well insulated homes are or how far the average person drives per year.</p>
 
 <h2>Free, for everyone, forever</h2>
 
-<p>The tools on Carbon & Place are developed as Open-Source Software and, as much as possible, use Open Data. All of the tools are free to use, and most of the data is free to download. We believe it is important that taxpayer-funded research is transparent and accessible, so we will provide as much detail as possible about data and methods. In many places the tools have help popups (look for the <i class="fa fa-question-circle" aria-hidden="true" style="color: #0b38e6;"></i>) that provide more information, or you can view all the documentation in the <a href="/manual">manual</a>.</p>
-<p>You can find all our <a href="https://github.com/PlaceBasedCarbonCalculator" target="_blank" rel="noopener">source code on GitHub</a>, and most of our outputs are free to <a href="/data">download</a>.</p>
+<p>The tools on Carbon &amp; Place are developed as open-source software and, as far as possible, use open data. All of the tools are free to use, and most of the data is free to download. We believe taxpayer-funded research should be transparent and accessible, so we document our data and methods as fully as we can, including the assumptions and the gaps. In many places the tools have help popups (look for the <i class="fa fa-question-circle" aria-hidden="true" style="color: #ac1a40;"></i>) that provide more information, or you can view all the documentation in the <a href="/manual/">manual</a>.</p>
+<p>You can find all our <a href="https://github.com/PlaceBasedCarbonCalculator" target="_blank" rel="noopener">source code on GitHub</a>, and most of our outputs are free to <a href="/data/">download</a>.</p>
 <p>In a limited number of cases, the licensing terms of the data we use mean we cannot publish datasets in full. In these cases, we provide details on accessing the original data.</p>
-<p>This website is licensed under a <a rel="license" href="https://www.gnu.org/licenses/agpl-3.0.en.html">GNU Affero General Public License v3.0</a>. For data download and license rules see the <a href="/data">data page</a>.</p>
+<p>This website is licensed under a <a rel="license" href="https://www.gnu.org/licenses/agpl-3.0.en.html">GNU Affero General Public License v3.0</a>. For data download and licence rules see the <a href="/data/">data page</a>.</p>
 
 <h2>Citing Carbon & Place</h2>
-<p>If you reference the Carbon & Place or use screenshots or extracts from the tool in publications, please cite:</p>
-<p>Morgan, M. (2025). Carbon & Place: Data and tools to understand the spatial variation in carbon footprints. <i>Environment and Planning B: Urban Analytics and City Science</i>, 0(0). <a href="https://doi.org/10.1177/23998083251401613">https://doi.org/10.1177/23998083251401613</a></p>
-
-
+<p>If you reference Carbon & Place or use screenshots or extracts from the tools in publications, please cite:</p>
+<p>Morgan, M. (2026). Carbon &amp; Place: Data and tools to understand the spatial variation in carbon footprints. <i>Environment and Planning B: Urban Analytics and City Science</i>, 53(3), 538&ndash;554. <a href="https://doi.org/10.1177/23998083251401613">https://doi.org/10.1177/23998083251401613</a></p>
 
 <h2>Who created Carbon & Place and how was it funded?</h2>
 
-<p>Carbon & Place was produced with funding from UK Research and Innovation, the Engineering and Physical Sciences Research Council, and the Economic and Social Research Council through the <a href="https://www.edrc.ac.uk/about/our-funders-and-partners/" target="_blank" rel="noopener">Energy Demand Research Centre</a>, grant reference number EP/Y010078/1</p>
+<p>Carbon & Place was produced with funding from UK Research and Innovation, the Engineering and Physical Sciences Research Council, and the Economic and Social Research Council through the <a href="https://www.edrc.ac.uk/about/our-funders-and-partners/" target="_blank" rel="noopener">Energy Demand Research Centre</a>, grant reference number EP/Y010078/1.</p>
 
-<p>The original PBCC was produced with funding from UK Research and Innovation through the <a href="https://www.creds.ac.uk/" target="_blank" rel="noopener">Centre for Research into Energy Demand Solutions</a>, grant reference number EP/R 035288/1</p>
+<p>The original PBCC was produced with funding from UK Research and Innovation through the <a href="https://www.creds.ac.uk/" target="_blank" rel="noopener">Centre for Research into Energy Demand Solutions</a>, grant reference number EP/R035288/1.</p>
 
 <h3>The Team</h3>
 
-<div>
-  <div style="height:301px">
-    
-    <p><img src="/images/people/malcolm.webp" alt="Malcolm Morgan" style="width:250px; max-width:50%; float:right"><a href="https://www.creds.ac.uk/people/malcolm-morgan/">Dr Malcolm Morgan</a>, Senior Research Fellow in Transport and Spatial Analysis, University of Leeds. </p><p>Malcolm is a specialist in GIS with an interest in low carbon transport and housing.</p></div>
-  
+<div class="card-grid">
+  <div class="card person-card">
+    <img src="/images/people/malcolm.webp" alt="Malcolm Morgan">
+    <div class="person-name"><a href="https://www.edrc.ac.uk/people/profile/dr-malcolm-morgan/">Dr Malcolm Morgan</a></div>
+    <div class="person-role">Senior Research Fellow in Transport and Spatial Analysis, University of Leeds</div>
+    <p>Malcolm is a specialist in GIS with an interest in low carbon transport and housing.</p>
+  </div>
 </div>
 
-<h4>Members of the original PBCC Team (2020 - 2023)</h4>
+<h4>Members of the original PBCC Team (2020-2023)</h4>
 
-<div>
-  <div style="height:301px">
-    
-    <img src="/images/people/jillian.webp" alt="Jillian Anable" style="width:250px; max-width:50%; float:right">
-    <p><a href="https://www.creds.ac.uk/people/jillian-anable/">Professor Jillian Anable</a>, Chair in Transport and Energy, University of Leeds.</p><p> Jillian has worked on mobility patterns, local policy evaluation and transport and decarbonisation for over 15 years.</p></div>
-  <div style="height:301px">
-    <img src="/images/people/karen.webp" alt="Karen Lucas" style="width:250px; max-width:50%; float:right">
-    <p><a href="https://www.creds.ac.uk/people/karen-lucas/">Professor Karen Lucas</a>, Professor of Human Geography, University of Manchester.</p><p> Karen has 20 years’ experience of social research in transport and mobilities employing a variety of mixed methods approaches to issues of mobility, accessibility, and social justice.</p></div>
-  <div style="height:301px">
-    <img src="/images/people/mark.webp" alt="Mark Valleley" style="width:250px; max-width:50%; float:right">
-    <p><a href="https://transportforthesoutheast.org.uk/about-us/meet-the-team/">Mark Valleley</a>, Technical lead, Transport for the South East.</p><p> Mark has 30 years’ experience as a transport planner spanning policy and strategy formulation as well as scheme development and delivery.</p></div>
-  <div style="height:301px">
-    <img src="/images/people/steve.webp" alt="Steven Bishop" style="width:250px; max-width:50%; float:right">
-    <p><a href="https://www.steergroup.com/about/our-people/steven-bishop">Steven Bishop</a>, Associate Director, Steer Group.</p><p> Steve has 15 years’ experience in transport planning and economic development working across both the private and public sectors.</p></div>
+<div class="card-grid">
+  <div class="card person-card">
+    <img src="/images/people/jillian.webp" alt="Jillian Anable">
+    <div class="person-name"><a href="https://www.creds.ac.uk/people/jillian-anable/">Professor Jillian Anable</a></div>
+    <div class="person-role">Chair in Transport and Energy, University of Leeds</div>
+    <p>Jillian has worked on mobility patterns, local policy evaluation and transport and decarbonisation for over 15 years.</p>
+  </div>
+  <div class="card person-card">
+    <img src="/images/people/karen.webp" alt="Karen Lucas">
+    <div class="person-name"><a href="https://www.creds.ac.uk/people/karen-lucas/">Professor Karen Lucas</a></div>
+    <div class="person-role">Professor of Human Geography, University of Manchester</div>
+    <p>Karen has 20 years’ experience of social research in transport and mobilities employing a variety of mixed methods approaches to issues of mobility, accessibility, and social justice.</p>
+  </div>
+  <div class="card person-card">
+    <img src="/images/people/mark.webp" alt="Mark Valleley">
+    <div class="person-name"><a href="https://transportforthesoutheast.org.uk/about-us/meet-the-team/">Mark Valleley</a></div>
+    <div class="person-role">Technical lead, Transport for the South East</div>
+    <p>Mark has 30 years’ experience as a transport planner spanning policy and strategy formulation as well as scheme development and delivery.</p>
+  </div>
+  <div class="card person-card">
+    <img src="/images/people/steve.webp" alt="Steven Bishop">
+    <div class="person-name"><a href="https://www.steergroup.com/about/our-people/steven-bishop">Steven Bishop</a></div>
+    <div class="person-role">Associate Director, Steer Group</div>
+    <p>Steve has 15 years’ experience in transport planning and economic development working across both the private and public sectors.</p>
+  </div>
 </div>
 
-</div>
+<h2 id="ai">How we use AI</h2>
+<p>AI coding assistants have been used to help build Carbon &amp; Place. Because our tools are used to inform decisions about real places, we think you are entitled to know where AI has been involved, where it has not, and what we do to make sure it has not quietly introduced errors.</p>
+
+<h3>Where AI is used</h3>
+<ul>
+<li><strong>Writing and reviewing code.</strong> Parts of the analysis pipeline and this website were written with the help of an AI coding assistant, working under direction from the research team. The result is treated like any other code: it is read, tested, run, and published in full on <a href="https://github.com/PlaceBasedCarbonCalculator" target="_blank" rel="noopener">GitHub</a>, where anyone can check it.</li>
+<li><strong>Drafting and editing text.</strong> Some of the documentation, including parts of the <a href="/manual/">manual</a> and this website, was drafted or edited with AI assistance. The methods being described, the caveats attached to them, and the conclusions drawn from them are the research team's, and every page is reviewed before publication.</li>
+<li><strong>Auditing our own work.</strong> We use AI to cross-check the analysis against what the website says the analysis does, which is a tedious job that machines are good at. The <a href="https://github.com/PlaceBasedCarbonCalculator/build/blob/main/AUDIT-2026-08-27.md" target="_blank" rel="noopener">August 2026 audit</a> is an example: it compares the pipeline with the published site, ranks what it finds by severity, and backs every finding with a file reference and a value read from the built outputs. Audits report; they do not change code on their own.</li>
+</ul>
+
+<h3>Where AI is not used</h3>
+<ul>
+<li><strong>No number on this website is generated by AI.</strong> Every figure we publish is produced by the <a href="https://github.com/PlaceBasedCarbonCalculator/build" target="_blank" rel="noopener">analysis pipeline</a>, which is ordinary R code running over the published input datasets listed on the <a href="/data/">data page</a>. There is no language model anywhere in that pipeline. Run the code on the same inputs and you get the same answers.</li>
+<li><strong>We do not use machine learning models.</strong> Where the analysis estimates something rather than measuring it, it does so with conventional and documented statistical methods: iterative proportional fitting to build synthetic households, deterministic and fuzzy string matching to join addresses, and a physical model of solar radiation. These are described in the <a href="/manual/">manual</a> and none of them is a black box.</li>
+<li><strong>AI does not decide what the data means.</strong> Judgements about what a result shows, how far it can be trusted, and what should be said about its limitations are made by the research team.</li>
+</ul>
+
+<h3>The safeguards</h3>
+<ul>
+<li><strong>Everything is open.</strong> Code that AI helped write is published under an open licence along with everything else. This is the main safeguard, because it means our work can be checked rather than taken on trust.</li>
+<li><strong>Reproducibility rather than trust.</strong> The pipeline is built with <a href="https://books.ropensci.org/targets/" target="_blank" rel="noopener">targets</a>, which tracks how every output depends on every input. A result stands because the code and the source data produce it, not because anything, human or machine, asserted it.</li>
+<li><strong>Checking against independent evidence.</strong> Where we can test our results against a source that was produced without us, we do. The public transport analysis, for example, is <a href="https://github.com/PlaceBasedCarbonCalculator/PublicTransportAnalysis/blob/main/reports/pdf_validation.md" target="_blank" rel="noopener">validated against operators' own published timetables</a>, because only the operator's document can say which of the competing data sources is right.</li>
+<li><strong>Tests on the parts most likely to break quietly.</strong> The stages where a subtle error would be hardest to spot, such as address cleaning and matching, have <a href="https://github.com/PlaceBasedCarbonCalculator/LandOwnership/tree/main/pipeline/tests" target="_blank" rel="noopener">regression tests</a> that run against known cases.</li>
+<li><strong>AI involvement is recorded.</strong> Commits made with the assistant carry a co-author line in the git history, so the record of where it was used is public and permanent rather than something you have to take our word for.</li>
+<li><strong>A person is accountable.</strong> Carbon &amp; Place is the responsibility of a named researcher at the University of Leeds, and that does not change because a tool was used along the way. AI is not an author of this research and is not credited as one.</li>
+</ul>
+
+<p>None of this makes mistakes impossible, and we would rather say so than imply otherwise. Errors in our work are more likely to come from the difficulty of the underlying data than from how the code was written, which is why the manual documents assumptions and gaps as carefully as it documents methods. If you find something that looks wrong, please <a href="https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/issues" target="_blank" rel="noopener">report it</a>.</p>
+
+
+
+
+</main>
 <script type="text/javascript" src="/js/common-nonmap.js"></script>  
 </body>
 </html>

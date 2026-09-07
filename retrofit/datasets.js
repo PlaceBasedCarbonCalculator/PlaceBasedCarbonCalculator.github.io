@@ -1,5 +1,32 @@
 // Data definitions, i.e. layers, charts, etc.
 // For Retrofit Tool
+
+// Single-binary datasets used by this tool (see js/databin.js). Record the
+// current index file name for each; the matching data_*.bin is named inside
+// the index (meta.bin_file). Bump a file name when that dataset is rebuilt and
+// re-uploaded - datasets are rebuilt independently, so the dates will diverge.
+//
+// postcode is the exception: its ~1.5M-record index would be a huge download,
+// so it has no index here - each postcode's byte range travels in the
+// postcodes.pmtiles feature (bin_offset/bin_clen) and is primed at click time
+// (see charts.postcodes below). Only the .bin file name is recorded. IMPORTANT:
+// the .bin and postcodes.pmtiles are built in lockstep, so bump this .bin name
+// and redeploy postcodes.pmtiles together whenever postcode data is rebuilt.
+if (typeof capBin !== 'undefined') {
+	capBin.register({
+		epc_dom: 'index_epc_dom_2026-09-06.json.gz',
+		historical_domestic_gas_elec: 'index_historical_domestic_gas_elec_2026-08-26.json.gz',
+		prices: 'index_prices_2026-09-07.json.gz',
+		// Dwelling stock from the council tax registers. voa_2010 (bands) is
+		// GB-wide; voa_2020 (type/bedrooms/age) is England and Wales only and
+		// legitimately has no record for a Scottish zone - see the dwelling
+		// stock section of ui.js.
+		voa_2010: 'index_voa_2010_2026-08-25.json.gz',
+		voa_2020: 'index_voa_2020_2026-07-13.json.gz',
+		postcode: { bin: 'data_postcode_2026-08-25.bin' }
+	});
+}
+
 const datasets_extra = {
 	
 	// Data layers
@@ -10,7 +37,7 @@ const datasets_extra = {
 			'type': 'fill',
 			'source': {
 				'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/zones_retrofit_20260206.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/zones_retrofit_20260828.pmtiles',
 				//'url': 'pmtiles://zones_retrofit.pmtiles',
 				},
 			'source-layer': 'zones',
@@ -26,7 +53,7 @@ const datasets_extra = {
 			'type': 'fill',
 			'source': {
 			'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/postcodes.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/postcodes_20260825.pmtiles',
 				},
 			'source-layer': 'postcodes',
 			'paint': {
@@ -41,7 +68,7 @@ const datasets_extra = {
 			'type': 'circle',
 			'source': {
 				'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/epc_dom_20260113.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/epc_dom_20260907.pmtiles',
 				},
 			'source-layer': 'epc_dom',
 			'paint': {
@@ -62,7 +89,7 @@ const datasets_extra = {
 			'type': 'circle',
 			'source': {
 			'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/epc_nondom_20260113.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/epc_nondom_20260728.pmtiles',
 				},
 			'source-layer': 'epc_nondom',
 			'paint': {
@@ -82,7 +109,7 @@ const datasets_extra = {
 			'type': 'circle',
 			'source': {
 			'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/uprn_unknown_20260113.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/uprn_unknown_20260728.pmtiles',
 				},
 			'source-layer': 'uprn_unknown',
 			'paint': {
@@ -96,21 +123,86 @@ const datasets_extra = {
 				]
 				}
 			}
+		},
+
+		// Annual solar insolation at 2 m resolution, from the GBsolar repo. This
+		// is a RASTER layer: the tiles are pre-coloured WebP images, not values,
+		// so it must be 'raster' and never 'raster-dem' - MapLibre would try to
+		// decode the Turbo colours as terrain heights. There is no 'source-layer'
+		// and no data-driven styling; the colour ramp is baked into the pixels
+		// (see the solar legend below, and GBsolar/METHOD.md section 3 for the
+		// authoritative colour-to-value table).
+		solar: {
+			'id': 'solar',
+			'type': 'raster',
+			'source': {
+				'type': 'raster',
+				'url': 'pmtiles://%tileserverUrl/GBsolar.pmtiles',
+				'tileSize': 512,
+				'minzoom': 5,
+				// maxzoom 15 from the 2026-08-29 GBsolar rebuild (previously 14) -
+				// must not go live before that rebuild's GBsolar.pmtiles is the one
+				// deployed, or z15 requests hit tiles that don't exist yet.
+				'maxzoom': 15,
+				'attribution': 'Solar model: University of Leeds, from Environment Agency LIDAR and ERA5'
+			},
+			'paint': {
+				'raster-opacity': 0.85,
+				// Keep rendering (upscaled) past the tileset's z15 rather than
+				// blanking out, since the rest of this tool works to z19
+				'raster-resampling': 'linear'
+			}
 		}
 	},
-	
+
 	// Layer styling callbacks functions, each defined below
 	layerStyling: {
 	  zones: zonesStyling,
 	  postcodes:	postcodesStyling,
 	  epc_dom:    EPCDomStyling,
-	  epc_nondom: EPCNonDomStyling
-	  
+	  epc_nondom: EPCNonDomStyling,
+	  solar:      solarStyling
+
+	},
+
+	// Explicit insertion anchors (see capUi.initialiseDatasets). Layers are
+	// otherwise all inserted below 'placeholder_name' in definition order, which
+	// puts each new one on top of the last - wrong for the solar raster, which is
+	// an opaque image and would hide every layer beneath it. Anchoring it to
+	// 'zones' keeps it under all the data layers and over the basemap.
+	layerBeforeId: {
+		solar: 'zones'
 	},
 	
 	
 	// #!# These need to be merged with lineColours
 	legends: {
+		// Static legend for the solar raster. These swatches are read off the
+		// Turbo colour table in GBsolar/METHOD.md section 3 - they are the
+		// definition of what the pixels mean, so they must be changed together
+		// with a re-render of GBsolar.pmtiles, never on their own.
+		//
+		// Domain is 100-1500 kWh/m2/year (changed from 0-2000 on the 2026-08-26
+		// rebuild that uses clear-sky-index-corrected rasters - see
+		// GBsolar/METHOD.md section 3, "Why the domain changed from 0-2000").
+		// BOTH ends are now clamps rather than extremes: the darkest blue means
+		// "100 or less" and the darkest red means "1500 or more", clipping about
+		// 0.009% and 0.1% of pixels respectively. Values are kWh/m2/year
+		// throughout - see GBsolar/METHOD.md section 1.
+		solar: {
+			'insolation': [
+				['<100',   '#30123B'],
+				['275',    '#466BE3'],
+				['450',    '#28BBEC'],
+				['625',    '#31F299'],
+				['800',    '#A2FC3C'],
+				['975',    '#EDD03A'],
+				['1150',   '#FB8022'],
+				['1325',   '#D23105'],
+				['1500+',  '#7A0403']
+			]
+		},
+
 		postcodes: {
 				'Grade': [
 					['A+','#313695'],
@@ -163,7 +255,7 @@ const datasets_extra = {
 				['Rented (private)','#e31a1c'],
 				['Owner occupied' ,'#33a02c'],
 				['Missing' ,'#000000'],
-				['Unknown','#999898']
+				['Unknown','#c0c0c0']
 			],
 			'age': [
 				['<1900','#9e0142'],
@@ -186,7 +278,7 @@ const datasets_extra = {
 				['2018','#f2a867'],
 				['2020','#f6cc15'],
 				['2022','#8cbc42'],
-				['2024','#0e7e58']
+				['2026','#0e7e58']
 			],
 			'area': [
 				['<40','#4d9221'],
@@ -265,7 +357,7 @@ const datasets_extra = {
   				['no','#2c7bb6'],
 				['No data','#000000']
 			],
-			'price_2024': [
+			'price_2025': [
 				['<£200k','#276419'],
 				['£200-300k','#4d9221'],
 				['£300-400k','#7fbc41'],
@@ -308,7 +400,9 @@ const datasets_extra = {
 				['2003-2006','#3288bd'],
 				['2007-2011','#5e4fa2'],
 				['2012-2021','#934fa2'],
-				['>2022','#c259a7']
+				['>2022','#c259a7'],
+				['Unknown','#c0c0c0'],
+				['No data','#000000']
 			],
 			'floor_area_avg': [
 				['<40','#4d9221'],
@@ -325,7 +419,9 @@ const datasets_extra = {
 				['Good' ,'#abd9e9'],
 				['Average','#ffffbf'],
 				['Poor','#fdae61'],
-				['Very Poor' ,'#d7191c']
+				['Very Poor' ,'#d7191c'],
+				['Unknown','#c0c0c0'],
+				['No data','#000000']
 			],
 			'modal_roof': [
 				['Very Good','#2c7bb6'],
@@ -333,21 +429,27 @@ const datasets_extra = {
 				['Average','#ffffbf'],
 				['Poor','#fdae61'],
 				['Very Poor' ,'#d7191c'],
-				['Another property above' ,'#4d9221']
+				['Another property above' ,'#4d9221'],
+				['Unknown','#c0c0c0'],
+				['No data','#000000']
 			],
 			'modal_heat': [
 				['Very Good','#2c7bb6'],
 				['Good' ,'#abd9e9'],
 				['Average','#ffffbf'],
 				['Poor','#fdae61'],
-				['Very Poor' ,'#d7191c']
+				['Very Poor' ,'#d7191c'],
+				['Unknown','#c0c0c0'],
+				['No data','#000000']
 			],
 			'modal_window': [
 				['Very Good','#2c7bb6'],
 				['Good' ,'#abd9e9'],
 				['Average','#ffffbf'],
 				['Poor','#fdae61'],
-				['Very Poor' ,'#d7191c']
+				['Very Poor' ,'#d7191c'],
+				['Unknown','#c0c0c0'],
+				['No data','#000000']
 			],
 			'modal_mainheat': [
 				['Community','#377eb8'],
@@ -355,22 +457,33 @@ const datasets_extra = {
 				['Heat pump','#4daf4a'],
 				['Oil boiler','#984ea3'],
 				['Room heater' ,'#ffff33'],
-				['Storage heater' ,'#ff7f00']
+				['Storage heater' ,'#ff7f00'],
+				['Portable heater' ,'#a65628'],
+				['Other','#c0c0c0'],
+				['No data','#000000']
 			],
 			'modal_mainfuel': [
 				['Biomass','#4daf4a'],
 				['Electricity' ,'#377eb8'],
 				['LPG','#ff7f00'],
 				['Mains gas','#e41a1c'],
-				['Oil' ,'#984ea3']
+				['Oil' ,'#984ea3'],
+				['Coal','#666666'],
+				['Dual fuel' ,'#a65628'],
+				['Other','#c0c0c0'],
+				['No data','#000000']
 			],
 			'modal_floord': [
-				['Another property below','#225ea8'],
+				['Another property below','#6a3d9a'],
 				['Solid insulated' ,'#b2e2e2'],
 				['Solid limited insulation','#66c2a4'],
 				['Solid uninsulated','#238b45'],
+				['Suspended insulated' ,'#f1b6da'],
 				['Suspended limited insulation' ,'#df65b0'],
-				['Suspended uninsulated' ,'#ce1256']
+				['Suspended uninsulated' ,'#ce1256'],
+				['Exposed to outside air','#fdae61'],
+				['Other','#c0c0c0'],
+				['No data','#000000']
 			],
 			'modal_type': [
 				['Flat' ,'#e31a1c'],
@@ -383,13 +496,16 @@ const datasets_extra = {
 				['Bungalow end-terrace' ,'#c51b8a'],
 				['Bungalow mid-terrace','#7a0177'],
 				['Maisonette' ,'#1f78b4'],
-				['Park home' ,'#fa7c00']
+				['Park home' ,'#fa7c00'],
+				['Other','#c0c0c0'],
+				['No data','#000000']
 			],
 			'modal_tenure': [
 				['Rented (social)','#1f78b4'],
 				['Rented (private)','#e31a1c'],
 				['Owner occupied' ,'#33a02c'],
-				['Unknown','#999898']
+				['Unknown','#c0c0c0'],
+				['No data','#000000']
 			],
 		  	'percent_EPC': [
 				['<30%','#ffffb2'],
@@ -400,7 +516,7 @@ const datasets_extra = {
 				['80-90%','#e31a1c'],
 				['>90%','#b10026']
 			],
-			'price_2024': [
+			'price_2025': [
 				['<£200k','#276419'],
 				['£200-300k','#4d9221'],
 				['£300-400k','#7fbc41'],
@@ -513,7 +629,7 @@ const datasets_extra = {
   				['140-160','#de77ae'],
   				['>160','#c51b7d']
 			],
-			'price_2024': [
+			'price_2025': [
 				['<£200k','#276419'],
 				['£200-300k','#4d9221'],
 				['£300-400k','#7fbc41'],
@@ -585,6 +701,7 @@ const datasets_extra = {
 				'20072011','#5e4fa2',
 				'20122021','#934fa2',
 				'post2022','#c259a7',
+				'unknown','#c0c0c0',
 				'#000000'
 			],
 			'floor_area_avg': [
@@ -604,6 +721,7 @@ const datasets_extra = {
 				'average','#ffffbf',
 				'poor','#fdae61',
 				'verypoor' ,'#d7191c',
+				'other','#c0c0c0',
 				'#000000'
 			],
 			'modal_roof': [
@@ -613,6 +731,7 @@ const datasets_extra = {
 				'poor','#fdae61',
 				'verypoor' ,'#d7191c',
 				'above' ,'#4d9221',
+				'other','#c0c0c0',
 				'#000000'
 			],
 			'modal_heat': [
@@ -621,6 +740,7 @@ const datasets_extra = {
 				'average','#ffffbf',
 				'poor','#fdae61',
 				'verypoor' ,'#d7191c',
+				'other','#c0c0c0',
 				'#000000'
 			],
 			'modal_window': [
@@ -629,6 +749,7 @@ const datasets_extra = {
 				'average','#ffffbf',
 				'poor','#fdae61',
 				'verypoor' ,'#d7191c',
+				'other','#c0c0c0',
 				'#000000'
 			],
 			'modal_mainheat': [
@@ -638,6 +759,8 @@ const datasets_extra = {
 				'oilboiler','#984ea3',
 				'roomheater' ,'#ffff33',
 				'storageheater' ,'#ff7f00',
+				'portableheater' ,'#a65628',
+				'other','#c0c0c0',
 				'#000000'
 			],
 			'modal_mainfuel': [
@@ -646,15 +769,21 @@ const datasets_extra = {
 				'lpg','#ff7f00',
 				'mainsgas','#e41a1c',
 				'oil' ,'#984ea3',
+				'coal','#666666',
+				'dualfuel' ,'#a65628',
+				'other','#c0c0c0',
 				'#000000'
 			],
 			'modal_floord': [
-				'below','#225ea8',
+				'below','#6a3d9a',
 				'solidinsulated' ,'#b2e2e2',
 				'solidlimitedinsulated','#66c2a4',
 				'soliduninsulated','#238b45',
+				'suspendedinsualted' ,'#f1b6da',
 				'suspendedlimitedinsulated' ,'#df65b0',
 				'suspendeduninsulated' ,'#ce1256',
+				'external','#fdae61',
+				'other','#c0c0c0',
 				'#000000'
 			],
 			'modal_type': [
@@ -669,13 +798,14 @@ const datasets_extra = {
 				'bungalow_midterrace','#7a0177',
 				'maisonette' ,'#1f78b4',
 				'parkhome' ,'#fa7c00',
+				'other','#c0c0c0',
 				'#000000'
 			],
 			'modal_tenure': [
 				'socialrent','#1f78b4',
 				'owner' ,'#33a02c',
 				'privaterent','#e31a1c',
-				'unknown','#999898',
+				'unknown','#c0c0c0',
 				'#000000'
 			],
 		  	'percent_EPC': [
@@ -688,7 +818,7 @@ const datasets_extra = {
 				'90-200','#b10026',
 				'#000000'
 			],
-			'price_2024': [
+			'price_2025': [
 				0,'#276419',
 				200000,'#4d9221',
 				300000,'#7fbc41',
@@ -811,7 +941,7 @@ const datasets_extra = {
 				2018,'#f6cc15',
 				2020 ,'#f2a867',
 				2022,'#8cbc42',
-				2024,'#0e7e58'
+				2026,'#0e7e58'
 			],
 			'area': [
 				0,'#4d9221',
@@ -898,7 +1028,7 @@ const datasets_extra = {
 					'no','#2c7bb6',
 					'#000000'
 				],
-			'price_2024': [
+			'price_2025': [
 				0,'#276419',
 				200000,'#4d9221',
 				300000,'#7fbc41',
@@ -914,7 +1044,7 @@ const datasets_extra = {
 				'rented (social)','#1f78b4',
 				'owner-occupied' ,'#33a02c',
 				'rented (private)','#e31a1c',
-				'unknown','#999898',
+				'unknown','#c0c0c0',
 				'#000000'
 			],
 			'freehold': [
@@ -964,7 +1094,7 @@ const datasets_extra = {
 				140,'#de77ae',
 				160,'#c51b7d'
 			],
-			'price_2024': [
+			'price_2025': [
 				0,'#276419',
 				200000,'#4d9221',
 				300000,'#7fbc41',
@@ -990,10 +1120,18 @@ const datasets_extra = {
 	  postcodes: {
 	    postcodes : {
 	    // Data fields
-  			// #!# Should use a main server URL setting
-  			dataUrl: 'https://pbcc.blob.core.windows.net/pbcc-data/Postcode/%id.json',
+  			// No dataUrl: served from the postcode bin by range request, using the
+  			// binDataset/binOffsetField/binLengthField below.
   			propertiesField: 'postcode',
   			titleField: 'postcode',
+
+  			// Postcode energy data is read straight from the postcode .bin by
+  			// range request; the range for the clicked postcode is carried in the
+  			// pmtiles feature (bin_offset + bin_clen). The generic click handler
+  			// (js/ui-common.js) primes it via capBin.primeRange before opening.
+  			binDataset: 'postcode',
+  			binOffsetField: 'bin_offset',
+  			binLengthField: 'bin_clen',
   			
   			// Title
   			titlePrefix: 'Postcode Summary: ',
@@ -1013,8 +1151,8 @@ const datasets_extra = {
 	  zones: {
 	    zones : {
 	    // Data fields
-  			// #!# Should use a main server URL setting
-  			dataUrl: 'https://pbcc.blob.core.windows.net/pbcc-data/epc_dom/%id.json',
+  			// No dataUrl: this modal's data comes from the bins registered at the
+  			// top of this file, fetched by capBin.fetchRecord() in ui.js.
   			propertiesField: 'LSOA21CD',
   			titleField: 'LSOA21CD',
   			
@@ -1116,7 +1254,7 @@ function EPCDomStyling (layerId, map, settings, datasets, createLegend /* callba
 	const style = getEPCDomStyleColumn (field, datasets);
 	//console.log(style);
 
-  let interpolate = ['area', 'year', 'price_2024'];
+  let interpolate = ['area', 'year', 'price_2025'];
 
 	// Set paint properties
 	if(interpolate.includes(field)){
@@ -1147,7 +1285,7 @@ function EPCNonDomStyling (layerId, map, settings, datasets, createLegend /* cal
 	const style = getEPCNonDomStyleColumn (field, datasets);
 	//console.log(style);
 
-  let interpolate = ['area', 'year','price_2024'];
+  let interpolate = ['area', 'year','price_2025'];
 
 	// Set paint properties
 	if(interpolate.includes(field)){
@@ -1171,7 +1309,7 @@ function zonesStyling (layerId, map, settings, datasets, createLegend /* callbac
 	// Get UI state
 	const daysymetricMode = document.querySelector ('input.updatelayer[data-layer="zones"][name="daysymetricmode"]').checked;
 	
-	let interpolate = ['price_2024', 'house_income_ratio','median_gas_kwh','median_elec_kwh'];
+	let interpolate = ['price_2025', 'house_income_ratio','median_gas_kwh','median_elec_kwh'];
 
 	// Set paint properties
 	if(interpolate.includes(field)){
@@ -1192,6 +1330,25 @@ function zonesStyling (layerId, map, settings, datasets, createLegend /* callbac
 		
 }
 
+// Styling callback for the solar raster. Unlike every other layer here there
+// is no data-driven paint expression to build - the colours are baked into the
+// tiles - so this only draws the static legend and applies the transparency
+// slider. The slider is labelled (and read) as transparency because that is
+// what a user is choosing; MapLibre wants the opposite, hence the 1 - v.
+function solarStyling (layerId, map, settings, datasets, createLegend /* callback */)
+{
+	createLegend (datasets.legends.solar, 'insolation', 'solarlegend');
+
+	const slider = document.querySelector ('input.updatelayer[data-layer="solar"][name="transparency"]');
+	if (slider) {
+		const transparency = Number (slider.value);
+		map.setPaintProperty (layerId, 'raster-opacity', 1 - (transparency / 100));
+		const readout = document.getElementById ('solartransparencyvalue');
+		if (readout) { readout.textContent = transparency + '%'; }
+	}
+}
+
+
 // Function to determine the buildings colour
 function getBuildingsColour (settings)
 {
@@ -1206,7 +1363,7 @@ function getBuildingsColour (settings)
 	if (document.querySelector ('input.updatelayer[data-layer="zones"][name="daysymetricmode"]').checked) {
 		const field = document.querySelector ('select.updatelayer[data-layer="zones"][name="field"]').value;
 
-		let interpolate = ['price_2024', 'house_income_ratio','median_gas_kwh','median_elec_kwh'];
+		let interpolate = ['price_2025', 'house_income_ratio','median_gas_kwh','median_elec_kwh'];
 
 		// Set paint properties
 		if(interpolate.includes(field)){

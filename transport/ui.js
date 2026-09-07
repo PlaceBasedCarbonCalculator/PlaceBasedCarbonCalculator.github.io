@@ -10,21 +10,157 @@ var accessLocationData = {};
 var frequencyLocationData = {};
 var vehicleLocationData = {};
 
+// The bands the accessibility scatter can be drawn at. The two axes must
+// always come from the SAME band - a 30-minute isochrone and a 3-mile circle
+// describe different journeys, so plotting one against the other would compare
+// two unrelated catchments. Keeping the pair in one object, selected by one
+// drop-down, makes a mismatched pair impossible to produce.
+// `value` matches the <option value> in the report card markup and the numeric
+// suffix of the access_*/proximity_* fields in the access bin.
+const ACCESS_BANDS = [
+	{ value: '15', minutes: 15, miles: '0.75' },
+	{ value: '30', minutes: 30, miles: '1.5' },
+	{ value: '45', minutes: 45, miles: '2.25' },
+	{ value: '60', minutes: 60, miles: '3' }
+];
+const ACCESS_BAND_DEFAULT = '30';
+
+// Resolve the drop-down to a band, falling back to the default if the control
+// is missing (report cards render the fragment lazily) or holds a stale value
+function getAccessBand () {
+	const select = document.getElementById('access-band');
+	const wanted = (select ? select.value : ACCESS_BAND_DEFAULT);
+	return ACCESS_BANDS.find(b => b.value === wanted) ||
+		ACCESS_BANDS.find(b => b.value === ACCESS_BAND_DEFAULT);
+}
+
+// ---------------------------------------------------------------------------
+// Colours for the accessibility scatter.
+//
+// The chart carries every Points of Interest category (42 of them) with every
+// class inside it (385 in all), which is far more series than any hand-picked
+// qualitative palette covers. The list this replaced was 42 entries long but
+// held only 23 distinct colours, so 34 of the 42 categories shared a swatch
+// with another and the legend could not tell them apart.
+//
+// Two levels instead, generated from the data so the count can change without
+// anyone editing a list:
+//   * each CATEGORY gets its own base hue - hues are spread over the wheel and
+//     re-used only at a clearly different lightness, so no two categories are
+//     the same colour and neighbouring legend entries never sit on the same hue;
+//   * each CLASS within a category is a step along a ramp from that base,
+//     lighter and less saturated, so the points of one category read as a
+//     family without being indistinguishable from each other.
+// ---------------------------------------------------------------------------
+
+const ACCESS_HUE_COUNT = 14;    // hues before one is re-used at another lightness
+
+function hslToHex (h, s, l) {
+	const a = (s / 100) * Math.min(l / 100, 1 - l / 100);
+	const f = function (n) {
+		const k = (n + h / 30) % 12;
+		const v = l / 100 - a * Math.max(-1, Math.min(k - 3, 9 - k, 1));
+		return Math.round(255 * v).toString(16).padStart(2, '0');
+	};
+	return '#' + f(0) + f(8) + f(4);
+}
+
+// Each tier of categories occupies its own lightness band, and the ramp span is
+// deliberately smaller than the gap between tiers. That matters: two categories
+// sharing a hue always sit in different tiers, so if their ramps could reach
+// into each other's band, a point from one would be indistinguishable from a
+// point of the other. Keeping the bands apart means the closest a cross-category
+// pair can get is within one tier, where every category is a full hue step away.
+// The bands also stay clear of white - a dot much lighter than about L 78
+// vanishes against the chart background.
+const ACCESS_TIER_LIGHTNESS = [30, 48, 66];
+const ACCESS_TIER_SATURATION = [74, 64, 56];
+const ACCESS_RAMP_LIGHTNESS = 12;   // < the 18 between tiers
+const ACCESS_RAMP_SATURATION = 20;
+
+// Base colour for category `i` of `n`. Consecutive categories step a whole hue
+// apart; a hue only repeats once every ACCESS_HUE_COUNT categories, and then at
+// a different lightness and saturation.
+function accessCategoryBase (i, n) {
+	const tier = Math.floor(i / ACCESS_HUE_COUNT) % ACCESS_TIER_LIGHTNESS.length;
+	return {
+		h: (i % ACCESS_HUE_COUNT) * (360 / ACCESS_HUE_COUNT),
+		s: ACCESS_TIER_SATURATION[tier],
+		l: ACCESS_TIER_LIGHTNESS[tier]
+	};
+}
+
+// One colour per class in a category, walking from the base colour towards a
+// lighter, softer version of it. Index 0 is the base, so the legend swatch
+// (which Chart.js takes from the dataset's first point) is the category colour.
+function accessClassRamp (base, count) {
+	const out = [];
+	for (let j = 0; j < count; j++) {
+		const t = count > 1 ? j / (count - 1) : 0;
+		out.push(hslToHex(base.h,
+		                  Math.max(28, base.s - t * ACCESS_RAMP_SATURATION),
+		                  base.l + t * ACCESS_RAMP_LIGHTNESS));
+	}
+	return out;
+}
+
+// Show or hide the whole Accessibility & Proximity section, swapping in a
+// short explanation in its place. Mirrors voaSetAvailable() in retrofit/ui.js,
+// which does the same for the England-and-Wales-only dwelling stock charts.
+//
+// The analysis is built from the ONS Travel Area Isochrones around 2021 Output
+// Area centroids and straight-line buffers around 2021 LSOA population-weighted
+// centroids, both of which are published for England and Wales only, so the
+// access bin holds no record at all for a Scottish Data Zone and fetchRecord()
+// rejects. That is the expected outcome, not a failure, so say why rather than
+// leaving an empty chart and an empty table on screen.
+function accessSetAvailable (available, locationId)
+{
+	const content = document.getElementById('access-content');
+	if (content) { content.style.display = (available ? 'block' : 'none'); }
+
+	const note = document.getElementById('access-nodata');
+	if (!note) { return; }
+	note.style.display = (available ? 'none' : 'block');
+	if (available) { return; }
+
+	// Scottish zone codes start with S. Anything else reaching this branch is a
+	// genuine lookup failure, so don't blame the geography for it.
+	const isScotland = (typeof locationId === 'string' && locationId.charAt(0) === 'S');
+	note.innerHTML = (isScotland
+		? 'Accessibility and proximity scores are not available for Scotland. They are built from the ' +
+		  'ONS travel area isochrones and population-weighted centroids, which are published for ' +
+		  'England and Wales only, and there is no equivalent Scottish dataset. Every other tab on ' +
+		  'this report card does cover Scotland.'
+		: 'Accessibility and proximity scores are not available for this area.');
+}
+
 
 manageCharts = function (locationId) {
-  const p1 = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/Access/' + locationId + '.json')
+  // Access now comes from the access bin (single binary + range request)
+  // instead of one JSON file per zone.
+  // England and Wales only: a Scottish zone has no record here at all, so this
+  // rejects and the whole section is replaced by a note (see
+  // accessSetAvailable). Do NOT alert - it is the expected outcome, not an error.
+  const p1 = capBin.fetchRecord('access', locationId)
     .then(function (accessData) {
       accessLocationData = accessData;
+      accessSetAvailable(true, locationId);
       makeChartAccess();
       makeTableAccess();
     })
     .catch(function (error) {
-      // Keep user-visible alert for backwards compatibility, but don't reject the overall promise
-      //alert('Failed to get access data for this location, or to process it correctly. Please try refreshing the page.');
+      accessLocationData = {};
+      if (accessChart) { accessChart.destroy(); accessChart = undefined; }
+      const table = document.getElementById('access-table');
+      if (table) { table.innerHTML = ''; }
+      accessSetAvailable(false, locationId);
       console.log(error);
     });
 
-  const p2 = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/PTfrequency/v2/' + locationId + '.json')
+  // Public transport frequency now comes from the pt_frequency bin (single
+  // binary + range request) instead of one JSON file per zone.
+  const p2 = capBin.fetchRecord('pt_frequency', locationId)
     .then(function (frequencyData) {
       frequencyLocationData = frequencyData;
       makeChartFrequency();
@@ -34,7 +170,9 @@ manageCharts = function (locationId) {
       console.log(error);
     });
 
-  const p3 = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/vehicle_summary/v1/' + locationId + '.json')
+  // Vehicle summary now comes from the vehicle_summary bin instead of one
+  // JSON file per zone.
+  const p3 = capBin.fetchRecord('vehicle_summary', locationId)
     .then(function (vehicleData) {
       vehicleLocationData = vehicleData;
       makeChartVehicles();
@@ -50,20 +188,33 @@ manageCharts = function (locationId) {
 
 
 makeChartAccess = function(){
-  
+
+  // Guard: do nothing until access data has loaded
+  if (!accessLocationData || !accessLocationData['categoryname']) { return; }
+
   // Access Chart
   // Destroy old chart
 	if(accessChart){
 		accessChart.destroy();
 	}
   
-  // Get data muliple datasets for each category
-  
-  
-  const category = accessLocationData["c"];
-  const datax = accessLocationData["p60"];
-	const datay = accessLocationData["a60"];
-	const labels = accessLocationData["Bc"];
+  // Bind the band drop-down the first time we draw. Done here rather than on
+  // page load because the report cards inject this markup lazily; the guard
+  // stops a second listener being added on the next zone click.
+  const bandSelect = document.getElementById('access-band');
+  if (bandSelect && !bandSelect.dataset.bound) {
+    bandSelect.dataset.bound = 'true';
+    bandSelect.addEventListener('change', function () { makeChartAccess(); });
+  }
+
+  // Get data muliple datasets for each category. Both axes come from the same
+  // band (see ACCESS_BANDS) so the scatter always compares like with like.
+  const band = getAccessBand();
+
+  const category = accessLocationData["categoryname"];
+  const datax = accessLocationData["proximity_" + band.value];
+	const datay = accessLocationData["access_" + band.value];
+	const labels = accessLocationData["classname"];
 	//const data  = datax.map((xVal, index) => ({ x: xVal, y: datay[index] }));
 	
 	
@@ -87,31 +238,35 @@ makeChartAccess = function(){
     lableData[cat].push([labels[i]]);
   }
   
-  // Create the datasets object
+  // Create the datasets object: one dataset per category, coloured from that
+  // category's base, with each class inside it a step along the ramp (see
+  // accessCategoryBase / accessClassRamp above).
+  const categories = Object.keys(categoryData);
   const data = {
-    datasets: Object.keys(categoryData).map((cat) => ({
-      backgroundColor: '#00000',
-      borderColor: '#00000',
-      label: cat,
-      labels: lableData[cat],
-      data: categoryData[cat],
-    })),
+    datasets: categories.map((cat, i) => {
+      const base = accessCategoryBase(i, categories.length);
+      const baseHex = hslToHex(base.h, base.s, base.l);
+      const ramp = accessClassRamp(base, categoryData[cat].length);
+      return {
+        label: cat,
+        labels: lableData[cat],
+        data: categoryData[cat],
+        // Scalar for the legend swatch and any fallback; the point-level
+        // options below are what actually colour the dots.
+        backgroundColor: baseHex,
+        borderColor: baseHex,
+        pointBackgroundColor: ramp,
+        // Outline every dot in the category's own colour: it keeps the pale end
+        // of a long ramp visible and ties the family together visually.
+        pointBorderColor: baseHex,
+        pointBorderWidth: 1,
+        pointRadius: 4,
+        pointHoverRadius: 6
+      };
+    })
   };
-  
-  // Add colours
-  const colours = ['#FF5733','#4CAF50','#2196F3','#FFC107','#E91E63','#9C27B0',
-                  '#FF9800','#00BCD4','#8BC34A','#673AB7','#F44336','#3F51B5',
-                  '#FFEB3B','#009688','#FF5722','#607D8B','#CDDC39','#795548',
-                  '#FFCDD2','#9E9E9E','#FF9800','#FFC107','#FFEB3B','#4CAF50',
-                  '#03A9F4','#FF4081','#8BC34A','#9C27B0','#FF5252','#00BCD4',
-                  '#FF5722','#607D8B','#CDDC39','#795548','#FFCDD2','#9E9E9E',
-                  '#FF9800','#FFC107','#FFEB3B','#4CAF50','#03A9F4','#FF4081'];
 
-  for (let i = 0; i < data.datasets.length; i++) {
-    data.datasets[i].borderColor = colours[i]
-    data.datasets[i].backgroundColor = colours[i]
-  }                
-  
+
   var accessctx = document.getElementById('access-chart').getContext('2d');
 	accessChart = new Chart(accessctx, {
     type: 'scatter',
@@ -127,7 +282,7 @@ makeChartAccess = function(){
           max: 3,
           title: {
             display: true,
-            text: 'Proximity'
+            text: 'Proximity: services within ' + band.miles + ' miles (SD from GB average)'
           }
         },
         y: {
@@ -135,7 +290,7 @@ makeChartAccess = function(){
           max: 3,
           title: {
             display: true,
-            text: 'Accessibility by public transport'
+            text: 'Accessibility: services within ' + band.minutes + ' minutes (SD from GB average)'
           }
         },
       },
@@ -167,20 +322,23 @@ makeChartAccess = function(){
 
 
 makeTableAccess = function(){
-  
+
+    // Guard: do nothing until access data has loaded
+    if (!accessLocationData || !accessLocationData['categoryname']) { return; }
+
     const tab = document.getElementById('access-table');
     tab.innerHTML = ''
-    
-    const labels = accessLocationData["Bc"];
-    const category = accessLocationData["c"];
-    const access_15 = accessLocationData["a15"];
-    const access_30 = accessLocationData["a30"];
-    const access_45 = accessLocationData["a45"];
-    const access_60 = accessLocationData["a60"];
-    const proximity_15 = accessLocationData["p15"];
-    const proximity_30 = accessLocationData["p30"];
-    const proximity_45 = accessLocationData["p45"];
-    const proximity_60 = accessLocationData["p60"];
+
+    const labels = accessLocationData["classname"];
+    const category = accessLocationData["categoryname"];
+    const access_15 = accessLocationData["access_15"];
+    const access_30 = accessLocationData["access_30"];
+    const access_45 = accessLocationData["access_45"];
+    const access_60 = accessLocationData["access_60"];
+    const proximity_15 = accessLocationData["proximity_15"];
+    const proximity_30 = accessLocationData["proximity_30"];
+    const proximity_45 = accessLocationData["proximity_45"];
+    const proximity_60 = accessLocationData["proximity_60"];
   
 
 // Group data by category
@@ -258,7 +416,10 @@ const cells = tab.getElementsByTagName('td');
 }
 
 makeChartFrequency = function(){
-  
+
+  // Guard: do nothing until frequency data has loaded
+  if (!frequencyLocationData || !frequencyLocationData['year']) { return; }
+
   // Access Chart
   // Destroy old chart
 	if(frequencyChart){
@@ -330,6 +491,7 @@ makeChartFrequency = function(){
 		},
 		options: {
       responsive: true,
+      maintainAspectRatio: false,
       plugins: {
         legend: {
           position: 'top',
@@ -340,8 +502,39 @@ makeChartFrequency = function(){
 
 }
 
+// The ownership rates divide the private vehicle count by ONS mid-year
+// population, adult population and modelled household counts. Those
+// denominators only run to 2024 for England and Wales and to 2022 for
+// Scotland, and the build writes a 0 for any year without one, which drew the
+// lines plunging to zero at the end of the series. Blank out those years (a
+// rate of zero in a year the area still has vehicles registered) and trim the
+// trailing years no series can fill, so each line stops at the last year with
+// a denominator instead of dropping off a cliff.
+vehicleRateSeries = function(data, labels){
+  const keys = ['vehiclesPPers','vehiclesPAdult','vehiclesPHousehold'];
+  const vehicles = data['vehicles_PRIVATE'] || [];
+  const out = {};
+  keys.forEach(function(k){
+    const a = data[k] || [];
+    out[k] = labels.map(function(_, i){
+      const v = a[i];
+      if(typeof v !== 'number' || !isFinite(v)){ return null; }
+      return (v === 0 && vehicles[i] > 0) ? null : v;
+    });
+  });
+  let end = labels.length;
+  while(end > 0 && keys.every(function(k){ return out[k][end - 1] === null; })){ end--; }
+  out.labels = labels.slice(0, end);
+  keys.forEach(function(k){ out[k] = out[k].slice(0, end); });
+  return out;
+}
+
 makeChartVehicles = function(){
-  
+
+  // Guard: do nothing until vehicle data has actually loaded (avoids a crash if
+  // called with the empty default object, e.g. before a location is selected)
+  if (!vehicleLocationData || !vehicleLocationData['year']) { return; }
+
   // Access Chart
   // Destroy old chart
 	if(privateVehicleBodyChart){
@@ -542,22 +735,23 @@ makeChartVehicles = function(){
       ]
     };
   
+    const ratesVehiclePP = vehicleRateSeries(vehicleLocationData, labels);
     const dataVehiclePP = {
-      labels: labels.slice(0, 15), // Miss last year as no data
+      labels: ratesVehiclePP.labels,
       datasets: [
         {
           label: 'Per Person',
-          data: vehicleLocationData['vehiclesPPers'].slice(0, 15),
+          data: ratesVehiclePP['vehiclesPPers'],
           backgroundColor: '#07c220',
         },
         {
           label: 'Per Adult',
-          data: vehicleLocationData['vehiclesPAdult'].slice(0, 15),
+          data: ratesVehiclePP['vehiclesPAdult'],
           backgroundColor: '#0042f7',
         },
         {
           label: 'Per Household',
-          data: vehicleLocationData['vehiclesPHousehold'].slice(0, 15),
+          data: ratesVehiclePP['vehiclesPHousehold'],
           backgroundColor: '#f50c0c',
         }
       ]
@@ -714,8 +908,158 @@ makeChartVehicles = function(){
   });
 
 
-  
-}
+
+};
+
+// --- 15-minute neighbourhoods (travel-time isochrones) -----------------------
+// Recreates the legacy PBCC "15-minute neighbourhoods" feature. A "Show
+// centroids" checkbox displays the population-weighted centroid of each LSOA
+// (from the legacy centroids tiles, whose codes match the isochrone data).
+// Clicking a centroid fetches and displays that LSOA's 15-minute isochrones for
+// walking, cycling, walk+transit and bike+transit. Layers/sources are always
+// removed before (re)adding so no stale duplicates remain, and everything is
+// re-added after a basemap change (which resets the map style).
+// NOTE: the leading semicolon guards against ASI joining this IIFE onto the
+// preceding function expression.
+;(function setupTransportIsochrones() {
+  var handlersBound = false;
+  var ISO = 'isochrones';
+  var CENTROIDS = 'centroids';
+  var lastIsoCode = null; // Re-show the current isochrone after a basemap change
+
+  function getMapHandle() {
+    return (typeof capUi !== 'undefined' && typeof capUi.getMap === 'function') ? capUi.getMap() : null;
+  }
+
+  function centroidsEnabled() {
+    var cb = document.getElementById('centroidscheckbox');
+    return !!(cb && cb.checked);
+  }
+
+  function removeIsochrones(map) {
+    if (map.getLayer(ISO)) { map.removeLayer(ISO); }
+    if (map.getSource(ISO)) { map.removeSource(ISO); }
+  }
+
+  function showIsochrones(map, lsoacode) {
+    // Always clear any existing isochrone first to avoid duplicate layers/sources
+    removeIsochrones(map);
+    lastIsoCode = lsoacode;
+    map.addSource(ISO, {
+      type: 'geojson',
+      data: 'https://pbcc.blob.core.windows.net/pbcc-data/isochrones_legacy/' + lsoacode + '.geojson'
+    });
+    // Insert below the roads (as in the legacy tool) where that anchor exists
+    var beforeId = (map.getLayer('roads 0 Restricted Road') ? 'roads 0 Restricted Road' :
+                    (map.getLayer('placeholder_name') ? 'placeholder_name' : undefined));
+    map.addLayer({
+      id: ISO,
+      type: 'fill',
+      source: ISO,
+      paint: {
+        'fill-color': ['match', ['get', 'mode'],
+          'WALK', '#4daf4a',
+          'BIKE', '#377eb8',
+          'TRANSIT', '#984ea3',
+          'BIKETRANSIT', '#e41a1c',
+          /* other */ '#e0e0e0'],
+        'fill-opacity': 0.6,
+        'fill-outline-color': 'rgba(0, 0, 0, 0.6)'
+      }
+    }, beforeId);
+    if (typeof capUi !== 'undefined' && typeof capUi.trackEvent === 'function') {
+      capUi.trackEvent('isochrones_show', { 'lsoa': lsoacode });
+    }
+  }
+
+  // (Re)create the centroids source and circle layer; safe to call repeatedly
+  function ensureCentroids(map) {
+    if (!map.getSource(CENTROIDS)) {
+      map.addSource(CENTROIDS, {
+        type: 'vector',
+        url: 'pmtiles://https://pbcc.blob.core.windows.net/pbcc-pmtiles/centroids_legacy.pmtiles',
+        minzoom: 6,
+        maxzoom: 13
+      });
+    }
+    if (!map.getLayer(CENTROIDS)) {
+      map.addLayer({
+        id: CENTROIDS,
+        type: 'circle',
+        source: CENTROIDS,
+        'source-layer': 'centroids',
+        layout: {
+          visibility: (centroidsEnabled() ? 'visible' : 'none')
+        },
+        paint: {
+          // Make circles larger as the user zooms in (as in the legacy tool)
+          'circle-radius': {
+            'base': 5,
+            'stops': [[10, 7], [22, 180]]
+          },
+          'circle-color': '#000000'
+        }
+      });
+    }
+  }
+
+  function initIsochrones() {
+    var map = getMapHandle();
+    if (!map) { return; }
+
+    // Re-add sources/layers every time the map style is (re)built
+    ensureCentroids(map);
+    if (lastIsoCode && centroidsEnabled() && !map.getLayer(ISO)) {
+      showIsochrones(map, lastIsoCode);
+    }
+
+    // Bind interaction handlers once only (map.on handlers survive style changes)
+    if (handlersBound) { return; }
+    handlersBound = true;
+
+    // Click a centroid to show that LSOA's isochrones
+    map.on('click', CENTROIDS, function (e) {
+      if (!e.features || !e.features.length) { return; }
+      var code = e.features[0].properties.code;
+      if (code) { showIsochrones(map, code); }
+    });
+
+    // Pointer cursor over centroids
+    map.on('mouseenter', CENTROIDS, function () { map.getCanvas().style.cursor = 'pointer'; });
+    map.on('mouseleave', CENTROIDS, function () { map.getCanvas().style.cursor = ''; });
+
+    // "Show centroids" checkbox toggles the centroid layer
+    var cb = document.getElementById('centroidscheckbox');
+    if (cb) {
+      cb.addEventListener('change', function () {
+        var m = getMapHandle();
+        if (!m) { return; }
+        ensureCentroids(m);
+        m.setLayoutProperty(CENTROIDS, 'visibility', (cb.checked ? 'visible' : 'none'));
+        if (!cb.checked) {
+          removeIsochrones(m);
+          lastIsoCode = null;
+        }
+        if (typeof capUi !== 'undefined' && typeof capUi.trackEvent === 'function') {
+          capUi.trackEvent('isochrones_toggle', { 'enabled': cb.checked });
+        }
+      });
+    }
+
+    // "Clear isochrones" button
+    var clearBtn = document.getElementById('clearisochrones');
+    if (clearBtn) {
+      clearBtn.addEventListener('click', function () {
+        var m = getMapHandle();
+        if (m) { removeIsochrones(m); }
+        lastIsoCode = null;
+      });
+    }
+  }
+
+  // '@map/ready' fires on initial load and after every basemap change
+  document.addEventListener('@map/ready', initIsochrones);
+})();
 
 // Function for modal tabs
 modalTab = function (evt, tabName) {
@@ -741,24 +1085,27 @@ modalTab = function (evt, tabName) {
 
 document.getElementById("defaultOpen").click();
 
-// Initialize print button functionality
-function initPrintButtons() {
-  const printButtons = document.querySelectorAll('.print-button');
-  
-  printButtons.forEach(function(button) {
-    button.addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      
-      // Simply trigger the print dialog - CSS handles the rest
-      window.print();
-    });
-  });
-}
+// Print buttons are wired up by capUi.initPrintButtons (js/ui-common.js), which
+// also lays out the charts in unopened tabs so they appear in the printout. This
+// file used to bind its own duplicate handler, which bound a second click
+// listener to the same buttons and so opened the print dialog twice.
 
-// Initialize print buttons when page loads
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initPrintButtons);
-} else {
-  initPrintButtons();
-}
+// Function to switch chart description tabs (Overview / Policy / Methods)
+// Scoped to the chart's own .chart-description-tabs container, so multiple
+// chart tab groups operate independently.
+switchChartTab = function (evt, tabName) {
+  var tabsContainer = evt.currentTarget.closest('.chart-description-tabs');
+  tabsContainer.querySelectorAll('.chart-description-tab-content').forEach(function (content) {
+    content.classList.remove('active');
+    content.style.display = 'none';
+  });
+  tabsContainer.querySelectorAll('.chart-tab-btn').forEach(function (button) {
+    button.classList.remove('active');
+  });
+  var selectedContent = document.getElementById(tabName);
+  if (selectedContent) {
+    selectedContent.classList.add('active');
+    selectedContent.style.display = 'block';
+    evt.currentTarget.classList.add('active');
+  }
+};

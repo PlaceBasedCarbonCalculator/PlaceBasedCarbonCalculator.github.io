@@ -155,18 +155,9 @@ railCheckboxProxying = function ()
 			setRailCheckboxes ();
 		});
 	});
-	
-	// Ensure the visible enabled/simplified boxes are set to match the real checkbox values on initial load due to URL state
-	// TODO: Implment this
-	/*
-	document.addEventListener ('@map/initiallayersset', function (event) {
-		const layerProxyEnabled = (rnetCheckbox.checked || rnetsimplifiedCheckbox.checked);
-		const simplifiedModeProxyEnabled = rnetsimplifiedCheckbox.checked;
-		railCheckboxProxy.checked = (layerProxyEnabled);
-		rnetsimplifiedCheckboxProxy.checked = (layerProxyEnabled && simplifiedModeProxyEnabled);
-		// Events are not dispatched, to avoid event loop
-	});
-	*/
+
+	// The reverse direction, setting these visible controls from the layers the
+	// URL turned on, is handled by syncNoiseProxy() at the end of this file.
 }
 
 
@@ -202,16 +193,49 @@ roadCheckboxProxying = function ()
 			setroadCheckboxes ();
 		});
 	});
-	
-	// Ensure the visible enabled/simplified boxes are set to match the real checkbox values on initial load due to URL state
-	// TODO: Implment this
-	/*
-	document.addEventListener ('@map/initiallayersset', function (event) {
-		const layerProxyEnabled = (rnetCheckbox.checked || rnetsimplifiedCheckbox.checked);
-		const simplifiedModeProxyEnabled = rnetsimplifiedCheckbox.checked;
-		roadCheckboxProxy.checked = (layerProxyEnabled);
-		rnetsimplifiedCheckboxProxy.checked = (layerProxyEnabled && simplifiedModeProxyEnabled);
-		// Events are not dispatched, to avoid event loop
-	});
-	*/
+
+	// The reverse direction, setting these visible controls from the layers the
+	// URL turned on, is handled by syncNoiseProxy() at the end of this file.
 }
+
+
+// Set the visible noise controls from the layers the URL actually switched on.
+//
+// The two proxying functions above are wired only to onchange in landuse/index.html,
+// so neither of them runs at page load and nothing sets the visible checkbox and
+// dropdown from the real layer checkboxes. A shared link such as
+// #/road_16/#12/53.80/-1.55 therefore drew the right layer while the panel showed
+// road noise switched off and the dropdown reading "24h average". Worse, the first
+// click on that panel ran setroadCheckboxes() against the stale visible state and
+// silently switched the map from road_16 to road_all, rewriting the URL with it,
+// so the link no longer showed what it was shared to show.
+//
+// ui-common.js dispatches '@map/initiallayersset' immediately after applying the
+// URL's layer list, which is exactly the moment when the real checkboxes are right
+// and the visible ones are not. This file is deferred, so the listener below is
+// registered long before that fires.
+function syncNoiseProxy (kind)
+{
+	const proxy = document.getElementById (kind + 'noiseProxy');
+	const selector = document.getElementById (kind + 'noise_type_input');
+	if (!proxy || !selector) {return;}
+
+	// The three variants are mutually exclusive, so at most one is ever checked.
+	// Their data-layer values ('road_all', 'road_16', 'road_night') are also the
+	// dropdown's option values, so the selector needs no lookup table.
+	const active = [kind + '_all', kind + '_16', kind + '_night']
+		.map ((layerId) => document.querySelector ('input.showlayer[data-layer="' + layerId + '"]'))
+		.find ((checkbox) => checkbox && checkbox.checked);
+
+	proxy.checked = !!active;
+	if (active) {selector.value = active.dataset.layer;}
+
+	// No change events are dispatched: the real checkboxes already agree with the
+	// URL, and dispatching would re-enter setroadCheckboxes/setRailCheckboxes and
+	// overwrite the very state being synced from.
+}
+
+document.addEventListener ('@map/initiallayersset', function () {
+	syncNoiseProxy ('road');
+	syncNoiseProxy ('rail');
+});

@@ -96,7 +96,6 @@
 }
 
 #map {
-  background: linear-gradient(0deg, rgba(36,0,0,1) 56%, rgb(249 209 89) 62%, rgb(81 151 173) 80%, rgb(2 92 179) 95%);
   width:100%;
   height:100%;
 }
@@ -166,12 +165,20 @@ p.help-end {
   height: auto;
 }
 
+/* 24px is the minimum comfortable touch target; the icon itself stays the same
+   size, the button just claims enough room around it. inline-flex centres the
+   icon in that box, which a plain inline button would not do. */
 .helpbutton {
   cursor: pointer;
   background: transparent;
   border: none !important;
-  min-width: 15px;
-  min-height: 15px;
+  min-width: 24px;
+  min-height: 24px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
 }
 
 .fa-question-circle {
@@ -1022,7 +1029,12 @@ input:checked + .slider:before {
     color: #000 !important;
     font-size: 0.9em !important;
   }
-  
+
+  /* Help buttons open the manual, which a printed page cannot do */
+  .helpbutton {
+    display: none !important;
+  }
+
   /* Tables */
   table {
     width: 100% !important;
@@ -1069,4 +1081,203 @@ input:checked + .slider:before {
   select {
     font-size: 0.9em !important;
   }
+}
+
+
+
+/* Chart description tabs */
+.chart-description-tabs {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	max-height: 400px;
+}
+
+.chart-description-tab-buttons {
+	display: flex;
+	border: 1px solid #ccc;
+	background-color: #f1f1f1;
+	border-bottom: none;
+}
+
+.chart-description-tab-buttons button {
+	flex: 1;
+	background-color: inherit;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	padding: 10px 12px;
+	transition: 0.3s;
+	font-family: Raleway, sans-serif;
+	font-size: 0.95em;
+	border-right: 1px solid #ccc;
+}
+
+.chart-description-tab-buttons button:last-child {
+	border-right: none;
+}
+
+.chart-description-tab-buttons button:hover {
+	background-color: #ddd;
+}
+
+.chart-description-tab-buttons button.active {
+	background-color: #ccc;
+}
+
+.chart-description-tab-content {
+	flex: 1;
+	display: none;
+	padding: 12px 16px;
+	border: 1px solid #ccc;
+	border-top: none;
+	overflow-y: auto;
+	background-color: white;
+}
+
+.chart-description-tab-content.active {
+	display: block;
+}
+
+.chart-description-tab-content p {
+	margin: 0;
+	line-height: 1.5;
+	font-size: 0.95em;
+}
+
+/* Guided tour (js/tour.js) */
+.tour-overlay {
+	display: none;
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.45);
+	z-index: 5000;
+}
+.tour-spotlight {
+	display: none;
+	position: fixed;
+	border: 2px solid #ffffff;
+	border-radius: 8px;
+	box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.45);
+	z-index: 5001;
+	pointer-events: none;
+}
+.tour-popover {
+	display: none;
+	position: fixed;
+	z-index: 5002;
+	max-width: 340px;
+	background: #ffffff;
+	border-radius: 10px;
+	padding: 16px 18px;
+	box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+}
+.tour-popover h3 { margin: 0 0 8px; }
+.tour-popover p { margin: 0 0 12px; font-size: 14px; line-height: 1.5; }
+.tour-controls { display: flex; align-items: center; gap: 8px; }
+.tour-count { font-size: 12px; color: #888; margin-right: auto; }
+.tour-controls button {
+	border: 1px solid #ac1a40;
+	background: none;
+	color: #ac1a40;
+	border-radius: 6px;
+	padding: 6px 12px;
+	cursor: pointer;
+	font-size: 13px;
+}
+.tour-controls button.tour-next { background: #ac1a40; color: #fff; }
+.tour-controls button:disabled { opacity: 0.4; cursor: default; }
+.tour-controls button.tour-skip { border-color: #999; color: #666; }
+.welcome-tour-button {
+	display: inline-block;
+	background: #ac1a40;
+	color: #fff !important;
+	border: none;
+	border-radius: 6px;
+	padding: 10px 18px;
+	font-size: 15px;
+	cursor: pointer;
+	margin: 4px 0 10px;
+}
+.welcome-tour-button:hover { background: #8f1535; }
+.tour-restart { font-size: 13px; }
+
+/* Share button + dependency-free share menu (report modals) */
+.share-wrap {
+	float: right;
+	position: relative;
+}
+.share-button {
+	background-color: #717e82;
+	color: white;
+	border: 1px solid #ffffff;
+	padding: 8px 16px;
+	margin-left: 12px;
+	cursor: pointer;
+	font-size: 0.95em;
+	border-radius: 3px;
+}
+.share-button:hover {
+	background-color: #5a6469;
+}
+.share-button i {
+	margin-right: 6px;
+}
+.share-menu {
+	position: absolute;
+	right: 0;
+	top: calc(100% + 4px);
+	min-width: 170px;
+	background: #ffffff;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+	z-index: 1200;
+	padding: 4px 0;
+}
+.share-menu-item {
+	display: block;
+	width: 100%;
+	text-align: left;
+	background: none;
+	border: none;
+	padding: 8px 14px;
+	font-size: 0.9em;
+	cursor: pointer;
+	color: #333;
+}
+.share-menu-item:hover {
+	background: #f1f1f1;
+}
+.share-menu-item i {
+	margin-right: 8px;
+	color: #717e82;
+}
+
+/* Fix the Overview/Policy/Methods box height so it aligns with the fixed-height
+   charts on desktop; content scrolls internally when the text is longer */
+@media screen and (min-width: 56.25rem) {
+	.chart-description-tabs {
+		height: 400px;
+		max-height: 400px;
+	}
+}
+
+/* Layer-panel slider row (e.g. the solar raster transparency control): keep the
+   label, slider and its readout on one line, with the slider taking the slack
+   and the readout wide enough that "100%" does not shunt the layout as the
+   value changes. */
+.slider-row {
+	display: flex;
+	align-items: center;
+	gap: 0.5em;
+}
+.slider-row input[type="range"] {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+.slider-row output {
+	flex: 0 0 3em;
+	text-align: right;
+	font-variant-numeric: tabular-nums;
 }

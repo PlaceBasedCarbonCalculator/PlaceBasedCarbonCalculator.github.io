@@ -26,6 +26,96 @@
     content: "\f00d";
 }
 
+/* NOTE: the bundled fa-solid-900-min font is subsetted; only add classes here
+   after confirming the glyph exists in the font (e.g. eye/link/envelope do NOT).
+
+   To check, read the font's own cmap rather than guessing: the subset carries
+   321 codepoints, which is far more than the classes listed here. Adding a class
+   whose glyph is absent is worse than leaving it out, because the character then
+   falls through to the next font in the stack and these are Private Use Area
+   codepoints, so a tofu box appears where nothing appeared before.
+
+   Known absent from this subset: fa-book (f02d), fa-file-lines (f15c),
+   fa-key (f084) and fa-layer-group (f5fd). They are used only in
+   proposals/proposal-focused.html, which is noindexed and not deployed. Adding
+   them needs the font subset rebuilt, not a rule here. */
+
+.fa-binoculars:before {
+    content: "\f1e5";
+}
+
+.fa-building-columns:before,
+.fa-university:before {
+    content: "\f19c";
+}
+
+.fa-flask:before {
+    content: "\f0c3";
+}
+
+.fa-share-nodes:before,
+.fa-share-alt:before {
+    content: "\f1e0";
+}
+
+.fa-copy:before {
+    content: "\f0c5";
+}
+
+.fa-inbox:before {
+    content: "\f01c";
+}
+
+.fa-compass:before {
+    content: "\f14e";
+}
+
+/* These nine were used in the markup with no rule here, so they rendered as
+   nothing at all: fa-download alone appears on 14 buttons, including every
+   download on the data page. All nine glyphs were confirmed present in the
+   subsetted font before being added. */
+
+.fa-download:before {
+    content: "\f019";
+}
+
+.fa-arrow-right:before {
+    content: "\f061";
+}
+
+.fa-archive:before,
+.fa-box-archive:before {
+    content: "\f187";
+}
+
+.fa-bus:before {
+    content: "\f207";
+}
+
+.fa-area-chart:before,
+.fa-chart-area:before {
+    content: "\f1fe";
+}
+
+.fa-chevron-down:before {
+    content: "\f078";
+}
+
+.fa-circle-info:before,
+.fa-info-circle:before {
+    content: "\f05a";
+}
+
+.fa-ellipsis-v:before,
+.fa-ellipsis-vertical:before {
+    content: "\f142";
+}
+
+.fa-home-lg:before,
+.fa-house-chimney:before {
+    content: "\e3af";
+}
+
 .fa {
     font-family: var(--fa-style-family, "Font Awesome 6 Free");
     font-weight: var(--fa-style, 900);

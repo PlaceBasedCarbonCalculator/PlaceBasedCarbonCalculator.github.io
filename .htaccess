@@ -1,3 +1,46 @@
+# ---------------------------------------------------------------------------
+# Carbon & Place server configuration
+# ---------------------------------------------------------------------------
+
+
+# --- Custom error pages ----------------------------------------------------
+# Without this, Apache serves its own bare "Not Found" page and the styled
+# /404.html shipped with the site is never used. Old legacy deep links and
+# shared report URLs land here, so it needs to look like the rest of the site.
+
+ErrorDocument 404 /404.html
+
+
+# --- Character set ---------------------------------------------------------
+
+AddDefaultCharset utf-8
+
+<IfModule mod_mime.c>
+    # MapLibre GL JS 6 is ESM-only, so the tools import a .mjs. Older Apache
+    # mime.types files do not know that extension, and a module served as
+    # anything but a JavaScript type is refused outright by the browser, which
+    # would take out every map on the site. Declare it rather than rely on the
+    # host's defaults.
+    AddType text/javascript .mjs
+
+    AddCharset utf-8 .appcache \
+                     .atom \
+                     .css \
+                     .js \
+                     .json \
+                     .manifest \
+                     .map \
+                     .mjs \
+                     .rdf \
+                     .rss \
+                     .vtt \
+                     .webmanifest \
+                     .xml
+</IfModule>
+
+
+# --- Compression -----------------------------------------------------------
+
 <IfModule mod_deflate.c>
   AddOutputFilterByType DEFLATE application/javascript
   AddOutputFilterByType DEFLATE application/rss+xml
@@ -22,35 +65,70 @@
   AddOutputFilterByType DEFLATE text/javascript
   AddOutputFilterByType DEFLATE text/plain
   AddOutputFilterByType DEFLATE text/xml
-  
-  
 </IfModule>
 
-Header set Cache-Control "max-age=2592000, public"
 
-AddDefaultCharset utf-8
-
-<IfModule mod_mime.c>
-    AddCharset utf-8 .appcache \
-                     .atom \
-                     .css \
-                     .js \
-                     .json \
-                     .manifest \
-                     .map \
-                     .mjs \
-                     .rdf \
-                     .rss \
-                     .vtt \
-                     .webmanifest \
-                     .xml
-</IfModule>
+# --- Caching ---------------------------------------------------------------
+# The site is deployed by uploading files in place, so every URL keeps its name
+# across releases: there are no content hashes in /css/main.css or
+# /js/ui-common.js. That makes a long max-age dangerous rather than merely
+# suboptimal, because a returning visitor can hold last month's stylesheet
+# against this month's markup and there is no new URL to break the tie. The
+# previous configuration set thirty days on everything and added "immutable",
+# which also tells Firefox and Safari not to revalidate even on a reload.
+#
+# Repeat-visit performance is handled by the service worker instead, which
+# stores the app shell in the Cache Storage API and serves it stale-while-
+# revalidate. Note that its cache.add() and fetch() calls both go through the
+# HTTP cache, so an over-long max-age here would let a fresh CACHE_VERSION
+# precache stale files. Short lifetimes here keep that honest.
+#
+# The blocks below are ordered least to most specific: Apache applies matching
+# <FilesMatch> sections in file order and "Header set" replaces, so a later
+# match wins.
 
 <IfModule mod_headers.c>
-	Header always set X-Content-Type-Options nosniff
-	#https://webhint.io/docs/user-guide/hints/hint-http-cache/?source=devtools
-    Header merge Cache-Control immutable
-    <FilesMatch "\.(appcache|cur|ico|x?html?|topojson|xml)$">
-        Header edit Cache-Control immutable ""
+
+    Header always set X-Content-Type-Options nosniff
+
+    # Default for anything not matched below: store it, but check first.
+    # "no-cache" still allows a conditional request, so the usual answer is a
+    # cheap 304 rather than a fresh download.
+    Header set Cache-Control "no-cache"
+
+    # Images, fonts, media and tilesets. These are the assets that genuinely do
+    # not change without someone deliberately replacing them, and a slightly
+    # stale logo is harmless, so they get a week. Deliberately no "immutable":
+    # a reload should still be able to pick up a replaced image.
+    <FilesMatch "\.(jpg|jpeg|png|gif|webp|avif|svg|ico|cur|woff|woff2|ttf|otf|eot|mp4|webm|pmtiles)$">
+        Header set Cache-Control "max-age=604800, public"
     </FilesMatch>
+
+    # Stylesheets and scripts. Cached long enough to cover a browsing session
+    # without re-fetching on every page, short enough that a release reaches
+    # everyone within the hour.
+    <FilesMatch "\.(css|js|mjs)$">
+        Header set Cache-Control "max-age=3600, public"
+    </FilesMatch>
+
+    # Data and configuration read at runtime: basemap styles in /tiles/, the
+    # area lookup lists in /reports/, the manual source, robots and sitemap.
+    <FilesMatch "\.(json|webmanifest|xml|txt|md|topojson)$">
+        Header set Cache-Control "max-age=3600, public"
+    </FilesMatch>
+
+    # Pages must never be served stale, or a visitor can sit on the old site
+    # for as long as the cache lasts without ever knowing there is a new one.
+    <FilesMatch "\.(html|htm)$">
+        Header set Cache-Control "no-cache"
+    </FilesMatch>
+
+    # The service worker last, so it wins over the .js rule above. Browsers cap
+    # the worker script's own freshness at 24 hours regardless, but this is what
+    # lets a fixed worker ship the same day. It controls every other cached
+    # asset, so it is the one file that must always be checked.
+    <FilesMatch "^sw\.js$">
+        Header set Cache-Control "no-cache"
+    </FilesMatch>
+
 </IfModule>
