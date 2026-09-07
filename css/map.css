@@ -1255,11 +1255,20 @@ input:checked + .slider:before {
 }
 
 /* Fix the Overview/Policy/Methods box height so it aligns with the fixed-height
-   charts on desktop; content scrolls internally when the text is longer */
+   chart floated beside it on desktop; content scrolls internally when the text
+   is longer. Only boxes that sit next to a chart are padded out to 400px: the
+   full-width boxes (public transport frequency, accessibility and proximity)
+   have their chart below rather than beside them, so 400px would leave a large
+   empty gap. Those are pinned to 140px, which is the tallest of their three
+   tabs at full width, so switching tab does not shift the chart below. */
 @media screen and (min-width: 56.25rem) {
-	.chart-description-tabs {
+	.chart-wrapper > .chart-text > .chart-description-tabs {
 		height: 400px;
 		max-height: 400px;
+	}
+	.chart-description-tabs {
+		height: 140px;
+		max-height: 140px;
 	}
 }
 
