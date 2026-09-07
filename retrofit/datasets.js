@@ -16,7 +16,7 @@ if (typeof capBin !== 'undefined') {
 	capBin.register({
 		epc_dom: 'index_epc_dom_2026-09-06.json.gz',
 		historical_domestic_gas_elec: 'index_historical_domestic_gas_elec_2026-08-26.json.gz',
-		prices: 'index_prices_2026-07-25.json.gz',
+		prices: 'index_prices_2026-09-07.json.gz',
 		// Dwelling stock from the council tax registers. voa_2010 (bands) is
 		// GB-wide; voa_2020 (type/bedrooms/age) is England and Wales only and
 		// legitimately has no record for a Scottish zone - see the dwelling
@@ -68,7 +68,7 @@ const datasets_extra = {
 			'type': 'circle',
 			'source': {
 				'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/epc_dom_20260728.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/epc_dom_20260907.pmtiles',
 				},
 			'source-layer': 'epc_dom',
 			'paint': {
