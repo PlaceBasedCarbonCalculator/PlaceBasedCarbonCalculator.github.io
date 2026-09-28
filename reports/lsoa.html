@@ -251,7 +251,7 @@
 
 	function render(d, centre) {
 		var className = d.lsoa_class_name || '';
-		var heading = (postcode ? esc(postcode) + ' - ' : '') + areaWord + ' ' + esc(lsoa);
+		var heading = (postcode ? esc(postcode) + ' is part of ' : '') + areaWord + ' ' + esc(lsoa);
 		titleEl.textContent = heading;
 		document.title = heading + ' - Carbon & Place';
 		// og:title ships as the generic page title, so a shared link previewed as
@@ -355,7 +355,7 @@
 	if (typeof capBin !== 'undefined') {
 		capBin.register({
 			access: 'index_access_2026-08-25.json.gz',
-			pt_frequency: 'index_pt_frequency_2026-08-25.json.gz',
+			pt_frequency: 'index_pt_frequency_2026-09-26.json.gz',
 			vehicle_summary: 'index_vehicle_summary_2026-08-26.json.gz',
 			historical_emission: 'index_historical_emission_2026-08-28.json.gz',
 			oac_emissions: 'index_oac_emissions_2026-08-29.json.gz',

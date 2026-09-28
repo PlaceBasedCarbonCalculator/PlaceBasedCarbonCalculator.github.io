@@ -905,7 +905,11 @@ Colours run from dark blue (least sunlight) through green and yellow to dark red
 
 The transparency slider fades the layer so that streets and buildings on the basemap can be seen through it. At 0% the solar map is solid; drag it up to see the map underneath.
 
-Two limitations are worth keeping in mind. The layer is a visualisation, and the colour is compressed slightly when the tiles are stored, so it should be read to the nearest band rather than as an exact number. And it models sunlight reaching a surface, not electricity: converting to expected generation needs assumptions about panel type, efficiency, and how much of a roof is usable, none of which are applied here.
+In some rural areas (especially Scotland and Wales) we lack the high resolution LIDAR data to perform the solar analysis. Those areas are missing on the map. See the [GBDEM repo](https://github.com/PlaceBasedCarbonCalculator/GBDEM) for more information in LIDAR coverage in the UK.
+
+The layer is a visualisation, and the colour is compressed slightly when the tiles are stored, so it should be read to the nearest band rather than as an exact number. And it models sunlight reaching a surface, not electricity: converting to expected generation needs assumptions about panel type, efficiency, and how much of a roof is usable, none of which are applied here.
+
+If you are looking for a more detailed assessment of an individual building you might find [Solar Wizard](https://solarwizard.org.uk/) useful.
 
 ##### Data Sources {#retrofitsolardatasources}
 

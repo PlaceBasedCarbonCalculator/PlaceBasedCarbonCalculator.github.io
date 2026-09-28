@@ -10,7 +10,7 @@ var accessChart;
 // re-uploaded - datasets are rebuilt independently, so the dates will diverge.
 if (typeof capBin !== 'undefined') {
 	capBin.register({
-		pt_frequency: 'index_pt_frequency_2026-08-25.json.gz',
+		pt_frequency: 'index_pt_frequency_2026-09-26.json.gz',
 		access: 'index_access_2026-08-25.json.gz',
 		vehicle_summary: 'index_vehicle_summary_2026-08-26.json.gz'
 	});
@@ -191,7 +191,7 @@ const datasets_extra = {
 			'type': 'fill',
 			'source': {
 			'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/zones_transport_20260828.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/zones_transport_20260926.pmtiles',
 				},
 			'source-layer': 'zones',
 			'paint': {
