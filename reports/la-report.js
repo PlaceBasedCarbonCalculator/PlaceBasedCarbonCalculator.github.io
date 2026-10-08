@@ -102,7 +102,7 @@
 	// re-uploaded.
 	var dates = {
 		access: '2026-09-02',
-		pt_frequency: '2026-09-26',
+		pt_frequency: '2026-10-08',
 		vehicle_summary: '2026-09-02',
 		epc_dom: '2026-09-06',
 		gas_electric: '2026-09-02',

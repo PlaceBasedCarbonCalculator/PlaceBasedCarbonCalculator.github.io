@@ -16,6 +16,10 @@ if (typeof capBin !== 'undefined') {
 	capBin.register({
 		epc_dom: 'index_epc_dom_2026-09-06.json.gz',
 		historical_domestic_gas_elec: 'index_historical_domestic_gas_elec_2026-08-26.json.gz',
+		// Non-domestic gas and electricity, keyed by 2021 MSOA / 2022 Scottish
+		// Intermediate Zone code. Only ~8,600 records, so it gets an ordinary
+		// index here rather than the primeRange treatment postcode needs.
+		historical_nondomestic_gas_elec: 'index_historical_nondomestic_gas_elec_2026-10-07.json.gz',
 		prices: 'index_prices_2026-09-07.json.gz',
 		// Dwelling stock from the council tax registers. voa_2010 (bands) is
 		// GB-wide; voa_2020 (type/bedrooms/age) is England and Wales only and
@@ -63,6 +67,26 @@ const datasets_extra = {
 			}
 		},
 		
+		// Non-domestic gas and electricity on 2021 MSOAs / 2022 Scottish
+		// Intermediate Zones. Defined after postcodes, so it draws above both
+		// zone fills - the same "most recently defined fill wins" order the
+		// layers above already rely on. Tiled only to z13, since MSOAs are far
+		// larger than the buildings this tool shows above that zoom.
+		nondomestic: {
+			'id': 'nondomestic',
+			'type': 'fill',
+			'source': {
+			'type': 'vector',
+				'url': 'pmtiles://%tileserverUrl/nondomestic_20261007.pmtiles',
+				},
+			'source-layer': 'nondomestic',
+			'paint': {
+				'fill-color': '#9c9898',
+				'fill-opacity': 0.8,
+				'fill-outline-color': '#000000'
+			}
+		},
+
 		epc_dom: {
 			'id': 'epc_dom',
 			'type': 'circle',
@@ -159,6 +183,7 @@ const datasets_extra = {
 	layerStyling: {
 	  zones: zonesStyling,
 	  postcodes:	postcodesStyling,
+	  nondomestic:	nondomesticStyling,
 	  epc_dom:    EPCDomStyling,
 	  epc_nondom: EPCNonDomStyling,
 	  solar:      solarStyling
@@ -1148,6 +1173,21 @@ const datasets_extra = {
 	  }
 	  },
 	  
+	  nondomestic: {
+	    nondomestic : {
+	    // Data fields
+  			// No dataUrl: this modal's data comes from the
+  			// historical_nondomestic_gas_elec bin registered at the top of this
+  			// file, fetched by capBin.fetchRecord() in ui.js. The index is small
+  			// enough to download whole, so there is no binDataset/primeRange here
+  			// and the .bin can be redeployed without rebuilding the tiles.
+  			//
+  			// The clicked zone's code; the charts themselves and the modal title
+  			// are in index.html and ui.js respectively.
+  			propertiesField: 'MSOA21CD'
+	  }
+	  },
+
 	  zones: {
 	    zones : {
 	    // Data fields
@@ -1193,6 +1233,28 @@ const datasets_extra = {
 };
 
 //console.log(datasets_common);
+// The non-domestic layer grades on the same A+ to F- scale as the postcode
+// layer, so it derives its palettes from that layer's rather than keeping a
+// second copy of eighteen colours that would have to be edited in step.
+//
+// It adds one entry the postcode layer does not need. Every MSOA is present in
+// nondomestic.pmtiles, graded or not, and roughly one in eleven has its
+// non-domestic gas suppressed by DESNZ and carries the grade "NA"; the postcode
+// tiles simply leave such areas out. Without an explicit grey those zones would
+// fall through to the palette's black fallback and read as the worst grade
+// rather than as missing data, so "NA" is mapped to grey and the fallback is
+// grey too.
+const nondomesticNoData = '#cccccc';
+datasets_extra.legends.nondomestic = {
+	'Grade': datasets_extra.legends.postcodes['Grade'].concat ([['No Data', nondomesticNoData]])
+};
+datasets_extra.lineColours.nondomestic = {
+	// Flat [label, colour, ..., fallback] list, so drop the postcode fallback
+	// before appending the "NA" pair and a grey fallback of our own
+	'Grade': datasets_extra.lineColours.postcodes['Grade'].slice (0, -1)
+		.concat (['NA', nondomesticNoData, nondomesticNoData])
+};
+
 const datasets = mergeObjects(datasets_extra, datasets_common);
 //const datasets = { ...datasets_common, ...datasets_extra };
 //console.log(datasets);
@@ -1202,6 +1264,13 @@ function getStyleColumn (layerId, datasets)
 {
 	const style_col_selected = datasets.lineColours.postcodes.hasOwnProperty(layerId) ? layerId : '_';
 	return datasets.lineColours.postcodes['Grade'];
+}
+
+// Function to determine the style column. Every field this layer offers is a
+// grade on the same scale, so there is one palette whatever is selected.
+function getStyleColumnNondomestic (layerId, datasets)
+{
+	return datasets.lineColours.nondomestic['Grade'];
 }
 
 // Function to determine the style column
@@ -1231,6 +1300,27 @@ function postcodesStyling (layerId, map, settings, datasets, createLegend /* cal
 	map.setPaintProperty (layerId, 'fill-outline-color', 'rgba(0, 0, 0, 0.2)'); 
 	
 	
+}
+
+
+// Styling callback for the non-domestic MSOA layer. Every field in its
+// drop-down is a grade, so the legend and palette are fixed and only the
+// field being matched changes - exactly as for the postcode layer above.
+function nondomesticStyling (layerId, map, settings, datasets, createLegend /* callback */)
+{
+	// Update the legend (even if map layer is off)
+	const field = document.querySelector ('select.updatelayer[data-layer="nondomestic"][name="field"]').value
+	createLegend (datasets.legends.nondomestic, "Grade", 'nondomesticlegend'); // Fixed legend for grades
+
+	// Set paint properties
+	map.setPaintProperty (layerId, 'fill-color', ['match', ['get', field], ...getStyleColumnNondomestic (field, datasets)]);
+	map.setPaintProperty (layerId, 'fill-opacity', 0.8);
+
+	// Set buildings layer colour/visibility
+	const buildingColour = '#9c9898';
+	map.setPaintProperty ('buildings', 'fill-extrusion-color', (buildingColour || '#9c9898'));
+	map.setLayoutProperty ('buildings', 'visibility', (buildingColour ? 'visible' : 'none'));
+	map.setPaintProperty (layerId, 'fill-outline-color', 'rgba(0, 0, 0, 0.2)');
 }
 
 

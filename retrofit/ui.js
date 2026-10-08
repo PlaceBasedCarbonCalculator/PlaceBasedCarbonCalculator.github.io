@@ -4,6 +4,12 @@ var gasChart;
 var electricityChart;
 var metersChart;
 
+var emissionsNDChart;
+var gasNDChart;
+var electricityNDChart;
+var electricityHHNDChart;
+var metersNDChart;
+
 var emissionsLSOAChart;
 var gasLSOAChart;
 var electricityLSOAChart;
@@ -37,6 +43,7 @@ var pricesChart;
 var transactionsChart;
 
 var postcodeLocationData = {};
+var nondomesticLocationData = {};
 var lsoaLocationData = {};
 var pricesLocationData = {};
 var lsoaEnergyData = {};
@@ -120,6 +127,22 @@ manageCharts =  function (locationId, mapLayerId){
         })
         .catch(function (error) {
             alert('Failed to get access data for this location, or to process it correctly. Please try refreshing the page.');
+            console.log(error);
+        });
+
+    return p;
+  } else if (mapLayerId == 'nondomestic'){
+    // Non-domestic gas/electricity for the MSOA (or Scottish Intermediate Zone)
+    // containing the click, from the historical_nondomestic_gas_elec bin. Only
+    // ~8,600 records, so this uses the ordinary index rather than a range
+    // primed from the tiles the way postcode does.
+    const p = capBin.fetchRecord('historical_nondomestic_gas_elec', locationId)
+        .then(function (nondomesticData) {
+            nondomesticLocationData = nondomesticData;
+            makeChartNondomestic(locationId);
+        })
+        .catch(function (error) {
+            alert('Failed to get non-domestic energy data for this location, or to process it correctly. Please try refreshing the page.');
             console.log(error);
         });
 
@@ -408,6 +431,299 @@ makeChartPostcode = function(locationId){
     },
   });
   
+}
+
+makeChartNondomestic = function(locationId){
+
+  console.log("Make non-domestic energy charts");
+  // Destroy old charts
+	if(emissionsNDChart){
+		emissionsNDChart.destroy();
+	}
+	if(gasNDChart){
+		gasNDChart.destroy();
+	}
+	if(electricityNDChart){
+		electricityNDChart.destroy();
+	}
+	if(electricityHHNDChart){
+		electricityHHNDChart.destroy();
+	}
+  if(metersNDChart){
+		metersNDChart.destroy();
+	}
+
+  // Set modal title. Called again with no argument when a drop-down changes, so
+  // only set it when we actually know the location.
+  if(locationId){
+    const label = locationId.startsWith('S') ? 'Intermediate Zone' : 'MSOA';
+    document.querySelector('#nondomestic-chartsmodal .modal-title').innerHTML =
+      locationId + ' non-domestic energy summary (' + label + ')';
+  }
+
+  // Get Control Settings
+  const setting_emissions = document.getElementById("select_emissionsND").value;
+	const setting_gas = document.getElementById("select_gasND").value;
+  const setting_electricity = document.getElementById("select_electricityND").value;
+
+  let data_emissions_gas;
+  let data_emissions_elec;
+  let data_elec;
+  let data_gas;
+
+  // Get data. Electricity is non-half-hourly only: that is all DESNZ publishes
+  // at this geography. The half-hourly series is local-authority-wide and gets
+  // its own chart rather than being mixed into these.
+  if(setting_emissions == "total"){
+     data_emissions_gas = nondomesticLocationData['total_gas_kgco2e'];
+     data_emissions_elec = nondomesticLocationData['total_elec_kgco2e'];
+  } else if (setting_emissions == "mean") {
+     data_emissions_gas = nondomesticLocationData['mean_gas_kgco2e'];
+     data_emissions_elec = nondomesticLocationData['mean_elec_kgco2e'];
+  } else if (setting_emissions == "median") {
+     data_emissions_gas = nondomesticLocationData['median_gas_kgco2e'];
+     data_emissions_elec = nondomesticLocationData['median_elec_kgco2e'];
+  }
+
+  if(setting_electricity == "total"){
+     data_elec = nondomesticLocationData['total_elec_kwh'];
+  } else if (setting_electricity == "mean") {
+     data_elec = nondomesticLocationData['mean_elec_kwh'];
+  } else if (setting_electricity == "median") {
+     data_elec = nondomesticLocationData['median_elec_kwh'];
+  }
+
+  if(setting_gas == "total"){
+     data_gas = nondomesticLocationData['total_gas_kwh'];
+  } else if (setting_gas == "mean") {
+     data_gas = nondomesticLocationData['mean_gas_kwh'];
+  } else if (setting_gas == "median") {
+     data_gas = nondomesticLocationData['median_gas_kwh'];
+  }
+
+  const labels = nondomesticLocationData['year'];
+
+  const dataMeters = {
+    labels: labels,
+    datasets: [
+      {
+        label: 'Gas',
+        data: nondomesticLocationData['meters_gas'],
+        backgroundColor: '#2b8cbe',
+        stack: 'Stack 0',
+      },
+      {
+        label: 'Electric (non half-hourly)',
+        data: nondomesticLocationData['meters_elec'],
+        backgroundColor: '#b30000',
+        stack: 'Stack 1',
+      }
+    ]
+  };
+
+  const dataEmissions = {
+    labels: labels,
+      datasets: [
+        {
+          label: 'Gas',
+          data: data_emissions_gas,
+          borderColor: '#2b8cbe',
+          backgroundColor: '#2b8cbe',
+        },
+        {
+          label: 'Electricity (non half-hourly)',
+          data: data_emissions_elec,
+          borderColor: '#b30000',
+          backgroundColor: '#b30000',
+        }
+      ]
+    };
+
+	const dataElectricity = {
+    labels: labels,
+      datasets: [
+        {
+          label: 'Non half-hourly meters',
+          data: data_elec,
+          borderColor: '#b30000',
+          backgroundColor: '#b30000',
+        }
+      ]
+    };
+
+	const dataElectricityHH = {
+    labels: labels,
+      datasets: [
+        {
+          label: 'Half-hourly meters (whole local authority)',
+          data: nondomesticLocationData['total_elec_hh_la_kwh'],
+          borderColor: '#6a339a',
+          backgroundColor: '#6a339a',
+        }
+      ]
+    };
+
+	const dataGas = {
+    labels: labels,
+      datasets: [
+        {
+          label: 'All non-domestic meters',
+          data: data_gas,
+          borderColor: '#2b8cbe',
+          backgroundColor: '#2b8cbe',
+        }
+      ]
+    };
+
+	var metersctx = document.getElementById('metersND-chart').getContext('2d');
+	metersNDChart = new Chart(metersctx, {
+    type: 'bar',
+      data: dataMeters,
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: {
+          intersect: false,
+        },
+        scales: {
+          x: {
+            stacked: true,
+            title: {
+              display: true,
+              text: 'Year'
+            }
+          },
+          y: {
+            stacked: true,
+            title: {
+              display: true,
+              text: 'Meters'
+            }
+          }
+        }
+      }
+  });
+
+	var emissionsctx = document.getElementById('emissionsND-chart').getContext('2d');
+	emissionsNDChart = new Chart(emissionsctx, {
+    type: 'line',
+    data: dataEmissions,
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: 'Emissions kgCO2e'
+          },
+          beginAtZero: true
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Year'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      }
+    },
+  });
+
+  var gasctx = document.getElementById('gasND-chart').getContext('2d');
+	gasNDChart = new Chart(gasctx, {
+    type: 'line',
+    data: dataGas,
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: 'Gas Consumption kWh'
+          },
+          beginAtZero: true
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Year'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      }
+    },
+  });
+
+	var electricityctx = document.getElementById('electricityND-chart').getContext('2d');
+	electricityNDChart = new Chart(electricityctx, {
+    type: 'line',
+    data: dataElectricity,
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: 'Consumption kWh'
+          },
+          beginAtZero: true
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Year'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      }
+    },
+  });
+
+	var electricityHHctx = document.getElementById('electricityHHND-chart').getContext('2d');
+	electricityHHNDChart = new Chart(electricityHHctx, {
+    type: 'line',
+    data: dataElectricityHH,
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: 'Consumption kWh (local authority)'
+          },
+          beginAtZero: true
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Year'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      }
+    },
+  });
+
 }
 
 makeChartLSOAEnergy = function(locationId){

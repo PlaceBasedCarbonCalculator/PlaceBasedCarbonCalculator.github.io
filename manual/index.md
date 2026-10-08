@@ -803,6 +803,32 @@ Clicking any postcode opens its report card. Postcode boundaries are copyright o
 * [Postcode boundaries](https://digimap.edina.ac.uk/) (academic use only)
 <!-- /#retrofit-postcodes -->
 
+<!-- #retrofit-nondomestic -->
+#### Non-domestic Gas & Electric
+
+This layer maps non-domestic gas and electricity consumption, published by the Department for Energy Security and Net Zero: the energy used by everything that is not a home, from corner shops and offices to schools, hospitals and factories.
+
+The drop-down menu switches between six views, graded from A+ (lowest emissions) to F-:
+
+* Combined, Gas or Electricity Emissions **(per meter)**: the median consumption of a single non-domestic meter in the area, so a high street of small shops is not marked down simply for having many of them. This is the same measure the Postcode Gas & Electric layer uses.
+* Combined, Gas or Electricity Emissions **(area total)**: all non-domestic consumption in the area added together, which is what the area contributes to local emissions. An industrial estate scores badly here and unremarkably per meter; a parade of shops does the reverse.
+
+Three things about this data are worth knowing before using it.
+
+**The areas are much larger than elsewhere in this tool.** Non-domestic figures are only published for Middle Layer Super Output Areas in England and Wales, and Intermediate Zones in Scotland, each roughly five times the size of the neighbourhoods used by the other layers. A single large site can therefore colour a wide area.
+
+**The electricity figures are incomplete, by a wide margin.** Only non-half-hourly meters, the smaller commercial supplies, are published for areas this small. Half-hourly meters, which serve the largest users and typically account for several times as much electricity, are only published per local authority. The map and its grades cover non-half-hourly meters alone; the local authority half-hourly totals are shown as a separate chart in each area's report, clearly labelled, because leaving them out entirely would give a misleading impression of how much electricity non-domestic buildings use.
+
+**The series starts in 2015.** Earlier years are published on the 2011 boundaries. In Scotland the Intermediate Zone codes were renumbered wholesale between the two, so the older figures cannot be matched to today's areas without inventing a split, and household-based weights would be the wrong basis for splitting commercial meters.
+
+Areas with too few non-domestic gas meters are suppressed to protect commercial confidentiality and appear as gaps rather than zeroes; in the latest year this affects roughly one area in eleven for gas. Clicking any area opens its report card, with the full annual series back to 2015.
+
+##### Data Sources {#retrofitnondomesticenergydatasources}
+
+* [Sub-national gas consumption](https://www.gov.uk/government/collections/sub-national-gas-consumption-data)
+* [Sub-national electricity consumption](https://www.gov.uk/government/collections/sub-national-electricity-consumption-data)
+<!-- /#retrofit-nondomestic -->
+
 <!-- #retrofit-epc-dom -->
 #### Domestic Properties
 

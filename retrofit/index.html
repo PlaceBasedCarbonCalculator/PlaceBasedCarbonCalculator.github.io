@@ -257,6 +257,29 @@
 			
 			</div>
 			
+			<button class="accordion">Non-domestic Gas &amp; Electric</button>
+			<div class="panel">
+				<p><label><input type="checkbox" class="showlayer" data-layer="nondomestic" value="false">Show layer</label></p>
+				<p>
+				  	<select name="field" class="updatelayer" data-layer="nondomestic" aria-label="Non-domestic gas and electricity layer">
+						<option value="combined" selected>Combined Emissions (per meter)</option>
+						<option value="gas">Gas Emissions (per meter)</option>
+						<option value="elec">Electricity Emissions (per meter)</option>
+						<option value="combined_total">Combined Emissions (area total)</option>
+						<option value="gas_total">Gas Emissions (area total)</option>
+						<option value="elec_total">Electricity Emissions (area total)</option>
+					</select>
+					<button aria-label="Help Non-domestic Gas &amp; Electric" class="helpbutton" data-help="retrofit-nondomestic"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+				</p>
+				<div id="nondomesticlegend" class="legendContextual">
+					<div class="l_rHorizontal">
+						<div class="lb"><span style="background-color: #ffffff"></span>&nbsp;</div>
+					</div>
+				</div>
+				
+			
+			</div>
+			
 			<button class="accordion">Domestic Properties</button>
 			<div class="panel">
 				<p><label><input type="checkbox" class="showlayer" data-layer="epc_dom" value="false">Show layer</label></p>
@@ -503,6 +526,140 @@
 			</div>
 		</div>
 		
+		<!-- Modal Non-domestic Gas & Electric-->
+		<div class="modal" id="nondomestic-chartsmodal" style="display: none;">
+			<div class="modal-header">
+				<span class="modal-close">&times;</span>
+				<button class="print-button" aria-label="Print this modal" title="Print this page">Print</button>
+				<h2 class="modal-title">Non-domestic Energy Summary: XXXXX</h2>
+			</div>
+			<div class="modal-body">
+
+			  This page provides a summary of the non-domestic <a href="https://www.gov.uk/government/collections/sub-national-gas-consumption-data" target="_blank" rel="noopener noreferrer">gas</a> and <a href="https://www.gov.uk/government/collections/sub-national-electricity-consumption-data" target="_blank" rel="noopener noreferrer">electricity</a> consumption data published by the Department for Energy Security and Net Zero (DESNZ), for the Middle Layer Super Output Area (or Scottish Intermediate Zone) containing this point. These areas are around five times larger than the neighbourhoods used elsewhere in this tool, because that is the smallest geography the non-domestic figures are published for.
+
+			  <div class="chart-wrapper" id="emissionsND-chartrow" style="display: block;">
+					<div class="chart-text">
+					  <h4 class="chart-title">Historical non-domestic gas and electricity emissions</h4>
+					  <div class="chart-description-tabs">
+							<div class="chart-description-tab-buttons">
+								<button onclick="switchChartTab(event, 'descTab-emissionsND-chartrow-overview')" class="chart-tab-btn active"><i class="fa fa-binoculars" aria-hidden="true"></i> Overview</button>
+								<button onclick="switchChartTab(event, 'descTab-emissionsND-chartrow-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
+								<button onclick="switchChartTab(event, 'descTab-emissionsND-chartrow-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
+							</div>
+							<div id="descTab-emissionsND-chartrow-overview" class="chart-description-tab-content active"><p>This chart shows the annual carbon emissions from gas and electricity used by non-domestic buildings in this area: shops, offices, factories, schools, hospitals, and everything else that is not a home. Use the drop-down menu to select total, median, or mean emissions. The electricity figures cover non-half-hourly meters only, which is all DESNZ publishes at this geography; the much larger half-hourly supplies are shown further down for the whole local authority.</p></div>
+							<div id="descTab-emissionsND-chartrow-policy" class="chart-description-tab-content"><p>Non-domestic buildings are a different retrofit problem to homes. The occupier often does not own the building, which splits the incentive to invest between landlord and tenant, and the building stock is far more varied, so there is no equivalent of the standard cavity-wall or loft measure. The main levers in England and Wales are the <a href="https://www.gov.uk/guidance/non-domestic-private-rented-property-minimum-energy-efficiency-standard-landlord-guidance" target="_blank" rel="noopener">minimum energy efficiency standards</a> for non-domestic rented property and, for larger organisations, the <a href="https://www.gov.uk/guidance/energy-savings-opportunity-scheme-esos" target="_blank" rel="noopener">Energy Savings Opportunity Scheme</a>. An area with high non-domestic emissions and low domestic emissions needs a commercial programme, not a household one.</p></div>
+							<div id="descTab-emissionsND-chartrow-methods" class="chart-description-tab-content"><p>Emissions are estimated by multiplying metered consumption by the national emissions factor for each year. Electricity factors fall as the grid decarbonises, so identical consumption produces lower emissions in later years. Source: the sub-national <a href="https://www.gov.uk/government/collections/sub-national-gas-consumption-data" target="_blank" rel="noopener">gas</a> and <a href="https://www.gov.uk/government/collections/sub-national-electricity-consumption-data" target="_blank" rel="noopener">electricity</a> statistics from DESNZ. The series starts in 2015 because earlier years are published on the 2011 boundaries, which cannot be converted to today's areas without inventing a split. Because they come from meter readings these are among the most reliable figures in Carbon &amp; Place, subject to the caveats that apply to every energy chart: totals are not weather-corrected, areas with few meters are suppressed, and unmetered fuels such as oil and solid fuel are absent altogether. See the <a href="/manual/#energyconsumption" class="opentool">manual</a>.</p></div>
+						</div>
+					  <p>Chart type:
+      				<select id="select_emissionsND" name="select_emissionsND" onchange="makeChartNondomestic()">
+                  <option value="median" selected>Median</option>
+                  <option value="mean">Mean</option>
+                  <option value="total">Total</option>
+              </select></p>
+					</div>
+					<div class="chart-container">
+						<canvas id="emissionsND-chart"></canvas>
+					</div>
+				</div>
+
+
+  			<div class="chart-wrapper" id="gasND-chartrow" style="display: block;">
+					<div class="chart-text">
+					  <h4 class="chart-title">Historical non-domestic gas consumption</h4>
+					  <div class="chart-description-tabs">
+							<div class="chart-description-tab-buttons">
+								<button onclick="switchChartTab(event, 'descTab-gasND-chartrow-overview')" class="chart-tab-btn active"><i class="fa fa-binoculars" aria-hidden="true"></i> Overview</button>
+								<button onclick="switchChartTab(event, 'descTab-gasND-chartrow-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
+								<button onclick="switchChartTab(event, 'descTab-gasND-chartrow-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
+							</div>
+							<div id="descTab-gasND-chartrow-overview" class="chart-description-tab-content active"><p>This chart shows the annual gas consumption of non-domestic buildings in this area, in kilowatt hours. Use the drop-down menu to select total, median, or mean consumption. Non-domestic gas meters vary enormously in size, from a corner shop to a factory, so the median is usually a better guide to the typical building here than the mean.</p></div>
+							<div id="descTab-gasND-chartrow-policy" class="chart-description-tab-content"><p>Non-domestic gas is burned for space heating, hot water, catering, and industrial process heat, and these need different answers: heat pumps and heat networks can cover the first two, while high-temperature process heat is one of the harder parts of the economy to decarbonise. Heat network zoning under the <a href="https://www.gov.uk/government/publications/heat-and-buildings-strategy" target="_blank" rel="noopener">Heat and Buildings Strategy</a> is most often viable where non-domestic heat demand is dense, which is what the total view of this chart shows.</p></div>
+							<div id="descTab-gasND-chartrow-methods" class="chart-description-tab-content"><p>Figures cover mains gas meters classified as non-domestic; buildings heated by oil, LPG, electricity, or a communal system do not appear. Areas with too few non-domestic gas meters are suppressed by DESNZ to protect commercial confidentiality, and show as gaps rather than zeroes. Source: the sub-national <a href="https://www.gov.uk/government/collections/sub-national-gas-consumption-data" target="_blank" rel="noopener">gas</a> statistics from DESNZ. See the <a href="/manual/#energyconsumption" class="opentool">manual</a>.</p></div>
+						</div>
+
+					  <p>Chart type: <select id="select_gasND" name="select_gasND" onchange="makeChartNondomestic()">
+            <option value="median" selected>Median</option>
+            <option value="mean">Mean</option>
+            <option value="total">Total</option>
+            </select></p>
+					</div>
+					<div class="chart-container">
+						<canvas id="gasND-chart"></canvas>
+					</div>
+				</div>
+
+
+				<div class="chart-wrapper" id="electricityND-chartrow" style="display: block;">
+					<div class="chart-text">
+					  <h4 class="chart-title">Historical non-domestic electricity consumption</h4>
+					  <div class="chart-description-tabs">
+							<div class="chart-description-tab-buttons">
+								<button onclick="switchChartTab(event, 'descTab-electricityND-chartrow-overview')" class="chart-tab-btn active"><i class="fa fa-binoculars" aria-hidden="true"></i> Overview</button>
+								<button onclick="switchChartTab(event, 'descTab-electricityND-chartrow-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
+								<button onclick="switchChartTab(event, 'descTab-electricityND-chartrow-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
+							</div>
+							<div id="descTab-electricityND-chartrow-overview" class="chart-description-tab-content active"><p>This chart shows the annual electricity consumption of non-domestic buildings in this area, in kilowatt hours, for non-half-hourly meters. These are the smaller commercial supplies: shops, offices, small workshops, and similar. Large sites are metered half-hourly and are not published for areas this small; the chart below shows those for the whole local authority instead.</p></div>
+							<div id="descTab-electricityND-chartrow-policy" class="chart-description-tab-content"><p>Commercial electricity demand is where lighting, refrigeration, and ventilation upgrades pay back fastest, and it is rising as heating and vehicle fleets electrify. Rising local demand also has network consequences: distribution network operators plan reinforcement on forecasts of heat pump and electric vehicle uptake, and commercial premises are often the largest single connections on a local network.</p></div>
+							<div id="descTab-electricityND-chartrow-methods" class="chart-description-tab-content"><p>Non-half-hourly meters are read periodically rather than continuously, and are the only non-domestic electricity DESNZ publishes at this geography. Treating this as the area's whole non-domestic electricity use would understate it substantially. Source: the sub-national <a href="https://www.gov.uk/government/collections/sub-national-electricity-consumption-data" target="_blank" rel="noopener">electricity</a> statistics from DESNZ. See the <a href="/manual/#energyconsumption" class="opentool">manual</a>.</p></div>
+						</div>
+
+					  <p>Chart type: <select id="select_electricityND" name="select_electricityND" onchange="makeChartNondomestic()">
+            <option value="median" selected>Median</option>
+            <option value="mean">Mean</option>
+            <option value="total">Total</option>
+            </select></p>
+					</div>
+
+					<div class="chart-container">
+						<canvas id="electricityND-chart"></canvas>
+					</div>
+				</div>
+
+				<div class="chart-wrapper" id="electricityHHND-chartrow" style="display: block;">
+					<div class="chart-text">
+					  <h4 class="chart-title">Half-hourly electricity, whole local authority</h4>
+					  <div class="chart-description-tabs">
+							<div class="chart-description-tab-buttons">
+								<button onclick="switchChartTab(event, 'descTab-electricityHHND-chartrow-overview')" class="chart-tab-btn active"><i class="fa fa-binoculars" aria-hidden="true"></i> Overview</button>
+								<button onclick="switchChartTab(event, 'descTab-electricityHHND-chartrow-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
+								<button onclick="switchChartTab(event, 'descTab-electricityHHND-chartrow-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
+							</div>
+							<div id="descTab-electricityHHND-chartrow-overview" class="chart-description-tab-content active"><p><strong>This chart is for the whole local authority, not this area.</strong> Half-hourly meters serve the largest electricity users: factories, hospitals, large retail, and data centres. Together they typically use several times as much electricity as all the non-half-hourly meters combined, so they matter a great deal to the total picture. DESNZ only publishes them per local authority, so they cannot be attributed to an area this small, and the figures here are repeated for every area in the same authority.</p></div>
+							<div id="descTab-electricityHHND-chartrow-policy" class="chart-description-tab-content"><p>A handful of half-hourly sites can dominate an authority's non-domestic emissions, which is why area-wide carbon targets often turn on the plans of a few large operators rather than on the broad building stock. Those sites are also the ones with the most to gain from flexibility and on-site generation, since they are already settled half-hourly and exposed to time-varying network and wholesale costs.</p></div>
+							<div id="descTab-electricityHHND-chartrow-methods" class="chart-description-tab-content"><p>These are the local authority totals from the DESNZ non-domestic electricity tables, carried onto every area in the authority so they can be seen alongside the local figures. They must not be added up across areas, and they are not included in the emissions chart at the top of this page or in the map grades. Source: the sub-national <a href="https://www.gov.uk/government/collections/sub-national-electricity-consumption-data" target="_blank" rel="noopener">electricity</a> statistics from DESNZ. See the <a href="/manual/#energyconsumption" class="opentool">manual</a>.</p></div>
+						</div>
+					</div>
+
+					<div class="chart-container">
+						<canvas id="electricityHHND-chart"></canvas>
+					</div>
+				</div>
+
+				<div class="chart-wrapper" id="metersND-chartrow" style="display: block;">
+					<div class="chart-text">
+					  <h4 class="chart-title">Historical non-domestic gas and electricity meters</h4>
+					  <div class="chart-description-tabs">
+							<div class="chart-description-tab-buttons">
+								<button onclick="switchChartTab(event, 'descTab-metersND-chartrow-overview')" class="chart-tab-btn active"><i class="fa fa-binoculars" aria-hidden="true"></i> Overview</button>
+								<button onclick="switchChartTab(event, 'descTab-metersND-chartrow-policy')" class="chart-tab-btn"><i class="fa fa-building-columns" aria-hidden="true"></i> Policy</button>
+								<button onclick="switchChartTab(event, 'descTab-metersND-chartrow-methods')" class="chart-tab-btn"><i class="fa fa-flask" aria-hidden="true"></i> Methods</button>
+							</div>
+							<div id="descTab-metersND-chartrow-overview" class="chart-description-tab-content active"><p>This chart shows the number of non-domestic gas and non-half-hourly electricity meters in this area. A gap between the two indicates premises with no gas supply, and a change over time usually means commercial development, conversion to housing, or closure.</p></div>
+							<div id="descTab-metersND-chartrow-policy" class="chart-description-tab-content"><p>Meter counts are a rough measure of how many premises a commercial retrofit or heat network programme would have to reach, and of how concentrated the demand is. A few large meters and a dense cluster of small ones call for very different delivery approaches.</p></div>
+							<div id="descTab-metersND-chartrow-methods" class="chart-description-tab-content"><p>Meters do not map one-to-one to premises or businesses: a single building can hold several meters, and one meter can serve a whole parade of units. Meter counts are suppressed in areas with very few, so a missing bar is not a zero.</p></div>
+						</div>
+					</div>
+
+					<div class="chart-container">
+						<canvas id="metersND-chart"></canvas>
+					</div>
+				</div>
+
+
+
+			</div>
+		</div>
+
 		<!-- Modal LSOA-->
 		<div class="modal" id="zones-chartsmodal" style="display: none;">
 			<div class="modal-header">
