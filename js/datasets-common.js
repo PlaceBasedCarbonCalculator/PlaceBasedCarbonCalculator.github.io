@@ -1,5 +1,20 @@
 // Data definitions, i.e. layers, charts, etc.
 // Common Datasets used on all maps
+
+// Single-binary datasets used by every map tool (see js/databin.js), as opposed
+// to the per-tool ones registered in each tool's own datasets.js.
+//
+// lsoa_overview lives here because capUi.manageLSOAOverview() in js/ui-common.js
+// reads it for the report modal title, classification colour and data warnings
+// on every tool with a "zones" layer - not just PBCC. It replaces the old
+// pbcc-data/lsoa_overview/v1/ JSON folder, and unlike that folder it carries the
+// ward/parish/constituency ONS codes the report links need.
+if (typeof capBin !== 'undefined') {
+	capBin.register({
+		lsoa_overview: 'index_lsoa_overview_2026-09-02.json.gz'
+	});
+}
+
 const datasets_common = {
 	
 	// Data layers
@@ -11,7 +26,7 @@ const datasets_common = {
 			'type': 'line',
 			'source': {
 				'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/wards.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/wards_20260728.pmtiles',
 			},
 			'source-layer': 'wards',
 			'paint': {
@@ -25,7 +40,7 @@ const datasets_common = {
 			'type': 'line',
 			'source': {
 				'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/la.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/la_20260728.pmtiles',
 			},
 			'source-layer': 'la',
 			'paint': {
@@ -39,7 +54,7 @@ const datasets_common = {
 			'type': 'line',
 			'source': {
 				'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/parish.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/parish_20260728.pmtiles',
 			},
 			'source-layer': 'parish',
 			'paint': {
@@ -53,7 +68,7 @@ const datasets_common = {
 			'type': 'line',
 			'source': {
 				'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/westminster.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/westminster_20260728.pmtiles',
 			},
 			'source-layer': 'westminster',
 			'paint': {
@@ -64,6 +79,17 @@ const datasets_common = {
 		
 		
 	},
+	// Name-label properties for the administrative boundary layers. Each entry
+	// creates a companion '<layerId>-labels' symbol layer whose visibility is
+	// controlled by an optional checkbox: <input class="showlabels" data-layer="...">
+	// (labels only show while the boundary layer itself is visible).
+	boundaryLabels: {
+		wards: 'WD25NM',
+		la: 'LAD25NM',
+		parish: 'PAR23NM',
+		westminster: 'PCON24NM'
+	},
+
 	// Layer styling callbacks functions, each defined below
 	layerStyling: {
 	},

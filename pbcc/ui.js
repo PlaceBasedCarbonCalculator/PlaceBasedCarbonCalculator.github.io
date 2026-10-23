@@ -36,8 +36,6 @@ var plefTransformChart;
 var populationChart;
 
 var locationData = {};
-var voa2020LocationData = {};
-var voa2010LocationData = {};
 var communityPicLocationData = {};
 var populationLocationData = {};
 var lsoaOverviewData = {};
@@ -45,35 +43,82 @@ var laHistoricalData = {};
 var oacHistoricalData = {};
 var gbHistoricalData = {};
 
-var dwellingsctChart;
-var dwellingstypeChart;
-var dwellingsbedroomsChart;
-var dwellingsageChart;
+
+// Draws the CCC target line on top of a chart without creating a legend entry.
+// Defined at file level so both the historical chart and the rebuildable
+// overview comparison chart can share it.
+const thresholdLinePlugin = {
+	id: 'thresholdLinePlugin',
+	afterDatasetsDraw(chart, args, options) {
+		const pluginOpts = (chart.options && chart.options.plugins && chart.options.plugins.thresholdLinePlugin) || options || {};
+		const value = pluginOpts.value;
+		if (typeof value !== 'number') return;
+		const ctx = chart.ctx;
+		const yScale = chart.scales['y'];
+		if (!yScale) return;
+		const y = yScale.getPixelForValue(value);
+		ctx.save();
+		ctx.strokeStyle = pluginOpts.color || 'black';
+		ctx.lineWidth = pluginOpts.width || 2;
+		if (Array.isArray(pluginOpts.dash) && pluginOpts.dash.length) ctx.setLineDash(pluginOpts.dash);
+		ctx.beginPath();
+		ctx.moveTo(chart.chartArea.left, y);
+		ctx.lineTo(chart.chartArea.right, y);
+		ctx.stroke();
+		ctx.restore();
+	}
+};
+
+// Simplified grouping for the overview comparison chart. Member names must
+// match the labels in makeChartHistorical's component array ('Goods &
+// Services' is excluded there as it duplicates the consumption categories).
+// Colours are a colourblind-safe trio checked against white.
+const OVERVIEW_SIMPLIFIED_GROUPS = [
+	{
+		label: 'Housing',
+		colour: '#2456d6',
+		members: ['Gas', 'Electricity', 'Other Heating', 'Other Housing']
+	},
+	{
+		label: 'Transport',
+		colour: '#0f6b28',
+		members: ['Cars', 'Vans', 'Bikes & Company Vehicles', 'Vehicle Purchase', 'Vehicle Maintenance', 'Public Transport', 'Flights']
+	},
+	{
+		label: 'Consumption',
+		colour: '#cf8f0e',
+		members: ['Furnishings', 'Food & Drink', 'Alcohol & Tobacco', 'Clothing', 'Communications', 'Recreation', 'Restaurants & Hotels', 'Health', 'Education', 'Miscellaneous']
+	}
+];
+
+// Latest per-category comparison data (This Area / LA / Similar / GB), stored
+// so the overview chart can be rebuilt when the simplified toggle changes
+var _overviewComparison = null;
 
 manageCharts = function (locationId) {
 	console.log('Managing Charts');
 
-	// Primary chained requests that feed multiple charts
-	const urlsPrimary = [
-		'https://pbcc.blob.core.windows.net/pbcc-data/historical_emissions/v2/' + locationId + '.json',
-		'https://pbcc.blob.core.windows.net/pbcc-data/population/' + locationId + '.json',
-		'https://pbcc.blob.core.windows.net/pbcc-data/lsoa_overview/v1/' + locationId + '.json',
-		'https://pbcc.blob.core.windows.net/pbcc-data/la_emissions/v2/GB.json'
-	];
-
-	const primary = Promise.all(urlsPrimary.map(capUi.fetchJSON))
+	// Primary chained requests that feed multiple charts. Every source now comes
+	// from its bin (single binary + range request) rather than one JSON file per
+	// zone. The GB comparison row lives in the la_emissions bin under the ID
+	// 'GB' (added by make_la_summary() in build/R/la_summaries.R), so it is a
+	// range request into the same binary as the per-LAD figures.
+	const primary = Promise.all([
+		capBin.fetchRecord('historical_emission', locationId),
+		capBin.fetchRecord('population', locationId),
+		capBin.fetchRecord('lsoa_overview', locationId),
+		capBin.fetchRecord('la_emissions', 'GB')
+	])
 		.then(([historicalData, populationData, overviewArr, GBData]) => {
 			locationData = historicalData;
 			populationLocationData = populationData;
 			lsoaOverviewData = overviewArr[0];
 			gbHistoricalData = GBData;
 
-			const urlsSecondary = [
-				'https://pbcc.blob.core.windows.net/pbcc-data/oac_emissions/v2/' + lsoaOverviewData.lsoa_class_code + '.json',
-				'https://pbcc.blob.core.windows.net/pbcc-data/la_emissions/v2/' + lsoaOverviewData.LAD25CD + '.json'
-			];
-
-			return Promise.all(urlsSecondary.map(capUi.fetchJSON))
+			return Promise.all([
+				capBin.fetchRecord('oac_emissions', lsoaOverviewData.lsoa_class_code),
+				capBin.fetchRecord('la_emissions', lsoaOverviewData.LAD25CD)
+			])
 				.then(([oacData, laData]) => {
 					laHistoricalData = laData;
 					oacHistoricalData = oacData;
@@ -91,20 +136,18 @@ manageCharts = function (locationId) {
 		});
 
 	// Independent fetches
-	/* Will be moved to retrofit tool
-	const pVOA2010 = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/voa_2010/' + locationId + '.json')
-		.then(data => { voa2010LocationData = data; makeChartVOA2010(); })
-		.catch(err => { console.error('VOA2010 failed:', err); });
-
-	const pVOA2020 = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/voa_2020/' + locationId + '.json')
-		.then(data => { voa2020LocationData = data; makeChartVOA2020(); })
-		.catch(err => { console.error('VOA2020 failed:', err); });
-	*/
-	const pCommunity = capUi.fetchJSON('https://pbcc.blob.core.windows.net/pbcc-data/community_photo/v1/' + locationId + '.json')
+	// Community "family photo" data now comes from the community_pics bin
+	// (single binary + range request) instead of one JSON file per zone.
+	//
+	// The two VOA dwelling-stock charts used to live here. They describe the
+	// building stock rather than emissions, so they now belong to the retrofit
+	// tool (retrofit/ui.js, "Dwelling stock charts") and read from the
+	// voa_2010 / voa_2020 bins.
+	const pCommunity = capBin.fetchRecord('community_pics', locationId)
 		.then(data => { communityPicLocationData = data; makeCommunityPic(); })
 		.catch(err => { console.error('Community photo failed:', err); });
 
-    return Promise.all([primary,  pCommunity]); //pVOA2010, pVOA2020,
+    return Promise.all([primary,  pCommunity]);
 };
 
 makeCommunityPic = function(){
@@ -122,84 +165,6 @@ makeCommunityPic = function(){
   });
 }
 
-
-makeChartOverview = function(){
-  
-  // overview Chart
-  // Destroy old chart
-	if(overviewChart){
-		overviewChart.destroy();
-	}
-	
-	
-  // Create an object to store data for each category
-  
-  var component = [
-		    // Label, field (e.g. Gas => dgkp2020), background colour, border colour
-				['Gas', 'dgkp', 'rgba(166,206,227, 0.8)', 'rgba(166,206,227, 1)'],
-				['Electricity', 'dekp', 'rgba(31,120,180, 0.8)', 'rgba(31,120,180, 1)'],
-				['Other Heating', 'hokp', 'rgba(202,178,214, 0.8)', 'rgba(202,178,214, 1)'],
-				['Other Housing', 'Bhokp', 'rgba(51,160,44, 0.8)', 'rgba(51,160,44, 1)'],
-				['Cars', 'cep', 'rgba(251,154,153, 0.8)', 'rgba(251,154,153, 1)'],
-				['Vans', 'vep', 'rgba(227,26,28, 0.8)', 'rgba(227,26,28, 1)'],
-				['Bikes and Company Cars', 'cbep', 'rgba(227,26,28, 0.8)', 'rgba(227,26,28, 1)'],
-				['Flights', 'Cfkp', 'rgba(255,127,0, 0.8)', 'rgba(255,127,0, 1)'],
-				['Food & Drink', 'nep', 'rgba(202,178,214, 0.8)', 'rgba(202,178,214, 1)'],
-				['Alchohol & Tobacco', 'akp', 'rgba(202,178,214, 0.8)', 'rgba(202,178,214, 1)'],
-				['Clothing', 'ckp', 'rgba(106,61,154, 0.8)', 'rgba(106,61,154, 1)'],
-				['Communication', 'Bckp', 'rgba(106,61,154, 0.8)', 'rgba(106,61,154, 1)'],
-				['Furnishing', 'Bfkp', 'rgba(106,61,154, 0.8)', 'rgba(106,61,154, 1)'],
-				['Recreation', 'rkp', 'rgba(255,255,153, 0.8)', 'rgba(255,255,153, 1)'],
-				['Health', 'hkp', 'rgba(255,255,153, 0.8)', 'rgba(255,255,153, 1)'],
-				['Education', 'ekp', 'rgba(255,255,153, 0.8)', 'rgba(255,255,153, 1)'],
-				['Restaurant & Hotels', 'Brkp', 'rgba(177,89,40, 0.8)', 'rgba(177,89,40, 1)'],
-				['Miscellaneous', 'Brkp', 'rgba(177,89,40, 0.8)', 'rgba(177,89,40, 1)'],
-		  ]
-  
-  var years =  ['2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020']
-  // Assemble the datasets to be shown
-  
-	const data = {datasets: []};
-
-	component.forEach(comp => {
-		data.datasets.push({
-			label: comp[0],
-			data: years.map(year => locationData[comp[1] + year]),
-			backgroundColor: comp[2],
-			borderColor: comp[3],
-			borderWidth: 1
-		});
-	});
-
-  data.labels = years;
-  
-  var overviewctx = document.getElementById('overview-chart').getContext('2d');
-	consumptionFoodChart = new Chart(overviewctx, {
-    type: 'bar',
-					data: data,
-					options: {
-						scales: {
-							y: {
-								stacked: true,
-								title: {
-									display: true,
-									text: 'kgCO₂e per person'
-								},
-								ticks: {
-									beginAtZero: true,
-								}
-							},
-							x: {
-								stacked: true
-							},
-						},
-						responsive: true,
-						maintainAspectRatio: false
-					}
-  });
-  
-  
-}
 
 
 makeChartHistorical = function(){
@@ -427,18 +392,30 @@ makeChartHistorical = function(){
   //console.log(combinedData);
 
   // Make Overview table
-  // Find the index of the label '2019' in data.labels
-  const yearIndex = data.labels.indexOf(2019);
+  // Use the latest available year for the headline grade/figure, derived from
+  // the data so it tracks the extended 2010-2022 timeseries automatically
+  // (previously hard-coded to 2019).
+  const yearIndex = data.labels.length - 1;
 
   // Headline Grade
-  // Set grade image and alt text
-  const Totalgrade = locationData['total_grade'][yearIndex];
+  // Set grade image and alt text. Grades are relative to other areas of the
+  // same type, so not every feed carries them (the GB row in la_emissions is
+  // ungraded, for one). Only show the badge when a grade exists - otherwise
+  // gradelabel[yearIndex] would be read off undefined and throw, aborting the
+  // whole chart build.
+  const Totalgrade = (locationData['total_grade'] || [])[yearIndex];
   const TotalgradeImg = document.getElementById('data_total_emissions_grade');
-  TotalgradeImg.src = `/images/grades/${Totalgrade}.webp`;
-  TotalgradeImg.alt = `Grade ${Totalgrade}`;
-  document.getElementById("data_total_emissions_percap").innerHTML = 
-    locationData['total_kgco2e_percap'][yearIndex] + 
-    ' kgCO<sub>2</sub>e per person per year in ' + 
+  if (TotalgradeImg) {
+    if (Totalgrade) {
+      TotalgradeImg.src = `/images/grades/${Totalgrade}.webp`;
+      TotalgradeImg.alt = `Grade ${Totalgrade}`;
+    } else {
+      TotalgradeImg.style.display = 'none';
+    }
+  }
+  document.getElementById("data_total_emissions_percap").innerHTML =
+    (locationData['total_kgco2e_percap'] || [])[yearIndex] +
+    ' kgCO<sub>2</sub>e per person per year in ' +
     data.labels[yearIndex];
   
   //console.log(locationData['total_grade'][yearIndex]);
@@ -450,42 +427,29 @@ makeChartHistorical = function(){
     const [label, field, , , gradeField, valueId, gradeId] = comp;
     const dataset = data.datasets.find(ds => ds.label === label);
     if (!dataset) return;
-    // Set household emissions value
-    document.getElementById(valueId).innerHTML = dataset.data[yearIndex];
-  
-    // Set grade image and alt text
-    const grade = dataset.gradelabel[yearIndex];
+    // Set the per-person emissions value. A null means the pipeline suppressed
+    // this component for this zone-year - company vehicles in a neighbourhood
+    // where a fleet is registered at one address, for instance. Those are left
+    // out of the total and out of the chart, so print NA rather than "null".
+    const value = (dataset.data || [])[yearIndex];
+    document.getElementById(valueId).innerHTML =
+      (value === null || value === undefined ? 'NA' : value);
+
+    // Set grade image and alt text (only if this feed carries grades)
+    const grade = (dataset.gradelabel || [])[yearIndex];
     const gradeImg = document.getElementById(gradeId);
-    gradeImg.src = `/images/grades/${grade}.webp`;
-    gradeImg.alt = `Grade ${grade}`;
+    if (!gradeImg) return;
+    if (grade) {
+      gradeImg.src = `/images/grades/${grade}.webp`;
+      gradeImg.alt = `Grade ${grade}`;
+    } else {
+      gradeImg.style.display = 'none';
+    }
   });
 
-		// We draw the horizontal threshold line via a plugin so it always appears on top
-		// and does not create a legend entry. (No dataset is pushed here.)
-		//console.log(data.datasets);
-
-		// Define the threshold plugin here so we can attach it to the historical chart as well.
-		const thresholdLinePlugin = {
-			id: 'thresholdLinePlugin',
-			afterDatasetsDraw(chart, args, options) {
-				const pluginOpts = (chart.options && chart.options.plugins && chart.options.plugins.thresholdLinePlugin) || options || {};
-				const value = pluginOpts.value;
-				if (typeof value !== 'number') return;
-				const ctx = chart.ctx;
-				const yScale = chart.scales['y'];
-				if (!yScale) return;
-				const y = yScale.getPixelForValue(value);
-				ctx.save();
-				ctx.strokeStyle = pluginOpts.color || 'black';
-				ctx.lineWidth = pluginOpts.width || 2;
-				if (Array.isArray(pluginOpts.dash) && pluginOpts.dash.length) ctx.setLineDash(pluginOpts.dash);
-				ctx.beginPath();
-				ctx.moveTo(chart.chartArea.left, y);
-				ctx.lineTo(chart.chartArea.right, y);
-				ctx.stroke();
-				ctx.restore();
-			}
-		};
+		// The CCC target line is drawn by the shared thresholdLinePlugin (defined
+		// at the top of this file) so it always appears on top and does not
+		// create a legend entry.
 
 	historicalChart = new Chart(document.getElementById('historical-chart').getContext('2d'), {
     type: 'bar',
@@ -535,10 +499,32 @@ makeChartHistorical = function(){
 		});
 		const data_overview = {datasets: []};
 
+		// All four sources are now bins covering the same 2010-2022 range, but
+		// they are rebuilt and deployed independently, so line them up on the
+		// year VALUE rather than assuming a shared index. If a source is ever
+		// redeployed one year behind the others, this leaves its bar out of the
+		// comparison instead of silently showing an older year's figure beside
+		// the current one (or reading past the end of the array for no bar).
+		// Sources absent altogether on area reports give -1 -> undefined, as
+		// before.
+		const latestYear = (locationData['year'] || [])[yearIndex];
+		const yearIndexIn = function (source) {
+			const i = (source['year'] || []).indexOf(latestYear);
+			return (i === -1 ? undefined : i);
+		};
+		const laYearIndex = yearIndexIn(laHistoricalData);
+		const oacYearIndex = yearIndexIn(oacHistoricalData);
+		const gbYearIndex = yearIndexIn(gbHistoricalData);
+
 		component.forEach(comp => {
 			data_overview.datasets.push({
 				label: comp[0],
-				data: [locationData[comp[1]][yearIndex], laHistoricalData[comp[1]][yearIndex], oacHistoricalData[comp[1]][yearIndex], gbHistoricalData[comp[1]][yearIndex]],
+				// Guard each source: the report cards reuse this code for area
+				// levels (la/ward/parish/constituency) that have no LA/"Similar
+				// areas" comparison data, so those objects are empty. Without the
+				// || [] the missing field indexes undefined and throws, aborting
+				// the whole chart build (consumption, energy, etc.).
+				data: [(locationData[comp[1]] || [])[yearIndex], (laHistoricalData[comp[1]] || [])[laYearIndex], (oacHistoricalData[comp[1]] || [])[oacYearIndex], (gbHistoricalData[comp[1]] || [])[gbYearIndex]],
 				backgroundColor: comp[2],
 				borderColor: comp[3],
 				borderWidth: 1,
@@ -552,49 +538,10 @@ makeChartHistorical = function(){
 
 
 
-overviewChart = new Chart(document.getElementById('overview-chart').getContext('2d'), {
-    type: 'bar',
-		data: data_overview,
-		plugins: [thresholdLinePlugin],
-		options: {
-			scales: {
-				y: {
-					stacked: true,
-						title: {
-									display: true,
-									text: 'kgCO₂e per person'
-								},
-					ticks: {
-						beginAtZero: true,
-					}
-				},
-				x: {
-					stacked: true
-				},
-			},
-			plugins: {
-				// plugin options for thresholdLinePlugin
-				thresholdLinePlugin: {
-					value: 2849,
-					color: 'black',
-					width: 3,
-					dash: []
-				},
-				legend: {
-					position: 'right',
-					reverse: true,
-					labels: {
-						font: { size: 11 },
-						// Reduce spacing between legend items and tighten rows
-						padding: 4,
-						boxWidth: 10
-					}
-				}
-			},
-			responsive: true,
-			maintainAspectRatio: false
-		}
-  });
+	// Store the per-category comparison data, then build the overview chart in
+	// whichever mode the simplified-categories toggle is currently in
+	_overviewComparison = data_overview;
+	buildOverviewComparisonChart();
   
  
   var barChartOptions = {
@@ -769,466 +716,6 @@ overviewChart = new Chart(document.getElementById('overview-chart').getContext('
 
 }
 
-makeChartVOA2010 = function(){
-  
-  	// overview Chart
-  	// Destroy old chart
-	if(dwellingsctChart){
-		dwellingsctChart.destroy();
-	}
-  
-  	//console.log(voa2010LocationData);
- 
-	const years = voa2010LocationData['year'];	  
-	const bA = voa2010LocationData['banda'];
-  	const bB = voa2010LocationData['bandb'];
-  	const bC = voa2010LocationData['bandc'];
-  	const bD = voa2010LocationData['bandd'];
-  	const bE = voa2010LocationData['bande'];
-  	const bF = voa2010LocationData['bandf'];
-  	const bG = voa2010LocationData['bandg'];
-  	const bH = voa2010LocationData['bandh'];
-  	const bI = voa2010LocationData['bandi'];
-  
-  
-  var dwellingsctctx = document.getElementById('dwellingsct-chart').getContext('2d');
-	dwellingsctChart = new Chart(dwellingsctctx, {
-		type: 'bar',
-		data: {
-			labels: years,
-			datasets: [{
-				label: 'A',
-				data: bA,
-				backgroundColor: 'rgba(77,146,33, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-			{
-				label: 'B',
-				data: bB,
-				backgroundColor: 'rgba(127,188,65, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-			{
-				label: 'C',
-				data: bC,
-				backgroundColor: 'rgba(184,225,134, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-			{
-				label: 'D',
-				data: bD,
-				backgroundColor: 'rgba(230,245,208, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-			{
-				label: 'E',
-				data: bE,
-				backgroundColor: 'rgba(247,247,247, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-      {
-				label: 'F',
-				data: bF,
-				backgroundColor: 'rgba(253,224,239, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-      {
-				label: 'G',
-				data: bG,
-				backgroundColor: 'rgba(241,182,218, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-      {
-				label: 'H',
-				data: bH,
-				backgroundColor: 'rgba(222,119,174, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-      {
-				label: 'I',
-				data: bI,
-				backgroundColor: 'rgba(197,27,125, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-			]
-		},
-		options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-							y: {
-								stacked: true,
-								ticks: {
-									beginAtZero: true
-								}
-							},
-							x: {
-								stacked: true
-							}
-      },
-      plugins: {
-        legend: {
-          position: 'top',
-        }
-      }
-    }
-	});
-  
-  
-}
-
-
-makeChartVOA2020 = function(){
-  
-  // Destroy old chart
-	if(dwellingstypeChart){
-		dwellingstypeChart.destroy();
-	}
-	
-	if(dwellingsbedroomsChart){
-		dwellingsbedroomsChart.destroy();
-	}
-	
-	if(dwellingsageChart){
-		dwellingsageChart.destroy();
-	}
-  
-	const years = voa2020LocationData['year'];	  
-
-  var dwellingstypectx = document.getElementById('dwellingstype-chart').getContext('2d');
-	dwellingstypeChart = new Chart(dwellingstypectx, {
-		type: 'bar',
-		data: {
-			labels: years,
-			datasets: [{
-				label: 'Bungalow',
-				data: voa2020LocationData['bungalow'],
-				backgroundColor: 'rgba(105, 60, 153, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-			{
-				label: 'Flat/Maisonette',
-				data: voa2020LocationData['flatmais'],
-				backgroundColor: 'rgba(227, 26, 28, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-			{
-				label: 'Terraced',
-				data: voa2020LocationData['terraced'],
-				backgroundColor: 'rgba(17, 219, 13, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-			{
-				label: 'Semi-Detached',
-				data: voa2020LocationData['semi'],
-				backgroundColor: 'rgba(14, 156, 11, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-			{
-				label: 'Detached',
-				data: voa2020LocationData['detached'],
-				backgroundColor: 'rgba(8, 82, 7, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-      {
-				label: 'Annexe',
-				data: voa2020LocationData['annexe'],
-				backgroundColor: 'rgba(31, 120, 180, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-      {
-				label: 'Caravan/Boat/Mobile home',
-				data: voa2020LocationData['caravanboatmobilehome'],
-				backgroundColor: 'rgba(250, 124, 0, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-      {
-				label: 'Unknown',
-				data: voa2020LocationData['unknown'],
-				backgroundColor: 'rgba(135, 136, 138, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			}
-			]
-		},
-		options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-							y: {
-								stacked: true,
-								ticks: {
-									beginAtZero: true
-								}
-							},
-							x: {
-								stacked: true
-							}
-      },
-      plugins: {
-        legend: {
-          position: 'top',
-        }
-      }
-    }
-	});
-	
-	
-	var dwellingsbedroomsctx = document.getElementById('dwellingsbedrooms-chart').getContext('2d');
-	dwellingsbedroomsChart = new Chart(dwellingsbedroomsctx, {
-		type: 'bar',
-		data: {
-			labels: years,
-			datasets: [{
-				label: '1',
-				data: voa2020LocationData['bed1'],
-				backgroundColor: 'rgba(204,235,197, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-			{
-				label: '2',
-				data: voa2020LocationData['bed2'],
-				backgroundColor: 'rgba(168,221,181, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-			{
-				label: '3',
-				data: voa2020LocationData['bed3'],
-				backgroundColor: 'rgba(123,204,196, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-			{
-				label: '4',
-				data: voa2020LocationData['bed4'],
-				backgroundColor: 'rgba(78,179,211, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-			{
-				label: '5',
-				data: voa2020LocationData['bed5'],
-				backgroundColor: 'rgba(43,140,190, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-      {
-				label: '6+',
-				data: voa2020LocationData['bed6'],
-				backgroundColor: 'rgba(8,88,158, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			}
-			]
-		},
-		options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-							y: {
-								stacked: true,
-								ticks: {
-									beginAtZero: true
-								}
-							},
-							x: {
-								stacked: true
-							}
-      },
-      plugins: {
-        legend: {
-          position: 'top',
-        }
-      }
-    }
-	});
-	
-	
-	var dwellingsagectx = document.getElementById('dwellingsage-chart').getContext('2d');
-	dwellingsageChart = new Chart(dwellingsagectx, {
-		type: 'bar',
-		data: {
-			labels: years,
-			datasets: [{
-				label: 'pre 1900',
-				data: voa2020LocationData['bppre1900'],
-				backgroundColor: 'rgba(158, 1, 66, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-			{
-				label: '1900-18',
-				data: voa2020LocationData['bp19001918'],
-				backgroundColor: 'rgba(213, 62, 79, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-			{
-				label: '1919-29',
-				data: voa2020LocationData['bp19191929'],
-				backgroundColor: 'rgba(244, 109, 67, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-			{
-				label: '1930-39',
-				data: voa2020LocationData['bp19301939'],
-				backgroundColor: 'rgba(244, 109, 67, 0.8)',
-				borderColor: 'rgba(253, 174, 97)',
-				borderWidth: 1,
-				order: 1
-			},
-			{
-				label: '1945-54',
-				data: voa2020LocationData['bp19451954'],
-				backgroundColor: 'rgba(254,224,139, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-      {
-				label: '1955-64',
-				data: voa2020LocationData['bp19551964'],
-				backgroundColor: 'rgba(255,255,191, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-      {
-				label: '1965-72',
-				data: voa2020LocationData['bp19651972'],
-				backgroundColor: 'rgba(230,245,152, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-      {
-				label: '1973-82',
-				data: voa2020LocationData['bp19731982'],
-				backgroundColor: 'rgba(171,221,164, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-      {
-				label: '1983-92',
-				data: voa2020LocationData['bp19831992'],
-				backgroundColor: 'rgba(102,194,165, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},			
-      {
-				label: '1993-99',
-				data: voa2020LocationData['bp19931999'],
-				backgroundColor: 'rgba(50,136,189, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},			
-      {
-				label: '2000-08',
-				data: voa2020LocationData['bp20002008'],
-				backgroundColor: 'rgba(94,79,162, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},			
-      {
-				label: '2009-21',
-				data: voa2020LocationData['bp20092021'],
-				backgroundColor: 'rgba(144, 77, 159, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},			
-      {
-				label: '2022-24',
-				data: voa2020LocationData['bp20222024'],
-				backgroundColor: 'rgba(217, 22, 74, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			},
-      {
-				label: 'Unknown',
-				data: voa2020LocationData['bpunkw'],
-				backgroundColor: 'rgba(135, 136, 138, 0.8)',
-				borderColor: 'rgb(0,0,0)',
-				borderWidth: 1,
-				order: 1
-			}	
-			]
-		},
-		options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-							y: {
-								stacked: true,
-								ticks: {
-									beginAtZero: true
-								}
-							},
-							x: {
-								stacked: true
-							}
-      },
-      plugins: {
-        legend: {
-          position: 'top',
-        }
-      }
-    }
-	});
-  
-  
-}
-
 
 makeChartPopulation = function(){
   
@@ -1239,31 +726,35 @@ makeChartPopulation = function(){
 
   // Create an object to store data for each category
   var component = [
-		    // Label, field (e.g. Gas => dgkp2020), background colour, border colour
-				['0-4'  , 'a'  , 'rgb(255, 0, 0)', 'rgb(0,0,0)'],
-				['5-9'  , 'Ba' , 'rgb(255, 64, 0)'   , 'rgb(0,0,0)'],
-				['10-14', 'Ca' , 'rgb(255, 128, 0)'     , 'rgb(0,0,0)'],
-				['15-19', 'Da' , 'rgb(255, 192, 0)'    , 'rgb(0,0,0)'],
-				['20-24', 'Ea' , 'rgb(255, 255, 0)'  , 'rgb(0,0,0)'],
-				['25-29', 'Fa' , 'rgb(192, 255, 0)', 'rgb(0,0,0)'],
-				['30-34', 'Ga' , 'rgb(128, 255, 0)', 'rgb(0,0,0)'],
-				['35-39', 'Ha' , 'rgb(64, 255, 0)'   , 'rgb(0,0,0)'],
-				['40-44', 'Ia' , 'rgb(0, 255, 0)'  , 'rgb(0,0,0)'],
-				['45-49', 'Ja' , 'rgb(0, 255, 64)', 'rgb(0,0,0)'],
-				['50-54', 'Ka' , 'rgb(0, 255, 128)' , 'rgb(0,0,0)'],
-				['55-59', 'La' , 'rgb(0, 255, 192)'  , 'rgb(0,0,0)'],
-				['60-64', 'Ma' , 'rgb(0, 255, 255)'  , 'rgb(0,0,0)'],
-				['65-69', 'Na' , 'rgb(0, 192, 255)'     , 'rgb(0,0,0)'],
-				['70-74', 'Oa' , 'rgb(0, 128, 255)'    , 'rgb(0,0,0)'],
-				['75-79', 'Pa' , 'rgb(0, 64, 255)'     , 'rgb(0,0,0)'],
-				['80-84', 'Qa' , 'rgb(0, 0, 255)'     , 'rgb(0,0,0)'],
-				['85+'  , '8'  , 'rgb(128, 0, 255)'    , 'rgb(0,0,0)'],
-				['Households'  , 'he'  , 'rgb(0, 0, 0)'    , 'rgb(0,0,0)'],
-				['Dwellings'  , 'ap'  , 'rgb(255, 0, 0)'    , 'rgb(255,0,0)']
+		    // Label, field (matches columns in the population bin dataset), background colour, border colour
+				['0-4'  , 'a04'  , 'rgb(255, 0, 0)', 'rgb(0,0,0)'],
+				['5-9'  , 'a59' , 'rgb(255, 64, 0)'   , 'rgb(0,0,0)'],
+				['10-14', 'a1014' , 'rgb(255, 128, 0)'     , 'rgb(0,0,0)'],
+				['15-19', 'a1519' , 'rgb(255, 192, 0)'    , 'rgb(0,0,0)'],
+				['20-24', 'a2024' , 'rgb(255, 255, 0)'  , 'rgb(0,0,0)'],
+				['25-29', 'a2529' , 'rgb(192, 255, 0)', 'rgb(0,0,0)'],
+				['30-34', 'a3034' , 'rgb(128, 255, 0)', 'rgb(0,0,0)'],
+				['35-39', 'a3539' , 'rgb(64, 255, 0)'   , 'rgb(0,0,0)'],
+				['40-44', 'a4044' , 'rgb(0, 255, 0)'  , 'rgb(0,0,0)'],
+				['45-49', 'a4549' , 'rgb(0, 255, 64)', 'rgb(0,0,0)'],
+				['50-54', 'a5054' , 'rgb(0, 255, 128)' , 'rgb(0,0,0)'],
+				['55-59', 'a5559' , 'rgb(0, 255, 192)'  , 'rgb(0,0,0)'],
+				['60-64', 'a6064' , 'rgb(0, 255, 255)'  , 'rgb(0,0,0)'],
+				['65-69', 'a6569' , 'rgb(0, 192, 255)'     , 'rgb(0,0,0)'],
+				['70-74', 'a7074' , 'rgb(0, 128, 255)'    , 'rgb(0,0,0)'],
+				['75-79', 'a7579' , 'rgb(0, 64, 255)'     , 'rgb(0,0,0)'],
+				['80-84', 'a8084' , 'rgb(0, 0, 255)'     , 'rgb(0,0,0)'],
+				['85+'  , '85+'  , 'rgb(128, 0, 255)'    , 'rgb(0,0,0)'],
+				['Households'  , 'households_est'  , 'rgb(0, 0, 0)'    , 'rgb(0,0,0)'],
+				['Dwellings'  , 'all_properties'  , 'rgb(255, 0, 0)'    , 'rgb(255,0,0)']
 		  ]
   
   
-  var years =  ['2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022']
+  // Year labels come from the record itself, never a hard-coded list. The
+  // population series runs 2010-2024 in England and Wales but only 2010-2022 in
+  // Scotland, and Chart.js pairs data to labels by index: too few labels silently
+  // drop the newest years, too many invent years Scotland has no data for.
+  var years = (populationLocationData['year'] || []).map(String);
   // Assemble the datasets to be shown
   
 	const data = {datasets: []};
@@ -1295,8 +786,8 @@ makeChartPopulation = function(){
   
   //console.log(data);
   
-  data.labels = ['2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022'];
-  
+  data.labels = years;
+
   var populationctx = document.getElementById('population-chart').getContext('2d');
 	populationChart = new Chart(populationctx, {
     type: 'bar',
@@ -1669,6 +1160,33 @@ modalTab = function (evt, tabName) {
 // Click on modal tab open by default
 document.getElementById("defaultOpen").click();
 
+// Function to switch chart description tabs
+switchChartTab = function (evt, tabName) {
+  // Find the parent chart-description-tabs container
+  var tabsContainer = evt.currentTarget.closest('.chart-description-tabs');
+  
+  // Get all tab content divs within this container and hide them
+  var tabContents = tabsContainer.querySelectorAll('.chart-description-tab-content');
+  tabContents.forEach(function(content) {
+    content.classList.remove('active');
+    content.style.display = 'none';
+  });
+  
+  // Get all tab buttons within this container and remove the "active" class
+  var tabButtons = tabsContainer.querySelectorAll('.chart-tab-btn');
+  tabButtons.forEach(function(button) {
+    button.classList.remove('active');
+  });
+  
+  // Show the current tab and add "active" class to button
+  var selectedContent = document.getElementById(tabName);
+  if (selectedContent) {
+    selectedContent.classList.add('active');
+    selectedContent.style.display = 'block';
+    evt.currentTarget.classList.add('active');
+  }
+}
+
 // Function to switch Pen Portrait description
 function switchPenPortSub(SOAC11NM) {
   
@@ -1825,11 +1343,11 @@ var pp3 = `<p>The population of this supergroup typically live largely within ci
 
 <p>Unemployment rates are below the national average, and for employed residents, they are more likely to work in the information and communication industries and financial-related industries than nationally, to work full-time, and are more likely to travel to work using public transport, though households owning two or more cars are also more prevalent than nationally.</p>`;
 
-var pp4 = `<p>Of the four groups within the supergroup, this group has the lowest population density (26.3 persons per hectare). Residents belonging to this group are more likely to have been born in the UK or Ireland than for the parent supergroup. Households are also more likely to live in a semi-detached property (36.8% of all households) or terraced property (41.5% of all households).</p>
+var pp4 = `<p>The population of this supergroup typically live largely in either current or former industrial areas, in cities and larger towns across the UK.</p>
 
-<p>Households are also marginally more likely to own or have shared ownership of a property and to live in socially-rented accommodation (41.4% of households).</p>
+<p>Residents are much more likely to live in a terraced property or a flat (over two-thirds of all households) and to live in social rented accommodation. The supergroup has a below average ethnic mix and an above average of UK and Irish born residents. Residents are more likely to be represented in younger age groups than nationally. Rates of divorce or separation are higher than nationally, and the proportion of persons aged 16 years and over with higher qualifications is below the national average.</p>
 
-<p>For residents in employment, they are marginally more likely than the parent supergroup to use private transport to get to work and more likely to work in the energy, water or air conditioning supply industries than the parent supergroup. </p>`;
+<p>Unemployment rates are observably higher than the national average – at 7.5% the highest for any supergroup. Employed residents are more likely to work in the transport or storage industries and administrative or support services industries and marginally more likely to work part-time than nationally and to travel to work using public transport.</p>`;
 
 var pp5 = `<p>The population of this supergroup typically live largely in industrial areas across the UK and is the largest supergroup in terms of resident population – comprising one-fifth of the total UK population.</p>
 
@@ -1949,24 +1467,105 @@ function lsoaCharacteristicsTable(lsoadata) {
 	document.getElementById("data_lsoa_class_name").innerHTML = 'Subgroup Description: "' + lsoadata.lsoa_class_name + '"';
 }
 
-// Initialize print button functionality
-function initPrintButtons() {
-  const printButtons = document.querySelectorAll('.print-button');
-  
-  printButtons.forEach(function(button) {
-    button.addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      
-      // Simply trigger the print dialog - CSS handles the rest
-      window.print();
-    });
-  });
-}
+// Print buttons are wired up by capUi.initPrintButtons (js/ui-common.js), which
+// also lays out the charts in unopened tabs so they appear in the printout. This
+// file used to bind its own duplicate handler, which bound a second click
+// listener to the same buttons and so opened the print dialog twice.
 
-// Initialize print buttons when page loads
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initPrintButtons);
-} else {
-  initPrintButtons();
-}
+
+// (Re)build the overview comparison chart from the stored per-category data.
+// In simplified mode the categories are aggregated into Housing, Transport
+// and Consumption; otherwise every category is shown, as in the original tool.
+buildOverviewComparisonChart = function () {
+
+	if (!_overviewComparison) { return; }
+
+	if (overviewChart) { overviewChart.destroy(); }
+
+	const toggle = document.getElementById('overview-simplified');
+	const simplified = (toggle ? toggle.checked : false);
+
+	let datasets;
+	if (simplified) {
+		datasets = OVERVIEW_SIMPLIFIED_GROUPS.map(group => ({
+			label: group.label,
+			data: [0, 1, 2, 3].map(col =>
+				_overviewComparison.datasets
+					.filter(d => group.members.includes(d.label))
+					.reduce((sum, d) => sum + (Number(d.data[col]) || 0), 0)
+			),
+			backgroundColor: group.colour,
+			borderColor: 'rgb(0,0,0)',
+			borderWidth: 1,
+			stack: 'Stack 0'
+		}));
+	} else {
+		datasets = _overviewComparison.datasets;
+	}
+
+	overviewChart = new Chart(document.getElementById('overview-chart').getContext('2d'), {
+		type: 'bar',
+		data: {
+			labels: _overviewComparison.labels,
+			datasets: datasets
+		},
+		plugins: [thresholdLinePlugin],
+		options: {
+			scales: {
+				y: {
+					stacked: true,
+					title: {
+						display: true,
+						text: 'kgCO₂e per person'
+					},
+					ticks: {
+						beginAtZero: true,
+					}
+				},
+				x: {
+					stacked: true
+				},
+			},
+			plugins: {
+				// plugin options for thresholdLinePlugin
+				thresholdLinePlugin: {
+					value: 2849,
+					color: 'black',
+					width: 3,
+					dash: []
+				},
+				legend: {
+					position: 'right',
+					reverse: true,
+					labels: {
+						font: { size: 11 },
+						padding: 4,
+						boxWidth: 10
+					}
+				}
+			},
+			responsive: true,
+			maintainAspectRatio: false
+		}
+	});
+};
+
+// Rebuild the overview chart when the simplified-categories toggle changes
+(function initOverviewToggle() {
+	const toggle = document.getElementById('overview-simplified');
+	if (toggle) {
+		toggle.addEventListener('change', function () { buildOverviewComparisonChart(); });
+	}
+})();
+
+// Grade explainer popup ("What does this grade mean?" under the headline grade)
+(function initGradesPopup() {
+	const button = document.getElementById('grades-explain-button');
+	const popup = document.getElementById('grades-popup');
+	if (!button || !popup) { return; }
+	const closePopup = function () { popup.style.display = 'none'; };
+	button.addEventListener('click', function () { popup.style.display = 'flex'; });
+	popup.addEventListener('click', function (e) { if (e.target === popup) { closePopup(); } });
+	popup.querySelector('.grades-popup-close').addEventListener('click', closePopup);
+	document.addEventListener('keyup', function (e) { if (e.key === 'Escape') { closePopup(); } });
+})();

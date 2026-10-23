@@ -10,6 +10,7 @@ function loadManual ()
       document.querySelector ('#content').innerHTML = mdToHtml (text);
       followAnchorHash ();
       createToc ();
+      createTocToggle ();
       //createEditLink ();
     })
     .catch (function (error) {
@@ -20,9 +21,18 @@ function loadManual ()
 
 
 // Function to convert the loaded Markdown file text to HTML
+//
+// customizedHeaderId lets a heading carry an explicit "{#id}". Without it
+// showdown derives every id from the heading text and, where a title repeats
+// ("Data Sources", "Further reading", "Neighbourhoods"), falls back to a
+// positional suffix - datasources, datasources-1, datasources-2 and so on. Those
+// suffixes track document order, so inserting or moving a section silently
+// repoints every later link. The repeated headings therefore name their own id;
+// keep this option in step with capUi.mdToHtml in js/ui-common.js, which renders
+// the same file for the in-tool help popups.
 function mdToHtml (mdText)
 {
-  const converter = new showdown.Converter ();
+  const converter = new showdown.Converter ({customizedHeaderId: true});
   const html = converter.makeHtml (mdText);
   return html;
 }
@@ -72,6 +82,57 @@ function createToc ()
     heading.addEventListener('click', () => {
       location.hash = anchor;
     });
+  });
+}
+
+
+// Function to create a floating button that shows/hides the contents on mobile
+function createTocToggle ()
+{
+  const body = document.querySelector ('body');
+  const toc = document.querySelector ('.table-of-contents');
+  if (!toc) { return; }
+  toc.id = 'table-of-contents';
+
+  // Backdrop, so a tap outside the panel closes it
+  const backdrop = document.createElement ('div');
+  backdrop.classList.add ('toc-backdrop');
+  body.appendChild (backdrop);
+
+  // Floating button
+  const button = document.createElement ('button');
+  button.classList.add ('toc-toggle');
+  button.setAttribute ('type', 'button');
+  button.setAttribute ('aria-controls', 'table-of-contents');
+  body.appendChild (button);
+
+  const setOpen = function (open) {
+    body.classList.toggle ('toc-open', open);
+    button.setAttribute ('aria-expanded', open ? 'true' : 'false');
+    button.setAttribute ('aria-label', open ? 'Hide contents' : 'Show contents');
+    button.innerHTML = open ? '<i class="fa fa-xmark"></i>' : '<i class="fa fa-bars"></i>';
+  };
+  setOpen (false);
+
+  button.addEventListener ('click', function () {
+    setOpen (!body.classList.contains ('toc-open'));
+  });
+
+  backdrop.addEventListener ('click', function () {
+    setOpen (false);
+  });
+
+  // Close once a contents link has been followed
+  toc.addEventListener ('click', function (event) {
+    if (event.target.closest ('a')) {
+      setOpen (false);
+    }
+  });
+
+  document.addEventListener ('keydown', function (event) {
+    if (event.key === 'Escape') {
+      setOpen (false);
+    }
   });
 }
 

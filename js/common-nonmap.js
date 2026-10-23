@@ -2,11 +2,11 @@
 
 function manageAnalyticsCookie() {
 
-	// Disable tracking if the opt-out cookie exists.
+	// The opt-out cookie is read and applied by js/analytics.js, which runs in
+	// the head before gtag.js is requested. Applying it here would be too late:
+	// this file loads at the end of the body, by which point the tag could
+	// already have sent the page view.
 	const disableStr = 'ga-disable-' + 'G-Q11V10CDRV';
-	if (document.cookie.indexOf(disableStr + '=true') > -1) {
-		window[disableStr] = true;
-	}
 
 	// Define the cookie name
 	const cookieName = 'analyticstrack';
@@ -34,10 +34,14 @@ function manageAnalyticsCookie() {
 	{
 		if (accepted) {
 			setCookie(cookieName, 'true');
+			// Loads gtag.js now, so the rest of this visit is measured rather
+			// than being lost until the next page load.
+			if (window.capAnalytics) { capAnalytics.grant(); }
 		} else {
 			//alert("Tracking Op-Out Disabled");
 			gaOptout();
 			setCookie(cookieName, 'false');
+			if (window.capAnalytics) { capAnalytics.deny(); }
 		}
 		const cookiewarning = document.getElementById ('cookiewarning');
 		cookiewarning.style.display = 'none';

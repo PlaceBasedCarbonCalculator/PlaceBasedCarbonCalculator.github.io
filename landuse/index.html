@@ -5,24 +5,11 @@
 		
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="Description" content="Visualise land use and planning designations across Great Britain, explore green spaces, development constraints and how land use influences local carbon footprints and resilience.">
+		<meta name="Description" content="Planning designations and environmental constraints that shape development: flood zones, green belt, protected landscapes, heritage and noise. Mostly England.">
 		
-		<!-- Google tag (gtag.js) -->
-  	<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q11V10CDRV"></script>
-  	<script>
-  		window.dataLayer = window.dataLayer || [];
-  		function gtag () {dataLayer.push (arguments);}
-  		gtag('js', new Date ());
-  		gtag('config', 'G-Q11V10CDRV');
-  	</script>
+		<!-- Google Analytics, loaded only after the visitor accepts cookies -->
+		<script src="/js/analytics.js"></script>
   	
-  	<!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-TXQZCMJT');</script>
-    <!-- End Google Tag Manager -->
 		
 		
 		<!-- Favicon -->
@@ -30,33 +17,52 @@
 		<link rel="icon" href="/favicon.ico" type="image/x-icon">
 		
 		<!-- Social media -->
-		<meta property="og:title" content="Carbon & Place">
-		<meta property="og:description" content="An interactive map of land use">
-		<meta property="og:image" content="/images/thumbnail.jpg">
-		<meta property="twitter:image" content="/images/thumbnail.jpg">
-		<meta property="og:url" content="https://www.carbon.place">
+		<title>Land Use and Planning Explorer - Designations &amp; Constraints</title>
+		<link rel="canonical" href="https://www.carbon.place/landuse/">
+
+		<!-- Social media / Open Graph. og:title and og:description mirror the
+		     page title and meta description above, so there is one source. -->
+		<meta property="og:type" content="website">
+		<meta property="og:site_name" content="Carbon &amp; Place">
+		<meta property="og:locale" content="en_GB">
+		<meta property="og:title" content="Land Use and Planning Explorer - Designations &amp; Constraints">
+		<meta property="og:description" content="Planning designations and environmental constraints that shape development: flood zones, green belt, protected landscapes, heritage and noise. Mostly England.">
+		<meta property="og:url" content="https://www.carbon.place/landuse/">
+		<meta property="og:image" content="https://www.carbon.place/images/thumbnail.jpg">
+		<meta property="og:image:width" content="1200">
+		<meta property="og:image:height" content="630">
+		<meta property="og:image:alt" content="Carbon &amp; Place: a map of Great Britain shaded by neighbourhood carbon footprint">
 		<meta name="twitter:card" content="summary_large_image">
-		<meta property="og:site_name" content="Carbon & Place">
-		<meta name="twitter:image:alt" content="Carbon & Place thumbnail">
-		<title>Land Use Explorer — Planning, Land Cover &amp; Emissions</title>
+		<meta name="twitter:image" content="https://www.carbon.place/images/thumbnail.jpg">
+		<meta name="twitter:image:alt" content="Carbon &amp; Place: a map of Great Britain shaded by neighbourhood carbon footprint">
 		
 		<!-- PWA support -->
 		<link rel="manifest" href="/manifest.webmanifest">
 		<link rel="apple-touch-icon" href="/images/icons/192.png">
-		<meta name="apple-mobile-web-app-status-bar" content="#ac1a40">
+		<meta name="mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-title" content="Carbon & Place">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 		<meta name="theme-color" content="#ac1a40">
 		<script src="/app.js" defer></script>
 		
 		<!-- Map dependencies -->
-		<script src="https://unpkg.com/pmtiles@3.0.6/dist/pmtiles.js"></script>
+		<script src="/js/lib/pmtiles-4.5.0/pmtiles.js"></script>
 		<script src="/js/lib/geocoder/maplibre-gl-geocoder.min.js"></script>
 		<link rel="stylesheet" href="/js/lib/geocoder/maplibre-gl-geocoder-small.css" type="text/css"/>
-		<script src="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.js"></script>
-		<link href="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.css" rel="stylesheet" />
+		<link href="/js/lib/maplibre-gl-6.4.1/maplibre-gl.css" rel="stylesheet" />
+		<!-- MapLibre GL JS 6 is ESM-only (no UMD maplibre-gl.js any more), so import it
+		     and publish the global that ui-common.js and the geocoder expect. Module
+		     scripts are deferred, so this runs before ui.js and before DOMContentLoaded. -->
+		<script type="module">
+			import * as maplibregl from '/js/lib/maplibre-gl-6.4.1/maplibre-gl.mjs';
+			window.maplibregl = {...maplibregl};	// Copied, as a module namespace object is frozen
+		</script>
 		
 		<!-- Styles -->
 		<link rel="stylesheet" href="/css/main.css">
 		<link rel="stylesheet" href="/css/map.css">
+		<link rel="stylesheet" href="/css/map-new.css">
 
 		<!-- Carbon & Place application -->
 		<script src="/js/settings-common.js"></script>
@@ -64,6 +70,7 @@
 		<script src="datasets.js"></script>
 		<script src="settings.js"></script>
 		<script src="/js/ui-common.js"></script>
+		<script src="/js/tour.js" defer></script>
 		<script src="ui.js" defer></script>
 		<script>
 			document.addEventListener ('DOMContentLoaded', function () {
@@ -76,58 +83,60 @@
 		<link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet" defer>
 		
 		<!-- Markdown conversion -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js" defer></script>
+		<script src="/js/lib/showdown-2.1.0/showdown.min.js" defer></script>
 		
 		<!-- Tooltips -->
-		<script src="https://unpkg.com/@popperjs/core@2" defer></script>
-		<script src="https://unpkg.com/tippy.js@6" defer></script>
+		<script src="/js/lib/popperjs-2.11.8/popper.min.js" defer></script>
+		<script src="/js/lib/tippy-6.3.7/tippy-bundle.umd.min.js" defer></script>
 		
 		<!-- Charts -->
-		<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1" defer></script>
+		<script src="/js/lib/chartjs-4.4.1/chart.umd.js" defer></script>
 		
-	</head>
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "WebApplication", "name": "Land Use & Planning Explorer", "url": "https://www.carbon.place/landuse/", "description": "Map the planning designations and environmental constraints that shape what can be built where. Most layers cover England.", "isPartOf": {"@type": "WebSite", "name": "Carbon & Place", "url": "https://www.carbon.place/"}, "publisher": {"@type": "Organization", "name": "Carbon & Place", "url": "https://www.carbon.place/", "logo": "https://www.carbon.place/images/ui/logo.webp"}, "applicationCategory": "EducationalApplication", "operatingSystem": "Any (web browser)", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "GBP"}}
+  </script>
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.carbon.place/"}, {"@type": "ListItem", "position": 2, "name": "Land Use & Planning Explorer", "item": "https://www.carbon.place/landuse/"}]}
+  </script>
+</head>
 	
 	<body>
-		<!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TXQZCMJT"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->  
     
 		<!-- Menu -->
 		<nav>
 			<a href="/"><img src="/images/ui/logo.webp" alt="Carbon & Place Logo" class="logo" /></a>
-			<a href="/landuse">Land Use and Planning Explorer</a>
+			<a href="/landuse/">Land Use and Planning Explorer</a>
 			<a href="/about/">About</a>
 			<a href="/data/">Data</a>
 			<a href="/manual/">Manual</a>
+			<a href="/reports/">Reports</a>
 			<a href="#" id="expandtopnav" class="icon" aria-label="Expand menu"><i class="fa fa-bars"></i></a>
 		</nav>
 		
 		<!-- Welcome Splash -->
 		<div id="welcome-modal" class="welcome-modal">
 			<span class="modal-close">&times;</span>
-			<div>
+			<div class="modal-body">
 				<h1>Land Use and Planning Explorer</h1>
-				<p style="background-color: #f58291"><b>Beta Tool</b>: This tool is still in development and may contain preliminary analysis, bugs, or incomplete features. Beta tools are intended to provide an early look at upcoming features and so results should be treated with care. The tool may change at any time without warning. We are interested in your feedback and you can report issues or bugs on <a href="https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/issues" target="_blank" rel="noopener noreferrer">GitHub</a></p>
-				
-				<p>The Land Use and Planning Explorer provides more detail on how land is used in the UK. For a full explination of the tool please see the <a href="/manual/#landuseandplanningexplorer">manual</a>. You can also access sections of the manual via the help buttons (<i class="fa fa-question-circle" aria-hidden="true"></i>)</p>
+				<p>The Land Use and Planning Explorer maps the designations that shape what can be built where: flood zones, green belt, protected landscapes and habitats, heritage sites, and environmental hazards. For a full explanation of the tool please see the <a href="/manual/#landuseandplanningexplorer">manual</a>. You can also access sections of the manual via the help buttons (<i class="fa fa-question-circle" aria-hidden="true"></i>).</p>
+				<p><strong>Coverage:</strong> unlike our other tools, this one is mostly England. Planning designations are devolved, and the agencies that publish them differ by country, so most layers here (flood zones, green belt, conservation areas, listed buildings, national parks, nature reserves, registered parks and gardens, noise and historic landfill) are England only. Sites of Special Scientific Interest cover Great Britain, and the international designations (Ramsar sites, Special Areas of Conservation, Special Protection Areas) cover the UK; National Landscapes and ancient woodland cover England and Wales. Each layer's help button states its coverage. See also <a href="/about/faq/#coverage">which areas are covered</a>.</p>
 				
 				<div class="feedbackbox">
 					<div class="feedback-text">
 						<h2>How can we improve this tool?</h2>
-						<p>We would love to hear how you are using Carbon & Place and how we can make our tools more useful.</p>
-						<p><a href="/about/feedback" class="opentool">Submit Feedback</a></p>
+						<p>We would love to hear how you are using Carbon &amp; Place and how we can make our tools more useful. If you have found an error in the data or a bug in the tool, you can also report it on <a href="https://github.com/PlaceBasedCarbonCalculator/PlaceBasedCarbonCalculator.github.io/issues" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
+						<p><a href="/about/feedback/" class="toolbutton">Submit Feedback</a></p>
 					</div>
 					<img src="/images/ui/feedback.webp" alt="Feedback" loading="lazy" class="feedback-image">
 				</div>
 				
-				<p>Last updated: <span id="updatedate"></span>. You may need to <a href="https://www.minitool.com/news/f5-vs-ctrl-f5.html">clear your browser cache</a> to see the latest updates.</p>
+				<p>Last updated: <span id="updatedate"></span>. If the page looks out of date, reload it while holding <kbd>Shift</kbd> (or press <kbd>Ctrl</kbd>+<kbd>F5</kbd> on Windows, <kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd> on a Mac) to bypass your browser cache.</p>
 			</div>
 		</div>
 		
 		<!-- Cookies Warning  -->
 		<div id="cookiewarning" class="cookiewarning">
-			<p>We use cookies to measure how you use our website so we can understand how you interact with it, which helps us to make improvements. <a href="/privacy">Find out more.</a></p>
+			<p>We use cookies to measure how you use our website so we can understand how you interact with it, which helps us to make improvements. <a href="/privacy/">Find out more.</a></p>
 			<p>
 				<button class="button buttonOK" value="1"><strong>OK</strong></button>
 				<button class="button buttonNO" value=""><strong>No</strong></button>
@@ -238,8 +247,8 @@
 			  <div class="lbHorizontal"><span style="background-color: #bbe825"></span></div>
 			  </div></div>
 			
-			  <p><label><input type="checkbox" class="showlayer" data-layer="aonb" value="false"> Areas of outstanding natural beauty</label>
-			  <button aria-label="Help Areas of outstanding natural beauty" class="helpbutton" data-help="landuse-aonb"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+			  <p><label><input type="checkbox" class="showlayer" data-layer="aonb" value="false"> National Landscapes (Areas of Outstanding Natural Beauty)</label>
+			  <button aria-label="Help National Landscapes" class="helpbutton" data-help="landuse-aonb"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 			  
 			  <div class="legendContextual legendHorizontal"><div class="l_rHorizontal">
 			  <div class="lbHorizontal"><span style="background-color: #bbe825"></span></div>
@@ -297,8 +306,8 @@
 			  <div class="lbHorizontal"><span style="background-color: #a6cee3"></span></div>
 			  </div></div>
 				
-				<p><label><input type="checkbox" class="showlayer" data-layer="SAC" value="false"> Special areas of conservation</label>
-				<button aria-label="Help Special areas of conservation" class="helpbutton" data-help="landuse-SAC"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<p><label><input type="checkbox" class="showlayer" data-layer="SAC" value="false"> Special Areas of Conservation</label>
+				<button aria-label="Help Special Areas of Conservation" class="helpbutton" data-help="landuse-SAC"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
 				
 				<div class="legendContextual legendHorizontal"><div class="l_rHorizontal">
 			  <div class="lbHorizontal"><span style="background-color: #fb9a99"></span></div>
@@ -353,28 +362,32 @@
 			
 			<div class="panel">
 				<p><label><input type="checkbox" data-layer="wards" class="showlayer" value="false">Wards</label>
-				<button aria-label="Help Wards" class="helpbutton" data-help="boundaries-wards"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<button aria-label="Help Wards" class="helpbutton" data-help="boundaries-wards"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+				<span class="names-row"><label class="switch"><input type="checkbox" class="showlabels" data-layer="wards"><span class="slider round"></span></label> show names</span></p>
 				<div class="legendContextual legendHorizontal">
 					<div class="l_rHorizontal">
 						<div class="lbHorizontal"><span style="background-color: #206b07"></span></div>
 					</div>
 				</div>
 				<p><label><input type="checkbox" data-layer="la" class="showlayer" value="false">Local Authorities</label>
-				<button aria-label="Help Local Authorities" class="helpbutton" data-help="boundaries-la"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<button aria-label="Help Local Authorities" class="helpbutton" data-help="boundaries-la"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+				<span class="names-row"><label class="switch"><input type="checkbox" class="showlabels" data-layer="la"><span class="slider round"></span></label> show names</span></p>
 				<div class="legendContextual legendHorizontal">
 					<div class="l_rHorizontal">
 						<div class="lbHorizontal"><span style="background-color: #6b0707"></span></div>
 					</div>
 				</div>
 				<p><label><input type="checkbox" data-layer="parish" class="showlayer" value="false">Parish</label>
-				<button aria-label="Help Parish" class="helpbutton" data-help="boundaries-parish"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<button aria-label="Help Parish" class="helpbutton" data-help="boundaries-parish"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+				<span class="names-row"><label class="switch"><input type="checkbox" class="showlabels" data-layer="parish"><span class="slider round"></span></label> show names</span></p>
 				<div class="legendContextual legendHorizontal">
 					<div class="l_rHorizontal">
 						<div class="lbHorizontal"><span style="background-color: #6b0763"></span></div>
 					</div>
 				</div>
 				<p><label><input type="checkbox" data-layer="westminster" class="showlayer" value="false">Westminster Constituency</label>
-				<button aria-label="Help Westminster Constituency" class="helpbutton" data-help="boundaries-westminster"><i class="fa fa-question-circle" aria-hidden="true"></i></button></p>
+				<button aria-label="Help Westminster Constituency" class="helpbutton" data-help="boundaries-westminster"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+				<span class="names-row"><label class="switch"><input type="checkbox" class="showlabels" data-layer="westminster"><span class="slider round"></span></label> show names</span></p>
 				<div class="legendContextual legendHorizontal">
 					<div class="l_rHorizontal">
 						<div class="lbHorizontal"><span style="background-color: #07366b"></span></div>
@@ -392,39 +405,20 @@
 			</div>
 		</div>
 		
-		
-		<!-- Modal 
-		<div class="modal" id="zones-chartsmodal" style="display: block;">
-			<div class="modal-header">
-				<span class="modal-close">×</span>
-				<h2 class="modal-title">Zone Summary: XXXXX</h2>
-			</div>
-			<div class="modal-body">
-			  <div class="chart-text">
-							<h4 class="chart-title">Access Proximity plot</h4>
-							<p class="chart-description">Description goes here</p>
-						</div>
-					<div class="chart-wrapper" id="access-chartrow" style="display: block;">
-						<div class="chart-container-wide">
-							<canvas id="access-chart"></canvas>
-						</div>
-					</div>
-
-				</div>
-		</div>
-		-->
+				
 		
 		<div id="overlay"></div>
 		
 		<!-- Template for map popup -->
 		<template id="food_hygiene-popup">
 			<div class="mappopup">
-				<h4>Food Hygine Rating</h4>
+				<h4>Food Hygiene Rating</h4>
 				<table>
-					<tr><th>Name</td><td>{BusinessName}</td></tr>
-					<tr><th>Type</td><td>{BusinessType}</td></tr>
-					<tr><th>Rating</td><td>{RatingValue}</td></tr>
+					<tr><th>Name</th><td>{BusinessName}</td></tr>
+					<tr><th>Type</th><td>{BusinessType}</td></tr>
+					<tr><th>Rating</th><td>{RatingValue}</td></tr>
 				</table>
+			</div>
 		</template>
 		
 		

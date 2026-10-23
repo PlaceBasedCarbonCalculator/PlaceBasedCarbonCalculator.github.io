@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="Description" content="Explore combined carbon and place reports for any local authority, ward, parish or Westminster constituency, or search a postcode for your neighbourhood.">
+	<title>Local &amp; Area Reports - Carbon &amp; Place</title>
+	<link rel="canonical" href="https://www.carbon.place/reports/">
+
+	<!-- Social media / Open Graph. og:title and og:description mirror the
+	     page title and meta description above, so there is one source. -->
+	<meta property="og:type" content="website">
+	<meta property="og:site_name" content="Carbon &amp; Place">
+	<meta property="og:locale" content="en_GB">
+	<meta property="og:title" content="Local &amp; Area Reports - Carbon &amp; Place">
+	<meta property="og:description" content="Explore combined carbon and place reports for any local authority, ward, parish or Westminster constituency, or search a postcode for your neighbourhood.">
+	<meta property="og:url" content="https://www.carbon.place/reports/">
+	<meta property="og:image" content="https://www.carbon.place/images/thumbnail.jpg">
+	<meta property="og:image:width" content="1200">
+	<meta property="og:image:height" content="630">
+	<meta property="og:image:alt" content="Carbon &amp; Place: a map of Great Britain shaded by neighbourhood carbon footprint">
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:image" content="https://www.carbon.place/images/thumbnail.jpg">
+	<meta name="twitter:image:alt" content="Carbon &amp; Place: a map of Great Britain shaded by neighbourhood carbon footprint">
+
+	<link rel="stylesheet" href="/css/main.css">
+	<link rel="stylesheet" href="/css/content-new.css">
+	<!-- Set Up Icon -->
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+	<!-- Font Awesome -->
+	<link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet">
+	<link href="/assets/fontawesome/css/solid.min.css" rel="stylesheet">
+
+	<!-- PWA support -->
+	<link rel="manifest" href="/manifest.webmanifest">
+	<link rel="apple-touch-icon" href="/images/icons/192.png">
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-title" content="Carbon & Place">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<meta name="theme-color" content="#ac1a40">
+	<script src="/app.js" defer></script>
+
+	<!-- Google Analytics, loaded only after the visitor accepts cookies -->
+	<script src="/js/analytics.js"></script>
+
+
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "CollectionPage", "name": "Area Reports", "url": "https://www.carbon.place/reports/", "description": "Combined carbon and place reports for local authorities, wards, parishes, and constituencies.", "isPartOf": {"@type": "WebSite", "name": "Carbon & Place", "url": "https://www.carbon.place/"}, "publisher": {"@type": "Organization", "name": "Carbon & Place", "url": "https://www.carbon.place/", "logo": "https://www.carbon.place/images/ui/logo.webp"}}
+  </script>
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.carbon.place/"}, {"@type": "ListItem", "position": 2, "name": "Area Reports", "item": "https://www.carbon.place/reports/"}]}
+  </script>
+
+<style>
+	.postcode-search { margin: 12px 0 8px; padding: 16px 20px; background-color: #f7f3f4; border: 1px solid #e6d9dd; border-radius: 10px; max-width: 760px; box-sizing: border-box; }
+	body.content-page .page-lede { max-width: 760px; }
+	.postcode-search-form { display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch; max-width: 520px; }
+	.postcode-search-form input { flex: 1 1 220px; min-width: 0; padding: 12px 14px; font-size: 16px; border: 1px solid #b7b2b3; border-radius: 6px; text-transform: uppercase; }
+	.postcode-search-form input:focus { outline: 2px solid #ac1a40; outline-offset: 1px; }
+	.postcode-search-form button { flex: 0 0 auto; padding: 12px 22px; font-size: 16px; color: #ffffff; background-color: #ac1a40; border: none; border-radius: 6px; cursor: pointer; }
+	.postcode-search-form button:hover { background-color: #8f1535; }
+	.postcode-search-form button:disabled { background-color: #c98a9b; cursor: default; }
+	.postcode-search-error { margin: 10px 0 0; color: #ac1a40; font-weight: bold; }
+	.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+	/* Area search cards: one per row, wide enough for the search field and View button,
+	   styled to match the postcode-search box above */
+	body.content-page .card-grid.area-grid { grid-template-columns: 1fr; max-width: 760px; }
+	body.content-page .card-grid.area-grid .card { background-color: #f7f3f4; border: 1px solid #e6d9dd; border-radius: 10px; box-shadow: none; padding: 16px 20px; }
+	.card-grid.area-grid .location-search-input { padding: 12px 14px; font-size: 16px; border: 1px solid #b7b2b3; border-radius: 6px; }
+	.card-grid.area-grid .location-search-input:focus { outline: 2px solid #ac1a40; outline-offset: 1px; box-shadow: none; border-color: #b7b2b3; }
+	.card-grid.area-grid .location-nav-button { padding: 12px 22px; font-size: 16px; color: #ffffff; background-color: #ac1a40; border: none; border-radius: 6px; cursor: pointer; }
+	.card-grid.area-grid .location-nav-button:hover { background-color: #8f1535; }
+	.card-grid.area-grid .location-dropdown { border-color: #b7b2b3; border-radius: 0 0 6px 6px; }
+	.area-note { margin: 12px 0 0; font-size: 13px; line-height: 1.55; color: #555; border-left: 3px solid #ac1a40; padding-left: 10px; }
+	/* Full A-Z listings. These are the only crawlable path to the report pages,
+	   which are otherwise reachable only through the JavaScript searches above. */
+	.index-links { list-style: none; padding: 0; margin: 12px 0 0; max-width: 760px; }
+	.index-links li { margin: 0 0 10px; }
+	.index-links a { font-weight: bold; }
+	.index-count { display: block; font-size: 13px; color: #555; }
+</style>
+</head>
+<body class="content-page">
+
+
+<!-- Menu -->
+<nav>
+	<a href="/"><img src="/images/ui/logo.webp" alt="Carbon & Place Logo" class="logo" /></a>
+	<a href="/about/">About</a>
+	<a href="/data/">Data</a>
+	<a href="/manual/">Manual</a>
+	<a href="/reports/">Reports</a>
+	<a href="#" id="expandtopnav" class="icon" aria-label="Expand menu"><i class="fa fa-bars"></i></a>
+</nav> 
+
+<!-- Cookies Warning  -->
+<div id="cookiewarning" class="cookiewarning">
+	<p>We use cookies to measure how you use our website so we can understand how you interact with it, which helps us to make improvements. <a href="/privacy/">Find out more.</a></p>
+	<p>
+		<button class="button buttonOK" value="1"><strong>OK</strong></button>
+		<button class="button buttonNO" value=""><strong>No</strong></button>
+	</p>
+</div>
+
+<main class="content">
+<h1>Reports</h1>
+<p class="page-lede">Reports draw together data from all the Carbon & Place tools into a single summary for a place. They are useful when you want the full picture for one area, such as a council area or a constituency, rather than a national map of one measure. Search by postcode for your own neighbourhood, or choose a local authority, ward, parish, or Westminster constituency below.</p>
+
+<h2>Neighbourhoods (postcode search)</h2>
+
+<div class="postcode-search">
+	<p>Enter a postcode in Great Britain to open the combined local report for that neighbourhood (LSOA).</p>
+	<form id="postcode-search-form" class="postcode-search-form" role="search" aria-label="Postcode search">
+		<label for="postcode-search-input" class="visually-hidden">Postcode in Great Britain</label>
+		<input type="text" id="postcode-search-input" name="postcode" placeholder="e.g. LS2 9JT" autocomplete="postal-code" autocapitalize="characters" spellcheck="false" aria-describedby="postcode-search-error" maxlength="9">
+		<button type="submit" class="button"><strong>Search</strong></button>
+	</form>
+	<p id="postcode-search-error" class="postcode-search-error" role="alert" style="display:none"></p>
+	<p class="area-note">Neighbourhood (LSOA) reports use the same data as the map tools. The figures are still averages across roughly 1,500-3,000 residents, and some of them, such as the consumption footprint, are modelled rather than measured.</p>
+</div>
+
+<h2>Search by area</h2>
+<div class="card-grid area-grid">
+
+<div class="card">
+<h3>Local Authorities</h3>
+<div class="location-selector" data-json-file="/reports/la.json" data-report-page="/reports/la.html">
+	<div class="location-input-group">
+		<input
+			type="text"
+			class="location-search-input"
+			placeholder="Search for a location..."
+			aria-label="Search local authorities"
+		>
+		<button class="location-nav-button button" style="display: none;">
+			View LA Report
+		</button>
+	</div>
+	<ul class="location-dropdown" style="display: none;"></ul>
+</div>
+<p class="area-note">Local authority figures are built up from neighbourhood (LSOA) data. Neighbourhoods sit wholly inside council boundaries, so each is counted once and in the right place, which makes this data easily cross-comparable.</p>
+</div>
+
+<div class="card">
+<h3>Wards</h3>
+<div class="location-selector" data-json-file="/reports/wards.json" data-report-page="/reports/wards.html">
+	<div class="location-input-group">
+		<input
+			type="text"
+			class="location-search-input"
+			placeholder="Search for a ward..."
+			aria-label="Search wards"
+		>
+		<button class="location-nav-button button" style="display: none;">
+			View Ward Report
+		</button>
+	</div>
+	<ul class="location-dropdown" style="display: none;"></ul>
+</div>
+<p class="area-note">Wards are often smaller than a neighbourhood (LSOA), so each neighbourhood is divided between the wards it covers according to where its residents live. The split is a well-founded estimate rather than a measurement, so read figures for small wards with more caution.</p>
+</div>
+
+<div class="card">
+<h3>Parishes</h3>
+<div class="location-selector" data-json-file="/reports/parish.json" data-report-page="/reports/parishes.html">
+	<div class="location-input-group">
+		<input
+			type="text"
+			class="location-search-input"
+			placeholder="Search for a parish..."
+			aria-label="Search parishes"
+		>
+		<button class="location-nav-button button" style="display: none;">
+			View Parish Report
+		</button>
+	</div>
+	<ul class="location-dropdown" style="display: none;"></ul>
+</div>
+<p class="area-note">Parish figures carry the most uncertainty. A parish is frequently much smaller than a neighbourhood (LSOA), so several parishes may share one between them, and the figures for a small parish partly describe the wider area around it.</p>
+</div>
+
+<div class="card">
+<h3>Westminster Parliamentary Constituencies</h3>
+<div class="location-selector" data-json-file="/reports/westminster.json" data-report-page="/reports/constituencies.html">
+	<div class="location-input-group">
+		<input
+			type="text"
+			class="location-search-input"
+			placeholder="Search for a constituency..."
+			aria-label="Search constituencies"
+		>
+		<button class="location-nav-button button" style="display: none;">
+			View Constituency Report
+		</button>
+	</div>
+	<ul class="location-dropdown" style="display: none;"></ul>
+</div>
+<p class="area-note">A constituency typically contains around seventy neighbourhoods (LSOAs), each counted whole in the constituency holding most of its residents. Neighbourhoods split by a boundary go entirely to one side, which has a minor effect on the totals especially in Scotland.</p>
+</div>
+
+</div>
+
+<h2>Browse every area</h2>
+<p class="page-lede">The searches above are the quickest way to one place. These are the full lists, if you would rather look down them, or want to link to a report from somewhere else.</p>
+<ul class="index-links">
+	<li><a href="/reports/la/">Local authorities</a> <span class="index-count">350 councils across Great Britain</span></li>
+	<li><a href="/reports/wards/">Wards</a> <span class="index-count">7,943 electoral wards, grouped by council</span></li>
+	<li><a href="/reports/parishes/">Parishes</a> <span class="index-count">11,332 civil parishes, grouped by council</span></li>
+	<li><a href="/reports/constituencies/">Westminster constituencies</a> <span class="index-count">632 seats on the 2024 boundaries</span></li>
+	<li><a href="/reports/lsoa/">Neighbourhoods</a> <span class="index-count">43,064 LSOAs and Data Zones, listed by code</span></li>
+</ul>
+
+</main>
+
+<script type="text/javascript" src="/js/common-nonmap.js"></script>
+<script type="text/javascript" src="/js/postcode-search.js"></script>
+
+<script>
+// Searchable Location Dropdown
+class LocationDropdown {
+	constructor(selectorElement) {
+		this.selectorElement = selectorElement;
+		this.locations = [];
+		this.selectedLocation = null;
+		this.jsonFile = selectorElement.dataset.jsonFile;
+		this.reportPage = selectorElement.dataset.reportPage;
+		this.searchInput = selectorElement.querySelector('.location-search-input');
+		this.dropdown = selectorElement.querySelector('.location-dropdown');
+		this.navigateButton = selectorElement.querySelector('.location-nav-button');
+		
+		this.init();
+	}
+	
+	async init() {
+		try {
+			// Load JSON file
+			const response = await fetch(this.jsonFile);
+			if (!response.ok) throw new Error(`Failed to load ${this.jsonFile}`);
+			this.locations = await response.json();
+			
+			// Set up event listeners
+			this.searchInput.addEventListener('input', () => this.filterLocations());
+			this.searchInput.addEventListener('focus', () => this.filterLocations());
+			this.navigateButton.addEventListener('click', () => this.navigate());
+			
+			// Close dropdown when clicking outside
+			document.addEventListener('click', (e) => {
+				if (!e.target.closest('.location-selector')) {
+					this.dropdown.style.display = 'none';
+				}
+			});
+		} catch (error) {
+			console.error('Error initializing location dropdown:', error);
+		}
+	}
+	
+	filterLocations() {
+		// Close any other selector's dropdown first, so lists never overlap
+		document.querySelectorAll('.location-dropdown').forEach(d => {
+			if (d !== this.dropdown) { d.style.display = 'none'; }
+		});
+
+		const searchTerm = this.searchInput.value.toLowerCase().trim();
+		this.dropdown.innerHTML = '';
+		
+		const filtered = this.locations.filter(loc => 
+			loc.name.toLowerCase().includes(searchTerm)
+		);
+		
+		if (filtered.length === 0) {
+			this.dropdown.innerHTML = '<li class="no-results">No locations found</li>';
+			this.dropdown.style.display = 'block';
+			return;
+		}
+		
+		filtered.forEach(location => {
+			const li = document.createElement('li');
+			li.className = 'location-item';
+			li.textContent = location.name;
+			li.addEventListener('click', () => this.selectLocation(location));
+			this.dropdown.appendChild(li);
+		});
+		
+		this.dropdown.style.display = 'block';
+	}
+	
+	selectLocation(location) {
+		this.selectedLocation = location;
+		this.searchInput.value = location.name;
+		this.dropdown.style.display = 'none';
+		this.navigateButton.style.display = 'inline-block';
+	}
+	
+	navigate() {
+		if (this.selectedLocation) {
+			// Navigate to report page with id as query parameter
+			window.location.href = `${this.reportPage}?id=${this.selectedLocation.id}`;
+		}
+	}
+}
+
+// Initialize all location selectors when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+	document.querySelectorAll('.location-selector').forEach(selector => {
+		new LocationDropdown(selector);
+	});
+});
+</script>
+</body>
+</html>

@@ -3,4 +3,16 @@
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
  * Copyright 2023 Fonticons, Inc.
  */
-:host,:root{--fa-style-family-classic:"Font Awesome 6 Free";--fa-font-solid:normal 900 1em/1 "Font Awesome 6 Free"}@font-face{font-family:"Font Awesome 6 Free";font-style:normal;font-weight:900;font-display:block;src:url(../webfonts/fa-solid-900-min.woff2) format("woff2"),url(../webfonts/fa-solid-900-min.ttf) format("truetype")}.fa-solid,.fas{font-weight:900}
+/* TrueType only, deliberately. There used to be a .woff2 listed first here, but
+   the file of that name was a byte-for-byte copy of the .ttf (same MD5, same
+   TrueType magic number), so every page downloaded it, failed to parse it as
+   WOFF2, and then fetched the .ttf as well. Apache does not compress .woff2,
+   since a real one is already compressed, so that dead first request cost the
+   full 56KB uncompressed on top of the 23KB the .ttf actually needs.
+
+   The .ttf is gzipped in transit by the DEFLATE rules in /.htaccess, which gets
+   it to roughly 23KB, within a few KB of what a genuine WOFF2 of this subset
+   would achieve. If you do add a real WOFF2 later, generate it from THIS file:
+   the bundled font is subsetted to the icons the site uses, so the full upstream
+   fa-solid-900.woff2 would be both larger and a different glyph set. */
+:host,:root{--fa-style-family-classic:"Font Awesome 6 Free";--fa-font-solid:normal 900 1em/1 "Font Awesome 6 Free"}@font-face{font-family:"Font Awesome 6 Free";font-style:normal;font-weight:900;font-display:block;src:url(../webfonts/fa-solid-900-min.ttf) format("truetype")}.fa-solid,.fas{font-weight:900}

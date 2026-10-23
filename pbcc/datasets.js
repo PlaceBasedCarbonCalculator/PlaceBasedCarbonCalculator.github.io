@@ -1,5 +1,26 @@
 // Data definitions, i.e. layers, charts, etc.
 // For PBCC tool
+
+// Single-binary datasets used by this tool (see js/databin.js). Record the
+// current index file name for each; the matching data_*.bin is named inside
+// the index (meta.bin_file). Bump a file name when that dataset is rebuilt and
+// re-uploaded - datasets are rebuilt independently, so the dates will diverge.
+if (typeof capBin !== 'undefined') {
+	capBin.register({
+		community_pics: 'index_community_pics_2026-08-26.json.gz',
+		historical_emission: 'index_historical_emission_2026-08-28.json.gz',
+		population: 'index_population_2026-08-26.json.gz',
+		// lsoa_overview is shared with the other map tools and is registered in
+		// js/datasets-common.js, which loads before this file.
+		oac_emissions: 'index_oac_emissions_2026-08-29.json.gz',
+		// Per-LA per-capita emissions, plus a 'GB' record holding the national
+		// comparison row (see make_la_summary() in build/R/la_summaries.R).
+		// Replaces the old pbcc-data/la_emissions/v2/ JSON folder, which was
+		// never rebuilt past 2020.
+		la_emissions: 'index_la_emissions_2026-08-29.json.gz'
+	});
+}
+
 const datasets_extra = {
 	
 	// Data layers
@@ -10,7 +31,7 @@ const datasets_extra = {
 			'type': 'fill',
 			'source': {
 			'type': 'vector',
-				'url': 'pmtiles://%tileserverUrl/zones_pbcc_20251115.pmtiles',
+				'url': 'pmtiles://%tileserverUrl/zones_pbcc_20260829.pmtiles',
 				},
 			'source-layer': 'zones',
 			'paint': {
@@ -145,8 +166,8 @@ const datasets_extra = {
 	  zones: {
 	    zones: {
 	      // Data fields
-  			// #!# Should use a main server URL setting
-  			dataUrl: 'https://pbcc.blob.core.windows.net/pbcc-data/lsoa_overview/v1/%id.json',
+  			// No dataUrl: this modal's data comes from the bins registered at the
+  			// top of this file, fetched by capBin.fetchRecord() in ui.js.
   			propertiesField: 'LSOA21CD',
   			titleField: 'LSOA21CD',
   			

@@ -2,8 +2,12 @@
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="Description" content="Carbon & Place provides neighbourhood carbon mapping tools, manuals, and data to help communities and policymakers understand emissions and plan local decarbonisation actions.">
-<title>Carbon & Place — About, Tools &amp; Offline Content</title>
+<meta name="Description" content="Carbon & Place provides neighbourhood carbon mapping tools, a manual, and open data to help communities and policymakers understand emissions and plan local decarbonisation.">
+<!-- This page is only ever shown by the service worker when a navigation fails
+     offline. It is not a destination, so keep it out of the index: landing on
+     it from a search result would show an "Offline" page to an online user. -->
+<meta name="robots" content="noindex, follow">
+<title>Carbon & Place - About, Tools &amp; Offline Content</title>
 <link rel="stylesheet" href="/css/main.css">
 <!-- Set Up Icon -->
 <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
@@ -16,18 +20,15 @@
 <!-- PWA support -->
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/images/icons/192.png">
-<meta name="apple-mobile-web-app-status-bar" content="#ac1a40">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Carbon & Place">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#ac1a40">
 <script src="/app.js" defer></script>
 
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q11V10CDRV"></script>
-<script>
-	window.dataLayer = window.dataLayer || [];
-	function gtag () {dataLayer.push (arguments);}
-	gtag('js', new Date ());
-	gtag('config', 'G-Q11V10CDRV');
-</script>
+<!-- Google Analytics, loaded only after the visitor accepts cookies -->
+<script src="/js/analytics.js"></script>
 
 
 </head>
@@ -39,12 +40,13 @@
 	<a href="/about/">About</a>
 	<a href="/data/">Data</a>
 	<a href="/manual/">Manual</a>
+	<a href="/reports/">Reports</a>
 	<a href="#" id="expandtopnav" class="icon" aria-label="Expand menu"><i class="fa fa-bars"></i></a>
 </nav> 
 
 <!-- Cookies Warning  -->
 <div id="cookiewarning" class="cookiewarning">
-	<p>We use cookies to measure how you use our website so we can understand how you interact with it, which helps us to make improvements. <a href="/privacy">Find out more.</a></p>
+	<p>We use cookies to measure how you use our website so we can understand how you interact with it, which helps us to make improvements. <a href="/privacy/">Find out more.</a></p>
 	<p>
 		<button class="button buttonOK" value="1"><strong>OK</strong></button>
 		<button class="button buttonNO" value=""><strong>No</strong></button>
